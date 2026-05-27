@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard อาจารย์ — ระบบบันทึกความดี วพอ. 2569</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+  <style>
+    /* ===== KPI CARDS ===== */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .kpi-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    }
+
+    .kpi-card.gold::before {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    }
+
+    .kpi-card.green::before {
+      background: linear-gradient(90deg, #16a34a, #22c55e);
+    }
+
+    .kpi-card.blue::before {
+      background: linear-gradient(90deg, #1d4ed8, #3b82f6);
+    }
+
+    .kpi-card.red::before {
+      background: linear-gradient(90deg, #dc2626, #f87171);
+    }
+
+    .kpi-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .kpi-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+    }
+
+    .kpi-icon.gold {
+      background: var(--gold-bg);
+    }
+
+    .kpi-icon.green {
+      background: var(--green-bg);
+    }
+
+    .kpi-icon.blue {
+      background: var(--blue-bg);
+    }
+
+    .kpi-icon.red {
+      background: var(--red-bg);
+    }
+
+    .kpi-body {
+      flex: 1;
+    }
+
+    .kpi-value {
+      font-size: 2rem;
+      font-weight: 800;
+      font-family: 'Kanit', sans-serif;
+      line-height: 1;
+    }
+
+    .kpi-value.gold {
+      color: var(--gold);
+    }
+
+    .kpi-value.green {
+      color: var(--green);
+    }
+
+    .kpi-value.blue {
+      color: var(--blue);
+    }
+
+    .kpi-value.red {
+      color: var(--red);
+    }
+
+    .kpi-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    /* ===== TABS ===== */
+    .tab-bar {
+      display: flex;
+      gap: 4px;
+      border-bottom: 2px solid var(--navy-border);
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--gold);
+      border-bottom-color: var(--gold);
+    }
+
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* ===== PENDING CARDS ===== */
+    .pcard {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      margin-bottom: 12px;
+      transition: all 0.25s;
+    }
+
+    .pcard:hover {
+      border-color: rgba(201, 162, 39, 0.4);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .pcard-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .pcard-info {
+      flex: 1;
+    }
+
+    .pcard-hours {
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .pcard-hours .num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--gold);
+      font-family: 'Kanit', sans-serif;
+      line-height: 1;
+    }
+
+    .pcard-hours .unit {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .pcard-name {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 4px;
+    }
+
+    .pcard-cat {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 3px;
+    }
+
+    .pcard-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .pcard-meta {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 16px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pcard-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 12px;
+    }
+
+    .pcard-imgs {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+
+    .pcard-img {
+      width: 52px;
+      height: 52px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid var(--navy-border);
+      cursor: zoom-in;
+    }
+
+    /* ===== INLINE PROGRESS ===== */
+    .ibar-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .ibar {
+      flex: 1;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      overflow: hidden;
+      min-width: 80px;
+    }
+
+    .ibar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.4s;
+    }
+
+    /* ===== YEAR STATS CARDS ===== */
+    .year-stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .year-stat-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      transition: all 0.3s;
+    }
+
+    .year-stat-card:hover {
+      border-color: rgba(201, 162, 39, 0.3);
+    }
+
+    .year-stat-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .year-mini-stats {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 12px;
+    }
+
+    .year-mini {
+      text-align: center;
+    }
+
+    .year-mini .v {
+      font-size: 1.6rem;
+      font-weight: 800;
+      font-family: 'Kanit', sans-serif;
+      line-height: 1;
+    }
+
+    .year-mini .l {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    /* ===== CATEGORY BAR CHART ===== */
+    .cat-bar-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .cat-bar-item {
+      display: grid;
+      grid-template-columns: 160px 1fr 60px;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cat-bar-label {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cat-bar-track {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .cat-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.5s;
+    }
+
+    .cat-bar-val {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-align: right;
+    }
+
+    /* ===== STUDENT DETAIL MODAL ===== */
+    .smodal-header {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      margin-bottom: 16px;
+    }
+
+    .smodal-kv {
+      background: var(--input-bg);
+      border-radius: var(--radius-sm);
+      padding: 10px 14px;
+    }
+
+    .smodal-kv .k {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .smodal-kv .v {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .deed-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(30, 58, 110, 0.3);
+    }
+
+    .deed-row:last-child {
+      border-bottom: none;
+    }
+
+    /* ===== IMAGE LIGHTBOX ===== */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: zoom-out;
+    }
+
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+    }
+
+    #lightbox.hidden {
+      display: none;
+    }
+
+    /* ===== SECTION HEADER ===== */
+    .sec-hdr {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .sec-hdr h2 {
+      margin: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav class="top-nav">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+      <a href="teacher-dashboard.html" class="nav-brand">
+      <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+      <div class="nav-brand-text">
+        <span class="title">บันทึกความดี — อาจารย์</span>
+        <span class="subtitle">วพอ.พอ. ปีการศึกษา 2569</span>
+      </div>
+    </a>
+    </div>
+    <div class="nav-actions">
+      <span class="badge badge-pending" id="pending-badge" style="font-size:0.8rem;padding:5px 12px">⏳ <span
+          id="pending-count">0</span> รออนุมัติ</span>
+      <div class="nav-user">
+        <div class="avatar">👩‍🏫</div>
+        <span id="teacher-name" class="text-sm text-muted">อาจารย์</span>
+        <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR OVERLAY -->
+  <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+  <div class="layout">
+    <!-- SIDEBAR (Off-canvas) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand">
+          <img src="510903.jpg" alt="โลโก้">
+          <div>
+            <div class="brand-text">บันทึกความดี</div>
+            <div class="brand-sub">Dashboard อาจารย์</div>
+          </div>
+        </div>
+        <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+      </div>
+      <div class="sidebar-menu">
+        <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+        <a href="#" class="sidebar-item active" id="sb-pending" onclick="switchTab('pending',this)">
+          <span class="icon">⏳</span> รออนุมัติ
+          <span class="badge badge-pending" id="sb-badge" style="margin-left:auto"></span>
+        </a>
+        <a href="#" class="sidebar-item" id="sb-students" onclick="switchTab('students',this)">
+          <span class="icon">👥</span> นักเรียนทั้งหมด
+        </a>
+        <a href="#" class="sidebar-item" id="sb-stats" onclick="switchTab('stats',this)">
+          <span class="icon">📊</span> สถิติภาพรวม
+        </a>
+        <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+        <div class="divider" style="margin:8px 16px;"></div>
+        <a href="settings.html" class="sidebar-item" id="nav-settings"><span class="icon">⚙️</span> ตั้งค่าระบบ</a>
+        <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+      </div>
+      <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+      <!-- KPI ROW -->
+      <div class="kpi-grid" id="kpi-row">
+        <div class="kpi-card gold">
+          <div class="kpi-icon gold">⏳</div>
+          <div class="kpi-body">
+            <div class="kpi-value gold" id="k-pending">0</div>
+            <div class="kpi-label">รออนุมัติ</div>
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon green">✅</div>
+          <div class="kpi-body">
+            <div class="kpi-value green" id="k-approved">0</div>
+            <div class="kpi-label">อนุมัติแล้ว (รายการ)</div>
+          </div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-icon blue">👥</div>
+          <div class="kpi-body">
+            <div class="kpi-value blue" id="k-students">0</div>
+            <div class="kpi-label">นักเรียนทั้งหมด</div>
+          </div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-icon green">🏆</div>
+          <div class="kpi-body">
+            <div class="kpi-value green" id="k-passed">0</div>
+            <div class="kpi-label">ผ่านเกณฑ์แล้ว</div>
+          </div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-icon red">⚠️</div>
+          <div class="kpi-body">
+            <div class="kpi-value red" id="k-not-passed">0</div>
+            <div class="kpi-label">ยังไม่ผ่านเกณฑ์</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tab-bar">
+        <button class="tab-btn active" id="tb-pending" onclick="switchTab('pending',null)">⏳ รออนุมัติ</button>
+        <button class="tab-btn" id="tb-students" onclick="switchTab('students',null)">👥 นักเรียนทั้งหมด</button>
+        <button class="tab-btn" id="tb-stats" onclick="switchTab('stats',null)">📊 สถิติภาพรวม</button>
+      </div>
+
+      <!-- TAB: PENDING -->
+      <div class="tab-pane active" id="pane-pending">
+        <div class="sec-hdr">
+          <h2>📋 รายการรออนุมัติ</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="text" class="form-input" style="width:200px;padding:8px 12px" id="pend-search"
+              placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderPending()">
+            <button class="btn btn-success btn-sm" id="approve-all-btn" onclick="approveAll()">✅ อนุมัติทั้งหมด</button>
+          </div>
+        </div>
+        <div id="pending-list"></div>
+      </div>
+
+      <!-- TAB: STUDENTS -->
+      <div class="tab-pane" id="pane-students">
+        <div class="sec-hdr">
+          <h2>👥 นักเรียนทั้งหมด</h2>
+          <button class="btn btn-outline btn-sm" onclick="printAllReport()">🖨️ พิมพ์สรุปทั้งหมด</button>
+        </div>
+        <div class="filter-bar" style="margin-bottom:12px">
+          <button class="filter-pill active" onclick="setYearFilter('all',this)">ทั้งหมด</button>
+          <button class="filter-pill" onclick="setYearFilter(68,this)">ปี 2 (รุ่น 68)</button>
+          <button class="filter-pill" onclick="setYearFilter(67,this)">ปี 3 (รุ่น 67)</button>
+          <button class="filter-pill" onclick="setYearFilter(66,this)">ปี 4 (รุ่น 66)</button>
+          <button class="filter-pill" onclick="setYearFilter(65,this)">ศิษย์เก่า 65</button>
+          <button class="filter-pill" onclick="setYearFilter('pass',this)">✅ ผ่าน</button>
+          <button class="filter-pill" onclick="setYearFilter('fail',this)">⚠️ ยังไม่ผ่าน</button>
+          <div class="filter-search">
+            <input type="text" class="form-input" id="stu-search" placeholder="🔍 ค้นหาชื่อ / รหัส..."
+              oninput="renderStudents()">
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>รหัส</th>
+                <th>ยศ-ชื่อ-สกุล</th>
+                <th>ชั้นปี</th>
+                <th>รวม ชม.</th>
+                <th style="min-width:130px">ความคืบหน้า</th>
+                <th>สถานะ</th>
+                <th>รอ</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="stu-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB: STATS -->
+      <div class="tab-pane" id="pane-stats">
+        <div class="sec-hdr">
+          <h2>📊 สถิติภาพรวม — ปีการศึกษา 2569</h2>
+          <div style="display:flex; gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="printStats()">🖨️ พิมพ์สถิติ</button>
+            <button class="btn btn-primary btn-sm" id="btn-send-report" onclick="sendReportToTelegram()"
+              style="background:#1da1f2;border-color:#1da1f2;">📤 ส่งรายงานเข้า Telegram</button>
+          </div>
+        </div>
+        <div id="stats-content"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- MODAL: REJECT -->
+  <div class="modal-overlay" id="reject-modal">
+    <div class="modal">
+      <div class="modal-header">
+        <div class="modal-title">❌ ปฏิเสธรายการ</div>
+        <button class="modal-close" onclick="closeRejectModal()">✕</button>
+      </div>
+      <p style="font-size:0.875rem;color:var(--text-muted);margin-bottom:12px">ระบุเหตุผลเพื่อให้นักเรียนแก้ไขได้</p>
+      <input type="text" class="form-input" id="reject-reason" placeholder="เช่น หลักฐานไม่ชัดเจน...">
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px">
+        <button class="btn btn-outline" onclick="closeRejectModal()">ยกเลิก</button>
+        <button class="btn btn-danger" onclick="confirmReject()">❌ ยืนยันปฏิเสธ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: STUDENT DETAIL -->
+  <div class="modal-overlay" id="stu-modal">
+    <div class="modal" style="max-width:760px;width:95vw">
+      <div class="modal-header">
+        <div class="modal-title" id="smod-title">รายละเอียดนักเรียน</div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="btn btn-outline btn-sm" id="smod-print-btn">🖨️ พิมพ์</button>
+          <button class="modal-close" onclick="closeStuModal()">✕</button>
+        </div>
+      </div>
+      <div id="smod-body"></div>
+    </div>
+  </div>
+
+  <!-- IMAGE LIGHTBOX -->
+  <div id="lightbox" class="hidden" onclick="this.classList.add('hidden')">
+    <img id="lightbox-img" src="" alt="ภาพหลักฐาน">
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+  <script src="data/students_data.js?v=69"></script>
+  <script src="data/students_photos.js?v=69"></script>
+  <script src="data/deeds_data.js?v=69"></script>
+  <script src="app.js?v=69"></script>
+  <script>
+    // ===== STATE =====
+    let teacher = null;
+    let pendingDeeds = [];
+    let allSummary = [];
+    let yearFilter = 'all';
+    let rejectTarget = null;
+    let currentStudentId = null;
+
+    // ===== INIT =====
+    function init() {
+      teacher = App.requireAuth(['teacher', 'admin']);
+      if (!teacher) return;
+      document.getElementById('teacher-name').textContent = teacher.name || teacher.username || 'อาจารย์';
+      if (teacher.role !== 'admin') {
+        document.getElementById('nav-settings').style.display = 'none';
+      }
+
+      // ตรวจสอบว่า STUDENTS_DATA โหลดแล้ว
+      if (typeof STUDENTS_DATA === 'undefined' || !STUDENTS_DATA || STUDENTS_DATA.length === 0) {
+        document.querySelector('.main-content').innerHTML = `
+          <div style="text-align:center;padding:80px 20px">
+            <div style="font-size:4rem;margin-bottom:16px">⚠️</div>
+            <h2 style="color:var(--yellow);margin-bottom:8px">ข้อมูลนักเรียนยังไม่โหลด</h2>
+            <p style="color:var(--text-muted);margin-bottom:8px">กรุณาเปิดระบบจาก URL ที่ถูกต้อง แล้วกดโหลดใหม่</p>
+            <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:24px">
+              URL ที่ถูกต้อง: <code style="color:var(--gold)">http://localhost:8000/frontend/index.html</code>
+            </p>
+            <button class="btn btn-primary" onclick="location.reload(true)" style="margin-right:8px">🔄 โหลดใหม่</button>
+            <button class="btn btn-outline" onclick="App.logout()">🚪 ออกจากระบบ</button>
+          </div>`;
+        return;
+      }
+
+      loadData();
+    }
+
+    function loadData() {
+      pendingDeeds = App.getAllPendingDeeds();
+      allSummary = App.getAllStudentsSummary();
+      const passed = allSummary.filter(s => s.passed).length;
+      const totalApproved = allSummary.reduce((a, s) => a + s.approvedCount, 0);
+
+      document.getElementById('k-pending').textContent = pendingDeeds.length;
+      document.getElementById('k-approved').textContent = totalApproved;
+      document.getElementById('k-students').textContent = allSummary.length;
+      document.getElementById('k-passed').textContent = passed;
+      document.getElementById('k-not-passed').textContent = allSummary.length - passed;
+      document.getElementById('pending-count').textContent = pendingDeeds.length;
+      const sb = document.getElementById('sb-badge');
+      sb.textContent = pendingDeeds.length || '';
+      sb.style.display = pendingDeeds.length ? '' : 'none';
+
+      renderPending();
+      renderStudents();
+      renderStats();
+    }
+
+
+    // ===== TABS =====
+    function switchTab(name, sidebarEl) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+      document.getElementById('pane-' + name).classList.add('active');
+      document.getElementById('tb-' + name).classList.add('active');
+      if (sidebarEl) sidebarEl.classList.add('active');
+      else document.getElementById('sb-' + name)?.classList.add('active');
+    }
+
+    // ===== PENDING =====
+    function renderPending() {
+      const q = (document.getElementById('pend-search')?.value || '').toLowerCase();
+      let list = pendingDeeds;
+      if (q) list = list.filter(d => {
+        const s = d.student;
+        return s.student_id.includes(q) || (s.first_name || '').toLowerCase().includes(q) || (s.last_name || '').toLowerCase().includes(q);
+      });
+      const c = document.getElementById('pending-list');
+      if (!list.length) { c.innerHTML = `<div class="empty-state"><div class="icon">✅</div><p>ไม่มีรายการรออนุมัติ</p></div>`; return; }
+
+      c.innerHTML = list.map(d => {
+        const cat = App.getCategoryById(d.categoryId);
+        const s = d.student;
+        const imgs = (d.imageUrls || []).map(key => {
+          const src = App.getImage(key);
+          return src ? `<img class="pcard-img" src="${src}" onclick="showLightbox('${key}')" alt="หลักฐาน">` : '';
+        }).join('');
+        return `<div class="pcard" id="pc-${d.id}">
+      <div class="pcard-top">
+        <div class="pcard-info">
+          <div class="pcard-name">👤 ${s.rank} ${s.first_name} ${s.last_name}
+            <span class="badge badge-blue" style="margin-left:6px">${App.getYearName(s.class_year)}</span>
+            <span class="badge badge-gold" style="margin-left:4px">รหัส ${s.student_id}</span>
+          </div>
+          <div class="pcard-cat">${cat.emoji} ${cat.name}</div>
+          <div class="pcard-desc">${d.description || '-'}</div>
+          <div class="pcard-meta">
+            <span>📅 วันที่ทำ: ${App.formatDate(d.activityDate)}</span>
+            <span>📤 ส่งเมื่อ: ${App.formatDate(d.submittedAt)}</span>
+            ${d.note ? `<span>💬 ${d.note}</span>` : ''}
+          </div>
+          ${imgs ? `<div class="pcard-imgs">${imgs}</div>` : ''}
+        </div>
+        <div class="pcard-hours"><div class="num">${d.hours}</div><div class="unit">ชม.</div></div>
+      </div>
+      <div class="pcard-actions">
+        <button class="btn btn-outline btn-sm" onclick="openStuModal('${s.student_id}')">👁️ ดูโปรไฟล์</button>
+        <button class="btn btn-danger btn-sm" onclick="openRejectModal('${s.student_id}','${d.id}')">❌ ปฏิเสธ</button>
+        <button class="btn btn-success btn-sm" onclick="quickApprove('${s.student_id}','${d.id}')">✅ อนุมัติ</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    function quickApprove(sid, did) {
+      App.updateDeedStatus(sid, did, 'approved', teacher.name || 'อาจารย์');
+      const profile = App.getProfile(sid);
+      if (profile.telegramChatId) App.sendTelegram(profile.telegramChatId, `✅ <b>ความดีได้รับการอนุมัติ!</b>\nผู้อนุมัติ: ${teacher.name || 'อาจารย์'}`);
+
+      if (profile.email) {
+        const subject = encodeURIComponent('แจ้งผลอนุมัติบันทึกความดี วพอ.');
+        const body = encodeURIComponent(`เรียน นักเรียน (รหัส ${sid})\n\nรายการบันทึกความดีของคุณได้รับการพิจารณา: ✅ อนุมัติ\nผู้ประเมิน: ${teacher.name || 'อาจารย์'}\n\nขอบคุณสำหรับการทำความดีในครั้งนี้\nระบบบันทึกความดี วพอ. ปีการศึกษา 2569`);
+        window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+      }
+
+      showToast('อนุมัติสำเร็จ!', 'success');
+      const el = document.getElementById('pc-' + did);
+      if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(30px)'; el.style.transition = 'all 0.3s'; setTimeout(() => { el.remove(); loadData(); }, 300); }
+      else loadData();
+    }
+
+    function approveAll() {
+      const list = [...pendingDeeds];
+      if (!list.length) return;
+      list.forEach(d => App.updateDeedStatus(d.studentId, d.id, 'approved', teacher.name || 'อาจารย์'));
+      showToast(`✅ อนุมัติ ${list.length} รายการสำเร็จ!`, 'success');
+      loadData();
+    }
+
+    function openRejectModal(sid, did) {
+      rejectTarget = { sid, did };
+      document.getElementById('reject-reason').value = '';
+      document.getElementById('reject-modal').classList.add('open');
+    }
+    function closeRejectModal() { document.getElementById('reject-modal').classList.remove('open'); rejectTarget = null; }
+    function confirmReject() {
+      if (!rejectTarget) return;
+      const r = document.getElementById('reject-reason').value.trim();
+      if (!r) { showToast('กรุณาระบุเหตุผล', 'warning'); return; }
+      App.updateDeedStatus(rejectTarget.sid, rejectTarget.did, 'rejected', teacher.name || 'อาจารย์', r);
+
+      const profile = App.getProfile(rejectTarget.sid);
+      if (profile.telegramChatId) App.sendTelegram(profile.telegramChatId, `❌ <b>ความดีถูกปฏิเสธ</b>\nเหตุผล: ${r}\nผู้อนุมัติ: ${teacher.name || 'อาจารย์'}`);
+
+      if (profile.email) {
+        const subject = encodeURIComponent('แจ้งผลปฏิเสธบันทึกความดี วพอ.');
+        const body = encodeURIComponent(`เรียน นักเรียน (รหัส ${rejectTarget.sid})\n\nรายการบันทึกความดีของคุณได้รับการพิจารณา: ❌ ไม่อนุมัติ\nเหตุผล: ${r}\nผู้ประเมิน: ${teacher.name || 'อาจารย์'}\n\nระบบบันทึกความดี วพอ. ปีการศึกษา 2569`);
+        window.location.href = `mailto:${profile.email}?subject=${subject}&body=${body}`;
+      }
+
+      closeRejectModal();
+      showToast('ปฏิเสธรายการแล้ว', 'info');
+      loadData();
+    }
+
+    // ===== STUDENTS TABLE =====
+    function setYearFilter(val, btn) {
+      document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      yearFilter = val;
+      renderStudents();
+    }
+
+    function renderStudents() {
+      const q = (document.getElementById('stu-search')?.value || '').toLowerCase();
+      let data = allSummary;
+      if (yearFilter === 'pass') data = data.filter(s => s.passed);
+      else if (yearFilter === 'fail') data = data.filter(s => !s.passed);
+      else if (yearFilter !== 'all') {
+        // Some students may have a class year that is slightly out of bounds, so let's allow string matching or direct integer matching
+        data = data.filter(s => Number(s.class_year) === Number(yearFilter) || s.class_year === yearFilter);
+      }
+
+      if (q) {
+        data = data.filter(s =>
+          s.student_id.includes(q) ||
+          (s.first_name || '').toLowerCase().includes(q) ||
+          (s.last_name || '').toLowerCase().includes(q) ||
+          (s.rank || '').toLowerCase().includes(q)
+        );
+      }
+
+      const tbody = document.getElementById('stu-tbody');
+      if (!data.length) { tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">👥</div><p>ไม่พบนักเรียน</p></div></td></tr>`; return; }
+
+      tbody.innerHTML = data.map(s => {
+        const pct = Math.min((s.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
+        const col = s.passed ? '#22c55e' : (pct > 60 ? '#f59e0b' : '#ef4444');
+        return `<tr style="cursor:pointer" onclick="openStuModal('${s.student_id}')">
+      <td class="id-cell">${s.student_id}</td>
+      <td style="font-weight:600;color:var(--text-primary)">${s.rank} ${s.first_name} ${s.last_name}</td>
+      <td>${App.getYearName(s.class_year)}</td>
+      <td style="font-weight:700;color:var(--gold)">${s.totalHours} ชม.</td>
+      <td>
+        <div class="ibar-wrap">
+          <div class="ibar"><div class="ibar-fill" style="width:${pct}%;background:${col}"></div></div>
+          <span style="font-size:0.72rem;color:var(--text-muted);white-space:nowrap">${Math.round(pct)}%</span>
+        </div>
+      </td>
+      <td>${s.passed ? '<span class="badge badge-approved">✅ ผ่าน</span>' : '<span class="badge badge-pending">⏳ ยังไม่ผ่าน</span>'}</td>
+      <td>${s.pendingCount > 0 ? `<span class="badge badge-pending">${s.pendingCount}</span>` : '-'}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();printStudentReport('${s.student_id}')">🖨️</button></td>
+    </tr>`;
+      }).join('');
+    }
+
+    // ===== STUDENT MODAL =====
+    function openStuModal(sid) {
+      currentStudentId = sid;
+      const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+      const stu = students.find(s => s.student_id === sid);
+      if (!stu) return;
+      const summ = App.getStudentSummary(sid);
+      const deeds = App.getDeeds(sid).sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+      const pct = Math.min((summ.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
+
+      document.getElementById('smod-title').innerHTML = `👤 ${stu.rank} ${stu.first_name} ${stu.last_name}`;
+      document.getElementById('smod-print-btn').onclick = () => printStudentReport(sid);
+
+      // รูปโปรไฟล์
+      const photo = App.getProfilePhoto(sid);
+      const photoHtml = photo
+        ? `<div style="text-align:center;margin-bottom:16px"><img src="${photo}" alt="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 0 12px rgba(201,162,39,0.3)"></div>`
+        : '';
+      const catRows = summ.byCategory.filter(c => c.hours > 0).map(c => {
+        const maxH = Math.max(...summ.byCategory.map(x => x.hours), 1);
+        const w = Math.round((c.hours / maxH) * 100);
+        return `<div class="cat-bar-item">
+      <div class="cat-bar-label">${c.emoji} ${c.name}</div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${w}%;background:${c.color}"></div></div>
+      <div class="cat-bar-val">${c.hours} ชม.</div>
+    </div>`;
+      }).join('');
+
+      const deedRows = deeds.slice(0, 15).map(d => {
+        const cat = App.getCategoryById(d.categoryId);
+        const badges = { pending: '<span class="badge badge-pending">รอ</span>', approved: '<span class="badge badge-approved">✅</span>', rejected: '<span class="badge badge-rejected">❌</span>' };
+        const approveBtn = d.status === 'pending' ? `<button class="btn btn-success btn-sm" style="padding:4px 10px;font-size:0.75rem" onclick="quickApprove('${sid}','${d.id}');closeStuModal()">อนุมัติ</button>` : '';
+        return `<div class="deed-row">
+      <span>${cat.emoji}</span>
+      <span style="flex:1;font-size:0.82rem;color:var(--text-secondary)">${d.description || cat.name}</span>
+      <span style="font-size:0.82rem;font-weight:700;color:var(--gold)">${d.hours} ชม.</span>
+      ${badges[d.status] || ''}
+      ${approveBtn}
+    </div>`;
+      }).join('');
+
+      document.getElementById('smod-body').innerHTML = photoHtml + `
+    <div class="smodal-header">
+      <div class="smodal-kv"><div class="k">รหัสนักเรียน</div><div class="v">${stu.student_id}</div></div>
+      <div class="smodal-kv"><div class="k">ชั้นปี</div><div class="v">${App.getYearName(stu.class_year)}</div></div>
+      <div class="smodal-kv"><div class="k">รวมชั่วโมง</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
+      <div class="smodal-kv"><div class="k">สถานะ</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
+    </div>
+    <div class="progress-container">
+      <div class="progress-label"><span>ความคืบหน้า</span><span>${summ.totalHours} / ${CONFIG.MIN_HOURS_PER_YEAR} ชม.</span></div>
+      <div class="progress-track"><div class="progress-fill ${summ.passed ? 'green' : ''}" style="width:${pct}%"></div></div>
+    </div>
+    <div style="display:flex;gap:12px;margin-bottom:16px;font-size:0.8rem">
+      <span class="badge badge-approved">✅ อนุมัติ ${summ.approvedCount}</span>
+      <span class="badge badge-pending">⏳ รอ ${summ.pendingCount}</span>
+      <span class="badge badge-rejected">❌ ปฏิเสธ ${summ.rejectedCount}</span>
+    </div>
+    ${catRows ? `<div style="margin-bottom:14px"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:10px">ชั่วโมงตามหมวดหมู่</div><div class="cat-bar-list">${catRows}</div></div>` : ''}
+    <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:8px">รายการล่าสุด (${deeds.length} รายการ)</div>
+    <div style="max-height:240px;overflow-y:auto;border-radius:var(--radius-sm);border:1px solid var(--navy-border);padding:8px 12px">${deedRows || '<div class="empty-state" style="padding:20px"><p>ไม่มีรายการ</p></div>'}</div>
+  `;
+      document.getElementById('stu-modal').classList.add('open');
+    }
+    function closeStuModal() { document.getElementById('stu-modal').classList.remove('open'); }
+
+    // ===== STATS =====
+    function renderStats() {
+      const years = [
+        { label: 'ชั้นปีที่ 2', sub: 'รุ่น 68', year: 68, col: '#3b82f6' },
+        { label: 'ชั้นปีที่ 3', sub: 'รุ่น 67', year: 67, col: '#8b5cf6' },
+        { label: 'ชั้นปีที่ 4', sub: 'รุ่น 66', year: 66, col: '#22c55e' },
+        { label: 'ศิษย์เก่า รุ่น 65', sub: 'SWD65', year: 65, col: '#f59e0b' },
+      ];
+      const minH = CONFIG.MIN_HOURS_PER_YEAR;
+
+      // Category totals across all students
+      const catTotals = CATEGORIES.map(cat => ({
+        ...cat,
+        total: allSummary.reduce((a, s) => {
+          const d = App.getDeeds(s.student_id).filter(x => x.status === 'approved' && x.categoryId === cat.id);
+          return a + d.reduce((b, x) => b + x.hours, 0);
+        }, 0)
+      })).filter(c => c.total > 0).sort((a, b) => b.total - a.total);
+      const maxCat = catTotals[0]?.total || 1;
+
+      const yearCards = years.map(y => {
+        const ys = allSummary.filter(s => s.class_year === y.year);
+        const passed = ys.filter(s => s.passed).length;
+        const totalH = ys.reduce((a, s) => a + s.totalHours, 0);
+        const avgH = ys.length ? Math.round(totalH / ys.length) : 0;
+        const pct = ys.length ? Math.round((passed / ys.length) * 100) : 0;
+        return `<div class="year-stat-card">
+      <div class="year-stat-title">
+        <span>${y.label} <span style="font-size:0.75rem;color:var(--text-muted)">(${y.sub})</span></span>
+        <span class="badge badge-gold">${ys.length} คน</span>
+      </div>
+      <div class="year-mini-stats">
+        <div class="year-mini"><div class="v" style="color:var(--green)">${passed}</div><div class="l">ผ่านเกณฑ์</div></div>
+        <div class="year-mini"><div class="v" style="color:var(--yellow)">${ys.length - passed}</div><div class="l">ยังไม่ผ่าน</div></div>
+        <div class="year-mini"><div class="v" style="color:var(--gold)">${totalH}</div><div class="l">ชม. รวม</div></div>
+        <div class="year-mini"><div class="v" style="color:var(--blue)">${avgH}</div><div class="l">ชม. เฉลี่ย</div></div>
+      </div>
+      <div class="progress-container" style="margin-bottom:0">
+        <div class="progress-label"><span>ผ่านเกณฑ์ ${passed}/${ys.length} คน</span><span style="font-weight:700;color:${pct >= 80 ? 'var(--green)' : 'var(--yellow)'}">${pct}%</span></div>
+        <div class="progress-track"><div class="progress-fill ${pct >= 80 ? 'green' : ''}" style="width:${pct}%;background:${pct >= 80 ? '' : 'linear-gradient(90deg,' + y.col + 'aa,' + y.col + ')'};"></div></div>
+      </div>
+    </div>`;
+      }).join('');
+
+      const catBars = catTotals.map(c => `
+    <div class="cat-bar-item">
+      <div class="cat-bar-label">${c.emoji} ${c.name}</div>
+      <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round((c.total / maxCat) * 100)}%;background:${c.color}"></div></div>
+      <div class="cat-bar-val">${c.total} ชม.</div>
+    </div>`).join('');
+
+      // Pass rate overall
+      const totalPass = allSummary.filter(s => s.passed).length;
+      const overallPct = allSummary.length ? Math.round((totalPass / allSummary.length) * 100) : 0;
+
+      document.getElementById('stats-content').innerHTML = `
+    <div class="card mb-24" style="margin-bottom:20px">
+      <div class="card-title" style="margin-bottom:16px">🎯 สรุปภาพรวมทั้งสถาบัน</div>
+      <div class="progress-container">
+        <div class="progress-label">
+          <span>ผ่านเกณฑ์ ${totalPass} / ${allSummary.length} คน</span>
+          <span style="font-size:1.2rem;font-weight:700;color:${overallPct >= 80 ? 'var(--green)' : 'var(--yellow)'}">${overallPct}%</span>
+        </div>
+        <div class="progress-track" style="height:14px"><div class="progress-fill ${overallPct >= 80 ? 'green' : ''}" style="width:${overallPct}%"></div></div>
+      </div>
+    </div>
+    <div class="year-stats-grid mb-24" style="margin-bottom:20px">${yearCards}</div>
+    ${catBars ? `<div class="card"><div class="card-title" style="margin-bottom:16px">📈 ชั่วโมงรวมตามหมวดหมู่</div><div class="cat-bar-list">${catBars}</div></div>` : ''}
+  `;
+    }
+
+    // ===== LIGHTBOX =====
+    function showLightbox(key) {
+      const src = App.getImage(key);
+      if (!src) return;
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').classList.remove('hidden');
+    }
+
+    // ===== PRINT =====
+    function printStudentReport(studentId) {
+      const stu = allSummary.find(s => s.student_id === studentId);
+      if (!stu) return;
+      const photo = App.getProfilePhoto(studentId);
+      const photoHtml = photo ? `<img src="${photo}" class="stu-photo">` : `<div class="stu-photo placeholder">?</div>`;
+
+      const catRows = stu.byCategory.map(c => `
+    <tr>
+      <td>${c.emoji} ${c.name}</td>
+      <td style="text-align:right">${c.hours} ชม.</td>
+    </tr>
+  `).join('');
+
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html>
+<html lang="th" style="background:#0c1524">
+<head>
+  <meta charset="UTF-8">
+  <title>รายงานผลความดี - ${stu.first_name}</title>
+  <style>
+    body { font-family: 'Sarabun', sans-serif; color: #111; padding: 40px; max-width: 800px; margin: 0 auto; line-height: 1.5; }
+    .header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #1e3a8a; padding-bottom: 20px; }
+    .logo { width: 90px; height: 90px; object-fit: contain; margin-bottom: 10px; }
+    .inst-name { font-size: 1.4rem; font-weight: 700; color: #1e3a8a; margin: 0; }
+    .doc-title { font-size: 1.2rem; font-weight: 600; margin-top: 5px; }
+    .profile-section { display: flex; gap: 24px; align-items: flex-start; margin-bottom: 30px; }
+    .stu-photo { width: 120px; height: 120px; border-radius: 8px; object-fit: cover; border: 2px solid #ccc; }
+    .placeholder { background: #eee; display: flex; align-items: center; justify-content: center; font-size: 3rem; color: #999; font-weight: bold; }
+    .info-grid { flex: 1; display: grid; grid-template-columns: max-content 1fr; row-gap: 8px; column-gap: 16px; font-size: 1.05rem; }
+    .k { font-weight: 600; color: #4b5563; }
+    .v { font-weight: 700; color: #111; }
+    .status-pass { color: #16a34a; }
+    .status-fail { color: #dc2626; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 1.05rem; }
+    th { background: #f3f4f6; color: #1f2937; padding: 12px; text-align: left; border-bottom: 2px solid #d1d5db; }
+    td { padding: 12px; border-bottom: 1px solid #e5e7eb; }
+    .summary-row { font-weight: 700; background: #f9fafb; font-size: 1.15rem; }
+    .footer { margin-top: 50px; text-align: center; font-size: 0.9rem; color: #6b7280; }
+    @media print { body { padding: 0; } }
+  </style>
+</head>
+<body style="background:#0c1524">
+  <div class="header">
+    <img src="510903.jpg" class="logo" alt="Logo">
+    <h1 class="inst-name">วิทยาลัยพยาบาลทหารอากาศ</h1>
+    <div class="doc-title">รายงานสรุปผลการบันทึกความดี ประจำปีการศึกษา 2569</div>
+  </div>
+  
+  <div class="profile-section">
+    <div>${photoHtml}</div>
+    <div class="info-grid">
+      <div class="k">รหัสนักเรียน:</div><div class="v">${stu.student_id}</div>
+      <div class="k">ยศ-ชื่อ-สกุล:</div><div class="v">${stu.rank} ${stu.first_name} ${stu.last_name}</div>
+      <div class="k">ชั้นปี:</div><div class="v">${App.getYearName(stu.class_year)}</div>
+      <div class="k">สถานะการผ่านเกณฑ์:</div><div class="v ${stu.passed ? 'status-pass' : 'status-fail'}">${stu.passed ? '✓ ผ่านเกณฑ์' : '✗ ยังไม่ผ่านเกณฑ์'}</div>
+    </div>
+  </div>
+
+  <h3 style="margin-bottom:10px; color:#1e3a8a; border-bottom:1px solid #e5e7eb; padding-bottom:8px;">สรุปชั่วโมงความดีแยกตามหมวดหมู่</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>หมวดหมู่ความดี</th>
+        <th style="text-align:right">จำนวนชั่วโมงที่อนุมัติแล้ว</th>
+      </tr>
+    </thead>
+    <tbody>
+      ${catRows}
+      <tr class="summary-row">
+        <td>รวมชั่วโมงทั้งหมด</td>
+        <td style="text-align:right; color:#ca8a04;">${stu.totalHours} ชม.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    <p>พิมพ์เมื่อวันที่ ${new Date().toLocaleDateString('th-TH')} เวลา ${new Date().toLocaleTimeString('th-TH')}</p>
+    <p>เอกสารฉบับนี้จัดทำขึ้นโดยระบบบันทึกความดี วิทยาลัยพยาบาลทหารอากาศ</p>
+  </div>
+  <script>
+    setTimeout(() => { window.print(); }, 500);
+  </script>
+</body>
+
+</html>`);
+w.document.close();
+}
+
+function printStats() {
+const content = document.getElementById('stats-content').innerHTML;
+const w = window.open('','_blank');
+w.document.write(`
+<!DOCTYPE html>
+<html lang="th" style="background:#0c1524">
+
+<head>
+  <meta charset="UTF-8">
+  <title>สถิติภาพรวม — วพอ. 2569</title>
+  <style>
+    body {
+      font-family: 'Sarabun', sans-serif;
+      color: #111;
+      background: #fff;
+      padding: 24px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body style="background:#0c1524">
+  <h1>สถิติภาพรวม — ระบบบันทึกความดี วพอ. ปีการศึกษา 2569</h1>${content}
+  <script>window.print();<\/script></body></html>`);
+      w.document.close();
+    }
+
+    function printAllReport() {
+      const rows = allSummary.map(s => `<tr>
+    <td>${s.student_id}</td>
+    <td>${s.rank} ${s.first_name} ${s.last_name}</td>
+    <td>${App.getYearName(s.class_year)}</td>
+    <td style="text-align:center">${s.totalHours}</td>
+    <td style="text-align:center">${s.approvedCount}</td>
+    <td style="text-align:center">${s.pendingCount}</td>
+    <td style="text-align:center;color:${s.passed ? '#16a34a' : '#dc2626'}">${s.passed ? '✓ ผ่าน' : '✗ ไม่ผ่าน'}</td>
+  </tr>`).join('');
+      const w = window.open('', '_blank');
+      w.document.write(`<!DOCTYPE html><html lang="th" style="background:#0c1524"><head><meta charset="UTF-8">
+  <title>สรุปนักเรียนทั้งหมด — วพอ. 2569</title>
+  <style>body{font-family:'Sarabun',sans-serif;color:#111;padding:24px;max-width:1000px;margin:0 auto;}
+  table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+  th{background:#0a1628;color:#fff;padding:10px;text-align:left;}
+  td{border-bottom:1px solid #e5e7eb;padding:8px 10px;}
+  tr:nth-child(even){background:#f9fafb;}
+  h2{margin-bottom:12px;}</style></head>
+  <body style="background:#0c1524"><h2>สรุปนักเรียนทั้งหมด — ระบบบันทึกความดี วพอ. ปีการศึกษา 2569</h2>
+  <p style="margin-bottom:12px">พิมพ์วันที่: ${new Date().toLocaleDateString('th-TH')}</p>
+  <table><thead><tr><th>รหัส</th><th>ชื่อ-สกุล</th><th>ชั้นปี</th><th>รวม ชม.</th><th>อนุมัติ</th><th>รอ</th><th>สถานะ</th></tr></thead>
+  <tbody>${rows}</tbody></table>
+  <script>window.print();<\/script></body></html>`);
+      w.document.close();
+    }
+
+    // ===== TELEGRAM REPORT =====
+    async function sendReportToTelegram() {
+      const settings = App.getSettings();
+      // Changed to settings.telegramToken because adminChatId isn't explicitly checked anywhere else in the code, let's just check the token
+      if (!settings.telegramToken) {
+        showToast('กรุณาตั้งค่า Telegram Token ในเมนูตั้งค่าก่อน', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('btn-send-report');
+      btn.textContent = '⏳ กำลังส่ง...';
+      btn.disabled = true;
+
+      try {
+        const passed = allSummary.filter(s => s.passed).length;
+        const total = allSummary.length;
+        let msg = `📊 <b>รายงานความคืบหน้าความดี วพอ.พอ. ประจำปี ${CONFIG.ACADEMIC_YEAR}</b>\n\n`;
+        msg += `👥 <b>ภาพรวมทั้งหมด</b>\n`;
+        msg += `นักเรียนทั้งหมด: ${total} คน\n`;
+        msg += `✅ ผ่านเกณฑ์: ${passed} คน (${total ? Math.round((passed / total) * 100) : 0}%)\n`;
+        msg += `⚠️ ยังไม่ผ่าน: ${total - passed} คน\n\n`;
+
+        // จัดกลุ่มรายชั้นปี (เอาเฉพาะ 69-66)
+        const yearGroups = {};
+        allSummary.forEach(s => {
+          const cy = s.class_year;
+          if (!yearGroups[cy]) yearGroups[cy] = { total: 0, passed: 0, hours: 0 };
+          yearGroups[cy].total++;
+          if (s.passed) yearGroups[cy].passed++;
+          yearGroups[cy].hours += s.totalHours;
+        });
+
+        const activeYears = [69, 68, 67, 66]; // ปี 1-4
+        for (const cy of activeYears) {
+          if (yearGroups[cy]) {
+            const d = yearGroups[cy];
+            const pct = Math.round((d.passed / d.total) * 100) || 0;
+
+            // หาผู้ที่ทำความดีสูงสุดในชั้นปีนี้
+            const studentsInYear = allSummary.filter(s => s.class_year === cy);
+            let topStudent = null;
+            if (studentsInYear.length > 0) {
+              topStudent = studentsInYear.reduce((prev, current) =>
+                (prev.totalHours > current.totalHours) ? prev : current
+              );
+            }
+
+            msg += `🎓 <b>ชั้นปีที่ ${70 - cy} (รุ่น ${cy})</b>\n`;
+            msg += `   • จำนวน: ${d.total} คน\n`;
+            msg += `   • ผ่านแล้ว: ${d.passed} คน (${pct}%)\n`;
+            msg += `   • ยังไม่ผ่าน: ${d.total - d.passed} คน\n`;
+            if (topStudent && topStudent.totalHours > 0) {
+              msg += `   🏆 <i>ผู้ทำความดีสูงสุด: ${topStudent.rank} ${topStudent.first_name} ${topStudent.last_name} (${topStudent.totalHours} ชม.)</i>\n`;
+            }
+            msg += `\n`;
+          }
+        }
+
+        msg += `<i>ส่งรายงานเมื่อ: ${new Date().toLocaleString('th-TH')}</i>`;
+
+        // It seems the old code checked settings.adminChatId which wasn't always set. Let's send to telegram without it if possible, or use the bot token as chat id if needed?
+        // the original used adminchatid but it requires app.sendtelegram to work properly. let's assume we can fetch adminChatId from settings or we notify that it's needed
+        const chatId = settings.adminChatId || prompt('กรุณาระบุ Chat ID สำหรับรับรายงาน (ใส่ตัวเลข):');
+        if (!chatId) throw new Error("No Chat ID");
+
+        const ok = await App.sendTelegram(chatId, msg);
+        if (ok) {
+          showToast('📤 ส่งรายงานเข้า Telegram สำเร็จ!', 'success');
+          if (!settings.adminChatId) {
+            App.saveSettings({ ...settings, adminChatId: chatId }); // save it for next time
+          }
+        } else {
+          showToast('ไม่สามารถส่ง Telegram ได้ (ตรวจสอบ Token/Chat ID)', 'error');
+        }
+      } catch (e) {
+        showToast('เกิดข้อผิดพลาดในการเชื่อมต่อ หรือยกเลิกการส่ง', 'error');
+      } finally {
+        btn.textContent = '📤 ส่งรายงานเข้า Telegram';
+        btn.disabled = false;
+      }
+    }
+
+
+    init();
+  </script>
+</body>
+
+</html>

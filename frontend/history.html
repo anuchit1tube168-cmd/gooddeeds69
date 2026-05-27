@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ประวัติความดี - ระบบบันทึกความดี</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        .deed-card {
+            background: rgba(14, 31, 61, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            transition: all 0.2s;
+        }
+
+        .deed-card:hover {
+            border-color: rgba(201, 162, 39, 0.25);
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.1);
+        }
+
+        .deed-card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .deed-card-body {
+            flex: 1;
+        }
+
+        .deed-card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .deed-card-desc {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .deed-card-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .deed-card-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .deed-hours-big {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold);
+            line-height: 1;
+        }
+
+        .deed-hours-label {
+            font-size: 0.65rem;
+            color: var(--text-muted);
+        }
+
+        .reject-reason {
+            background: var(--red-bg);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            font-size: 0.78rem;
+            color: #fca5a5;
+            margin-top: 8px;
+        }
+
+        .images-row {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .images-row img {
+            width: 56px;
+            height: 56px;
+            object-fit: cover;
+            border-radius: 6px;
+            border: 1px solid var(--navy-border);
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .images-row img:hover {
+            transform: scale(1.05);
+        }
+
+        /* Summary strip */
+        .summary-strip {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+            margin-bottom: 20px;
+        }
+
+        .strip-item {
+            background: rgba(14, 31, 61, 0.45);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-md);
+            padding: 12px 20px;
+            text-align: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+        .strip-item:hover {
+            border-color: var(--gold);
+            transform: translateY(-1px);
+        }
+
+        .strip-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        .strip-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        /* Image lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .lightbox.hidden {
+            display: none;
+        }
+
+        .lightbox img {
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: var(--radius-sm);
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display:flex;align-items:center;gap:12px">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+            <a href="student-dashboard.html" class="nav-brand">
+            <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+            <div class="nav-brand-text">
+                <span class="title">บันทึกความดี</span>
+                <span class="subtitle">วพอ.พอ. 2569</span>
+            </div>
+        </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-outline btn-sm" onclick="printCurrentStudent()">🖨️ พิมพ์รายงาน</button>
+            <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item active"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <main class="main-content">
+            <div class="flex items-center justify-between mb-16">
+                <h1>📋 ประวัติความดีทั้งหมด</h1>
+                <a href="submit-deed.html" class="btn btn-primary btn-sm">+ บันทึกใหม่</a>
+            </div>
+
+            <!-- Summary Strip -->
+            <div class="summary-strip" id="summary-strip">
+                <div class="strip-item">
+                    <div class="strip-value" id="s-total">-</div>
+                    <div class="strip-label">รวม ชม.</div>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-value text-green" id="s-approved">-</div>
+                    <div class="strip-label">อนุมัติแล้ว</div>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-value text-yellow" id="s-pending">-</div>
+                    <div class="strip-label">รออนุมัติ</div>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-value text-red" id="s-rejected">-</div>
+                    <div class="strip-label">ปฏิเสธ</div>
+                </div>
+                <div class="strip-item">
+                    <div class="strip-value" id="s-count">-</div>
+                    <div class="strip-label">รายการทั้งหมด</div>
+                </div>
+            </div>
+
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <button class="filter-pill active" onclick="filterDeeds('all', this)">ทั้งหมด</button>
+                <button class="filter-pill" onclick="filterDeeds('pending', this)">⏳ รออนุมัติ</button>
+                <button class="filter-pill" onclick="filterDeeds('approved', this)">✅ อนุมัติแล้ว</button>
+                <button class="filter-pill" onclick="filterDeeds('rejected', this)">❌ ถูกปฏิเสธ</button>
+                <select class="form-input" id="cat-filter" onchange="renderDeeds()" style="width:auto;padding:6px 10px;flex-shrink:0">
+                    <option value="">📂 ทุกหมวดหมู่</option>
+                </select>
+                <div class="filter-search">
+                    <input type="text" class="form-input" id="search-input" placeholder="🔍 ค้นหากิจกรรม..."
+                        oninput="renderDeeds()">
+                </div>
+            </div>
+
+            <!-- Deeds List -->
+            <div id="deeds-list"></div>
+        </main>
+    </div>
+
+    <!-- Lightbox -->
+    <div class="lightbox hidden" id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="หลักฐาน">
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="data/students_data.js?v=69"></script>
+    <script src="data/deeds_data.js?v=69"></script>
+    <script src="app.js?v=69"></script>
+    <script>
+        let currentUser = null;
+        let allDeeds = [];
+        let currentFilter = 'all';
+
+        function init() {
+            currentUser = App.requireAuth(['student']);
+            if (!currentUser) return;
+            allDeeds = App.getDeeds(currentUser.student_id)
+                .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+            // Populate category filter dropdown
+            const catSel = document.getElementById('cat-filter');
+            CATEGORIES.forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat.id;
+                opt.textContent = cat.emoji + ' ' + cat.name;
+                catSel.appendChild(opt);
+            });
+            renderSummary();
+            renderDeeds();
+        }
+
+        function renderSummary() {
+            const s = App.getStudentSummary(currentUser.student_id);
+            document.getElementById('s-total').textContent = s.totalHours + ' ชม.';
+            document.getElementById('s-approved').textContent = s.approvedCount;
+            document.getElementById('s-pending').textContent = s.pendingCount;
+            document.getElementById('s-rejected').textContent = s.rejectedCount;
+            document.getElementById('s-count').textContent = s.totalCount;
+        }
+
+        function filterDeeds(status, btn) {
+            if (btn) {
+                document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+                btn.classList.add('active');
+                currentFilter = status;
+            }
+            renderDeeds();
+        }
+
+        function renderDeeds() {
+            const q = (document.getElementById('search-input')?.value || '').toLowerCase();
+            const catId = parseInt(document.getElementById('cat-filter')?.value) || 0;
+            let filtered = allDeeds;
+            if (currentFilter !== 'all') filtered = filtered.filter(d => d.status === currentFilter);
+            if (catId) filtered = filtered.filter(d => d.categoryId === catId);
+            if (q) filtered = filtered.filter(d => {
+                const cat = App.getCategoryById(d.categoryId);
+                return cat.name.toLowerCase().includes(q) || (d.description || '').toLowerCase().includes(q);
+            });
+
+            const container = document.getElementById('deeds-list');
+            if (!filtered.length) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>ไม่พบรายการ</p></div>`;
+                return;
+            }
+
+            const badges = {
+                pending: '<span class="badge badge-pending">⏳ รออนุมัติ</span>',
+                approved: '<span class="badge badge-approved">✅ อนุมัติแล้ว</span>',
+                rejected: '<span class="badge badge-rejected">❌ ถูกปฏิเสธ</span>'
+            };
+
+            container.innerHTML = filtered.map(d => {
+                const cat = App.getCategoryById(d.categoryId);
+                const images = (d.imageUrls || []).map(key => {
+                    const src = App.getImage(key);
+                    return src ? `<img src="${src}" alt="หลักฐาน" onclick="openLightbox('${key}')">` : '';
+                }).join('');
+
+                const rejectBox = d.status === 'rejected' && d.rejectReason
+                    ? `<div class="reject-reason">❌ เหตุผล: ${d.rejectReason}</div>` : '';
+
+                const approvedInfo = d.approvedAt
+                    ? `<span>👨‍⚕️ ${d.approvedBy || 'อาจารย์'}</span><span>✅ ${App.formatDate(d.approvedAt)}</span>`
+                    : '';
+
+                const canDelete = d.status === 'rejected';
+                return `<div class="deed-card">
+          <div class="deed-card-icon" style="background:${cat.bg}">${cat.emoji}</div>
+          <div class="deed-card-body">
+            <div class="deed-card-title">${cat.name}</div>
+            <div class="deed-card-desc">${d.description || '-'}</div>
+            <div class="deed-card-meta">
+              <span>📅 ${App.formatDate(d.activityDate)}</span>
+              <span>📤 ${App.formatDate(d.submittedAt)}</span>
+              ${approvedInfo}
+              ${badges[d.status] || ''}
+            </div>
+            ${d.note ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">💬 ${d.note}</div>` : ''}
+            ${rejectBox}
+            ${images ? `<div class="images-row">${images}</div>` : ''}
+            ${canDelete ? `<div style="margin-top:8px"><button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="deleteDeed('${d.id}')">🗑️ ลบรายการ</button></div>` : ''}
+          </div>
+          <div class="deed-card-right">
+            <div class="deed-hours-big">${d.hours}</div>
+            <div class="deed-hours-label">ชม.</div>
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        function openLightbox(key) {
+            const src = App.getImage(key);
+            if (!src) return;
+            document.getElementById('lightbox-img').src = src;
+            document.getElementById('lightbox').classList.remove('hidden');
+        }
+        function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
+
+        function deleteDeed(deedId) {
+            if (!confirm('ลบรายการนี้ออกจากระบบ?')) return;
+            const deeds = App.getDeeds(currentUser.student_id).filter(d => d.id !== deedId);
+            App.saveDeeds(currentUser.student_id, deeds);
+            allDeeds = deeds.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+            renderSummary();
+            renderDeeds();
+            showToast('ลบรายการแล้ว', 'info');
+        }
+
+        function printCurrentStudent() {
+            if (currentUser) printStudentReport(currentUser.student_id);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

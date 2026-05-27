@@ -1,0 +1,21 @@
+{
+    "id": "deed_sim_69_003_A",
+    "academicYear": 2569,
+    "student": {
+        "student_id": "6900003",
+        "rank": "นพอ.",
+        "first_name": "วรเมธ",
+        "last_name": "รักสงบ",
+        "class_year": 69,
+        "year_level": 1,
+        "role": "student"
+    },
+    "categoryId": 6,
+    "hours": 6.0,
+    "description": "ช่วยทาสีรั้วโบสถ์และกวาดลานวัดพระศรีมหาธาตุวรมหาวิหาร บางเขน",
+    "activityDate": "2026-05-20",
+    "status": "approved",
+    "submittedAt": "2026-05-27T04:20:00.000Z",
+    "approvedBy": "อาจารย์พรนภา",
+    "approvedAt": "2026-05-27T05:21:47Z"
+}

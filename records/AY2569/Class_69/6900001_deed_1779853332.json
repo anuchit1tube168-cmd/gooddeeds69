@@ -1,0 +1,11 @@
+{
+    "academicYear": 2569,
+    "student": {
+        "year_level": 1,
+        "class_year": 69,
+        "student_id": "6900001"
+    },
+    "categoryId": "1",
+    "hours": 2,
+    "description": "Test Backend"
+}

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ตั้งค่าระบบ - ระบบบันทึกความดี</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+</head>
+
+<body>
+    <nav class="top-nav">
+        <a href="teacher-dashboard.html" class="nav-brand">
+            <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+            <div class="nav-brand-text"><span class="title">บันทึกความดี</span><span class="subtitle">วพอ.พอ.
+                    2569</span></div>
+        </a>
+        <div class="nav-actions">
+            <button class="btn btn-outline btn-sm" onclick="history.back()">← กลับ</button>
+        </div>
+    </nav>
+    <div class="layout">
+        <main class="main-content">
+            <h1 class="mb-24">⚙️ ตั้งค่าระบบ</h1>
+            <div style="max-width:640px; display:flex; flex-direction:column; gap:16px;">
+
+                <!-- Telegram Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">💬</span> การแจ้งเตือน Telegram</div>
+                    </div>
+                    <div
+                        style="background:rgba(29,161,242,0.08);border:1px solid rgba(29,161,242,0.2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.82rem;color:var(--text-secondary)">
+                        <p><strong style="color:#1da1f2">📌 วิธีตั้งค่า Telegram Bot:</strong></p>
+                        <ol style="padding-left:16px;margin-top:8px; line-height:2">
+                            <li>เปิด Telegram → ค้นหา <strong>@BotFather</strong></li>
+                            <li>พิมพ์ <code>/newbot</code> และตั้งชื่อ Bot</li>
+                            <li>BotFather จะส่ง <strong>Token</strong> ให้</li>
+                            <li>ให้อาจารย์ start Bot แล้วใช้ <a href="https://t.me/userinfobot" target="_blank"
+                                    style="color:#1da1f2">@userinfobot</a> หา Chat ID</li>
+                            <li>กรอก Token และ Admin Chat ID ด้านล่าง</li>
+                        </ol>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Telegram Bot Token</label>
+                        <input type="text" class="form-input" id="setting-token"
+                            placeholder="1234567890:ABCDEFGHijklmnop-QRSTUVWXYZ">
+                        <div class="form-hint">Token จาก @BotFather ห้ามเผยแพร่</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Admin Chat ID (อาจารย์/Admin)</label>
+                        <input type="text" class="form-input" id="setting-admin-chat" placeholder="เช่น 123456789">
+                        <div class="form-hint">Chat ID ของอาจารย์ที่รับแจ้งเตือน</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="testTelegram()">🧪 ทดสอบการแจ้งเตือน</button>
+                </div>
+
+                <!-- LINE Notify Section -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">💚</span> การแจ้งเตือน LINE Notify</div>
+                    </div>
+                    <div
+                        style="background:rgba(6,199,85,0.08);border:1px solid rgba(6,199,85,0.2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.82rem;color:var(--text-secondary)">
+                        <p><strong style="color:#06c755">📌 วิธีตั้งค่า LINE Notify:</strong></p>
+                        <ol style="padding-left:16px;margin-top:8px; line-height:2">
+                            <li>ไปที่ <a href="https://notify-bot.line.me/my/" target="_blank"
+                                    style="color:#06c755">notify-bot.line.me</a></li>
+                            <li>Login ด้วยบัญชี LINE แล้วกด <strong>"Generate Token"</strong></li>
+                            <li>เลือกกลุ่ม LINE ที่ต้องการรับแจ้งเตือน หรือเลือก "1-on-1 chat"</li>
+                            <li>Copy Token มาวางด้านล่าง</li>
+                        </ol>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LINE Notify Token</label>
+                        <input type="text" class="form-input" id="setting-line-token"
+                            placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxx">
+                        <div class="form-hint">Token จาก LINE Notify (ใช้แจ้งเตือนเข้ากลุ่ม LINE)</div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="testLine()">🧪 ทดสอบ LINE Notify</button>
+                </div>
+
+                <!-- System Settings -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">📊</span> เกณฑ์ชั่วโมง</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ชั่วโมงขั้นต่ำต่อปีการศึกษา</label>
+                        <input type="number" class="form-input" id="setting-min-hours" value="36" min="1" max="200"
+                            step="1">
+                        <div class="form-hint">นักเรียนต้องสะสมครบจำนวนนี้จึงจะถือว่าผ่าน</div>
+                    </div>
+                </div>
+
+                <!-- Academic Year -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">📅</span> ปีการศึกษา</div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">ปีการศึกษาปัจจุบัน (พ.ศ.)</label>
+                        <input type="number" class="form-input" id="setting-year" value="2569" min="2560" max="2600">
+                    </div>
+                </div>
+
+                <!-- Teacher Accounts -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">👩‍🏫</span> บัญชีอาจารย์</div>
+                    </div>
+                    <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
+                        บัญชีสำหรับเข้าระบบในฐานะอาจารย์ (ค่าเริ่มต้น)</div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ชื่อผู้ใช้</th>
+                                    <th>บทบาท</th>
+                                    <th>ชื่อ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><code>admin</code></td>
+                                    <td><span class="badge badge-gold">Admin</span></td>
+                                    <td>ผู้ดูแลระบบ</td>
+                                </tr>
+                                <tr>
+                                    <td><code>teacher</code></td>
+                                    <td><span class="badge badge-blue">Teacher</span></td>
+                                    <td>อาจารย์</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="form-hint mt-8">รหัสผ่านเริ่มต้น: <code>admin69</code> / <code>teacher69</code>
+                        (แก้ไขได้ใน app.js)</div>
+                </div>
+
+                <!-- Google Apps Script URL -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">☁️</span> Google Apps Script (ออนไลน์)</div>
+                    </div>
+                    <div
+                        style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;font-size:0.82rem;color:var(--text-secondary)">
+                        📁 ไฟล์ <strong>backend/Code.gs</strong> ในโฟลเดอร์นี้ — อัปโหลดขึ้น Google Apps Script
+                        เพื่อเปิดใช้งานออนไลน์
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GAS Web App URL (หลัง deploy)</label>
+                        <input type="url" class="form-input" id="setting-gas-url"
+                            placeholder="https://script.google.com/macros/s/.../exec">
+                    </div>
+                </div>
+
+                <!-- Save Button -->
+                <div class="flex gap-8">
+                    <button class="btn btn-primary" onclick="saveSettings()" style="flex:1">💾 บันทึกการตั้งค่า</button>
+                    <button class="btn btn-outline" onclick="resetSettings()">↩️ รีเซ็ต</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="data/students_data.js"></script>
+    <script src="data/deeds_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        function init() {
+            const currentUser = App.requireAuth(['admin']);
+            if (!currentUser) return;
+            const settings = App.getSettings();
+            document.getElementById('setting-token').value = settings.telegramToken || '';
+            document.getElementById('setting-admin-chat').value = settings.adminChatId || '';
+            document.getElementById('setting-line-token').value = settings.lineNotifyToken || '';
+            document.getElementById('setting-min-hours').value = settings.minHours || 36;
+            document.getElementById('setting-year').value = settings.academicYear || 2569;
+            document.getElementById('setting-gas-url').value = settings.gasUrl || '';
+        }
+
+        function saveSettings() {
+            const s = {
+                telegramToken: document.getElementById('setting-token').value.trim(),
+                adminChatId: document.getElementById('setting-admin-chat').value.trim(),
+                lineNotifyToken: document.getElementById('setting-line-token').value.trim(),
+                minHours: parseInt(document.getElementById('setting-min-hours').value) || 36,
+                academicYear: parseInt(document.getElementById('setting-year').value) || 2569,
+                gasUrl: document.getElementById('setting-gas-url').value.trim(),
+            };
+            App.saveSettings(s);
+            CONFIG.MIN_HOURS_PER_YEAR = s.minHours;
+            showToast('บันทึกการตั้งค่าสำเร็จ ✅', 'success');
+        }
+
+        async function testTelegram() {
+            const token = document.getElementById('setting-token').value.trim();
+            const chatId = document.getElementById('setting-admin-chat').value.trim();
+            if (!token || !chatId) { showToast('กรุณากรอก Token และ Chat ID ก่อน', 'warning'); return; }
+            App.saveSettings({ ...App.getSettings(), telegramToken: token, adminChatId: chatId });
+            const ok = await App.sendTelegram(chatId, `🧪 <b>ทดสอบการแจ้งเตือน</b>\nระบบบันทึกความดี วพอ.พอ. ✅`);
+            if (ok) showToast('ส่งข้อความ Telegram สำเร็จ! 🎉', 'success');
+            else showToast('ไม่สามารถส่งได้ — ตรวจสอบ Token และ Chat ID', 'error');
+        }
+
+        async function testLine() {
+            const token = document.getElementById('setting-line-token').value.trim();
+            if (!token) { showToast('กรุณากรอก LINE Notify Token ก่อน', 'warning'); return; }
+            App.saveSettings({ ...App.getSettings(), lineNotifyToken: token });
+            const ok = await App.sendLineNotify('\n🧪 ทดสอบ LINE Notify\nระบบบันทึกความดี วพอ.พอ. ✅');
+            if (ok) showToast('ส่ง LINE Notify สำเร็จ! 🎉', 'success');
+            else showToast('ไม่สามารถส่งได้ — ตรวจสอบ Token (CORS อาจบล็อกจาก browser)', 'error');
+        }
+
+        function resetSettings() {
+            if (!confirm('รีเซ็ตการตั้งค่าทั้งหมด?')) return;
+            App.saveSettings({});
+            init();
+            showToast('รีเซ็ตแล้ว', 'info');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

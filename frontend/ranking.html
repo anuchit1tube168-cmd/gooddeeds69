@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>จัดอันดับและสถิติ - ระบบบันทึกความดี</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        /* Shared Styles from Dashboards */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid var(--navy-border);
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-primary);
+        }
+
+        .tab-btn.active {
+            color: var(--gold);
+            border-bottom-color: var(--gold);
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .year-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .year-stat-card {
+            background: rgba(14, 31, 61, 0.45);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .year-stat-card:hover {
+            border-color: rgba(201, 162, 39, 0.25);
+            box-shadow: var(--shadow-lg), var(--shadow-gold);
+            transform: translateY(-2px);
+        }
+
+        .year-stat-title {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .year-mini-stats {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+
+        .year-mini {
+            text-align: center;
+        }
+
+        .year-mini .v {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: 'Kanit', sans-serif;
+            line-height: 1;
+        }
+
+        .year-mini .l {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .cat-bar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .cat-bar-item {
+            display: grid;
+            grid-template-columns: 160px 1fr 60px;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cat-bar-label {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .cat-bar-track {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .cat-bar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.5s;
+        }
+
+        .cat-bar-val {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .smodal-header {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .smodal-kv {
+            background: var(--input-bg);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+        }
+
+        .smodal-kv .k {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .smodal-kv .v {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .deed-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 0;
+            border-bottom: 1px solid rgba(30, 58, 110, 0.3);
+        }
+
+        .deed-row:last-child {
+            border-bottom: none;
+        }
+
+        .ibar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .ibar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 999px;
+            overflow: hidden;
+            min-width: 80px;
+        }
+
+        .ibar-fill {
+            height: 100%;
+            border-radius: 999px;
+            transition: width 0.4s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav class="top-nav">
+        <div style="display:flex;align-items:center;gap:12px">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+            <a href="#" class="nav-brand" id="nav-brand-link">
+                <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+                <div class="nav-brand-text">
+                    <span class="title">สถิติและจัดอันดับ</span>
+                    <span class="subtitle">วพอ.พอ. 2569</span>
+                </div>
+            </a>
+        </div>
+        <div class="nav-actions">
+            <div class="nav-user">
+                <div class="avatar" id="nav-avatar">👤</div>
+                <span id="nav-name" class="text-sm text-muted">กำลังโหลด...</span>
+                <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR (Off-canvas) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu" id="sidebar-menu">
+                <!-- Injected by JS based on role -->
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <div class="tab-bar">
+                <button class="tab-btn active" id="tb-students" onclick="switchTab('students')">👥
+                    จัดอันดับนักเรียน</button>
+                <button class="tab-btn" id="tb-stats" onclick="switchTab('stats')">📊 สถิติภาพรวม</button>
+            </div>
+
+            <!-- TAB: STUDENTS (LEADERBOARD) -->
+            <div class="tab-pane active" id="pane-students">
+                <div class="card crystal-card" style="padding: 24px;">
+                    <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                        <span class="light red"></span>
+                        <span class="light yellow"></span>
+                        <span class="light green"></span>
+                        <span class="mac-title">Leaderboard - ทำเนียบความดี</span>
+                    </div>
+                    <div class="sec-hdr" style="display:flex; justify-content:space-between; align-items:center;">
+                        <h2>🏆 ทำเนียบความดี / จัดอันดับนักเรียน</h2>
+                    </div>
+
+                <div class="filter-bar" style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap;">
+                    <button class="filter-pill active" onclick="setYearFilter('all',this)">ทั้งหมด</button>
+                    <button class="filter-pill" onclick="setYearFilter(68,this)">ปี 2 (68)</button>
+                    <button class="filter-pill" onclick="setYearFilter(67,this)">ปี 3 (67)</button>
+                    <button class="filter-pill" onclick="setYearFilter(66,this)">ปี 4 (66)</button>
+                    <button class="filter-pill" onclick="setYearFilter(65,this)">ศิษย์เก่า 65</button>
+
+                    <div style="margin-left:auto; display:flex; gap:8px;">
+                        <select class="form-input" id="sort-order" onchange="renderStudents()"
+                            style="padding:4px 8px; width:auto;">
+                            <option value="desc">ชม. มากไปน้อย (สูงสุด)</option>
+                            <option value="asc">ชม. น้อยไปมาก (ต่ำสุด)</option>
+                        </select>
+                        <input type="text" class="form-input" id="stu-search" placeholder="🔍 ค้นหาชื่อ/รหัส..."
+                            oninput="renderStudents()" style="padding:4px 8px; width:150px;">
+                    </div>
+                </div>
+
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:60px;text-align:center;">อันดับ</th>
+                                <th>รหัส</th>
+                                <th>ยศ-ชื่อ-สกุล</th>
+                                <th>ชั้นปี</th>
+                                <th>รวม ชม.</th>
+                                <th style="min-width:130px">ความคืบหน้า</th>
+                                <th>สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stu-tbody"></tbody>
+                    </table>
+                </div>
+            </div></div>
+
+            <!-- TAB: STATS -->
+            <div class="tab-pane" id="pane-stats">
+                <div class="sec-hdr">
+                    <h2>📊 สถิติภาพรวม — ปีการศึกษา 2569</h2>
+                </div>
+                <div id="stats-content"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: STUDENT DETAIL -->
+    <div class="modal-overlay" id="stu-modal">
+        <div class="modal" style="max-width:760px;width:95vw">
+            <div class="modal-header">
+                <div class="modal-title" id="smod-title">รายละเอียดนักเรียน</div>
+                <button class="modal-close" onclick="closeStuModal()">✕</button>
+            </div>
+            <div id="smod-body"></div>
+        </div>
+    </div>
+
+    <script src="data/students_data.js"></script>
+    <script src="data/students_photos.js"></script>
+    <script src="data/deeds_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        let currentUser = null;
+        let allSummary = [];
+        let yearFilter = 'all';
+
+        function init() {
+            currentUser = App.requireAuth(['student', 'teacher', 'admin']);
+            if (!currentUser) return;
+
+            // Render nav profile
+            if (currentUser.role === 'student') {
+                document.getElementById('nav-name').textContent = currentUser.first_name || 'นักเรียน';
+                const initials = (currentUser.first_name || '?')[0];
+                const photo = App.getProfilePhoto(currentUser.student_id);
+                if (photo) document.getElementById('nav-avatar').innerHTML = `<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+                else document.getElementById('nav-avatar').textContent = initials;
+                document.getElementById('nav-brand-link').href = 'student-dashboard.html';
+
+                renderStudentSidebar();
+            } else {
+                document.getElementById('nav-name').textContent = currentUser.name || currentUser.username;
+                document.getElementById('nav-avatar').textContent = '👩‍🏫';
+                document.getElementById('nav-brand-link').href = 'teacher-dashboard.html';
+
+                renderTeacherSidebar();
+            }
+
+            loadData();
+        }
+
+        function renderStudentSidebar() {
+            document.getElementById('sidebar-menu').innerHTML = `
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="ranking.html" class="sidebar-item active"><span class="icon">🏆</span> จัดอันดับ & สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            `;
+        }
+
+        function renderTeacherSidebar() {
+            document.getElementById('sidebar-menu').innerHTML = `
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="teacher-dashboard.html" class="sidebar-item"><span class="icon">⬅️</span> กลับหน้าอาจารย์</a>
+                <a href="ranking.html" class="sidebar-item active"><span class="icon">🏆</span> จัดอันดับ & สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <a href="settings.html" class="sidebar-item" ${currentUser.role !== 'admin' ? 'style="display:none"' : ''}><span class="icon">⚙️</span> ตั้งค่าระบบ</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            `;
+        }
+
+        function loadData() {
+            allSummary = App.getAllStudentsSummary();
+            // Default sort: highest hours first
+            allSummary.sort((a, b) => b.totalHours - a.totalHours);
+
+            renderStudents();
+            renderStats();
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('pane-' + name).classList.add('active');
+            document.getElementById('tb-' + name).classList.add('active');
+        }
+
+        function setYearFilter(val, btn) {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            yearFilter = val;
+            renderStudents();
+        }
+
+        function renderStudents() {
+            const q = (document.getElementById('stu-search')?.value || '').toLowerCase();
+            const sortOrder = document.getElementById('sort-order').value;
+
+            let data = [...allSummary];
+
+            if (yearFilter !== 'all') {
+                data = data.filter(s => Number(s.class_year) === Number(yearFilter) || s.class_year === yearFilter);
+            }
+
+            if (q) {
+                data = data.filter(s =>
+                    s.student_id.includes(q) ||
+                    (s.first_name || '').toLowerCase().includes(q) ||
+                    (s.last_name || '').toLowerCase().includes(q) ||
+                    (s.rank || '').toLowerCase().includes(q)
+                );
+            }
+
+            // Sort
+            if (sortOrder === 'desc') {
+                data.sort((a, b) => b.totalHours - a.totalHours);
+            } else {
+                data.sort((a, b) => a.totalHours - b.totalHours);
+            }
+
+            const tbody = document.getElementById('stu-tbody');
+            if (!data.length) { tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state"><div class="icon">👥</div><p>ไม่พบนักเรียน</p></div></td></tr>`; return; }
+
+            tbody.innerHTML = data.map((s, index) => {
+                const pct = Math.min((s.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
+                const col = s.passed ? '#22c55e' : (pct > 60 ? '#f59e0b' : '#ef4444');
+
+                // Rank visualization
+                let rankVisual = index + 1;
+                if (sortOrder === 'desc') {
+                    if (index === 0) rankVisual = '🥇';
+                    else if (index === 1) rankVisual = '🥈';
+                    else if (index === 2) rankVisual = '🥉';
+                    else rankVisual = `<span style="color:var(--text-muted);font-weight:700">${index + 1}</span>`;
+                } else {
+                    rankVisual = `<span style="color:var(--text-muted);font-weight:700">${index + 1}</span>`;
+                }
+
+                return `<tr style="cursor:pointer" onclick="openStuModal('${s.student_id}')">
+                    <td style="text-align:center;font-size:1.2rem;">${rankVisual}</td>
+                    <td class="id-cell">${s.student_id}</td>
+                    <td style="font-weight:600;color:var(--text-primary)">${s.rank} ${s.first_name} ${s.last_name}</td>
+                    <td>${App.getYearName(s.class_year)}</td>
+                    <td style="font-weight:700;color:var(--gold);font-size:1.1rem">${s.totalHours}</td>
+                    <td>
+                        <div class="ibar-wrap">
+                            <div class="ibar"><div class="ibar-fill" style="width:${pct}%;background:${col}"></div></div>
+                            <span style="font-size:0.72rem;color:var(--text-muted);white-space:nowrap">${Math.round(pct)}%</span>
+                        </div>
+                    </td>
+                    <td>${s.passed ? '<span class="badge badge-approved">✅ ผ่าน</span>' : '<span class="badge badge-pending">⏳ ยังไม่ผ่าน</span>'}</td>
+                </tr>`;
+            }).join('');
+        }
+
+        // ===== MODAL (Reused logic from teacher dash) =====
+        function openStuModal(sid) {
+            const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+            const stu = students.find(s => s.student_id === sid);
+            if (!stu) return;
+            const summ = App.getStudentSummary(sid);
+            const deeds = App.getDeeds(sid).filter(d => d.status === 'approved').sort((a, b) => new Date(b.approvedAt) - new Date(a.approvedAt));
+            const pct = Math.min((summ.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
+
+            document.getElementById('smod-title').innerHTML = `👤 ${stu.rank} ${stu.first_name} ${stu.last_name}`;
+
+            const photo = App.getProfilePhoto(sid);
+            const photoHtml = photo
+                ? `<div style="text-align:center;margin-bottom:16px"><img src="${photo}" alt="" style="width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--gold);box-shadow:0 0 12px rgba(201,162,39,0.3)"></div>`
+                : '';
+
+            const catRows = summ.byCategory.filter(c => c.hours > 0).map(c => {
+                const maxH = Math.max(...summ.byCategory.map(x => x.hours), 1);
+                const w = Math.round((c.hours / maxH) * 100);
+                return `<div class="cat-bar-item">
+                    <div class="cat-bar-label">${c.emoji} ${c.name}</div>
+                    <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${w}%;background:${c.color}"></div></div>
+                    <div class="cat-bar-val">${c.hours} ชม.</div>
+                </div>`;
+            }).join('');
+
+            const deedRows = deeds.slice(0, 10).map(d => {
+                const cat = App.getCategoryById(d.categoryId);
+                return `<div class="deed-row">
+                    <span>${cat.emoji}</span>
+                    <span style="flex:1;font-size:0.82rem;color:var(--text-secondary)">${d.description || cat.name}</span>
+                    <span style="font-size:0.82rem;font-weight:700;color:var(--gold)">${d.hours} ชม.</span>
+                </div>`;
+            }).join('');
+
+            document.getElementById('smod-body').innerHTML = photoHtml + `
+                <div class="smodal-header">
+                    <div class="smodal-kv"><div class="k">รหัสนักเรียน</div><div class="v">${stu.student_id}</div></div>
+                    <div class="smodal-kv"><div class="k">ชั้นปี</div><div class="v">${App.getYearName(stu.class_year)}</div></div>
+                    <div class="smodal-kv"><div class="k">รวมชั่วโมง (ที่อนุมัติแล้ว)</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
+                    <div class="smodal-kv"><div class="k">สถานะ</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label"><span>ความคืบหน้า</span><span>${summ.totalHours} / ${CONFIG.MIN_HOURS_PER_YEAR} ชม.</span></div>
+                    <div class="progress-track"><div class="progress-fill ${summ.passed ? 'green' : ''}" style="width:${pct}%"></div></div>
+                </div>
+                ${catRows ? `<div style="margin-bottom:14px"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:10px">ชั่วโมงตามหมวดหมู่ (เฉพาะที่ได้รับอนุมัติแล้ว)</div><div class="cat-bar-list">${catRows}</div></div>` : ''}
+                <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:8px">ผลงานที่อนุมัติล่าสุด (${deeds.length} รายการ)</div>
+                <div style="max-height:240px;overflow-y:auto;border-radius:var(--radius-sm);border:1px solid var(--navy-border);padding:8px 12px">${deedRows || '<div class="empty-state" style="padding:20px"><p>ไม่มีรายการ</p></div>'}</div>
+            `;
+            document.getElementById('stu-modal').classList.add('open');
+        }
+        function closeStuModal() { document.getElementById('stu-modal').classList.remove('open'); }
+
+        // ===== STATS =====
+        function renderStats() {
+            const years = [
+                { label: 'ชั้นปีที่ 2', sub: 'รุ่น 68', year: 68, col: '#3b82f6' },
+                { label: 'ชั้นปีที่ 3', sub: 'รุ่น 67', year: 67, col: '#8b5cf6' },
+                { label: 'ชั้นปีที่ 4', sub: 'รุ่น 66', year: 66, col: '#22c55e' },
+                { label: 'ศิษย์เก่า 65', sub: 'SWD65', year: 65, col: '#f59e0b' },
+            ];
+
+            const catTotals = CATEGORIES.map(cat => ({
+                ...cat,
+                total: allSummary.reduce((a, s) => {
+                    const d = App.getDeeds(s.student_id).filter(x => x.status === 'approved' && x.categoryId === cat.id);
+                    return a + d.reduce((b, x) => b + x.hours, 0);
+                }, 0)
+            })).filter(c => c.total > 0).sort((a, b) => b.total - a.total);
+            const maxCat = catTotals[0]?.total || 1;
+
+            const yearCards = years.map(y => {
+                const ys = allSummary.filter(s => s.class_year === y.year);
+                const passed = ys.filter(s => s.passed).length;
+                const totalH = ys.reduce((a, s) => a + s.totalHours, 0);
+                const avgH = ys.length ? Math.round(totalH / ys.length) : 0;
+                const pct = ys.length ? Math.round((passed / ys.length) * 100) : 0;
+                return `<div class="year-stat-card">
+                    <div class="year-stat-title">
+                        <span>${y.label} <span style="font-size:0.75rem;color:var(--text-muted)">(${y.sub})</span></span>
+                        <span class="badge badge-gold">${ys.length} คน</span>
+                    </div>
+                    <div class="year-mini-stats">
+                        <div class="year-mini"><div class="v" style="color:var(--green)">${passed}</div><div class="l">ผ่านเกณฑ์</div></div>
+                        <div class="year-mini"><div class="v" style="color:var(--yellow)">${ys.length - passed}</div><div class="l">ยังไม่ผ่าน</div></div>
+                        <div class="year-mini"><div class="v" style="color:var(--gold)">${totalH}</div><div class="l">ชม. รวม</div></div>
+                        <div class="year-mini"><div class="v" style="color:var(--blue)">${avgH}</div><div class="l">ชม. เฉลี่ย</div></div>
+                    </div>
+                    <div class="progress-container" style="margin-bottom:0">
+                        <div class="progress-label"><span>ผ่านเกณฑ์ ${passed}/${ys.length} คน</span><span style="font-weight:700;color:${pct >= 80 ? 'var(--green)' : 'var(--yellow)'}">${pct}%</span></div>
+                        <div class="progress-track"><div class="progress-fill ${pct >= 80 ? 'green' : ''}" style="width:${pct}%;background:${pct >= 80 ? '' : 'linear-gradient(90deg,' + y.col + 'aa,' + y.col + ')'};"></div></div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            const catBars = catTotals.map(c => `
+                <div class="cat-bar-item">
+                    <div class="cat-bar-label">${c.emoji} ${c.name}</div>
+                    <div class="cat-bar-track"><div class="cat-bar-fill" style="width:${Math.round((c.total / maxCat) * 100)}%;background:${c.color}"></div></div>
+                    <div class="cat-bar-val">${c.total} ชม.</div>
+                </div>`).join('');
+
+            const totalPass = allSummary.filter(s => s.passed).length;
+            const overallPct = allSummary.length ? Math.round((totalPass / allSummary.length) * 100) : 0;
+            const topStudent = [...allSummary].sort((a, b) => b.totalHours - a.totalHours)[0];
+
+            document.getElementById('stats-content').innerHTML = `
+                <div class="card crystal-card mb-24" style="margin-bottom:20px; padding: 24px;">
+                    <div class="mac-traffic-lights" style="margin-bottom:16px;">
+                        <span class="light red"></span>
+                        <span class="light yellow"></span>
+                        <span class="light green"></span>
+                        <span class="mac-title">ภาพรวมสถาบัน</span>
+                    </div>
+                    <div style="display:flex; flex-wrap:wrap; gap:20px; width:100%;">
+                        <div style="flex:2; min-width:250px;">
+                            <div class="card-title" style="margin-bottom:16px">🎯 สรุปภาพรวมทั้งสถาบัน</div>
+                            <div class="progress-container">
+                                <div class="progress-label">
+                                    <span>ผ่านเกณฑ์ ${totalPass} / ${allSummary.length} คน</span>
+                                    <span style="font-size:1.2rem;font-weight:700;color:${overallPct >= 80 ? 'var(--green)' : 'var(--yellow)'}">${overallPct}%</span>
+                                </div>
+                                <div class="progress-track" style="height:14px"><div class="progress-fill ${overallPct >= 80 ? 'green' : ''}" style="width:${overallPct}%"></div></div>
+                            </div>
+                        </div>
+                        ${topStudent && topStudent.totalHours > 0 ? `
+                            <div style="flex:1; min-width:200px; padding:16px; background:linear-gradient(135deg, rgba(201,162,39,0.1), rgba(10,22,40,0.5)); border-radius:8px; border:1px solid rgba(201,162,39,0.3); text-align:center;">
+                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:8px;">🏆 นักเรียนที่ทำความดีสูงสุด</div>
+                                <div style="font-weight:700; font-size:1.1rem; color:var(--gold)">${topStudent.rank} ${topStudent.first_name} ${topStudent.last_name}</div>
+                                <div style="font-family:'Kanit',sans-serif; font-size:1.8rem; font-weight:800; color:var(--text-primary); margin-top:4px;">${topStudent.totalHours} <span style="font-size:0.8rem; font-weight:400; color:var(--text-muted)">ชม.</span></div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                <div class="year-stats-grid mb-24" style="margin-bottom:20px">${yearCards}</div>
+                ${catBars ? `<div class="card crystal-card"><div class="mac-traffic-lights" style="margin-bottom:16px;"><span class="light red"></span><span class="light yellow"></span><span class="light green"></span><span class="mac-title">แยกหมวดหมู่</span></div><div class="card-title" style="margin-bottom:16px">📈 ชั่วโมงรวมตามหมวดหมู่</div><div class="cat-bar-list">${catBars}</div></div>` : ''}
+            `;
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard นักเรียน - ระบบบันทึกความดี</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        /* Hero card */
+        .hero-card {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(10, 22, 40, 0.9) 60%);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 28px;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .hero-card::before {
+            content: '🎖️';
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 6rem;
+            opacity: 0.06;
+            pointer-events: none;
+        }
+
+        .hero-avatar {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--navy);
+            font-family: 'Kanit', sans-serif;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.3), 0 4px 16px rgba(201, 162, 39, 0.3);
+        }
+
+        .hero-info .name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .hero-info .meta {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero-info .meta span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Status Banner */
+        .status-banner {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            border-radius: var(--radius-md);
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        .status-banner.pass {
+            background: var(--green-bg);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: var(--green);
+        }
+
+        .status-banner.fail {
+            background: var(--yellow-bg);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            color: var(--yellow);
+        }
+
+        .status-banner .icon {
+            font-size: 1.5rem;
+        }
+
+        .status-banner .detail {
+            font-size: 0.8rem;
+            font-weight: 400;
+            margin-top: 2px;
+        }
+
+        /* Category bars */
+        .cat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .cat-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .cat-icon-sm {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .cat-row-info {
+            flex: 1;
+        }
+
+        .cat-row-name {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cat-row-name .hrs {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Quick actions */
+        .action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .action-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+
+        .action-card:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .action-card .ac-icon {
+            font-size: 1.8rem;
+        }
+
+        .action-card .ac-label {
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Recent deeds */
+        .deed-item {
+            padding: 14px 0;
+            border-bottom: 1px solid rgba(30, 58, 110, 0.3);
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .deed-item:last-child {
+            border-bottom: none;
+        }
+
+        .deed-cat-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-top: 5px;
+            flex-shrink: 0;
+        }
+
+        .deed-content {
+            flex: 1;
+        }
+
+        .deed-title {
+            font-size: 0.875rem;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .deed-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .deed-right {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+        .deed-hours {
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: var(--gold);
+        }
+
+        /* Cols */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Mobile-responsive Category Slider */
+        .cat-slider-container {
+            display: flex;
+            gap: 14px;
+            overflow-x: auto;
+            padding: 8px 4px 16px;
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none; /* Hide standard scrollbars */
+            margin-bottom: 8px;
+        }
+        
+        .cat-slider-container::-webkit-scrollbar {
+            display: none; /* Hide Webkit scrollbars */
+        }
+
+        .cat-slide-card {
+            flex: 0 0 160px;
+            scroll-snap-align: start;
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.45) 0%, rgba(10, 22, 40, 0.75) 100%);
+            border: 1px solid rgba(30, 58, 110, 0.7);
+            border-radius: var(--radius-md);
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+        }
+
+        .cat-slide-card:hover {
+            border-color: rgba(201, 162, 39, 0.4);
+            transform: translateY(-3px);
+            color: var(--text-primary);
+        }
+
+        .cat-slide-card.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15) 0%, rgba(10, 22, 40, 0.95) 100%);
+            color: var(--gold);
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
+        }
+
+        .cat-slide-card .card-emoji {
+            font-size: 2rem;
+            margin-bottom: 2px;
+            transition: transform 0.3s;
+        }
+
+        .cat-slide-card:hover .card-emoji, .cat-slide-card.selected .card-emoji {
+            transform: scale(1.15);
+        }
+
+        .cat-slide-card .card-name {
+            font-size: 0.8rem;
+            font-weight: 500;
+            line-height: 1.3;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .cat-slide-card .card-hours {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-top: auto;
+            color: var(--text-primary);
+        }
+        
+        .cat-slide-card.selected .card-hours {
+            color: var(--gold);
+        }
+
+        /* Desktop view: Grid */
+        @media (min-width: 900px) {
+            .cat-slider-container {
+                display: grid;
+                grid-template-columns: repeat(5, 1fr);
+                gap: 14px;
+                overflow-x: visible;
+                scroll-snap-type: none;
+                margin-bottom: 16px;
+            }
+            .cat-slide-card {
+                flex: unset;
+            }
+        }
+
+        /* Table styles */
+        .interactive-table-card {
+            margin-top: 24px;
+            margin-bottom: 24px;
+        }
+
+        .deed-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .deed-table th {
+            background: #0a1628;
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--navy-border);
+            text-align: left;
+        }
+
+        .deed-table td {
+            padding: 14px 16px;
+            font-size: 0.85rem;
+            border-bottom: 1px solid rgba(30, 58, 110, 0.4);
+            color: var(--text-primary);
+        }
+
+        .deed-table tbody tr {
+            transition: background 0.2s;
+        }
+
+        .deed-table tbody tr:hover {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .deed-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .deed-table .table-desc {
+            color: var(--text-secondary);
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        
+        .deed-table .badge {
+            font-size: 0.7rem;
+        }
+        
+        /* ===== macOS Crystal Chibi Card ===== */
+        .crystal-card {
+            background: rgba(14, 31, 61, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            position: relative;
+            overflow: hidden;
+            padding: 24px !important;
+        }
+        
+        .mac-traffic-lights {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 12px;
+        }
+        
+        .mac-traffic-lights .light {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        
+        .mac-traffic-lights .red { background: #ff5f56; }
+        .mac-traffic-lights .yellow { background: #ffbd2e; }
+        .mac-traffic-lights .green { background: #27c93f; }
+        
+        .mac-traffic-lights .mac-title {
+            margin-left: 12px;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .crystal-grid {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+        
+        @media (max-width: 600px) {
+            .crystal-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .chibi-visual-section {
+                justify-content: center;
+            }
+        }
+        
+        .chibi-visual-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .chibi-avatar-glow {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(201, 162, 39, 0.2) 0%, transparent 70%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .chibi-avatar-glow span {
+            transition: transform 0.3s ease;
+        }
+        
+        .chibi-avatar-glow:hover span {
+            transform: scale(1.15) rotate(5deg);
+        }
+        
+        /* Leveling glow effects */
+        .chibi-avatar-glow.lv1 { background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv2 { background: radial-gradient(circle, rgba(245, 158, 11, 0.3) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv3 { background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv4 { background: radial-gradient(circle, rgba(6, 182, 212, 0.4) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv5 { background: radial-gradient(circle, rgba(34, 197, 94, 0.45) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv6 { background: radial-gradient(circle, rgba(236, 72, 153, 0.5) 0%, transparent 70%); }
+        .chibi-avatar-glow.lv7 {
+            background: radial-gradient(circle, rgba(201, 162, 39, 0.55) 0%, transparent 70%);
+            animation: level7-glow 4s ease-in-out infinite;
+        }
+        .chibi-avatar-glow.lv8 {
+            background: radial-gradient(circle, rgba(201, 162, 39, 0.6) 0%, radial-gradient(circle, rgba(168, 85, 247, 0.4) 0%, transparent 70%));
+            animation: level8-glow 2.5s ease-in-out infinite;
+            border: 2px dashed rgba(201, 162, 39, 0.4);
+            box-shadow: 0 0 25px rgba(201, 162, 39, 0.2);
+        }
+        
+        .chibi-image-render:hover {
+            transform: scale(1.18) rotate(3deg);
+        }
+        
+        @keyframes level7-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(201, 162, 39, 0.25); }
+            50% { box-shadow: 0 0 35px rgba(201, 162, 39, 0.55); }
+        }
+        @keyframes level8-glow {
+            0%, 100% { 
+                box-shadow: 0 0 25px rgba(201, 162, 39, 0.4), 0 0 45px rgba(168, 85, 247, 0.3);
+                transform: translateY(0);
+            }
+            50% { 
+                box-shadow: 0 0 45px rgba(201, 162, 39, 0.7), 0 0 65px rgba(168, 85, 247, 0.5);
+                transform: translateY(-8px);
+            }
+        }
+        
+        .chibi-level-badge {
+            background: var(--gold-bg);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.8rem;
+            font-weight: 700;
+            padding: 4px 16px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px rgba(201, 162, 39, 0.2);
+        }
+        
+        .chibi-stats-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .crystal-heading {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .rpg-stat-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .rpg-stat-row .stat-label { color: var(--text-secondary); }
+        .rpg-stat-row .stat-val { color: var(--text-primary); }
+        
+        .crystal-progress-track {
+            height: 10px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+        
+        .crystal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+            border-radius: 999px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 8px var(--gold);
+        }
+        
+        .chibi-stars {
+            display: flex;
+            gap: 4px;
+            font-size: 1.1rem;
+            color: var(--gold);
+        }
+        
+        .chibi-profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 16px;
+            margin-top: 8px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+        }
+        
+        @media (max-width: 500px) {
+            .chibi-profile-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .profile-kv {
+            font-size: 0.8rem;
+            display: flex;
+            justify-content: space-between;
+            background: rgba(255,255,255,0.02);
+            border-radius: 6px;
+            padding: 6px 10px;
+            border: 1px solid rgba(255,255,255,0.02);
+        }
+        
+        .profile-kv .k { color: var(--text-muted); }
+        .profile-kv .v { color: var(--text-primary); font-weight: 600; }
+        
+        .chibi-next-goal {
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div style="display:flex;align-items:center;gap:12px">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+            <a href="student-dashboard.html" class="nav-brand">
+            <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+            <div class="nav-brand-text">
+                <span class="title">บันทึกความดี</span>
+                <span class="subtitle">วพอ.พอ. 2569</span>
+            </div>
+        </a>
+        </div>
+        <div class="nav-actions">
+            <a href="submit-deed.html" class="btn btn-primary btn-sm">+ บันทึกความดีใหม่</a>
+            <div class="nav-user">
+                <div class="avatar" id="nav-avatar">?</div>
+                <span id="nav-name" class="hidden">-</span>
+                <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR (Off-canvas) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item  active"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <!-- MAIN -->
+        <main class="main-content">
+            <!-- HERO -->
+            <div class="hero-card" id="hero-section">
+                <div class="hero-avatar" id="hero-avatar" style="overflow:hidden;padding:0">?</div>
+                <div class="hero-info">
+                    <div class="name" id="hero-name">กำลังโหลด...</div>
+                    <div class="meta">
+                        <span>🎫 <span id="hero-id">-</span></span>
+                        <span>📚 <span id="hero-year">-</span></span>
+                        <span>📧 <span id="hero-email">-</span></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATUS BANNER -->
+            <div class="status-banner" id="status-banner">
+                <span class="icon" id="status-icon">⏳</span>
+                <div>
+                    <div id="status-text">กำลังโหลดสถานะ...</div>
+                    <div class="detail" id="status-detail"></div>
+                </div>
+                <span style="margin-left:auto" id="status-total-hrs"></span>
+            </div>
+
+            <!-- macOS CRYSTAL CHIBI HERO WIDGET -->
+            <div class="card crystal-card hero-chibi-card mb-24">
+                <div class="mac-traffic-lights" style="margin-bottom:16px;">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                    <span class="mac-title">HeroHQ - Chibi Growth Status</span>
+                </div>
+                
+                <div class="crystal-grid">
+                    <div class="chibi-visual-section">
+                        <div class="chibi-avatar-glow" id="chibi-hero-avatar-container">
+                            <span style="font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));">👶</span>
+                        </div>
+                        <div class="chibi-level-badge" id="chibi-level-badge">Lv.1 Novice</div>
+                    </div>
+                    
+                    <div class="chibi-stats-section">
+                        <h3 class="crystal-heading" id="chibi-hero-title">ตัวละครกำลังเติบโต...</h3>
+                        
+                        <div class="rpg-stat-row">
+                            <span class="stat-label">Volunteer EXP:</span>
+                            <span class="stat-val" id="chibi-exp-text">0 / 36 hours</span>
+                        </div>
+                        
+                        <div class="crystal-progress-track">
+                            <div class="crystal-progress-fill" id="chibi-progress-fill" style="width: 0%"></div>
+                        </div>
+                        
+                        <div class="chibi-stars" id="chibi-stars-container">
+                            ⭐⭐
+                        </div>
+                        
+                        <div class="chibi-profile-grid">
+                            <div class="profile-kv"><span class="k">ยศ-สกุล:</span><span class="v" id="chibi-fullname">-</span></div>
+                            <div class="profile-kv"><span class="k">รหัสนักเรียน:</span><span class="v" id="chibi-id">-</span></div>
+                            <div class="profile-kv"><span class="k">ชั่วโมงรวม:</span><span class="v" style="color:var(--gold); font-weight:700;" id="chibi-total-hours">0 ชม.</span></div>
+                            <div class="profile-kv"><span class="k">ฉายาจิตอาสา:</span><span class="v" id="chibi-rank-title">Cadet Apprentice</span></div>
+                        </div>
+                        
+                        <div class="chibi-next-goal" id="chibi-next-goal-text">
+                            เป้าหมายถัดไป: สะสมชั่วโมงความดีเพื่อวิวัฒนาการตัวละคร!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STATS -->
+            <div class="stats-grid mb-24" id="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="stat-total">-</div>
+                    <div class="stat-label">รวมชั่วโมงทั้งหมด</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-green" id="stat-approved">-</div>
+                    <div class="stat-label">รายการอนุมัติแล้ว</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-yellow" id="stat-pending">-</div>
+                    <div class="stat-label">รอการอนุมัติ</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value text-red" id="stat-rejected">-</div>
+                    <div class="stat-label">ถูกปฏิเสธ</div>
+                </div>
+            </div>
+
+            <!-- QUICK ACTIONS -->
+            <div class="action-grid">
+                <a href="submit-deed.html" class="action-card">
+                    <span class="ac-icon">✍️</span>
+                    <span class="ac-label">บันทึกความดีใหม่</span>
+                </a>
+                <a href="history.html" class="action-card">
+                    <span class="ac-icon">📋</span>
+                    <span class="ac-label">ดูประวัติทั้งหมด</span>
+                </a>
+                <a href="#" class="action-card" id="btn-print" onclick="printCurrentStudent(); return false;">
+                    <span class="ac-icon">🖨️</span>
+                    <span class="ac-label">พิมพ์รายงาน</span>
+                </a>
+                <a href="profile.html" class="action-card">
+                    <span class="ac-icon">👤</span>
+                    <span class="ac-label">แก้ไขโปรไฟล์</span>
+                </a>
+            </div>
+
+            <!-- Category Slider (Professional Dashboard Horizontal Carousel / Desktop Grid) -->
+            <div class="card crystal-card mb-24">
+                <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                    <span class="mac-title">หมวดหมู่จิตอาสา</span>
+                </div>
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">📊</span> สรุปชั่วโมงจิตอาสาแต่ละประเภท (คลิกการ์ดเพื่อกรองตาราง)</div>
+                </div>
+                <div class="cat-slider-container" id="category-slider">
+                    <div class="empty-state">
+                        <div class="icon">📊</div>
+                        <p>กำลังโหลดแถบสไลด์...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Interactive Activity Table (ตารางข้อมูลจิตอาสารายประเภท) -->
+            <div class="card crystal-card interactive-table-card" id="activity-table-card">
+                <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                    <span class="mac-title">ตารางข้อมูลจิตอาสา</span>
+                </div>
+                <div class="card-header" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                    <div class="card-title">
+                        <span class="icon">📋</span> ตารางรายการจิตอาสา: 
+                        <span id="filtered-category-name" class="text-gold" style="margin-left: 6px; font-weight: 700;">ทุกหมวดหมู่</span>
+                    </div>
+                    <div style="font-size:0.85rem; font-weight:700; color:var(--gold); background:rgba(201,162,39,0.1); border:1px solid rgba(201,162,39,0.25); padding:6px 14px; border-radius:20px;" id="filtered-category-hours">
+                        รวม 0 ชม.
+                    </div>
+                </div>
+                
+                <div class="table-wrapper">
+                    <table class="deed-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 220px;">ประเภทจิตอาสา</th>
+                                <th>รายละเอียดกิจกรรม</th>
+                                <th style="text-align:center; width: 100px;">ชั่วโมง</th>
+                                <th style="width: 130px;">วันที่ทำกิจกรรม</th>
+                                <th style="width: 120px;">สถานะ</th>
+                            </tr>
+                        </thead>
+                        <tbody id="interactive-deeds-body">
+                            <tr>
+                                <td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">
+                                    ยังไม่มีกิจกรรมบันทึกไว้ในระบบ
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MAIN GRID -->
+            <div class="grid-2">
+                <!-- Recent Deeds -->
+                <div class="card crystal-card">
+                    <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                        <span class="light red"></span>
+                        <span class="light yellow"></span>
+                        <span class="light green"></span>
+                        <span class="mac-title">ความดีล่าสุด</span>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">🕐</span> ความดีที่เพิ่งลงบันทึกเร็วๆ นี้</div>
+                        <a href="history.html" class="btn btn-outline btn-sm">ดูประวัติทั้งหมด</a>
+                    </div>
+                    <div id="recent-deeds">
+                        <div class="empty-state">
+                            <div class="icon">📝</div>
+                            <p>ยังไม่มีการบันทึก</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Guidelines Card -->
+                <div class="card crystal-card">
+                    <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                        <span class="light red"></span>
+                        <span class="light yellow"></span>
+                        <span class="light green"></span>
+                        <span class="mac-title">เกณฑ์จิตอาสา</span>
+                    </div>
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">🎖️</span> ชี้แจงเกณฑ์กิจกรรมจิตอาสา</div>
+                    </div>
+                    <div style="font-size:0.85rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:12px;">
+                        <p>นักเรียนพยาบาลทหารอากาศ (นพอ.) ทุกนาย จะต้องสะสมชั่วโมงความดีจิตอาสาให้ครบถ้วนตามข้อกำหนดเพื่อผ่านเกณฑ์การประเมินประจำปีการศึกษา</p>
+                        <div style="border-left: 3px solid var(--gold); padding-left:12px; margin: 4px 0;">
+                            <span style="font-weight:700; color:var(--text-primary);">เกณฑ์การสะสมชั่วโมงขั้นต่ำ:</span><br>
+                            <span style="font-size:1.2rem; font-weight:800; color:var(--gold);">36 ชั่วโมง / ปีการศึกษา</span>
+                        </div>
+                        <p style="font-size:0.8rem; color:var(--text-muted);">* เมื่อบันทึกกิจกรรมเรียบร้อยแล้ว กรุณารออาจารย์เข้าตรวจและอนุมัติในระบบ ตัวโฟลเดอร์สำหรับผลอนุมัติ (Approved Folder) จะ�        function renderChibiHero() {
+            const hours = summary.totalHours || 0;
+            let level = 1;
+            let levelTitle = "";
+            let rankTitle = "";
+            let chibiEmoji = "";
+            let progressPct = 0;
+            let stars = "";
+            let nextGoal = "";
+
+            if (hours >= 40) {
+                level = 8;
+                levelTitle = "Ultimate Sovereign Angel Hero (สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด)";
+                rankTitle = "สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด";
+                chibiEmoji = "🌟";
+                progressPct = 100;
+                stars = "⭐⭐⭐⭐⭐⭐⭐⭐";
+                nextGoal = "🎉 ยินดีด้วย! คุณได้บรรลุระดับจิตอาสาสูงสุดของวิทยาลัยพยาบาลทหารอากาศแล้ว!";
+            } else if (hours >= 36) {
+                level = 7;
+                levelTitle = "Royal Air Force Nurse Commander (ผู้บัญชาการจิตอาสา วพอ.)";
+                rankTitle = "ผู้บัญชาการจิตอาสา วพอ.";
+                chibiEmoji = "👑";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(40 - hours).toFixed(1)} ชม. เพื่อวิวัฒนาการเป็นระดับสูงสุด Lv.8 อัครเทวทูตสวรรค์!`;
+            } else if (hours >= 30) {
+                level = 6;
+                levelTitle = "Guardian Angel of Health (เทวทูตผู้พิทักษ์สุขภาพชุมชน)";
+                rankTitle = "เทวทูตผู้พิทักษ์สุขภาพ";
+                chibiEmoji = "👼";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(36 - hours).toFixed(1)} ชม. เพื่อผ่านเกณฑ์ 36 ชม. และเลื่อนระดับเป็น Lv.7 ผู้บัญชาการจิตอาสา!`;
+            } else if (hours >= 20) {
+                level = 5;
+                levelTitle = "Gold Flight Rescue Hero (ฮีโร่กู้ชีพเวชศาสตร์การบิน)";
+                rankTitle = "ฮีโร่กู้ชีพเวชศาสตร์การบิน";
+                chibiEmoji = "✈️";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(30 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.6 เทวทูตผู้พิทักษ์สุขภาพ!`;
+            } else if (hours >= 15) {
+                level = 4;
+                levelTitle = "Silver Care Hero (วีรบุรุษพยาบาลปีกเงิน)";
+                rankTitle = "วีรบุรุษพยาบาลปีกเงิน";
+                chibiEmoji = "🧑‍⚕️";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(20 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.5 ฮีโร่กู้ชีพเวชศาสตร์การบิน!`;
+            } else if (hours >= 10) {
+                level = 3;
+                levelTitle = "Bronze Service Cadet (พยาบาลจิตอาสาปีกทองแดง)";
+                rankTitle = "พยาบาลจิตอาสาปีกทองแดง";
+                chibiEmoji = "🩺";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(15 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.4 วีรบุรุษพยาบาลปีกเงิน!`;
+            } else if (hours >= 5) {
+                level = 2;
+                levelTitle = "Cadet Apprentice (นักเรียนฝึกงานพยาบาล)";
+                rankTitle = "นักเรียนฝึกงานพยาบาล";
+                chibiEmoji = "📝";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(10 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.3 พยาบาลจิตอาสาปีกทองแดง!`;
+            } else {
+                level = 1;
+                levelTitle = "Cadet Novice (นักเรียนพยาบาลฝึกหัด)";
+                rankTitle = "นักเรียนพยาบาลฝึกหัด";
+                chibiEmoji = "👶";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(5 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.2 นักเรียนฝึกงานพยาบาล!`;
+            }
+
+            document.getElementById('chibi-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
+            document.getElementById('chibi-hero-title').innerHTML = `🦸‍♂️ ฮีโร่จิตอาสา: ${currentUser.first_name}`;
+            document.getElementById('chibi-exp-text').textContent = `${hours} / 36 ชั่วโมง (EXP)`;
+            document.getElementById('chibi-progress-fill').style.width = `${Math.min(progressPct, 100)}%`;
+            document.getElementById('chibi-stars-container').textContent = stars;
+            document.getElementById('chibi-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
+            document.getElementById('chibi-id').textContent = currentUser.student_id;
+            document.getElementById('chibi-total-hours').textContent = `${hours} ชม.`;
+            document.getElementById('chibi-rank-title').textContent = rankTitle;
+            document.getElementById('chibi-next-goal-text').textContent = nextGoal;
+            
+            // Set image and glow class
+            const avatarContainer = document.getElementById('chibi-hero-avatar-container');
+            avatarContainer.className = `chibi-avatar-glow lv${level}`;
+            
+            const chibiImage = `photos/chibi/chibi_lv${level}.png`;
+            avatarContainer.innerHTML = `
+                <img src="${chibiImage}" alt="${levelTitle}" 
+                     class="chibi-image-render" 
+                     style="width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6)); border-radius: 50%; transition: all 0.3s ease;"
+                     onerror="this.outerHTML='<span class=\\'float-emoji\\' style=\\'font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));\\'>${chibiEmoji}</span>'">
+            `;
+        }el = 3;
+                levelTitle = "Winged Rescue Hero (ฮีโร่เวชศาสตร์การบิน)";
+                rankTitle = "ฮีโร่เวชศาสตร์ปีกเงิน";
+                chibiEmoji = "🎖️";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${36 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.4 สุดยอดวีรบุรุษปีกทองคำ!`;
+            } else if (hours >= 10) {
+                level = 2;
+                levelTitle = "Apprentice Hero (พยาบาลฝึกหัดปีกเหล็ก)";
+                rankTitle = "นักเรียนพยาบาลปีกเหล็ก";
+                chibiEmoji = "🧑‍⚕️";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${20 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.3 ฮีโร่เวชศาสตร์การบิน!`;
+            } else {
+                level = 1;
+                levelTitle = "Cadet Novice (ผู้เข้ารับการฝึกหัด)";
+                rankTitle = "นักเรียนพยาบาลฝึกหัด";
+                chibiEmoji = "👶";
+                progressPct = Math.round((hours / 36) * 100);
+                stars = "⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${10 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.2 พยาบาลฝึกหัดปีกเหล็ก!`;
+            }
+
+            document.getElementById('chibi-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
+            document.getElementById('chibi-hero-title').innerHTML = `🦸‍♂️ ฮีโร่จิตอาสา: ${currentUser.first_name}`;
+            document.getElementById('chibi-exp-text').textContent = `${hours} / 36 ชั่วโมง (EXP)`;
+            document.getElementById('chibi-progress-fill').style.width = `${progressPct}%`;
+            document.getElementById('chibi-stars-container').textContent = stars;
+            document.getElementById('chibi-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
+            document.getElementById('chibi-id').textContent = currentUser.student_id;
+            document.getElementById('chibi-total-hours').textContent = `${hours} ชม.`;
+            document.getElementById('chibi-rank-title').textContent = rankTitle;
+            document.getElementById('chibi-next-goal-text').textContent = nextGoal;
+            
+            // Set emoji and glow class
+            const avatarContainer = document.getElementById('chibi-hero-avatar-container');
+            avatarContainer.className = `chibi-avatar-glow lv${level}`;
+            avatarContainer.innerHTML = `<span class="float-emoji" style="font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));">${chibiEmoji}</span>`;
+        }
+
+        function renderStats() {
+            document.getElementById('stat-total').textContent = summary.totalHours + ' ชม.';
+            document.getElementById('stat-approved').textContent = summary.approvedCount;
+            document.getElementById('stat-pending').textContent = summary.pendingCount;
+            document.getElementById('stat-rejected').textContent = summary.rejectedCount;
+        }
+
+        function renderStatusBanner() {
+            const min = CONFIG.MIN_HOURS_PER_YEAR;
+            const banner = document.getElementById('status-banner');
+            if (summary.passed) {
+                banner.className = 'status-banner pass';
+                document.getElementById('status-icon').textContent = '✅';
+                document.getElementById('status-text').textContent = 'ผ่านเกณฑ์ชั่วโมงความดีประจำปี!';
+                document.getElementById('status-detail').textContent = `สะสมแล้ว ${summary.totalHours} ชม. (เกณฑ์: ${min} ชม./ปี)`;
+            } else {
+                banner.className = 'status-banner fail';
+                document.getElementById('status-icon').textContent = '⏳';
+                document.getElementById('status-text').textContent = `ยังไม่ผ่านเกณฑ์ — ต้องการอีก ${min - summary.totalHours} ชม.`;
+                document.getElementById('status-detail').textContent = `สะสมแล้ว ${summary.totalHours} ชม. จาก ${min} ชม. ที่กำหนด`;
+            }
+            document.getElementById('status-total-hrs').innerHTML = `<span style="font-size:1.8rem;font-weight:700;color:var(--gold)">${summary.totalHours}</span><br><span style="font-size:0.7rem;color:var(--text-muted)">ชม.</span>`;
+        }
+
+        let activeCategoryFilter = 'all';
+
+        function renderCategories() {
+            const container = document.getElementById('category-slider');
+            if (!container) return;
+
+            // 1. Build "All Categories" card
+            const totalHours = summary.totalHours || 0;
+            let cardsHtml = `
+                <div class="cat-slide-card ${activeCategoryFilter === 'all' ? 'selected' : ''}" 
+                     onclick="selectCategoryFilter('all', this)">
+                    <div class="card-emoji">🌐</div>
+                    <div class="card-name">หมวดหมู่ทั้งหมด</div>
+                    <div class="card-hours">${totalHours} ชม.</div>
+                </div>
+            `;
+
+            // 2. Build cards for each of the 9 categories
+            summary.byCategory.forEach(cat => {
+                const isSelected = String(activeCategoryFilter) === String(cat.id);
+                cardsHtml += `
+                    <div class="cat-slide-card ${isSelected ? 'selected' : ''}" 
+                         onclick="selectCategoryFilter(${cat.id}, this)">
+                        <div class="card-emoji">${cat.emoji}</div>
+                        <div class="card-name">${cat.name}</div>
+                        <div class="card-hours">${cat.hours} ชม.</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = cardsHtml;
+            renderInteractiveTable();
+        }
+
+        function selectCategoryFilter(catId, element) {
+            activeCategoryFilter = catId;
+            
+            // Toggle active classes
+            document.querySelectorAll('.cat-slide-card').forEach(el => el.classList.remove('selected'));
+            if (element) {
+                element.classList.add('selected');
+            } else {
+                // Find card by logic
+                const cards = document.querySelectorAll('.cat-slide-card');
+                if (catId === 'all' && cards[0]) cards[0].classList.add('selected');
+            }
+
+            // Update details
+            const nameEl = document.getElementById('filtered-category-name');
+            const hoursEl = document.getElementById('filtered-category-hours');
+
+            if (catId === 'all') {
+                nameEl.textContent = 'ทุกหมวดหมู่';
+                hoursEl.textContent = `รวม ${summary.totalHours} ชม.`;
+            } else {
+                const cat = App.getCategoryById(catId);
+                const catSummary = summary.byCategory.find(c => String(c.id) === String(catId));
+                const hrs = catSummary ? catSummary.hours : 0;
+                nameEl.textContent = `${cat.emoji} ${cat.name}`;
+                hoursEl.textContent = `รวม ${hrs} ชม.`;
+            }
+
+            renderInteractiveTable();
+        }
+
+        function renderInteractiveTable() {
+            const container = document.getElementById('interactive-deeds-body');
+            if (!container) return;
+
+            let deeds = App.getDeeds(currentUser.student_id)
+                .sort((a, b) => new Date(b.activityDate) - new Date(a.activityDate));
+
+            // Apply filter
+            if (activeCategoryFilter !== 'all') {
+                deeds = deeds.filter(d => String(d.categoryId) === String(activeCategoryFilter));
+            }
+
+            if (!deeds.length) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align:center; color:var(--text-muted); padding:32px;">
+                            📭 ยังไม่มีข้อมูลบันทึกความดีสำหรับหมวดหมู่นี้
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const badges = {
+                pending: '<span class="badge badge-pending">⏳ รออนุมัติ</span>',
+                approved: '<span class="badge badge-approved">✅ อนุมัติแล้ว</span>',
+                rejected: '<span class="badge badge-rejected">❌ ปฏิเสธ</span>'
+            };
+
+            container.innerHTML = deeds.map(d => {
+                const cat = App.getCategoryById(d.categoryId);
+                
+                // Details description with note if any
+                const descText = d.description || '-';
+                const noteText = d.note ? `<div style="font-size:0.75rem; color:var(--text-muted); margin-top: 4px;">💬 หมายเหตุ: ${d.note}</div>` : '';
+                const rejectReason = d.status === 'rejected' && d.rejectReason ? `<div style="font-size:0.75rem; color:var(--red); margin-top: 4px; font-weight:600;">❌ เหตุผลที่ปฏิเสธ: ${d.rejectReason}</div>` : '';
+
+                return `
+                    <tr>
+                        <td>
+                            <span style="font-size:1.1rem; margin-right:4px;">${cat.emoji}</span> 
+                            <span style="font-weight:600;">${cat.name}</span>
+                        </td>
+                        <td>
+                            <div class="table-desc" title="${descText}">${descText}</div>
+                            ${noteText}
+                            ${rejectReason}
+                        </td>
+                        <td style="text-align:center; font-weight:700; color:var(--gold);">
+                            ${d.hours}
+                        </td>
+                        <td>
+                            ${App.formatDate(d.activityDate)}
+                        </td>
+                        <td>
+                            ${badges[d.status] || ''}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function renderRecentDeeds() {
+            const deeds = App.getDeeds(currentUser.student_id)
+                .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt))
+                .slice(0, 5);
+            const container = document.getElementById('recent-deeds');
+            if (!deeds.length) {
+                container.innerHTML = `<div class="empty-state"><div class="icon">📝</div><p>ยังไม่มีการบันทึกความดี<br><a href="submit-deed.html" style="color:var(--gold)">บันทึกรายการแรก →</a></p></div>`;
+                return;
+            }
+            container.innerHTML = deeds.map(d => {
+                const cat = App.getCategoryById(d.categoryId);
+                const badges = { pending: '<span class="badge badge-pending">⏳ รออนุมัติ</span>', approved: '<span class="badge badge-approved">✅ อนุมัติ</span>', rejected: '<span class="badge badge-rejected">❌ ปฏิเสธ</span>' };
+                return `<div class="deed-item">
+          <div class="deed-cat-dot" style="background:${cat.color}"></div>
+          <div class="deed-content">
+            <div class="deed-title">${cat.emoji} ${cat.name}</div>
+            <div class="deed-meta">${d.description || '-'} · ${App.formatDate(d.activityDate)}</div>
+            <div style="margin-top:4px">${badges[d.status] || ''}</div>
+          </div>
+          <div class="deed-right">
+            <div class="deed-hours">${d.hours} ชม.</div>
+          </div>
+        </div>`;
+            }).join('');
+        }
+
+        function printCurrentStudent() {
+            if (currentUser) printStudentReport(currentUser.student_id);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>

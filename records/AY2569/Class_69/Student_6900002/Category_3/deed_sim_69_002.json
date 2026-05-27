@@ -1,0 +1,21 @@
+{
+    "id": "deed_sim_69_002",
+    "academicYear": 2569,
+    "student": {
+        "student_id": "6900002",
+        "first_name": "พรนภัส",
+        "last_name": "จิตใจดี",
+        "class_year": 69,
+        "year_level": 1,
+        "rank": "นพอ.",
+        "role": "student"
+    },
+    "categoryId": 3,
+    "hours": 3.0,
+    "description": "ช่วยจัดเรียงโต๊ะเก้าอี้และติดตั้งระบบเครื่องเสียงงานปฐมนิเทศ นพอ. รุ่น 69 ณ ห้องประชุม วพอ.",
+    "activityDate": "2026-05-27",
+    "status": "approved",
+    "submittedAt": "2026-05-27T12:15:00.000Z",
+    "approvedBy": "อาจารย์พรนภา",
+    "approvedAt": "2026-05-27T05:18:49Z"
+}

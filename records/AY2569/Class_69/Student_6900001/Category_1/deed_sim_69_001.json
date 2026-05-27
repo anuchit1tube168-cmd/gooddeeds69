@@ -1,0 +1,21 @@
+{
+    "id": "deed_sim_69_001",
+    "academicYear": 2569,
+    "student": {
+        "student_id": "6900001",
+        "first_name": "กิตติภพ",
+        "last_name": "ทองดี",
+        "class_year": 69,
+        "year_level": 1,
+        "rank": "นพอ.",
+        "role": "student"
+    },
+    "categoryId": 1,
+    "hours": 4.0,
+    "description": "บริจาคโลหิตช่วยสภากาชาดไทย ครั้งที่ 1 ประจำปีการศึกษา 2569",
+    "activityDate": "2026-05-27",
+    "status": "approved",
+    "submittedAt": "2026-05-27T12:10:00.000Z",
+    "approvedBy": "อาจารย์พรนภา",
+    "approvedAt": "2026-05-27T05:11:39Z"
+}

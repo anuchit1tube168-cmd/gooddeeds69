@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบันทึกความดี - วิทยาลัยพยาบาลทหารอากาศ</title>
+    <meta name="description" content="ระบบบันทึกชั่วโมงความดีจิตอาสาสำหรับนักเรียนพยาบาลทหารอากาศ">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 16px;
+        }
+
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        /* Header Logo Section */
+        .login-header {
+            text-align: center;
+            margin-bottom: 32px;
+            animation: fadeDown 0.6s ease;
+        }
+
+        .emblem-ring {
+            width: 96px;
+            height: 96px;
+            margin: 0 auto 16px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 50%, var(--gold-dark) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.2), 0 8px 32px rgba(201, 162, 39, 0.3);
+            font-size: 2.8rem;
+            animation: pulse-ring 3s ease-in-out infinite;
+            overflow: hidden;
+            padding: 4px;
+        }
+
+        .emblem-ring img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+        }
+
+        @keyframes pulse-ring {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 4px rgba(201, 162, 39, 0.2), 0 8px 32px rgba(201, 162, 39, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 0 8px rgba(201, 162, 39, 0.1), 0 8px 40px rgba(201, 162, 39, 0.4);
+            }
+        }
+
+        .login-header h1 {
+            font-size: 1.3rem;
+            color: var(--gold);
+            margin-bottom: 4px;
+        }
+
+        .login-header .subtitle {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Tab Switcher */
+        .tab-bar {
+            display: flex;
+            background: rgba(10, 22, 40, 0.8);
+            border: 1px solid var(--navy-border);
+            border-radius: var(--radius-md);
+            padding: 4px;
+            margin-bottom: 24px;
+            gap: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            border-radius: calc(var(--radius-md) - 4px);
+            color: var(--text-muted);
+            font-family: 'Sarabun', "Sukhumvit Set", "Thonburi", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-size: 0.875rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.2), rgba(201, 162, 39, 0.1));
+            color: var(--gold);
+            border: 1px solid rgba(201, 162, 39, 0.25);
+        }
+
+        /* Login Card */
+        .login-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow-lg);
+            animation: fadeUp 0.5s ease;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .login-form-section {
+            display: none;
+        }
+
+        .login-form-section.active {
+            display: block;
+        }
+
+        /* Student ID Input with prefix */
+        .input-with-prefix {
+            position: relative;
+        }
+
+        .input-prefix {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.85rem;
+            pointer-events: none;
+        }
+
+        .input-with-prefix .form-input {
+            padding-left: 80px;
+        }
+
+        /* Password toggle */
+        .input-with-toggle {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 1rem;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-primary);
+        }
+
+        .input-with-toggle .form-input {
+            padding-right: 44px;
+        }
+
+        /* Remember / Forgot */
+        .login-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.8rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type=checkbox] {
+            accent-color: var(--gold);
+            width: 14px;
+            height: 14px;
+        }
+
+        .link-text {
+            color: var(--gold);
+            text-decoration: none;
+            font-size: 0.8rem;
+        }
+
+        .link-text:hover {
+            text-decoration: underline;
+        }
+
+        /* Alert Box */
+        .alert {
+            padding: 12px 14px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert.show {
+            display: flex;
+        }
+
+        .alert-error {
+            background: var(--red-bg);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
+
+        .alert-success {
+            background: var(--green-bg);
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            color: #86efac;
+        }
+
+        /* Teacher info box */
+        .info-box {
+            background: rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: var(--radius-sm);
+            padding: 12px 14px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+        }
+
+        .login-footer {
+            margin-top: 24px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .login-footer a {
+            color: var(--gold);
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-wrapper">
+        <!-- Logo -->
+        <div class="login-header">
+            <div class="emblem-ring"><img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ"></div>
+            <h1>ระบบบันทึกความดี</h1>
+            <p class="subtitle">วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569</p>
+        </div>
+
+        <!-- Card -->
+        <div class="login-card crystal-card">
+            <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                <span class="light red"></span>
+                <span class="light yellow"></span>
+                <span class="light green"></span>
+                <span class="mac-title">HeroHQ Lock Screen</span>
+            </div>
+            <!-- Tab Switcher -->
+            <div class="tab-bar">
+                <button class="tab-btn active" id="tab-student" onclick="switchTab('student')">
+                    👨‍⚕️ นักเรียน
+                </button>
+                <button class="tab-btn" id="tab-teacher" onclick="switchTab('teacher')">
+                    👩‍🏫 อาจารย์
+                </button>
+            </div>
+
+            <!-- Alert -->
+            <div class="alert alert-error" id="login-alert">
+                <span>⚠️</span> <span id="alert-message">รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง</span>
+            </div>
+
+            <!-- Student Login -->
+            <div class="login-form-section active" id="section-student">
+                <form id="form-student" onsubmit="handleLogin(event,'student')">
+                    <div class="form-group">
+                        <label class="form-label">รหัสนักเรียน <span class="required">*</span></label>
+                        <div class="input-with-prefix">
+                            <span class="input-prefix">นพอ.</span>
+                            <input type="text" class="form-input" id="student-id" placeholder="เช่น 6503690"
+                                maxlength="10" inputmode="numeric" autocomplete="username">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">รหัสผ่าน <span class="required">*</span></label>
+                        <div class="input-with-toggle">
+                            <input type="password" class="form-input" id="student-password"
+                                placeholder="รหัสผ่าน (ค่าเริ่มต้น = รหัสนักเรียน)" autocomplete="current-password">
+                            <button type="button" class="toggle-password"
+                                onclick="togglePwd('student-password', this)">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="login-meta">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-student"> จดจำการเข้าสู่ระบบ
+                        </label>
+                        <a href="#" class="link-text">ลืมรหัสผ่าน?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-student-login">
+                        <span>🔓</span> เข้าสู่ระบบ
+                    </button>
+                </form>
+            </div>
+
+            <!-- Teacher Login -->
+            <div class="login-form-section" id="section-teacher">
+                <div class="info-box">
+                    ℹ️ สำหรับอาจารย์และเจ้าหน้าที่ที่ได้รับมอบหมาย บัญชีจะได้รับจากผู้ดูแลระบบ
+                </div>
+                <form id="form-teacher" onsubmit="handleLogin(event,'teacher')">
+                    <div class="form-group">
+                        <label class="form-label">ชื่อผู้ใช้ <span class="required">*</span></label>
+                        <input type="text" class="form-input" id="teacher-username" placeholder="username"
+                            autocomplete="username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">รหัสผ่าน <span class="required">*</span></label>
+                        <div class="input-with-toggle">
+                            <input type="password" class="form-input" id="teacher-password" placeholder="รหัสผ่าน"
+                                autocomplete="current-password">
+                            <button type="button" class="toggle-password"
+                                onclick="togglePwd('teacher-password', this)">👁️</button>
+                        </div>
+                    </div>
+
+                    <div class="login-meta">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="remember-teacher"> จดจำการเข้าสู่ระบบ
+                        </label>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-teacher-login">
+                        <span>🔐</span> เข้าสู่ระบบ (อาจารย์)
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <div class="login-footer">
+            ระบบบันทึกความดี v1.1 &nbsp;|&nbsp; พัฒนาสำหรับ วพอ.พอ. 2569<br>
+            <a href="teacher-dashboard.html">🛠 Admin Panel</a>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="data/students_data.js?v=69"></script>
+    <script src="data/deeds_data.js?v=69"></script>
+    <script src="app.js?v=69"></script>
+    <script>
+        // Tab switch
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.login-form-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('tab-' + tab).classList.add('active');
+            document.getElementById('section-' + tab).classList.add('active');
+            hideAlert();
+        }
+
+        function togglePwd(inputId, btn) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+            else { input.type = 'password'; btn.textContent = '👁️'; }
+        }
+
+        function showAlert(msg, type = 'error') {
+            const el = document.getElementById('login-alert');
+            const msgEl = document.getElementById('alert-message');
+            el.className = 'alert show alert-' + type;
+            msgEl.textContent = msg;
+        }
+        function hideAlert() {
+            document.getElementById('login-alert').classList.remove('show');
+        }
+
+        async function handleLogin(e, role) {
+            e.preventDefault();
+            hideAlert();
+
+            if (role === 'student') {
+                const sid = document.getElementById('student-id').value.trim();
+                const pwd = document.getElementById('student-password').value;
+                const btn = document.getElementById('btn-student-login');
+
+                if (!sid) { showAlert('กรุณากรอกรหัสนักเรียน'); return; }
+                if (!pwd) { showAlert('กรุณากรอกรหัสผ่าน'); return; }
+
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';
+
+                try {
+                    const result = await App.loginStudent(sid, pwd);
+                    if (result.success) {
+                        showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
+                        setTimeout(() => window.location.href = 'student-dashboard.html', 800);
+                    } else {
+                        showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>🔓</span> เข้าสู่ระบบ';
+                    }
+                } catch (err) {
+                    showAlert('เกิดข้อผิดพลาด: ' + err.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>🔓</span> เข้าสู่ระบบ';
+                }
+
+            } else {
+                const user = document.getElementById('teacher-username').value.trim();
+                const pwd = document.getElementById('teacher-password').value;
+                const btn = document.getElementById('btn-teacher-login');
+
+                if (!user || !pwd) { showAlert('กรุณากรอกข้อมูลให้ครบถ้วน'); return; }
+
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';
+
+                try {
+                    const result = await App.loginTeacher(user, pwd);
+                    if (result.success) {
+                        showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
+                        setTimeout(() => window.location.href = 'teacher-dashboard.html', 800);
+                    } else {
+                        showAlert(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+                        btn.disabled = false;
+                        btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์)';
+                    }
+                } catch (err) {
+                    showAlert('เกิดข้อผิดพลาด: ' + err.message);
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์)';
+                }
+            }
+        }
+
+        // Check if already logged in
+        window.addEventListener('load', () => {
+            const user = App.getCurrentUser();
+            if (user) {
+                if (user.role === 'student') window.location.href = 'student-dashboard.html';
+                else window.location.href = 'teacher-dashboard.html';
+            }
+
+            // Dynamic look-up for Student ID
+            const studentIdInput = document.getElementById('student-id');
+            const emblemRing = document.querySelector('.emblem-ring');
+            const loginHeaderTitle = document.querySelector('.login-header h1');
+            const loginHeaderSubtitle = document.querySelector('.login-header .subtitle');
+
+            if (studentIdInput) {
+                studentIdInput.addEventListener('input', () => {
+                    const sid = studentIdInput.value.trim().replace(/^นพอ\.?\s*/, '');
+                    
+                    // Only lookup if at least 5 digits
+                    if (sid.length >= 5) {
+                        const student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [])
+                            .find(s => s.student_id === sid);
+
+                        if (student) {
+                            // Get photo or initials
+                            const photo = App.getProfilePhoto(student.student_id);
+                            if (photo) {
+                                emblemRing.innerHTML = `<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+                            } else {
+                                const initials = (student.first_name || '?')[0];
+                                emblemRing.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--navy);background:linear-gradient(135deg, var(--gold-dark), var(--gold));border-radius:50%;">${initials}</div>`;
+                            }
+                            
+                            // Calculate Level
+                            const summary = App.getStudentSummary(student.student_id);
+                            const hours = summary.totalHours || 0;
+                            let lvlTitle = "Lv.1 Novice";
+                            let emoji = "👶";
+                            if (hours >= 36) { lvlTitle = "Lv.4 Master"; emoji = "👼"; }
+                            else if (hours >= 20) { lvlTitle = "Lv.3 Expert"; emoji = "🎖️"; }
+                            else if (hours >= 10) { lvlTitle = "Lv.2 Apprentice"; emoji = "🧑‍⚕️"; }
+
+                            loginHeaderTitle.innerHTML = `ยินดีต้อนรับ ${student.rank} ${student.first_name} ${emoji}`;
+                            loginHeaderSubtitle.innerHTML = `<span style="color:var(--gold);font-weight:700;">${lvlTitle}</span> (สะสมแล้ว ${hours} ชม.จิตอาสา)`;
+                            return;
+                        }
+                    }
+                    
+                    // Fallback to default
+                    emblemRing.innerHTML = `<img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ">`;
+                    loginHeaderTitle.textContent = "ระบบบันทึกความดี";
+                    loginHeaderSubtitle.innerHTML = `วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569`;
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

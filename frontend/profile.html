@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>โปรไฟล์ - ระบบบันทึกความดี</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+  <style>
+    .profile-photo-wrap {
+      position: relative;
+      width: 110px;
+      height: 110px;
+      margin: 0 auto 14px;
+      cursor: pointer;
+    }
+
+    .profile-photo {
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 20px rgba(201, 162, 39, 0.3);
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--navy);
+    }
+
+    .profile-photo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+      color: #fff;
+      font-size: 0.75rem;
+      font-weight: 600;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .profile-photo-wrap:hover .photo-overlay {
+      opacity: 1;
+    }
+
+    .section-card {
+      background: rgba(14, 31, 61, 0.35);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 16px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .section-card:hover {
+      border-color: rgba(201, 162, 39, 0.25);
+      box-shadow: var(--shadow-lg), var(--shadow-gold);
+    }
+
+    .section-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid var(--navy-border);
+      padding-bottom: 10px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    @media(max-width:600px) {
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .telegram-info {
+      background: rgba(29, 161, 242, 0.08);
+      border: 1px solid rgba(29, 161, 242, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .telegram-info a {
+      color: #1da1f2;
+      text-decoration: none;
+    }
+
+    .photo-from-system {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <nav class="top-nav">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+      <a href="student-dashboard.html" class="nav-brand">
+      <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+      <div class="nav-brand-text"><span class="title">บันทึกความดี</span><span class="subtitle">วพอ.พอ. 2569</span>
+      </div>
+    </a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+    </div>
+  </nav>
+
+  <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR (Off-canvas) -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item active"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+    <main class="main-content">
+      <a href="student-dashboard.html" class="btn btn-outline btn-sm" style="margin-bottom:16px">← กลับ</a>
+      <h1 class="mb-24">👤 โปรไฟล์ของฉัน</h1>
+
+      <div style="max-width:640px">
+
+        <!-- รูปโปรไฟล์ + ข้อมูลเบื้องต้น -->
+        <div class="section-card" style="text-align:center">
+          <div class="profile-photo-wrap" onclick="document.getElementById('photo-input').click()"
+            title="คลิกเพื่อเปลี่ยนรูป">
+            <div class="profile-photo" id="profile-photo-circle">
+              <img id="profile-photo-img" src="" alt="" style="display:none">
+              <span id="profile-initials">?</span>
+            </div>
+            <div class="photo-overlay">📷<br>เปลี่ยนรูป</div>
+          </div>
+          <div class="photo-from-system" id="photo-source-label"></div>
+          <input type="file" id="photo-input" accept="image/*" style="display:none" onchange="handlePhotoChange(this)">
+          <div style="font-size:1.15rem;font-weight:700;color:var(--text-primary);margin-top:8px" id="profile-fullname">
+            -</div>
+          <div style="font-size:0.85rem;color:var(--text-muted)" id="profile-id-year">-</div>
+          <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="removePhoto()" id="remove-photo-btn"
+            style="display:none">🗑️ ลบรูปที่อัพโหลด</button>
+        </div>
+
+        <!-- ประวัติส่วนตัว -->
+        <div class="section-card">
+          <div class="section-title">📋 ประวัติส่วนตัว</div>
+          <form id="bio-form" onsubmit="saveBio(event)">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">ชื่อเล่น</label>
+                <input type="text" class="form-input" id="bio-nickname" placeholder="เช่น แนน">
+              </div>
+              <div class="form-group">
+                <label class="form-label">วันเกิด</label>
+                <input type="date" class="form-input" id="bio-dob">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">ภูมิลำเนา / จังหวัด</label>
+                <input type="text" class="form-input" id="bio-province" placeholder="เช่น เชียงใหม่">
+              </div>
+              <div class="form-group">
+                <label class="form-label">กรุ๊ปเลือด</label>
+                <select class="form-select" id="bio-blood">
+                  <option value="">-- เลือก --</option>
+                  <option>A</option>
+                  <option>B</option>
+                  <option>AB</option>
+                  <option>O</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ความสนใจ / งานอดิเรก</label>
+              <input type="text" class="form-input" id="bio-hobby" placeholder="เช่น ดนตรี, วาดภาพ, กีฬา">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ประวัติเพิ่มเติม</label>
+              <textarea class="form-textarea" id="bio-bio" rows="3" placeholder="แนะนำตัวเอง..."></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary w-full">💾 บันทึกประวัติ</button>
+          </form>
+        </div>
+
+        <!-- การติดต่อ -->
+        <div class="section-card">
+          <div class="section-title">📬 การติดต่อ & แจ้งเตือน</div>
+          <form id="contact-form" onsubmit="saveContact(event)">
+            <div class="form-group">
+              <label class="form-label">อีเมล (สำหรับแจ้งเตือน)</label>
+              <input type="email" class="form-input" id="profile-email" placeholder="example@email.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Telegram Chat ID</label>
+              <div class="telegram-info">
+                💡 วิธีหา Chat ID: เปิด Telegram → ค้นหา <a href="https://t.me/userinfobot"
+                  target="_blank">@userinfobot</a> → กด Start
+              </div>
+              <input type="text" class="form-input" id="profile-telegram" placeholder="เช่น 123456789">
+            </div>
+            <button type="submit" class="btn btn-primary w-full">💾 บันทึกข้อมูลติดต่อ</button>
+          </form>
+        </div>
+
+        <!-- เปลี่ยนรหัสผ่าน -->
+        <div class="section-card">
+          <div class="section-title">🔐 เปลี่ยนรหัสผ่าน</div>
+          <form id="pwd-form" onsubmit="savePassword(event)">
+            <div class="form-group">
+              <label class="form-label">รหัสผ่านใหม่</label>
+              <input type="password" class="form-input" id="new-password" placeholder="รหัสผ่านใหม่">
+            </div>
+            <div class="form-group">
+              <label class="form-label">ยืนยันรหัสผ่านใหม่</label>
+              <input type="password" class="form-input" id="confirm-password" placeholder="ยืนยันรหัสผ่านใหม่">
+            </div>
+            <div class="form-error" id="pwd-error">รหัสผ่านไม่ตรงกัน</div>
+            <button type="submit" class="btn btn-outline w-full">🔐 เปลี่ยนรหัสผ่าน</button>
+          </form>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <div class="toast-container" id="toast-container"></div>
+  <script src="data/students_data.js"></script>
+  <script src="data/students_photos.js"></script>
+  <script src="data/deeds_data.js"></script>
+  <script src="app.js"></script>
+  <script>
+    let currentUser;
+
+    function init() {
+      currentUser = App.requireAuth(['student']);
+      if (!currentUser) return;
+      const initials = (currentUser.first_name || '?')[0];
+      document.getElementById('profile-initials').textContent = initials;
+      document.getElementById('profile-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
+      document.getElementById('profile-id-year').textContent = `${currentUser.student_id} · ${App.getYearName(currentUser.class_year)}`;
+      loadPhoto();
+      loadBio();
+      loadContact();
+    }
+
+    // ===== รูปโปรไฟล์ =====
+    function loadPhoto() {
+      const sid = currentUser.student_id;
+      const local = Storage.get('photo_' + sid);
+      const sysPhoto = (typeof STUDENT_PHOTOS !== 'undefined') ? STUDENT_PHOTOS[sid] : null;
+      if (local) {
+        showPhoto(local);
+        document.getElementById('photo-source-label').textContent = '📷 รูปที่อัพโหลดเอง';
+        document.getElementById('remove-photo-btn').style.display = '';
+      } else if (sysPhoto) {
+        showPhoto(sysPhoto);
+        document.getElementById('photo-source-label').textContent = '🖼️ รูปจากระบบ (คลิกเพื่อเปลี่ยน)';
+        document.getElementById('remove-photo-btn').style.display = 'none';
+      }
+    }
+
+    function showPhoto(src) {
+      const img = document.getElementById('profile-photo-img');
+      const init = document.getElementById('profile-initials');
+      img.src = src; img.style.display = ''; init.style.display = 'none';
+    }
+
+    async function handlePhotoChange(input) {
+      const file = input.files[0]; if (!file) return;
+      if (file.size > 3 * 1024 * 1024) { showToast('รูปใหญ่เกิน 3MB', 'warning'); return; }
+      const b64 = await App.imageToBase64(file);
+      App.saveProfilePhoto(currentUser.student_id, b64);
+      showPhoto(b64);
+      document.getElementById('photo-source-label').textContent = '📷 รูปที่อัพโหลดเอง';
+      document.getElementById('remove-photo-btn').style.display = '';
+      showToast('บันทึกรูปโปรไฟล์แล้ว ✅', 'success');
+    }
+
+    function removePhoto() {
+      Storage.remove('photo_' + currentUser.student_id);
+      const img = document.getElementById('profile-photo-img');
+      img.src = ''; img.style.display = 'none';
+      document.getElementById('profile-initials').style.display = '';
+      document.getElementById('remove-photo-btn').style.display = 'none';
+      loadPhoto(); // reload system photo if available
+      showToast('ลบรูปที่อัพโหลดแล้ว', 'info');
+    }
+
+    // ===== ประวัติส่วนตัว =====
+    function loadBio() {
+      const bio = Storage.get('bio_' + currentUser.student_id) || {};
+      document.getElementById('bio-nickname').value = bio.nickname || '';
+      document.getElementById('bio-dob').value = bio.dob || '';
+      document.getElementById('bio-province').value = bio.province || '';
+      document.getElementById('bio-blood').value = bio.blood || '';
+      document.getElementById('bio-hobby').value = bio.hobby || '';
+      document.getElementById('bio-bio').value = bio.bio || '';
+    }
+
+    function saveBio(e) {
+      e.preventDefault();
+      const bio = {
+        nickname: document.getElementById('bio-nickname').value.trim(),
+        dob: document.getElementById('bio-dob').value,
+        province: document.getElementById('bio-province').value.trim(),
+        blood: document.getElementById('bio-blood').value,
+        hobby: document.getElementById('bio-hobby').value.trim(),
+        bio: document.getElementById('bio-bio').value.trim(),
+      };
+      Storage.set('bio_' + currentUser.student_id, bio);
+      showToast('บันทึกประวัติส่วนตัวแล้ว ✅', 'success');
+    }
+
+    // ===== ติดต่อ =====
+    function loadContact() {
+      const p = App.getProfile(currentUser.student_id);
+      document.getElementById('profile-email').value = p.email || '';
+      document.getElementById('profile-telegram').value = p.telegramChatId || '';
+    }
+
+    function saveContact(e) {
+      e.preventDefault();
+      App.updateProfile({
+        email: document.getElementById('profile-email').value.trim(),
+        telegramChatId: document.getElementById('profile-telegram').value.trim(),
+      });
+      showToast('บันทึกข้อมูลติดต่อแล้ว ✅', 'success');
+    }
+
+    // ===== รหัสผ่าน =====
+    function savePassword(e) {
+      e.preventDefault();
+      const np = document.getElementById('new-password').value;
+      const cp = document.getElementById('confirm-password').value;
+      const err = document.getElementById('pwd-error');
+      if (!np) { showToast('กรุณากรอกรหัสผ่านใหม่', 'warning'); return; }
+      if (np !== cp) { err.classList.add('show'); return; }
+      err.classList.remove('show');
+      Storage.set('pwd_' + currentUser.student_id, np);
+      document.getElementById('new-password').value = '';
+      document.getElementById('confirm-password').value = '';
+      showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐', 'success');
+    }
+
+    init();
+  </script>
+</body>
+
+</html>

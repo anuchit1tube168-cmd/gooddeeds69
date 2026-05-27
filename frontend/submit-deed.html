@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>บันทึกความดี - ระบบบันทึกความดี</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    <style>
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        .page-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Category Selector - Modern Cards */
+        .cat-select-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .cat-option {
+            background: rgba(14, 31, 61, 0.4);
+            border: 1px solid rgba(30, 58, 110, 0.4);
+            border-radius: var(--radius-lg);
+            padding: 16px 12px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cat-option::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .cat-option:hover {
+            border-color: rgba(201, 162, 39, 0.5);
+            background: rgba(14, 31, 61, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: var(--text-primary);
+        }
+
+        .cat-option:hover::before {
+            opacity: 1;
+        }
+
+        .cat-option.selected {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.15), rgba(14, 31, 61, 0.9));
+            color: var(--gold);
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.2);
+        }
+
+        .cat-option .icon {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        
+        .cat-option:hover .icon, .cat-option.selected .icon {
+            transform: scale(1.15);
+        }
+
+        /* Modern Hours Stepper */
+        .hours-input-wrap {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(10, 22, 40, 0.6);
+            border: 1px solid var(--navy-border);
+            border-radius: var(--radius-md);
+            padding: 6px;
+            transition: all 0.2s;
+        }
+        
+        .hours-input-wrap:focus-within {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
+        }
+
+        .hours-stepper {
+            background: var(--card-bg);
+            border-radius: var(--radius-sm);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            transition: all 0.2s;
+            user-select: none;
+            border: 1px solid transparent;
+        }
+
+        .hours-stepper:hover {
+            background: rgba(201, 162, 39, 0.1);
+            color: var(--gold);
+            border-color: rgba(201, 162, 39, 0.3);
+        }
+
+        .hours-input-wrap input[type=number] {
+            width: 70px;
+            text-align: center;
+            background: transparent;
+            border: none;
+            color: var(--gold);
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 0;
+        }
+        
+        .hours-input-wrap input[type=number]:focus {
+            box-shadow: none;
+        }
+
+        /* Image preview */
+        .preview-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin-top: 16px;
+        }
+
+        .preview-item {
+            position: relative;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.3s;
+        }
+        
+        .preview-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .preview-remove {
+            position: absolute;
+            top: 6px;
+            right: 6px;
+            background: rgba(239, 68, 68, 0.9);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s;
+            backdrop-filter: blur(4px);
+        }
+        
+        .preview-remove:hover {
+            background: var(--red);
+        }
+
+        /* Form layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media (max-width: 640px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+        
+        .submit-layout-grid {
+            display: grid;
+            grid-template-columns: 1fr 340px;
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .submit-layout-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .custom-card {
+            background: rgba(14, 31, 61, 0.35);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius-xl);
+            padding: 32px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .custom-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold), transparent);
+            opacity: 0.5;
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="top-nav">
+        <div style="display:flex;align-items:center;gap:12px">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+            <a href="student-dashboard.html" class="nav-brand">
+            <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+            <div class="nav-brand-text">
+                <span class="title">บันทึกความดี</span>
+                <span class="subtitle">วพอ.พอ. 2569</span>
+            </div>
+        </a>
+        </div>
+        <div class="nav-actions">
+            <div class="nav-user">
+                <div class="avatar" id="nav-avatar">?</div>
+                <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item active"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <a href="student-dashboard.html" class="btn btn-outline btn-sm" style="margin-bottom:16px; border-radius: 20px; padding: 4px 16px;">← ย้อนกลับ</a>
+                <h1>✨ บันทึกความดีใหม่</h1>
+                <p>กรอกรายละเอียดกิจกรรมจิตอาสาอย่างครบถ้วน เพื่อให้อาจารย์พิจารณาอนุมัติ</p>
+            </div>
+
+            <div class="submit-layout-grid" style="max-width: 1100px; margin: 0 auto;">
+                <div class="custom-card crystal-card">
+                    <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                        <span class="light red"></span>
+                        <span class="light yellow"></span>
+                        <span class="light green"></span>
+                        <span class="mac-title">บันทึกความดีจิตอาสา</span>
+                    </div>
+                    <form id="deed-form" onsubmit="handleSubmit(event)">
+
+                    <!-- Category -->
+                    <div class="form-group" style="margin-bottom: 28px;">
+                        <label class="form-label" style="font-size: 1.1rem; margin-bottom: 12px;">1. เลือกหมวดหมู่ความดี <span class="required">*</span></label>
+                        <div class="cat-select-grid" id="cat-grid"></div>
+                        <input type="hidden" id="selected-category" required>
+                        <div class="form-error" id="cat-error">กรุณาเลือกหมวดหมู่กิจกรรม</div>
+                    </div>
+
+                    <!-- Date and Hours -->
+                    <div class="form-grid" style="margin-bottom: 24px;">
+                        <div class="form-group">
+                            <label class="form-label">2. วันที่ทำกิจกรรม <span class="required">*</span></label>
+                            <input type="date" class="form-input" id="activity-date" required style="padding: 14px; font-size: 1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">3. จำนวนชั่วโมง <span class="required">*</span></label>
+                            <div class="hours-input-wrap">
+                                <div class="hours-stepper" onclick="adjustHours(-0.5)">−</div>
+                                <input type="number" id="hours" min="0.5" max="24" step="0.5" value="2" required>
+                                <div class="hours-stepper" onclick="adjustHours(0.5)">+</div>
+                                <span style="color:var(--text-muted); font-size:0.9rem; margin-right: 8px;">ชั่วโมง</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label class="form-label">4. รายละเอียดกิจกรรม <span class="required">*</span></label>
+                        <textarea class="form-textarea" id="description"
+                            placeholder="อธิบายกิจกรรมที่ทำอย่างละเอียด เช่น บริจาคโลหิตที่ รพ.ภูมิพล เมื่อวันที่ 1 มีนาคม 2569..."
+                            rows="4" required style="font-size: 1rem; line-height: 1.6; padding: 16px; border-radius: var(--radius-md);"></textarea>
+                    </div>
+
+                    <!-- Note -->
+                    <div class="form-group" style="margin-bottom: 28px;">
+                        <label class="form-label">5. หมายเหตุ (ถ้ามี)</label>
+                        <input type="text" class="form-input" id="note" placeholder="ข้อมูลเพิ่มเติมสำหรับอาจารย์..." style="padding: 14px; font-size: 1rem;">
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group" style="margin-bottom: 32px;">
+                        <label class="form-label">6. แนบรูปภาพหลักฐาน (ถ้ามี)</label>
+                        <div class="upload-zone" id="upload-zone" style="background: rgba(10, 22, 40, 0.4); border: 2px dashed rgba(30, 58, 110, 0.8); border-radius: var(--radius-lg); padding: 40px 20px;"
+                            onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)"
+                            ondrop="handleDrop(event)">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 16px; opacity: 0.8; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <div style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">ลากไฟล์มาวางที่นี่ หรือ <span style="color: var(--gold); text-decoration: underline;">คลิกเพื่ออัปโหลด</span></div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 5MB (อัปโหลดได้หลายรูป)</div>
+                        </div>
+                        <input type="file" id="file-input" accept="image/*" multiple hidden
+                            onchange="handleFileSelect(event)">
+                        <div class="preview-grid" id="preview-grid"></div>
+                    </div>
+
+                    <!-- Alert -->
+                    <div class="alert alert-error" id="form-alert">
+                        <span>⚠️</span><span id="alert-msg">กรุณากรอกข้อมูลให้ครบ</span>
+                    </div>
+
+                    <!-- Submit -->
+                    <div style="display:flex; justify-content:flex-end; gap:16px; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(30,58,110,0.5);">
+                        <a href="student-dashboard.html" class="btn btn-outline" style="padding: 12px 24px;">ยกเลิก</a>
+                        <button type="submit" class="btn btn-primary" id="submit-btn" style="padding: 12px 32px; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(201,162,39,0.3);">
+                            🚀 ส่งข้อมูลเพื่ออนุมัติ
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Right Side: Live Chibi Hero EXP Calculator -->
+            <div class="crystal-card hero-chibi-card" style="padding: 24px; position: sticky; top: 88px;">
+                <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
+                    <span class="light red"></span>
+                    <span class="light yellow"></span>
+                    <span class="light green"></span>
+                    <span class="mac-title">EXP growth preview</span>
+                </div>
+                
+                <div style="display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;">
+                    <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:1.2px;">ความคืบหน้าคาดการณ์</div>
+                    
+                    <div class="chibi-avatar-glow lv1" id="chibi-calc-avatar-container" style="width:130px; height:130px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition: all 0.3s ease;">
+                        <span class="float-emoji" style="font-size: 4.8rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));" id="chibi-calc-emoji">👶</span>
+                    </div>
+                    
+                    <div class="chibi-level-badge" id="chibi-calc-level-badge" style="font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:20px; background:var(--gold-bg); border:1px solid var(--gold); color:var(--gold);">Lv.1 Novice</div>
+                    
+                    <div style="width:100%; text-align:left; margin-top:8px;">
+                        <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
+                            <span style="color:var(--text-secondary);">Volunteer EXP:</span>
+                            <span style="color:var(--text-primary);" id="chibi-calc-exp-text">0 / 36 ชม.</span>
+                        </div>
+                        
+                        <div class="crystal-progress-track" style="height:8px; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.04);">
+                            <div class="crystal-progress-fill" id="chibi-calc-progress-fill" style="width:0%; height:100%; background:linear-gradient(90deg, var(--gold-dark), var(--gold-light)); border-radius:999px; transition:width 0.4s ease; box-shadow: 0 0 8px var(--gold);"></div>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:center; gap:4px; margin-top:12px; color:var(--gold);" id="chibi-calc-stars">
+                            ⭐⭐
+                        </div>
+                    </div>
+                    
+                    <div style="width:100%; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px; text-align:left; font-size:0.75rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:6px;">
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">ชั่วโมงที่อนุมัติแล้ว:</span><span style="font-weight:600; color:var(--text-primary);" id="chibi-calc-current-hrs">0 ชม.</span></div>
+                        <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">บวกเพิ่ม (รอพิจารณา):</span><span style="font-weight:600; color:var(--gold);" id="chibi-calc-added-hrs">+2 ชม.</span></div>
+                        <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.06); padding-top:4px; font-weight:700;"><span style="color:var(--text-secondary);">รวมเมื่อผ่านอนุมัติ:</span><span style="color:var(--text-primary);" id="chibi-calc-projected-hrs">2 ชม.</span></div>
+                    </div>
+                    
+                    <div style="font-size:0.75rem; color:var(--text-muted); font-style:italic; line-height:1.4; margin-top:4px;" id="chibi-calc-next-goal">
+                        เป้าหมายถัดไป: สะสมชั่วโมงความดีเพื่อวิวัฒนาการตัวละคร!
+                    </div>
+                </div>
+            </div>
+        </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toast-container"></div>
+    <script src="data/students_data.js?v=69"></script>
+    <script src="data/deeds_data.js?v=69"></script>
+    <script src="app.js?v=69"></script>
+    <script>
+        let currentUser = null;
+        let selectedCategoryId = null;
+        let uploadedImages = [];
+
+        function init() {
+            currentUser = App.requireAuth(['student']);
+            if (!currentUser) return;
+            document.getElementById('nav-avatar').textContent = (currentUser.first_name || '?')[0];
+
+            // Set today as default date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('activity-date').value = today;
+            document.getElementById('activity-date').max = today;
+
+            renderCategories();
+
+            // Set up hours listener
+            const hoursEl = document.getElementById('hours');
+            if (hoursEl) {
+                hoursEl.addEventListener('input', calculateProjectedChibi);
+                hoursEl.addEventListener('change', calculateProjectedChibi);
+            }
+            calculateProjectedChibi();
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('cat-grid');
+            grid.innerHTML = CATEGORIES.map(cat => `
+                <div class="cat-option ${selectedCategoryId === cat.id ? 'selected' : ''}" 
+                     id="cat-${cat.id}" 
+                     onclick="selectCategory(${cat.id})">
+                    <div class="icon">${cat.emoji}</div>
+                    <div style="font-weight: 500;">${cat.name}</div>
+                </div>`).join('');
+        }
+
+        function selectCategory(id) {
+            selectedCategoryId = id;
+            document.querySelectorAll('.cat-option').forEach(el => el.classList.remove('selected'));
+            document.getElementById('cat-' + id).classList.add('selected');
+            document.getElementById('selected-category').value = id;
+            document.getElementById('cat-error').classList.remove('show');
+        }
+
+        function adjustHours(delta) {
+            const input = document.getElementById('hours');
+            const val = parseFloat(input.value) || 0;
+            const newVal = Math.max(0.5, Math.min(24, val + delta));
+            input.value = newVal;
+            calculateProjectedChibi();
+        }
+
+        function calculateProjectedChibi() {
+            if (!currentUser) return;
+            const summary = App.getStudentSummary(currentUser.student_id);
+            const currentHours = summary.totalHours || 0;
+            const inputVal = parseFloat(document.getElementById('hours').value) || 0;
+            const projectedHours = currentHours + inputVal;
+
+            let level = 1;
+            let levelTitle = "Cadet Novice";
+            let rankTitle = "ผู้รับการฝึกหัด";
+            let chibiEmoji = "👶";
+            let progressPct = 0;
+            let stars = "";
+            let nextGoal = "";
+
+            if (projectedHours >= 36) {
+                level = 4;
+                levelTitle = "Celestial Archangel Hero (ปีกทองคำ)";
+                rankTitle = "สุดยอดวีรบุรุษปีกทองคำ";
+                chibiEmoji = "👼";
+                progressPct = 100;
+                stars = "⭐⭐⭐⭐⭐";
+                nextGoal = "🎉 คุณได้ผ่านเกณฑ์ขั้นสูงสุดแล้ว! วิวัฒนาการเป็นฮีโร่สายสวรรค์เสร็จสมบูรณ์";
+            } else if (projectedHours >= 20) {
+                level = 3;
+                levelTitle = "Winged Rescue Hero (ฮีโร่เวชศาสตร์การบิน)";
+                rankTitle = "ฮีโร่เวชศาสตร์ปีกเงิน";
+                chibiEmoji = "🎖️";
+                progressPct = Math.round((projectedHours / 36) * 100);
+                stars = "⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(36 - projectedHours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.4 สุดยอดวีรบุรุษปีกทองคำ!`;
+            } else if (projectedHours >= 10) {
+                level = 2;
+                levelTitle = "Apprentice Hero (พยาบาลฝึกหัดปีกเหล็ก)";
+                rankTitle = "นักเรียนพยาบาลปีกเหล็ก";
+                chibiEmoji = "🧑‍⚕️";
+                progressPct = Math.round((projectedHours / 36) * 100);
+                stars = "⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(20 - projectedHours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.3 ฮีโร่เวชศาสตร์การบิน!`;
+            } else {
+                level = 1;
+                levelTitle = "Cadet Novice (ผู้เข้ารับการฝึกหัด)";
+                rankTitle = "นักเรียนพยาบาลฝึกหัด";
+                chibiEmoji = "👶";
+                progressPct = Math.round((projectedHours / 36) * 100);
+                stars = "⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(10 - projectedHours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.2 พยาบาลฝึกหัดปีกเหล็ก!`;
+            }
+
+            // Update Chibi calculator card elements
+            document.getElementById('chibi-calc-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
+            document.getElementById('chibi-calc-exp-text').textContent = `${projectedHours.toFixed(1)} / 36 ชั่วโมง (EXP)`;
+            document.getElementById('chibi-calc-progress-fill').style.width = `${progressPct}%`;
+            document.getElementById('chibi-calc-stars').textContent = stars;
+            document.getElementById('chibi-calc-current-hrs').textContent = `${currentHours.toFixed(1)} ชม.`;
+            document.getElementById('chibi-calc-added-hrs').textContent = `+${inputVal.toFixed(1)} ชม.`;
+            document.getElementById('chibi-calc-projected-hrs').textContent = `${projectedHours.toFixed(1)} ชม.`;
+            document.getElementById('chibi-calc-next-goal').textContent = nextGoal;
+
+            // Set emoji and glow class
+            const avatarContainer = document.getElementById('chibi-calc-avatar-container');
+            if (avatarContainer) {
+                avatarContainer.className = `chibi-avatar-glow lv${level}`;
+                const emojiSpan = avatarContainer.querySelector('span');
+                if (emojiSpan) emojiSpan.textContent = chibiEmoji;
+            }
+        }
+
+        async function handleFileSelect(e) {
+            const files = Array.from(e.target.files);
+            for (const file of files) {
+                if (file.size > 5 * 1024 * 1024) { showToast('ไฟล์ใหญ่เกิน 5MB: ' + file.name, 'warning'); continue; }
+                const b64 = await App.imageToBase64(file);
+                uploadedImages.push(b64);
+                renderPreviews();
+            }
+        }
+
+        function handleDragOver(e) { e.preventDefault(); document.getElementById('upload-zone').classList.add('drag-over'); }
+
+        async function handleDrop(e) {
+            e.preventDefault();
+            document.getElementById('upload-zone').classList.remove('drag-over');
+            const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+            for (const file of files) {
+                const b64 = await App.imageToBase64(file);
+                uploadedImages.push(b64);
+            }
+            renderPreviews();
+        }
+
+        function renderPreviews() {
+            const grid = document.getElementById('preview-grid');
+            grid.innerHTML = uploadedImages.map((img, i) => `
+        <div class="preview-item">
+          <img src="${img}" alt="หลักฐาน ${i + 1}">
+          <button class="preview-remove" onclick="removeImage(${i})">✕</button>
+        </div>`).join('');
+        }
+
+        function removeImage(idx) {
+            uploadedImages.splice(idx, 1);
+            renderPreviews();
+        }
+
+        function showFormAlert(msg) {
+            document.getElementById('form-alert').classList.add('show');
+            document.getElementById('alert-msg').textContent = msg;
+        }
+        function hideFormAlert() { document.getElementById('form-alert').classList.remove('show'); }
+
+        async function handleSubmit(e) {
+            e.preventDefault();
+            hideFormAlert();
+
+            if (!selectedCategoryId) {
+                document.getElementById('cat-error').classList.add('show');
+                showFormAlert('กรุณาเลือกหมวดหมู่ความดี');
+                return;
+            }
+
+            const hours = parseFloat(document.getElementById('hours').value);
+            const description = document.getElementById('description').value.trim();
+            const activityDate = document.getElementById('activity-date').value;
+            const note = document.getElementById('note').value.trim();
+
+            if (!hours || hours <= 0) { showFormAlert('กรุณากรอกจำนวนชั่วโมงที่ถูกต้อง'); return; }
+            if (!description) { showFormAlert('กรุณากรอกรายละเอียดกิจกรรม'); return; }
+            if (!activityDate) { showFormAlert('กรุณาเลือกวันที่ทำกิจกรรม'); return; }
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> กำลังบันทึก...';
+
+            // Save images
+            const imageKeys = uploadedImages.map((img, i) => {
+                const key = `${currentUser.student_id}_${Date.now()}_${i}`;
+                App.saveImage(img, key);
+                return key;
+            });
+
+            const deed = await App.addDeed({
+                categoryId: selectedCategoryId,
+                hours,
+                description,
+                activityDate,
+                note,
+                imageUrls: imageKeys,
+            });
+
+            // Notify admin via Telegram + LINE (if configured)
+            const notified = await App.notifyAdmins(deed, currentUser);
+
+            if (notified) {
+                showToast('บันทึกสำเร็จ! แจ้งเตือนอาจารย์แล้ว 📢', 'success');
+            } else {
+                showToast('บันทึกความดีสำเร็จ! รอการอนุมัติจากอาจารย์ 🎉', 'success');
+            }
+            setTimeout(() => window.location.href = 'history.html', 1200);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
