@@ -616,6 +616,357 @@
             font-style: italic;
             margin-top: 4px;
         }
+
+        /* ===== Starbucks Volunteer Member Card ===== */
+        .starbucks-card-container {
+            perspective: 1000px;
+            margin-bottom: 24px;
+        }
+
+        .starbucks-card {
+            background: linear-gradient(135deg, #1f1f2e 0%, #11111b 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 24px;
+            min-height: 240px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .starbucks-card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px rgba(201, 162, 39, 0.2);
+        }
+
+        /* Glass shine overlay */
+        .card-shine {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);
+            z-index: 5;
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        /* Card Header */
+        .starbucks-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            z-index: 2;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .starbucks-card .card-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .starbucks-card .card-logo {
+            width: 45px;
+            height: 45px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: #fff;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .starbucks-card .card-brand-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .starbucks-card .card-brand-text .th {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            color: #fff;
+        }
+
+        .starbucks-card .card-brand-text .en {
+            font-size: 0.55rem;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .starbucks-card .card-level-badge {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 30px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Card Body */
+        .starbucks-card .card-body {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            z-index: 2;
+        }
+
+        .starbucks-card .card-photo-wrap {
+            width: 76px;
+            height: 76px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .starbucks-card .card-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .starbucks-card .card-student-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .starbucks-card .card-student-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            color: #fff;
+        }
+
+        .starbucks-card .card-student-detail {
+            display: flex;
+            gap: 14px;
+            font-size: 0.75rem;
+            opacity: 0.8;
+            flex-wrap: wrap;
+            color: #fff;
+        }
+
+        .starbucks-card .card-student-detail span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .starbucks-card .card-student-detail b {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .starbucks-card .card-watermark {
+            position: absolute;
+            right: -20px;
+            bottom: 30px;
+            font-size: 11rem;
+            opacity: 0.04;
+            pointer-events: none;
+            line-height: 1;
+            z-index: 1;
+            font-family: 'Kanit', sans-serif;
+            color: #fff;
+        }
+
+        .starbucks-card .card-chibi-wrap {
+            position: absolute;
+            right: 15px;
+            top: 50px;
+            width: 85px;
+            height: 85px;
+            pointer-events: none;
+            z-index: 3;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+            animation: cardChibiFloat 3s ease-in-out infinite;
+        }
+
+        .starbucks-card .card-chibi-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes cardChibiFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
+        }
+
+        /* Card Footer */
+        .starbucks-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 2;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 14px;
+            margin-top: 4px;
+        }
+
+        .starbucks-card .card-stars-display {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+        }
+
+        .starbucks-card .stars-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            opacity: 0.7;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .starbucks-card .stars-row {
+            display: flex;
+            gap: 3px;
+            font-size: 1.15rem;
+            color: #e2e8f0;
+            line-height: 1;
+        }
+
+        .starbucks-card .stars-row .star-icon {
+            color: rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .starbucks-card .stars-row .star-icon.active {
+            color: #f59e0b;
+            text-shadow: 0 0 8px rgba(245, 158, 11, 0.6);
+        }
+
+        .starbucks-card .stars-count {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #c9a227;
+            margin-top: 2px;
+        }
+
+        /* Barcode Area */
+        .starbucks-card .card-barcode-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+
+        .starbucks-card .card-barcode {
+            display: flex;
+            align-items: center;
+            height: 32px;
+            background: rgba(255,255,255,0.9);
+            padding: 3px 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            color: #000;
+        }
+
+        .starbucks-card .card-barcode div {
+            flex-shrink: 0;
+        }
+
+        .starbucks-card .card-barcode-text {
+            font-family: monospace;
+            font-size: 0.65rem;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            color: #fff;
+        }
+
+        /* Card Levels Color Schemes */
+        .starbucks-card.welcome-level {
+            background: linear-gradient(135deg, #2c1a12 0%, #1e110b 100%);
+            border-color: rgba(197, 107, 72, 0.3);
+        }
+        .starbucks-card.welcome-level .card-level-badge {
+            background: #c56b48;
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .starbucks-card.welcome-level .stars-count {
+            color: #c56b48;
+        }
+
+        .starbucks-card.green-level {
+            background: linear-gradient(135deg, #004d30 0%, #002718 100%);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        .starbucks-card.green-level .card-level-badge {
+            background: #006241;
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .starbucks-card.green-level .stars-count {
+            color: #00e08f;
+        }
+
+        .starbucks-card.gold-level {
+            background: linear-gradient(135deg, #6c5112 0%, #302100 100%), 
+                        radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 50%);
+            border-color: rgba(201, 162, 39, 0.4);
+        }
+        .starbucks-card.gold-level .card-level-badge {
+            background: linear-gradient(135deg, #c9a227, #a07818);
+            color: #000;
+            font-weight: 800;
+            border-color: rgba(255,255,255,0.5);
+        }
+        .starbucks-card.gold-level .stars-count {
+            color: #f59e0b;
+        }
+
+        .starbucks-card.platinum-level {
+            background: linear-gradient(135deg, #081121 0%, #03070f 100%);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .starbucks-card.platinum-level .card-level-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            border-color: rgba(255,255,255,0.4);
+            animation: badge-glow 2s infinite alternate;
+        }
+        .starbucks-card.platinum-level .stars-count {
+            color: #3b82f6;
+        }
+        @keyframes badge-glow {
+            0% { box-shadow: 0 0 5px rgba(59,130,246,0.3); }
+            100% { box-shadow: 0 0 15px rgba(139,92,246,0.7); }
+        }
     </style>
 </head>
 
@@ -664,6 +1015,7 @@
                 <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
                 <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
                 <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
                 <div class="divider" style="margin: 8px 16px;"></div>
                 <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
                 <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
@@ -674,15 +1026,60 @@
 
         <!-- MAIN -->
         <main class="main-content">
-            <!-- HERO -->
-            <div class="hero-card" id="hero-section">
-                <div class="hero-avatar" id="hero-avatar" style="overflow:hidden;padding:0">?</div>
-                <div class="hero-info">
-                    <div class="name" id="hero-name">กำลังโหลด...</div>
-                    <div class="meta">
-                        <span>🎫 <span id="hero-id">-</span></span>
-                        <span>📚 <span id="hero-year">-</span></span>
-                        <span>📧 <span id="hero-email">-</span></span>
+            <!-- STARBUCKS MEMBER CARD -->
+            <div class="starbucks-card-container">
+                <div class="starbucks-card welcome-level" id="starbucks-card">
+                    <!-- Glass shine effect -->
+                    <div class="card-shine"></div>
+                    
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <img src="510903.jpg" class="card-logo" alt="Logo">
+                            <div class="card-brand-text">
+                                <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                            </div>
+                        </div>
+                        <div class="card-level-badge" id="card-level-badge">WELCOME LEVEL</div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <!-- Profile Photo on Card -->
+                        <div class="card-photo-wrap">
+                            <div class="card-photo" id="card-photo">?</div>
+                        </div>
+                        
+                        <div class="card-student-info">
+                            <div class="card-student-name" id="card-student-name">กำลังโหลด...</div>
+                            <div class="card-student-detail">
+                                <span>🎫 รหัส: <b id="card-student-id">-</b></span>
+                                <span>📚 รุ่น: <b id="card-student-year">-</b></span>
+                                <span>📧 อีเมล: <b id="card-student-email">-</b></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating Chibi on Card -->
+                        <div class="card-chibi-wrap" id="card-chibi-wrap"></div>
+                        
+                        <!-- Watermark inside card background -->
+                        <div class="card-watermark">★</div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-stars-display">
+                            <span class="stars-title">คะแนนสะสม (ชั่วโมงจิตอาสา)</span>
+                            <div class="stars-row" id="card-stars-row">
+                                <!-- Stars generated dynamically -->
+                            </div>
+                            <div class="stars-count" id="card-stars-count">0 / 50 ชม.</div>
+                        </div>
+                        
+                        <div class="card-barcode-wrap">
+                            <div class="card-barcode" id="card-barcode">
+                                <!-- Barcode bars generated dynamically -->
+                            </div>
+                            <div class="card-barcode-text" id="card-barcode-text">0000000</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -708,9 +1105,8 @@
                 
                 <div class="crystal-grid">
                     <div class="chibi-visual-section">
-                        <div class="chibi-avatar-glow" id="chibi-hero-avatar-container">
-                            <span style="font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));">👶</span>
-                        </div>
+                        <!-- 3D Animated Chibi Container -->
+                        <div id="chibi-3d-mount" style="position:relative;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;"></div>
                         <div class="chibi-level-badge" id="chibi-level-badge">Lv.1 Novice</div>
                     </div>
                     
@@ -719,7 +1115,7 @@
                         
                         <div class="rpg-stat-row">
                             <span class="stat-label">Volunteer EXP:</span>
-                            <span class="stat-val" id="chibi-exp-text">0 / 36 hours</span>
+                            <span class="stat-val" id="chibi-exp-text">0 / 50 hours</span>
                         </div>
                         
                         <div class="crystal-progress-track">
@@ -774,9 +1170,9 @@
                     <span class="ac-icon">📋</span>
                     <span class="ac-label">ดูประวัติทั้งหมด</span>
                 </a>
-                <a href="#" class="action-card" id="btn-print" onclick="printCurrentStudent(); return false;">
-                    <span class="ac-icon">🖨️</span>
-                    <span class="ac-label">พิมพ์รายงาน</span>
+                <a href="report.html?type=individual" class="action-card">
+                    <span class="ac-icon">📊</span>
+                    <span class="ac-label">รายงาน PDF / พิมพ์</span>
                 </a>
                 <a href="profile.html" class="action-card">
                     <span class="ac-icon">👤</span>
@@ -880,9 +1276,176 @@
                         <p>นักเรียนพยาบาลทหารอากาศ (นพอ.) ทุกนาย จะต้องสะสมชั่วโมงความดีจิตอาสาให้ครบถ้วนตามข้อกำหนดเพื่อผ่านเกณฑ์การประเมินประจำปีการศึกษา</p>
                         <div style="border-left: 3px solid var(--gold); padding-left:12px; margin: 4px 0;">
                             <span style="font-weight:700; color:var(--text-primary);">เกณฑ์การสะสมชั่วโมงขั้นต่ำ:</span><br>
-                            <span style="font-size:1.2rem; font-weight:800; color:var(--gold);">36 ชั่วโมง / ปีการศึกษา</span>
+                            <span style="font-size:1.2rem; font-weight:800; color:var(--gold);">50 ชั่วโมง / ปีการศึกษา</span>
                         </div>
-                        <p style="font-size:0.8rem; color:var(--text-muted);">* เมื่อบันทึกกิจกรรมเรียบร้อยแล้ว กรุณารออาจารย์เข้าตรวจและอนุมัติในระบบ ตัวโฟลเดอร์สำหรับผลอนุมัติ (Approved Folder) จะ�        function renderChibiHero() {
+                        <p style="font-size:0.8rem; color:var(--text-muted);">* เมื่อบันทึกกิจกรรมเรียบร้อยแล้ว กรุณารออาจารย์เข้าตรวจและอนุมัติในระบบ</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPT INCLUDES -->
+    <script src="data/students_data.js?v=70"></script>
+    <script src="data/students_photos.js?v=70"></script>
+    <script src="data/deeds_data.js?v=70"></script>
+    <script src="app.js?v=72"></script>
+    <script src="chibi3d.js?v=1"></script>
+
+    <script>
+        let currentUser = null;
+        let summary = {};
+
+        async function init() {
+            currentUser = App.requireAuth(['student']);
+            if (!currentUser) return;
+
+            if (App.canUseBackendApi()) {
+                await App.syncDeedsWithBackend(currentUser.student_id);
+            }
+
+            summary = App.getStudentSummary(currentUser.student_id);
+
+            renderHero();
+            renderStatusBanner();
+            renderChibiHero();
+            renderStats();
+            renderCategories();
+            renderInteractiveTable();
+            renderRecentDeeds();
+        }
+
+                function renderHero() {
+            // Name & ID
+            const fullName = (currentUser.rank || '') + ' ' + currentUser.first_name + ' ' + currentUser.last_name;
+            
+            // Populate Starbucks Card Elements
+            document.getElementById('card-student-name').textContent = fullName;
+            document.getElementById('card-student-id').textContent = currentUser.student_id;
+            document.getElementById('card-student-year').textContent = currentUser.class_year ? 'รุ่น ' + currentUser.class_year : '-';
+            document.getElementById('card-student-email').textContent = currentUser.email || '-';
+
+            // Avatar photo
+            const photoUrl = App.getProfilePhoto(currentUser.student_id);
+            const avatarEl = document.getElementById('card-photo');
+            if (photoUrl) {
+                const img = document.createElement('img');
+                img.src = photoUrl;
+                img.alt = 'profile';
+                img.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:50%;';
+                img.onerror = function() {
+                    avatarEl.textContent = currentUser.first_name ? currentUser.first_name.charAt(0) : '?';
+                };
+                avatarEl.textContent = '';
+                avatarEl.appendChild(img);
+            } else {
+                avatarEl.textContent = currentUser.first_name ? currentUser.first_name.charAt(0) : '?';
+            }
+
+            // Nav name
+            const navName = document.getElementById('nav-name');
+            if (navName) navName.textContent = currentUser.first_name + ' ' + currentUser.last_name;
+
+            // Update Starbucks Card Styling based on Hours
+            const hours = summary.totalHours || 0;
+            const cardEl = document.getElementById('starbucks-card');
+            const badgeEl = document.getElementById('card-level-badge');
+            const starsRow = document.getElementById('card-stars-row');
+            const countEl = document.getElementById('card-stars-count');
+            const barcodeEl = document.getElementById('card-barcode');
+            const barcodeTextEl = document.getElementById('card-barcode-text');
+
+            // Determine level and color scheme
+            let cardClass = 'welcome-level';
+            let badgeText = 'Welcome Level';
+            let numStars = 1;
+            let activeStars = 0;
+
+            if (hours >= 50) {
+                cardClass = 'platinum-level';
+                badgeText = 'Platinum Pass';
+                numStars = 8;
+                activeStars = 8;
+            } else if (hours >= 30) {
+                cardClass = 'gold-level';
+                badgeText = 'Gold Member';
+                numStars = 5;
+                activeStars = Math.min(5, 3 + Math.floor(((hours - 30) / 20) * 2));
+            } else if (hours >= 10) {
+                cardClass = 'green-level';
+                badgeText = 'Green Member';
+                numStars = 3;
+                activeStars = Math.min(3, 1 + Math.floor(((hours - 10) / 20) * 2));
+            } else {
+                cardClass = 'welcome-level';
+                badgeText = 'Welcome Member';
+                numStars = 1;
+                activeStars = hours >= 5 ? 1 : 0;
+            }
+
+            // Apply card styling
+            cardEl.className = `starbucks-card ${cardClass}`;
+            badgeEl.textContent = badgeText;
+            countEl.textContent = `${hours} / 50 ชั่วโมง`;
+
+            // Draw Stars
+            let starsHtml = '';
+            for (let i = 0; i < numStars; i++) {
+                const isActive = i < activeStars;
+                starsHtml += `<span class="star-icon ${isActive ? 'active' : ''}">${isActive ? '★' : '☆'}</span>`;
+            }
+            starsRow.innerHTML = starsHtml;
+
+            // Draw Barcode lines dynamically based on student ID digits
+            let barcodeHtml = '';
+            const idStr = String(currentUser.student_id);
+            for (let i = 0; i < idStr.length; i++) {
+                const digit = parseInt(idStr[i]) || 3;
+                const barWidth = (digit % 3) + 1; // 1 to 3px
+                const spaceWidth = ((digit + 1) % 2) + 1; // 1 to 2px
+                barcodeHtml += `<div style="width:${barWidth}px; background:#000; height:100%; margin-right:${spaceWidth}px;"></div>`;
+            }
+            barcodeEl.innerHTML = barcodeHtml;
+            barcodeTextEl.textContent = currentUser.student_id;
+
+            // Init 3D tilt effect on the card
+            initCardTilt();
+        }
+
+        // Tilt effect helper
+        function initCardTilt() {
+            const card = document.getElementById('starbucks-card');
+            if (!card) return;
+            const container = card.parentElement;
+            
+            container.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left - rect.width/2;
+                const y = e.clientY - rect.top - rect.height/2;
+                
+                const rx = -(y / rect.height) * 15; // max 15 degrees rotation
+                const ry = (x / rect.width) * 15;
+                
+                card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`;
+                
+                const shine = card.querySelector('.card-shine');
+                if (shine) {
+                    const shineX = (e.clientX - rect.left) / rect.width * 100;
+                    const shineY = (e.clientY - rect.top) / rect.height * 100;
+                    shine.style.background = `radial-gradient(circle at ${shineX}% ${shineY}%, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 60%)`;
+                }
+            });
+            
+            container.addEventListener('mouseleave', () => {
+                card.style.transform = 'rotateX(0deg) rotateY(0deg) scale(1)';
+                const shine = card.querySelector('.card-shine');
+                if (shine) {
+                    shine.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%)';
+                }
+            });
+        }
+
+        function renderChibiHero() {
             const hours = summary.totalHours || 0;
             let level = 1;
             let levelTitle = "";
@@ -892,36 +1455,36 @@
             let stars = "";
             let nextGoal = "";
 
-            if (hours >= 40) {
+            if (hours >= 50) {
                 level = 8;
                 levelTitle = "Ultimate Sovereign Angel Hero (สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด)";
                 rankTitle = "สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด";
                 chibiEmoji = "🌟";
                 progressPct = 100;
                 stars = "⭐⭐⭐⭐⭐⭐⭐⭐";
-                nextGoal = "🎉 ยินดีด้วย! คุณได้บรรลุระดับจิตอาสาสูงสุดของวิทยาลัยพยาบาลทหารอากาศแล้ว!";
-            } else if (hours >= 36) {
+                nextGoal = "🎉 ยินดีด้วย! คุณผ่านเกณฑ์ 50 ชม. และบรรลุระดับจิตอาสาสูงสุดของวิทยาลัยพยาบาลทหารอากาศแล้ว!";
+            } else if (hours >= 40) {
                 level = 7;
                 levelTitle = "Royal Air Force Nurse Commander (ผู้บัญชาการจิตอาสา วพอ.)";
                 rankTitle = "ผู้บัญชาการจิตอาสา วพอ.";
                 chibiEmoji = "👑";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐⭐⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(40 - hours).toFixed(1)} ชม. เพื่อวิวัฒนาการเป็นระดับสูงสุด Lv.8 อัครเทวทูตสวรรค์!`;
+                nextGoal = `เป้าหมายถัดไป: อีก ${(50 - hours).toFixed(1)} ชม. เพื่อผ่านเกณฑ์ 50 ชม. และวิวัฒนาการเป็นระดับสูงสุด Lv.8 อัครเทวทูตสวรรค์!`;
             } else if (hours >= 30) {
                 level = 6;
                 levelTitle = "Guardian Angel of Health (เทวทูตผู้พิทักษ์สุขภาพชุมชน)";
                 rankTitle = "เทวทูตผู้พิทักษ์สุขภาพ";
                 chibiEmoji = "👼";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(36 - hours).toFixed(1)} ชม. เพื่อผ่านเกณฑ์ 36 ชม. และเลื่อนระดับเป็น Lv.7 ผู้บัญชาการจิตอาสา!`;
+                nextGoal = `เป้าหมายถัดไป: อีก ${(40 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.7 ผู้บัญชาการจิตอาสา!`;
             } else if (hours >= 20) {
                 level = 5;
                 levelTitle = "Gold Flight Rescue Hero (ฮีโร่กู้ชีพเวชศาสตร์การบิน)";
                 rankTitle = "ฮีโร่กู้ชีพเวชศาสตร์การบิน";
                 chibiEmoji = "✈️";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐⭐⭐⭐";
                 nextGoal = `เป้าหมายถัดไป: อีก ${(30 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.6 เทวทูตผู้พิทักษ์สุขภาพ!`;
             } else if (hours >= 15) {
@@ -929,7 +1492,7 @@
                 levelTitle = "Silver Care Hero (วีรบุรุษพยาบาลปีกเงิน)";
                 rankTitle = "วีรบุรุษพยาบาลปีกเงิน";
                 chibiEmoji = "🧑‍⚕️";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐⭐⭐";
                 nextGoal = `เป้าหมายถัดไป: อีก ${(20 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.5 ฮีโร่กู้ชีพเวชศาสตร์การบิน!`;
             } else if (hours >= 10) {
@@ -937,7 +1500,7 @@
                 levelTitle = "Bronze Service Cadet (พยาบาลจิตอาสาปีกทองแดง)";
                 rankTitle = "พยาบาลจิตอาสาปีกทองแดง";
                 chibiEmoji = "🩺";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐⭐";
                 nextGoal = `เป้าหมายถัดไป: อีก ${(15 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.4 วีรบุรุษพยาบาลปีกเงิน!`;
             } else if (hours >= 5) {
@@ -945,7 +1508,7 @@
                 levelTitle = "Cadet Apprentice (นักเรียนฝึกงานพยาบาล)";
                 rankTitle = "นักเรียนฝึกงานพยาบาล";
                 chibiEmoji = "📝";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐⭐";
                 nextGoal = `เป้าหมายถัดไป: อีก ${(10 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.3 พยาบาลจิตอาสาปีกทองแดง!`;
             } else {
@@ -953,14 +1516,14 @@
                 levelTitle = "Cadet Novice (นักเรียนพยาบาลฝึกหัด)";
                 rankTitle = "นักเรียนพยาบาลฝึกหัด";
                 chibiEmoji = "👶";
-                progressPct = Math.round((hours / 36) * 100);
+                progressPct = Math.round((hours / 50) * 100);
                 stars = "⭐";
                 nextGoal = `เป้าหมายถัดไป: อีก ${(5 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.2 นักเรียนฝึกงานพยาบาล!`;
             }
 
             document.getElementById('chibi-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
             document.getElementById('chibi-hero-title').innerHTML = `🦸‍♂️ ฮีโร่จิตอาสา: ${currentUser.first_name}`;
-            document.getElementById('chibi-exp-text').textContent = `${hours} / 36 ชั่วโมง (EXP)`;
+            document.getElementById('chibi-exp-text').textContent = `${hours} / 50 ชั่วโมง (EXP)`;
             document.getElementById('chibi-progress-fill').style.width = `${Math.min(progressPct, 100)}%`;
             document.getElementById('chibi-stars-container').textContent = stars;
             document.getElementById('chibi-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
@@ -969,57 +1532,16 @@
             document.getElementById('chibi-rank-title').textContent = rankTitle;
             document.getElementById('chibi-next-goal-text').textContent = nextGoal;
             
-            // Set image and glow class
-            const avatarContainer = document.getElementById('chibi-hero-avatar-container');
-            avatarContainer.className = `chibi-avatar-glow lv${level}`;
-            
-            const chibiImage = `photos/chibi/chibi_lv${level}.png`;
-            avatarContainer.innerHTML = `
-                <img src="${chibiImage}" alt="${levelTitle}" 
-                     class="chibi-image-render" 
-                     style="width: 130px; height: 130px; object-fit: contain; filter: drop-shadow(0 8px 20px rgba(0,0,0,0.6)); border-radius: 50%; transition: all 0.3s ease;"
-                     onerror="this.outerHTML='<span class=\\'float-emoji\\' style=\\'font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));\\'>${chibiEmoji}</span>'">
-            `;
-        }el = 3;
-                levelTitle = "Winged Rescue Hero (ฮีโร่เวชศาสตร์การบิน)";
-                rankTitle = "ฮีโร่เวชศาสตร์ปีกเงิน";
-                chibiEmoji = "🎖️";
-                progressPct = Math.round((hours / 36) * 100);
-                stars = "⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${36 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.4 สุดยอดวีรบุรุษปีกทองคำ!`;
-            } else if (hours >= 10) {
-                level = 2;
-                levelTitle = "Apprentice Hero (พยาบาลฝึกหัดปีกเหล็ก)";
-                rankTitle = "นักเรียนพยาบาลปีกเหล็ก";
-                chibiEmoji = "🧑‍⚕️";
-                progressPct = Math.round((hours / 36) * 100);
-                stars = "⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${20 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.3 ฮีโร่เวชศาสตร์การบิน!`;
-            } else {
-                level = 1;
-                levelTitle = "Cadet Novice (ผู้เข้ารับการฝึกหัด)";
-                rankTitle = "นักเรียนพยาบาลฝึกหัด";
-                chibiEmoji = "👶";
-                progressPct = Math.round((hours / 36) * 100);
-                stars = "⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${10 - hours} ชม. เพื่อเลื่อนระดับเป็น Lv.2 พยาบาลฝึกหัดปีกเหล็ก!`;
+            // Initialize 3D Chibi Character using the new chibi3d.js renderer
+            if (typeof initChibiHero === 'function') {
+                initChibiHero('chibi-3d-mount', level, hours);
             }
 
-            document.getElementById('chibi-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
-            document.getElementById('chibi-hero-title').innerHTML = `🦸‍♂️ ฮีโร่จิตอาสา: ${currentUser.first_name}`;
-            document.getElementById('chibi-exp-text').textContent = `${hours} / 36 ชั่วโมง (EXP)`;
-            document.getElementById('chibi-progress-fill').style.width = `${progressPct}%`;
-            document.getElementById('chibi-stars-container').textContent = stars;
-            document.getElementById('chibi-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
-            document.getElementById('chibi-id').textContent = currentUser.student_id;
-            document.getElementById('chibi-total-hours').textContent = `${hours} ชม.`;
-            document.getElementById('chibi-rank-title').textContent = rankTitle;
-            document.getElementById('chibi-next-goal-text').textContent = nextGoal;
-            
-            // Set emoji and glow class
-            const avatarContainer = document.getElementById('chibi-hero-avatar-container');
-            avatarContainer.className = `chibi-avatar-glow lv${level}`;
-            avatarContainer.innerHTML = `<span class="float-emoji" style="font-size: 5.5rem; filter: drop-shadow(0 8px 16px rgba(0,0,0,0.4));">${chibiEmoji}</span>`;
+            // Set floating Chibi image on the Starbucks Card
+            const cardChibiEl = document.getElementById('card-chibi-wrap');
+            if (cardChibiEl) {
+                cardChibiEl.innerHTML = `<img src="photos/chibi/chibi_lv${level}.png" alt="Chibi Level ${level}">`;
+            }
         }
 
         function renderStats() {
@@ -1200,7 +1722,13 @@
         }
 
         function printCurrentStudent() {
-            if (currentUser) printStudentReport(currentUser.student_id);
+            if (currentUser) {
+                if (App.canUseBackendApi()) {
+                    window.location.href = `/api/export_docx?studentId=${currentUser.student_id}`;
+                    return;
+                }
+                printStudentReport(currentUser.student_id);
+            }
         }
 
         init();

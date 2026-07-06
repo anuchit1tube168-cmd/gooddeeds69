@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คอลเลกชันบัตรความดีจิตอาสา - วพอ.พอ.</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3">
+    
+    <style>
+        body {
+            background: radial-gradient(circle at 50% 0%, #0d1527 0%, #050a14 100%);
+            min-height: 100vh;
+            color: #fff;
+            padding: 40px 20px;
+        }
+
+        .showcase-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .showcase-header h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--gold) 0%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            text-shadow: 0 4px 20px rgba(201, 162, 39, 0.25);
+        }
+
+        .showcase-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto 24px;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .back-btn:hover {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.4);
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 32px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px 0;
+        }
+
+        .card-showcase-box {
+            background: rgba(10, 20, 38, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 24px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            transition: transform 0.3s, border-color 0.3s;
+        }
+
+        .card-showcase-box:hover {
+            border-color: rgba(201, 162, 39, 0.2);
+        }
+
+        .card-info-section {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 16px;
+        }
+
+        .card-title-badge {
+            display: inline-block;
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .welcome-badge { background: #c56b48; color: #fff; }
+        .green-badge { background: #006241; color: #fff; }
+        .gold-badge { background: #c9a227; color: #000; }
+        .platinum-badge { background: linear-gradient(135deg, #3b82f6, #8b5cf6); color: #fff; }
+
+        .card-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .criteria-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--gold);
+        }
+
+        .criteria-row b {
+            color: var(--gold);
+        }
+
+        /* ===== Starbucks Volunteer Member Card CSS ===== */
+        .starbucks-card-container {
+            perspective: 1000px;
+            width: 100%;
+        }
+
+        .starbucks-card {
+            background: linear-gradient(135deg, #1f1f2e 0%, #11111b 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 22px;
+            min-height: 230px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: #fff;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.03);
+            transition: transform 0.15s ease-out, box-shadow 0.3s ease;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        /* Glass shine overlay */
+        .card-shine {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 0) 100%);
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        /* Card Header */
+        .starbucks-card .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            z-index: 2;
+            background: transparent;
+            border: none;
+            padding: 0;
+        }
+
+        .starbucks-card .card-brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .starbucks-card .card-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 1.5px solid rgba(255, 255, 255, 0.2);
+            background: #fff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .starbucks-card .card-brand-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .starbucks-card .card-brand-text .th {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            color: #fff;
+        }
+
+        .starbucks-card .card-brand-text .en {
+            font-size: 0.5rem;
+            letter-spacing: 0.5px;
+            opacity: 0.7;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .starbucks-card .card-level-badge {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 30px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Card Body */
+        .starbucks-card .card-body {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 12px;
+            z-index: 2;
+        }
+
+        .starbucks-card .card-photo-wrap {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2.5px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.4);
+            flex-shrink: 0;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .starbucks-card .card-photo-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .starbucks-card .card-student-info {
+            flex-grow: 1;
+            text-align: left;
+        }
+
+        .starbucks-card .card-student-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            color: #fff;
+        }
+
+        .starbucks-card .card-student-detail {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 0.7rem;
+            opacity: 0.8;
+            color: #fff;
+        }
+
+        .starbucks-card .card-student-detail span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .starbucks-card .card-student-detail b {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .starbucks-card .card-watermark {
+            position: absolute;
+            right: -15px;
+            bottom: 25px;
+            font-size: 10rem;
+            opacity: 0.04;
+            pointer-events: none;
+            line-height: 1;
+            z-index: 1;
+            font-family: 'Kanit', sans-serif;
+            color: #fff;
+        }
+
+        /* Floating Chibi on Card */
+        .starbucks-card .card-chibi-wrap {
+            position: absolute;
+            right: 15px;
+            top: 50px;
+            width: 80px;
+            height: 80px;
+            pointer-events: none;
+            z-index: 3;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+            animation: cardChibiFloat 3s ease-in-out infinite;
+        }
+
+        .starbucks-card .card-chibi-wrap img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        @keyframes cardChibiFloat {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(3deg); }
+        }
+
+        /* Card Footer */
+        .starbucks-card .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 2;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            padding-top: 12px;
+            margin-top: 2px;
+        }
+
+        .starbucks-card .card-stars-display {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            text-align: left;
+        }
+
+        .starbucks-card .stars-title {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            opacity: 0.7;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .starbucks-card .stars-row {
+            display: flex;
+            gap: 3px;
+            font-size: 1rem;
+            color: #e2e8f0;
+            line-height: 1;
+        }
+
+        .starbucks-card .stars-row .star-icon {
+            color: rgba(255, 255, 255, 0.15);
+        }
+
+        .starbucks-card .stars-row .star-icon.active {
+            color: #f59e0b;
+            text-shadow: 0 0 6px rgba(245, 158, 11, 0.6);
+        }
+
+        .starbucks-card .stars-count {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-top: 1px;
+        }
+
+        /* Barcode Area */
+        .starbucks-card .card-barcode-wrap {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 3px;
+        }
+
+        .starbucks-card .card-barcode {
+            display: flex;
+            align-items: center;
+            height: 28px;
+            background: rgba(255,255,255,0.9);
+            padding: 3px 6px;
+            border-radius: 4px;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            color: #000;
+        }
+
+        .starbucks-card .card-barcode div {
+            flex-shrink: 0;
+        }
+
+        .starbucks-card .card-barcode-text {
+            font-family: monospace;
+            font-size: 0.55rem;
+            letter-spacing: 1.5px;
+            opacity: 0.8;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Card Levels Color Schemes */
+        .starbucks-card.welcome-level {
+            background: linear-gradient(135deg, #2c1a12 0%, #1e110b 100%);
+            border-color: rgba(197, 107, 72, 0.3);
+        }
+        .starbucks-card.welcome-level .card-level-badge {
+            background: #c56b48;
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .starbucks-card.welcome-level .stars-count {
+            color: #c56b48;
+        }
+
+        .starbucks-card.green-level {
+            background: linear-gradient(135deg, #004d30 0%, #002718 100%);
+            border-color: rgba(34, 197, 94, 0.2);
+        }
+        .starbucks-card.green-level .card-level-badge {
+            background: #006241;
+            color: #fff;
+            border-color: rgba(255,255,255,0.3);
+        }
+        .starbucks-card.green-level .stars-count {
+            color: #00e08f;
+        }
+
+        .starbucks-card.gold-level {
+            background: linear-gradient(135deg, #6c5112 0%, #302100 100%), 
+                        radial-gradient(circle at 80% 20%, rgba(245, 158, 11, 0.15) 0%, transparent 50%);
+            border-color: rgba(201, 162, 39, 0.4);
+        }
+        .starbucks-card.gold-level .card-level-badge {
+            background: linear-gradient(135deg, #c9a227, #a07818);
+            color: #000;
+            font-weight: 800;
+            border-color: rgba(255,255,255,0.5);
+        }
+        .starbucks-card.gold-level .stars-count {
+            color: #f59e0b;
+        }
+
+        .starbucks-card.platinum-level {
+            background: linear-gradient(135deg, #081121 0%, #03070f 100%);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .starbucks-card.platinum-level .card-level-badge {
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            color: #fff;
+            border-color: rgba(255,255,255,0.4);
+            animation: badge-glow 2s infinite alternate;
+        }
+        .starbucks-card.platinum-level .stars-count {
+            color: #3b82f6;
+        }
+        @keyframes badge-glow {
+            0% { box-shadow: 0 0 5px rgba(59,130,246,0.3); }
+            100% { box-shadow: 0 0 15px rgba(139,92,246,0.7); }
+        }
+    </style>
+</head>
+<body>
+    <div class="showcase-header">
+        <h1>คอลเลกชันบัตรความดีจิตอาสา</h1>
+        <p>ระดับบัตรสมาชิกจิตอาสาสไตล์ Starbucks ออกแบบมาเพื่อกระตุ้นและแสดงถึงระดับความดีของนักเรียนพยาบาลทหารอากาศ โดยแบ่งระดับจากชั่วโมงจิตอาสาที่สะสมได้จริง</p>
+        <a href="student-dashboard.html" class="back-btn">🏠 กลับสู่แดชบอร์ดนักเรียน</a>
+    </div>
+
+    <div class="cards-grid">
+        <!-- WELCOME LEVEL -->
+        <div class="card-showcase-box">
+            <div class="starbucks-card-container">
+                <div class="starbucks-card welcome-level" data-id="welcome">
+                    <div class="card-shine"></div>
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <img src="510903.jpg" class="card-logo" alt="Logo">
+                            <div class="card-brand-text">
+                                <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                            </div>
+                        </div>
+                        <div class="card-level-badge">Welcome Member</div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-photo-wrap"><img src="photos/chibi/chibi_lv1.png" alt="profile"></div>
+                        <div class="card-student-info">
+                            <div class="card-student-name">กำลังโหลด...</div>
+                            <div class="card-student-detail">
+                                <span>🎫 รหัส: <b>-</b></span>
+                                <span>📚 รุ่น: <b>-</b></span>
+                                <span>📧 อีเมล: <b>-</b></span>
+                            </div>
+                        </div>
+                        <div class="card-watermark">★</div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-stars-display">
+                            <span class="stars-title">คะแนนสะสม (ชั่วโมงจิตอาสา)</span>
+                            <div class="stars-row">
+                                <span class="star-icon active">★</span>
+                            </div>
+                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                        </div>
+                        <div class="card-barcode-wrap">
+                            <div class="card-barcode" data-barcode=""></div>
+                            <div class="card-barcode-text">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-info-section">
+                <span class="card-title-badge welcome-badge">Welcome Level</span>
+                <p class="card-desc">ระดับเริ่มต้นสำหรับนักเรียนใหม่ที่เพิ่งเข้าระบบ หรือสะสมชั่วโมงจิตอาสายังไม่ถึงเกณฑ์ขั้นแรก สีส้มทองแดงอบอุ่น ให้ความรู้สึกของก้าวแรกในการทำความดี</p>
+                <div class="criteria-row">เกณฑ์ระดับ: <b>0 - 9.9 ชั่วโมง</b></div>
+            </div>
+        </div>
+
+        <!-- GREEN LEVEL -->
+        <div class="card-showcase-box">
+            <div class="starbucks-card-container">
+                <div class="starbucks-card green-level" data-id="green">
+                    <div class="card-shine"></div>
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <img src="510903.jpg" class="card-logo" alt="Logo">
+                            <div class="card-brand-text">
+                                <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                            </div>
+                        </div>
+                        <div class="card-level-badge">Green Member</div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-photo-wrap"><img src="photos/chibi/chibi_lv3.png" alt="profile"></div>
+                        <div class="card-student-info">
+                            <div class="card-student-name">กำลังโหลด...</div>
+                            <div class="card-student-detail">
+                                <span>🎫 รหัส: <b>-</b></span>
+                                <span>📚 รุ่น: <b>-</b></span>
+                                <span>📧 อีเมล: <b>-</b></span>
+                            </div>
+                        </div>
+                        <div class="card-watermark">★</div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-stars-display">
+                            <span class="stars-title">คะแนนสะสม (ชั่วโมงจิตอาสา)</span>
+                            <div class="stars-row">
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon">☆</span>
+                            </div>
+                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                        </div>
+                        <div class="card-barcode-wrap">
+                            <div class="card-barcode" data-barcode=""></div>
+                            <div class="card-barcode-text">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-info-section">
+                <span class="card-title-badge green-badge">Green Level</span>
+                <p class="card-desc">ระดับสีเขียวป่าจิตอาสา สีเขียวแบรนด์เนมเข้มขรึม สะท้อนถึงการเจริญเติบโต ความงอกงามของการมีจิตสาธารณะ และการมีส่วนร่วมในกิจกรรมสม่ำเสมอ</p>
+                <div class="criteria-row">เกณฑ์ระดับ: <b>10 - 29.9 ชั่วโมง</b></div>
+            </div>
+        </div>
+
+        <!-- GOLD LEVEL -->
+        <div class="card-showcase-box">
+            <div class="starbucks-card-container">
+                <div class="starbucks-card gold-level" data-id="gold">
+                    <div class="card-shine"></div>
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <img src="510903.jpg" class="card-logo" alt="Logo">
+                            <div class="card-brand-text">
+                                <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                            </div>
+                        </div>
+                        <div class="card-level-badge">Gold Member</div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-photo-wrap"><img src="photos/chibi/chibi_lv5.png" alt="profile"></div>
+                        <div class="card-student-info">
+                            <div class="card-student-name">กำลังโหลด...</div>
+                            <div class="card-student-detail">
+                                <span>🎫 รหัส: <b>-</b></span>
+                                <span>📚 รุ่น: <b>-</b></span>
+                                <span>📧 อีเมล: <b>-</b></span>
+                            </div>
+                        </div>
+                        <div class="card-watermark">★</div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-stars-display">
+                            <span class="stars-title">คะแนนสะสม (ชั่วโมงจิตอาสา)</span>
+                            <div class="stars-row">
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon">☆</span>
+                            </div>
+                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                        </div>
+                        <div class="card-barcode-wrap">
+                            <div class="card-barcode" data-barcode=""></div>
+                            <div class="card-barcode-text">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-info-section">
+                <span class="card-title-badge gold-badge">Gold Level</span>
+                <p class="card-desc">ระดับทองคำสุดหรูสำหรับผู้สะสมจิตอาสาอย่างแข็งขัน มีระดับลวดลายสีทองและแสงสะท้อนอันเลอค่า พร้อมมีสัญลักษณ์ดาวทองสะสมพิเศษ บ่งบอกความทุ่มเทอย่างยอดเยี่ยม</p>
+                <div class="criteria-row">เกณฑ์ระดับ: <b>30 - 49.9 ชั่วโมง</b></div>
+            </div>
+        </div>
+
+        <!-- PLATINUM LEVEL -->
+        <div class="card-showcase-box">
+            <div class="starbucks-card-container">
+                <div class="starbucks-card platinum-level" data-id="platinum">
+                    <div class="card-shine"></div>
+                    <div class="card-header">
+                        <div class="card-brand">
+                            <img src="510903.jpg" class="card-logo" alt="Logo">
+                            <div class="card-brand-text">
+                                <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                            </div>
+                        </div>
+                        <div class="card-level-badge">Platinum Pass</div>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="card-photo-wrap"><img src="photos/chibi/chibi_lv8.png" alt="profile"></div>
+                        <div class="card-student-info">
+                            <div class="card-student-name">กำลังโหลด...</div>
+                            <div class="card-student-detail">
+                                <span>🎫 รหัส: <b>-</b></span>
+                                <span>📚 รุ่น: <b>-</b></span>
+                                <span>📧 อีเมล: <b>-</b></span>
+                            </div>
+                        </div>
+                        <div class="card-watermark">★</div>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <div class="card-stars-display">
+                            <span class="stars-title">คะแนนสะสม (ชั่วโมงจิตอาสา)</span>
+                            <div class="stars-row">
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                                <span class="star-icon active">★</span>
+                            </div>
+                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                        </div>
+                        <div class="card-barcode-wrap">
+                            <div class="card-barcode" data-barcode=""></div>
+                            <div class="card-barcode-text">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-info-section">
+                <span class="card-title-badge platinum-badge">Platinum Pass (ผ่านเกณฑ์เด่นชัด)</span>
+                <p class="card-desc">ระดับสูงสุดเหนือระดับจิตอาสาทั่วไป สี Cosmic Black ผสมผสานขอบเรืองแสงนีออนไล่เฉดน้ำเงิน-ม่วง มีดวงดาวระยิบระยับระดับอัศวินสวรรค์ บ่งบอกถึงการทำความดีทะลุเกณฑ์ 50 ชม. อย่างสมบูรณ์แบบ</p>
+                <div class="criteria-row">เกณฑ์ระดับ: <b>50+ ชั่วโมง (ผ่านเกณฑ์สำเร็จ)</b></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT INCLUDES -->
+    <script src="data/students_data.js?v=69"></script>
+    <script src="data/students_photos.js?v=69"></script>
+    <script src="data/deeds_data.js?v=69"></script>
+    <script src="app.js?v=72"></script>
+
+    <script>
+        // Draw Barcode Helper
+        function renderBarcode(el, code) {
+            let html = '';
+            for (let i = 0; i < code.length; i++) {
+                const digit = parseInt(code[i]) || 3;
+                const barWidth = (digit % 3) + 1; // 1 to 3px
+                const spaceWidth = ((digit + 1) % 2) + 1; // 1 to 2px
+                html += `<div style="width:${barWidth}px; background:#000; height:100%; margin-right:${spaceWidth}px;"></div>`;
+            }
+            el.innerHTML = html;
+        }
+
+        window.addEventListener('load', () => {
+            const currentUser = App.requireAuth(['student', 'teacher', 'admin']);
+            if (!currentUser) return;
+
+            let levels = {
+                welcome: null,
+                green: null,
+                gold: null,
+                platinum: null
+            };
+
+            if (currentUser.role === 'student') {
+                const ownSummary = App.getStudentSummary(currentUser.student_id);
+                levels = {
+                    welcome: { student: currentUser, summary: ownSummary },
+                    green: { student: currentUser, summary: ownSummary },
+                    gold: { student: currentUser, summary: ownSummary },
+                    platinum: { student: currentUser, summary: ownSummary },
+                };
+            } else {
+                // Find real students in the database who have real .jpg photos
+                const studentsWithPhotos = STUDENTS_DATA.filter(s => {
+                    const photo = STUDENT_PHOTOS[s.student_id];
+                    return photo && photo.endsWith('.jpg');
+                });
+
+                // Map them by volunteer hours category
+                studentsWithPhotos.forEach(s => {
+                    const summ = App.getStudentSummary(s.student_id);
+                    const hrs = summ.totalHours || 0;
+                    
+                    if (hrs >= 50 && !levels.platinum) {
+                        levels.platinum = { student: s, summary: summ };
+                    } else if (hrs >= 30 && hrs < 50 && !levels.gold) {
+                        levels.gold = { student: s, summary: summ };
+                    } else if (hrs >= 10 && hrs < 30 && !levels.green) {
+                        levels.green = { student: s, summary: summ };
+                    } else if (hrs < 10 && !levels.welcome) {
+                        levels.welcome = { student: s, summary: summ };
+                    }
+                });
+
+                // Fallbacks in case any category is empty: pick representatives and customize hours for preview
+                const defaultStudent = studentsWithPhotos[0] || STUDENTS_DATA[0];
+                if (!levels.welcome) {
+                    levels.welcome = { 
+                        student: defaultStudent, 
+                        summary: { totalHours: 4.5, approvedCount: 1, pendingCount: 0, rejectedCount: 0 } 
+                    };
+                }
+                if (!levels.green) {
+                    levels.green = { 
+                        student: studentsWithPhotos[1] || defaultStudent, 
+                        summary: { totalHours: 18.0, approvedCount: 3, pendingCount: 0, rejectedCount: 0 } 
+                    };
+                }
+                if (!levels.gold) {
+                    levels.gold = { 
+                        student: studentsWithPhotos[2] || defaultStudent, 
+                        summary: { totalHours: 42.5, approvedCount: 8, pendingCount: 0, rejectedCount: 0 } 
+                    };
+                }
+                if (!levels.platinum) {
+                    levels.platinum = { 
+                        student: studentsWithPhotos[3] || defaultStudent, 
+                        summary: { totalHours: 283.0, approvedCount: 35, pendingCount: 0, rejectedCount: 0 } 
+                    };
+                }
+            }
+
+            // Populate each card
+            const cardTypes = ['welcome', 'green', 'gold', 'platinum'];
+            cardTypes.forEach(type => {
+                const data = levels[type];
+                const stu = data.student;
+                const summ = data.summary;
+                const hrs = summ.totalHours;
+
+                const cardEl = document.querySelector(`.starbucks-card.${type}-level`);
+                if (!cardEl) return;
+
+                // 1. Student Name
+                const nameEl = cardEl.querySelector('.card-student-name');
+                nameEl.textContent = `${stu.rank} ${stu.first_name} ${stu.last_name}`;
+
+                // 2. Details (ID, Class, Email)
+                const detailSpans = cardEl.querySelectorAll('.card-student-detail b');
+                if (detailSpans.length >= 3) {
+                    detailSpans[0].textContent = stu.student_id;
+                    detailSpans[1].textContent = `รุ่น ${stu.class_year}`;
+                    detailSpans[2].textContent = stu.email || `${stu.first_name.toLowerCase()}@rtafnc.ac.th`;
+                }
+
+                // 3. Barcode
+                const barcodeEl = cardEl.querySelector('.card-barcode');
+                const barcodeTextEl = cardEl.querySelector('.card-barcode-text');
+                barcodeEl.setAttribute('data-barcode', stu.student_id);
+                barcodeTextEl.textContent = stu.student_id;
+                renderBarcode(barcodeEl, stu.student_id);
+
+                // 4. Student Real Photo
+                const photoWrap = cardEl.querySelector('.card-photo-wrap');
+                const photoPath = STUDENT_PHOTOS[stu.student_id] || `photos/${stu.student_id}.jpg`;
+                photoWrap.innerHTML = `<img src="${photoPath}" alt="profile" onerror="this.outerHTML='?'">`;
+
+                // 5. Accumulated Hours
+                const hoursCountEl = cardEl.querySelector('.stars-count');
+                hoursCountEl.textContent = `${hrs.toFixed(1)} / 50 ชั่วโมง`;
+
+                // 6. Draw Stars
+                const starsRow = cardEl.querySelector('.stars-row');
+                let numStars = 1;
+                let activeStars = 0;
+                if (type === 'platinum') {
+                    numStars = 8; activeStars = 8;
+                } else if (type === 'gold') {
+                    numStars = 5; activeStars = Math.min(5, 3 + Math.floor(((hrs - 30) / 20) * 2));
+                } else if (type === 'green') {
+                    numStars = 3; activeStars = Math.min(3, 1 + Math.floor(((hrs - 10) / 20) * 2));
+                } else {
+                    numStars = 1; activeStars = hrs >= 5 ? 1 : 0;
+                }
+
+                let starsHtml = '';
+                for (let i = 0; i < numStars; i++) {
+                    const isActive = i < activeStars;
+                    starsHtml += `<span class="star-icon ${isActive ? 'active' : ''}">${isActive ? '★' : '☆'}</span>`;
+                }
+                starsRow.innerHTML = starsHtml;
+
+                // 7. Add Floating Chibi Character by Level
+                let chibiLevel = 1;
+                if (hrs >= 50) chibiLevel = 8;
+                else if (hrs >= 40) chibiLevel = 7;
+                else if (hrs >= 30) chibiLevel = 6;
+                else if (hrs >= 20) chibiLevel = 5;
+                else if (hrs >= 15) chibiLevel = 4;
+                else if (hrs >= 10) chibiLevel = 3;
+                else if (hrs >= 5) chibiLevel = 2;
+                else chibiLevel = 1;
+
+                const cardBody = cardEl.querySelector('.card-body');
+                const chibiWrap = document.createElement('div');
+                chibiWrap.className = 'card-chibi-wrap';
+                chibiWrap.innerHTML = `<img src="photos/chibi/chibi_lv${chibiLevel}.png" alt="Chibi Level ${chibiLevel}">`;
+                cardBody.appendChild(chibiWrap);
+            });
+
+            // 3D Parallax Tilt Effect
+            document.querySelectorAll('.starbucks-card-container').forEach(container => {
+                const card = container.querySelector('.starbucks-card');
+                const shine = card.querySelector('.card-shine');
+
+                container.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left - rect.width/2;
+                    const y = e.clientY - rect.top - rect.height/2;
+                    
+                    const rx = -(y / rect.height) * 20; // max 20 deg
+                    const ry = (x / rect.width) * 20;
+                    
+                    card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+                    
+                    // Dynamic shine gradient moving with mouse
+                    const shineAngle = Math.atan2(y, x) * (180 / Math.PI) + 90;
+                    const shineDist = Math.min(100, Math.sqrt(x*x + y*y) / (rect.width/2) * 100);
+                    shine.style.background = `linear-gradient(${shineAngle}deg, rgba(255, 255, 255, ${0.18 - (shineDist/1000)}) 0%, rgba(255, 255, 255, 0) 60%)`;
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    card.style.transform = 'rotateX(0deg) rotateY(0deg)';
+                    shine.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0) 50%)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

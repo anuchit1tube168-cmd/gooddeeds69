@@ -2,6 +2,12 @@
 <html lang="th">
 
 <head>
+  <script>
+    window.onerror = function(message, source, lineno, colno, error) {
+      alert("❌ JavaScript Error:\n" + message + "\nLine: " + lineno + "\nSource: " + source);
+      return false;
+    };
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard อาจารย์ — ระบบบันทึกความดี วพอ. 2569</title>
@@ -506,6 +512,8 @@
           <span class="icon">📊</span> สถิติภาพรวม
         </a>
         <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+        <a href="report.html" class="sidebar-item"><span class="icon">📊</span> รายงาน PDF / พิมพ์</a>
+        <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
         <div class="divider" style="margin:8px 16px;"></div>
         <a href="settings.html" class="sidebar-item" id="nav-settings"><span class="icon">⚙️</span> ตั้งค่าระบบ</a>
         <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
@@ -651,7 +659,9 @@
       <div class="modal-header">
         <div class="modal-title" id="smod-title">รายละเอียดนักเรียน</div>
         <div style="display:flex;gap:8px;align-items:center">
-          <button class="btn btn-outline btn-sm" id="smod-print-btn">🖨️ พิมพ์</button>
+          <button class="btn btn-primary btn-sm" id="smod-edit-btn" onclick="toggleStuEdit()">✏️ แก้ไขประวัติ</button>
+          <button class="btn btn-outline btn-sm" id="smod-pdf-btn">🖨️ พิมพ์ PDF</button>
+          <button class="btn btn-outline btn-sm" id="smod-print-btn">📝 Word</button>
           <button class="modal-close" onclick="closeStuModal()">✕</button>
         </div>
       </div>
@@ -665,10 +675,10 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=69"></script>
-  <script src="data/students_photos.js?v=69"></script>
-  <script src="data/deeds_data.js?v=69"></script>
-  <script src="app.js?v=69"></script>
+  <script src="data/students_data.js?v=70"></script>
+  <script src="data/students_photos.js?v=70"></script>
+  <script src="data/deeds_data.js?v=70"></script>
+  <script src="app.js?v=72"></script>
   <script>
     // ===== STATE =====
     let teacher = null;
@@ -679,10 +689,12 @@
     let currentStudentId = null;
 
     // ===== INIT =====
-    function init() {
-      teacher = App.requireAuth(['teacher', 'admin']);
-      if (!teacher) return;
-      document.getElementById('teacher-name').textContent = teacher.name || teacher.username || 'อาจารย์';
+    async function init() {
+      try {
+        teacher = App.requireAuth(['teacher', 'admin']);
+        if (!teacher) return;
+        await App.syncAllDeedsWithBackend();
+        document.getElementById('teacher-name').textContent = teacher.name || teacher.username || 'อาจารย์';
       if (teacher.role !== 'admin') {
         document.getElementById('nav-settings').style.display = 'none';
       }
@@ -704,6 +716,9 @@
       }
 
       loadData();
+      } catch (err) {
+        alert("❌ Init Error:\n" + err.stack);
+      }
     }
 
     function loadData() {
@@ -881,12 +896,96 @@
       </td>
       <td>${s.passed ? '<span class="badge badge-approved">✅ ผ่าน</span>' : '<span class="badge badge-pending">⏳ ยังไม่ผ่าน</span>'}</td>
       <td>${s.pendingCount > 0 ? `<span class="badge badge-pending">${s.pendingCount}</span>` : '-'}</td>
-      <td><button class="btn btn-outline btn-sm" onclick="event.stopPropagation();printStudentReport('${s.student_id}')">🖨️</button></td>
+      <td><button class="btn btn-outline btn-sm" title="ส่งออก Word (.docx)" onclick="event.stopPropagation();downloadDocxReport('${s.student_id}')">📝</button></td>
     </tr>`;
       }).join('');
     }
 
     // ===== STUDENT MODAL =====
+    let isEditingStudent = false;
+
+    function toggleStuEdit(forceValue) {
+      const viewPanel = document.getElementById('smod-view-panel');
+      const editPanel = document.getElementById('smod-edit-panel');
+      const editBtn = document.getElementById('smod-edit-btn');
+      
+      if (!viewPanel || !editPanel) return;
+      
+      isEditingStudent = (forceValue !== undefined) ? forceValue : !isEditingStudent;
+      
+      if (isEditingStudent) {
+        viewPanel.style.display = 'none';
+        editPanel.style.display = 'block';
+        if (editBtn) editBtn.innerHTML = '📋 ดูประวัติ';
+      } else {
+        viewPanel.style.display = 'block';
+        editPanel.style.display = 'none';
+        if (editBtn) editBtn.innerHTML = '✏️ แก้ไขประวัติ';
+      }
+    }
+
+    async function saveStuProfile() {
+      if (!currentStudentId) return;
+      
+      const rank = document.getElementById('edit-stu-rank').value;
+      const firstName = document.getElementById('edit-stu-first').value.trim();
+      const lastName = document.getElementById('edit-stu-last').value.trim();
+      const classYear = parseInt(document.getElementById('edit-stu-class').value);
+      const email = document.getElementById('edit-stu-email').value.trim();
+      
+      if (!firstName || !lastName) {
+        alert('กรุณากรอกชื่อและนามสกุล');
+        return;
+      }
+      
+      const payload = {
+        studentId: currentStudentId,
+        rank,
+        firstName,
+        lastName,
+        classYear,
+        email
+      };
+      
+      try {
+        const res = await fetch('/api/update_student', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...App.getAuthHeaders() },
+          body: JSON.stringify(payload)
+        });
+        
+        if (res.ok) {
+          alert('บันทึกการแก้ไขประวัติเรียบร้อยแล้ว');
+          
+          // Update local STUDENTS_DATA
+          if (typeof STUDENTS_DATA !== 'undefined') {
+            const stu = STUDENTS_DATA.find(s => s.student_id === currentStudentId);
+            if (stu) {
+              stu.rank = rank;
+              stu.first_name = firstName;
+              stu.last_name = lastName;
+              stu.full_name = `${firstName} ${lastName}`.trim();
+              stu.class_year = classYear;
+              stu.email = email;
+            }
+          }
+          
+          // Re-sync all and render students table
+          await init();
+          
+          // Switch back to view mode and reload modal info
+          toggleStuEdit(false);
+          openStuModal(currentStudentId);
+        } else {
+          const err = await res.json();
+          alert('เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถบันทึกได้'));
+        }
+      } catch (e) {
+        console.error(e);
+        alert('ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้: ' + e.message);
+      }
+    }
+
     function openStuModal(sid) {
       currentStudentId = sid;
       const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
@@ -897,7 +996,8 @@
       const pct = Math.min((summ.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
 
       document.getElementById('smod-title').innerHTML = `👤 ${stu.rank} ${stu.first_name} ${stu.last_name}`;
-      document.getElementById('smod-print-btn').onclick = () => printStudentReport(sid);
+      document.getElementById('smod-pdf-btn').onclick = () => window.open('report.html?type=individual&studentId=' + sid, '_blank');
+      document.getElementById('smod-print-btn').onclick = () => downloadDocxReport(sid);
 
       // รูปโปรไฟล์
       const photo = App.getProfilePhoto(sid);
@@ -927,26 +1027,87 @@
     </div>`;
       }).join('');
 
-      document.getElementById('smod-body').innerHTML = photoHtml + `
-    <div class="smodal-header">
-      <div class="smodal-kv"><div class="k">รหัสนักเรียน</div><div class="v">${stu.student_id}</div></div>
-      <div class="smodal-kv"><div class="k">ชั้นปี</div><div class="v">${App.getYearName(stu.class_year)}</div></div>
-      <div class="smodal-kv"><div class="k">รวมชั่วโมง</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
-      <div class="smodal-kv"><div class="k">สถานะ</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
-    </div>
-    <div class="progress-container">
-      <div class="progress-label"><span>ความคืบหน้า</span><span>${summ.totalHours} / ${CONFIG.MIN_HOURS_PER_YEAR} ชม.</span></div>
-      <div class="progress-track"><div class="progress-fill ${summ.passed ? 'green' : ''}" style="width:${pct}%"></div></div>
-    </div>
-    <div style="display:flex;gap:12px;margin-bottom:16px;font-size:0.8rem">
-      <span class="badge badge-approved">✅ อนุมัติ ${summ.approvedCount}</span>
-      <span class="badge badge-pending">⏳ รอ ${summ.pendingCount}</span>
-      <span class="badge badge-rejected">❌ ปฏิเสธ ${summ.rejectedCount}</span>
-    </div>
-    ${catRows ? `<div style="margin-bottom:14px"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:10px">ชั่วโมงตามหมวดหมู่</div><div class="cat-bar-list">${catRows}</div></div>` : ''}
-    <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:8px">รายการล่าสุด (${deeds.length} รายการ)</div>
-    <div style="max-height:240px;overflow-y:auto;border-radius:var(--radius-sm);border:1px solid var(--navy-border);padding:8px 12px">${deedRows || '<div class="empty-state" style="padding:20px"><p>ไม่มีรายการ</p></div>'}</div>
-  `;
+      document.getElementById('smod-body').innerHTML = `
+        <div id="smod-view-panel">
+          ${photoHtml}
+          <div class="smodal-header">
+            <div class="smodal-kv"><div class="k">รหัสนักเรียน</div><div class="v">${stu.student_id}</div></div>
+            <div class="smodal-kv"><div class="k">ชั้นปี</div><div class="v">${App.getYearName(stu.class_year)}</div></div>
+            <div class="smodal-kv"><div class="k">รวมชั่วโมง</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
+            <div class="smodal-kv"><div class="k">สถานะ</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
+          </div>
+          <div class="progress-container">
+            <div class="progress-label"><span>ความคืบหน้า</span><span>${summ.totalHours} / ${CONFIG.MIN_HOURS_PER_YEAR} ชม.</span></div>
+            <div class="progress-track"><div class="progress-fill ${summ.passed ? 'green' : ''}" style="width:${pct}%"></div></div>
+          </div>
+          <div style="display:flex;gap:12px;margin-bottom:16px;font-size:0.8rem">
+            <span class="badge badge-approved">✅ อนุมัติ ${summ.approvedCount}</span>
+            <span class="badge badge-pending">⏳ รอ ${summ.pendingCount}</span>
+            <span class="badge badge-rejected">❌ ปฏิเสธ ${summ.rejectedCount}</span>
+          </div>
+          ${catRows ? `<div style="margin-bottom:14px"><div style="font-size:0.8rem;font-weight:600;color:var(--text-muted);margin-bottom:10px">ชั่วโมงตามหมวดหมู่</div><div class="cat-bar-list">${catRows}</div></div>` : ''}
+          <div style="font-size:0.875rem;font-weight:600;color:var(--text-primary);margin-bottom:8px">รายการล่าสุด (${deeds.length} รายการ)</div>
+          <div style="max-height:240px;overflow-y:auto;border-radius:var(--radius-sm);border:1px solid var(--navy-border);padding:8px 12px">${deedRows || '<div class="empty-state" style="padding:20px"><p>ไม่มีรายการ</p></div>'}</div>
+        </div>
+        
+        <div id="smod-edit-panel" style="display:none; padding:16px 0;">
+          <div style="font-size:1.1rem; font-weight:700; color:var(--text-primary); margin-bottom:16px;">✏️ แก้ไขข้อมูลประวัตินักเรียน</div>
+          
+          <div class="form-group">
+            <label class="form-label">ยศ / คำนำหน้า</label>
+            <select class="form-select" id="edit-stu-rank">
+              <option value="นพอ.">นพอ. (นักเรียนพยาบาลทหารอากาศ)</option>
+              <option value="จ.ต.หญิง">จ.ต.หญิง (จ่าอากาศตรีหญิง)</option>
+              <option value="พ.อ.ท.หญิง">พ.อ.ท.หญิง (พันจ่าอากาศโทหญิง)</option>
+              <option value="ร.ต.หญิง">ร.ต.หญิง (ร้อยตรีหญิง)</option>
+            </select>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">ชื่อจริง</label>
+              <input type="text" class="form-input" id="edit-stu-first" value="${stu.first_name || ''}" placeholder="ชื่อจริง">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">นามสกุล</label>
+              <input type="text" class="form-input" id="edit-stu-last" value="${stu.last_name || ''}" placeholder="นามสกุล">
+            </div>
+          </div>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">ชั้นปี (รุ่น)</label>
+              <select class="form-select" id="edit-stu-class">
+                <option value="69">ชั้นปีที่ 1 (รุ่น 69)</option>
+                <option value="68">ชั้นปีที่ 2 (รุ่น 68)</option>
+                <option value="67">ชั้นปีที่ 3 (รุ่น 67)</option>
+                <option value="66">ชั้นปีที่ 4 (รุ่น 66)</option>
+                <option value="65">ศิษย์เก่า (รุ่น 65)</option>
+                <option value="64">ศิษย์เก่า (รุ่น 64)</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label class="form-label">อีเมล</label>
+              <input type="email" class="form-input" id="edit-stu-email" value="${stu.email || ''}" placeholder="email@domain.com">
+            </div>
+          </div>
+          
+          <div style="display:flex; gap:12px; justify-content:flex-end; margin-top:24px;">
+            <button class="btn btn-outline" onclick="toggleStuEdit(false)">ยกเลิก</button>
+            <button class="btn btn-primary" onclick="saveStuProfile()">💾 บันทึกการเปลี่ยนแปลง</button>
+          </div>
+        </div>
+      `;
+      
+      // Set the select element values
+      document.getElementById('edit-stu-rank').value = stu.rank || 'นพอ.';
+      document.getElementById('edit-stu-class').value = String(stu.class_year || '69');
+
+      // Reset edit state variables
+      isEditingStudent = false;
+      const editBtn = document.getElementById('smod-edit-btn');
+      if (editBtn) editBtn.textContent = '✏️ แก้ไขประวัติ';
+
       document.getElementById('stu-modal').classList.add('open');
     }
     function closeStuModal() { document.getElementById('stu-modal').classList.remove('open'); }
@@ -1112,7 +1273,7 @@
   </div>
   <script>
     setTimeout(() => { window.print(); }, 500);
-  </script>
+  <\/script>
 </body>
 
 </html>`);
@@ -1256,6 +1417,12 @@ w.document.write(`
       }
     }
 
+
+    function downloadDocxReport(studentId) {
+      if (studentId) {
+        window.location.href = `/api/export_docx?studentId=${studentId}`;
+      }
+    }
 
     init();
   </script>

@@ -138,10 +138,33 @@
                                     <td>อาจารย์</td>
                                 </tr>
                             </tbody>
+                            <tbody id="extra-staff-rows">
+                            </tbody>
                         </table>
                     </div>
-                    <div class="form-hint mt-8">รหัสผ่านเริ่มต้น: <code>admin69</code> / <code>teacher69</code>
-                        (แก้ไขได้ใน app.js)</div>
+                    <div class="form-hint mt-8">รหัสผ่านเริ่มต้น: <code>admin69</code> / <code>teacher69</code></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">ชื่อผู้ใช้ใหม่</label>
+                            <input type="text" class="form-input" id="staff-username" placeholder="เช่น admin2">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">รหัสผ่าน</label>
+                            <input type="password" class="form-input" id="staff-password" placeholder="ตั้งรหัสผ่าน">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">ชื่อที่แสดง</label>
+                            <input type="text" class="form-input" id="staff-name" placeholder="เช่น ผู้ช่วยผู้ดูแล">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0">
+                            <label class="form-label">สิทธิ์</label>
+                            <select class="form-select" id="staff-role">
+                                <option value="teacher">Teacher - อนุมัติและดูข้อมูลรวม</option>
+                                <option value="admin">Admin - จัดการระบบ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-outline btn-sm" onclick="addStaffAccount()" style="margin-top:12px">➕ เพิ่มบัญชี/สิทธิ์</button>
                 </div>
 
                 <!-- Google Apps Script URL -->
@@ -173,7 +196,7 @@
     <div class="toast-container" id="toast-container"></div>
     <script src="data/students_data.js"></script>
     <script src="data/deeds_data.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=72"></script>
     <script>
         function init() {
             const currentUser = App.requireAuth(['admin']);
@@ -185,6 +208,54 @@
             document.getElementById('setting-min-hours').value = settings.minHours || 36;
             document.getElementById('setting-year').value = settings.academicYear || 2569;
             document.getElementById('setting-gas-url').value = settings.gasUrl || '';
+            renderStaffAccounts();
+        }
+
+        function renderStaffAccounts() {
+            const rows = document.getElementById('extra-staff-rows');
+            const extra = Storage.get('staff_accounts') || [];
+            rows.innerHTML = extra.map((account, index) => `
+                <tr>
+                    <td><code>${account.username}</code></td>
+                    <td><span class="badge ${account.role === 'admin' ? 'badge-gold' : 'badge-blue'}">${account.role === 'admin' ? 'Admin' : 'Teacher'}</span></td>
+                    <td>
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                            <span>${account.name || account.username}</span>
+                            <button class="btn btn-danger btn-sm" onclick="removeStaffAccount(${index})">ลบ</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function addStaffAccount() {
+            const username = document.getElementById('staff-username').value.trim();
+            const password = document.getElementById('staff-password').value;
+            const name = document.getElementById('staff-name').value.trim();
+            const role = document.getElementById('staff-role').value;
+            if (!username || !password) {
+                showToast('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน', 'warning');
+                return;
+            }
+            const result = App.addStaffAccount({ username, password, name, role });
+            if (!result.success) {
+                showToast(result.message || 'ไม่สามารถเพิ่มบัญชีได้', 'error');
+                return;
+            }
+            document.getElementById('staff-username').value = '';
+            document.getElementById('staff-password').value = '';
+            document.getElementById('staff-name').value = '';
+            document.getElementById('staff-role').value = 'teacher';
+            renderStaffAccounts();
+            showToast('เพิ่มบัญชีเรียบร้อย ✅', 'success');
+        }
+
+        function removeStaffAccount(index) {
+            const extra = Storage.get('staff_accounts') || [];
+            extra.splice(index, 1);
+            App.saveStaffAccounts(extra);
+            renderStaffAccounts();
+            showToast('ลบบัญชีแล้ว', 'info');
         }
 
         function saveSettings() {

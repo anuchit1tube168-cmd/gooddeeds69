@@ -1,0 +1,23 @@
+{
+    "id": "deed_scale_test_1781431405",
+    "studentId": "6900001",
+    "categoryId": 2,
+    "academicYear": 2569,
+    "hours": 1,
+    "description": "กิจกรรมสเกลลิ่งสำหรับการทดสอบแบบ Real-time",
+    "activityDate": "2026-06-14",
+    "imageUrls": [],
+    "status": "approved",
+    "submittedAt": "2026-06-14T10:00:00.000Z",
+    "student": {
+        "student_id": "6900001",
+        "class_year": 69,
+        "first_name": "กิตติภพ",
+        "last_name": "ทองดี",
+        "rank": "นพอ.",
+        "role": "student"
+    },
+    "approvedBy": "อาจารย์",
+    "approvedAt": "2026-07-06T04:48:55Z",
+    "rejectReason": ""
+}

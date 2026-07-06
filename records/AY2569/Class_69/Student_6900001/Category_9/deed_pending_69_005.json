@@ -1,0 +1,25 @@
+{
+    "id": "deed_pending_69_005",
+    "studentId": "6900001",
+    "categoryId": 9,
+    "academicYear": 2569,
+    "hours": 8.0,
+    "description": "ได้รับมอบหมายเป็นหัวหน้านักเรียนจัดกิจกรรมสัปดาห์จิตอาสา วพอ. ครั้งที่ 3",
+    "activityDate": "2026-06-15",
+    "imageUrls": [],
+    "status": "approved",
+    "submittedAt": "2026-06-15T10:00:00.000Z",
+    "approvedBy": "อาจารย์พรนภา",
+    "approvedAt": "2026-06-14T09:49:17Z",
+    "rejectReason": null,
+    "note": "ตัวอย่างจำลองเพื่อเปิดระบบทดสอบอนุมัติรายคน",
+    "student": {
+        "student_id": "6900001",
+        "rank": "นพอ.",
+        "first_name": "กิตติภพ",
+        "last_name": "ทองดี",
+        "class_year": 69,
+        "year_level": 1,
+        "role": "student"
+    }
+}

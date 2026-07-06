@@ -1,0 +1,25 @@
+{
+    "id": "deed_pending_69_003",
+    "studentId": "6900005",
+    "categoryId": 3,
+    "academicYear": 2569,
+    "hours": 3.0,
+    "description": "ช่วยงานฝ่ายธุรการและอำนวยความสะดวกในงานปฐมนิเทศ ณ อาคารอำนวยการ วพอ. ครั้งที่ 2",
+    "activityDate": "2026-06-13",
+    "imageUrls": [],
+    "status": "approved",
+    "submittedAt": "2026-06-13T10:00:00.000Z",
+    "approvedBy": "อาจารย์พรนภา",
+    "approvedAt": "2026-06-14T09:49:17Z",
+    "rejectReason": null,
+    "note": "ตัวอย่างจำลองเพื่อเปิดระบบทดสอบอนุมัติรายคน",
+    "student": {
+        "student_id": "6900005",
+        "rank": "นพอ.",
+        "first_name": "ปองพล",
+        "last_name": "คนดี",
+        "class_year": 69,
+        "year_level": 1,
+        "role": "student"
+    }
+}

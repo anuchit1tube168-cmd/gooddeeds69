@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>รายงานผลกิจกรรมจิตอาสา — วพอ. ปีการศึกษา 2569</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css?v=3">
+  <script src="data/students_data.js?v=69"></script>
+  <script src="data/students_photos.js?v=69"></script>
+  <script src="data/deeds_data.js?v=69"></script>
+  <script src="app.js?v=72"></script>
+  <style>
+    /* ===== PRINT / SCREEN LAYOUT ===== */
+    :root {
+      --report-gold: #c9a227;
+      --report-navy: #0a1628;
+      --report-navy2: #0e1f3d;
+    }
+
+    /* Screen controls */
+    .screen-only {
+      display: block;
+    }
+    .print-only {
+      display: none;
+    }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      .screen-only { display: none !important; }
+      .print-only { display: block !important; }
+      body { background: white !important; }
+      .report-page { box-shadow: none !important; margin: 0 !important; }
+      .page-break { page-break-before: always; }
+    }
+
+    /* ===== REPORT CONTROLS (screen only) ===== */
+    .report-controls {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: var(--report-navy2);
+      border-bottom: 2px solid var(--report-gold);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+    }
+    .report-controls .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .report-controls h1 {
+      font-size: 1rem;
+      color: var(--report-gold);
+      font-family: 'Kanit', sans-serif;
+      font-weight: 700;
+      margin: 0;
+    }
+    .report-controls p {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      margin: 0;
+    }
+    .ctrl-group {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-left: auto;
+    }
+    .ctrl-select {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(201,162,39,0.3);
+      color: #e2e8f0;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.85rem;
+    }
+    .btn-print {
+      background: linear-gradient(135deg, #c9a227, #f0c849);
+      color: #0a1628;
+      border: none;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: 'Sarabun', sans-serif;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-print:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(201,162,39,0.4);
+    }
+    .btn-back {
+      background: rgba(255,255,255,0.08);
+      color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'Sarabun', sans-serif;
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* ===== REPORT WRAPPER ===== */
+    .report-wrapper {
+      padding: 80px 24px 40px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ===== A4 PAGE ===== */
+    .report-page {
+      background: white;
+      width: 794px;
+      min-height: 1123px;
+      margin: 0 auto 32px;
+      padding: 40px 48px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Sarabun', sans-serif;
+      color: #1a1a2e;
+    }
+
+    /* Decorative corner marks */
+    .report-page::before,
+    .report-page::after {
+      content: '';
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      border-color: #c9a227;
+      border-style: solid;
+      opacity: 0.6;
+    }
+    .report-page::before {
+      top: 12px; left: 12px;
+      border-width: 2px 0 0 2px;
+    }
+    .report-page::after {
+      bottom: 12px; right: 12px;
+      border-width: 0 2px 2px 0;
+    }
+
+    /* ===== PAGE HEADER ===== */
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 3px solid #c9a227;
+      margin-bottom: 24px;
+    }
+    .header-logo {
+      width: 60px;
+      height: 60px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    .header-texts {
+      flex: 1;
+    }
+    .header-texts h1 {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0a1628;
+      font-family: 'Kanit', sans-serif;
+      margin: 0 0 2px;
+      line-height: 1.3;
+    }
+    .header-texts p {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin: 0;
+    }
+    .header-badge {
+      background: linear-gradient(135deg, #0a1628, #1e3a5f);
+      color: #c9a227;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-align: center;
+      border: 1px solid rgba(201,162,39,0.3);
+    }
+
+    /* ===== SUMMARY KPI ROW ===== */
+    .kpi-row {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .kpi-box {
+      background: linear-gradient(135deg, #0a1628, #0e1f3d);
+      border: 1px solid rgba(201,162,39,0.25);
+      border-radius: 10px;
+      padding: 14px 10px;
+      text-align: center;
+    }
+    .kpi-box .val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      font-family: 'Kanit', sans-serif;
+      color: #c9a227;
+      line-height: 1;
+    }
+    .kpi-box .lbl {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+    .kpi-box.green .val { color: #22c55e; }
+    .kpi-box.blue .val  { color: #3b82f6; }
+    .kpi-box.red .val   { color: #f87171; }
+    .kpi-box.purple .val { color: #a855f7; }
+
+    /* ===== SECTION TITLE ===== */
+    .sec-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #0a1628;
+      font-family: 'Kanit', sans-serif;
+      padding: 6px 14px;
+      background: linear-gradient(135deg, #c9a227, #f0c849);
+      border-radius: 6px;
+      margin-bottom: 14px;
+      display: inline-block;
+    }
+
+    /* ===== CLASS YEAR SECTION ===== */
+    .year-section {
+      margin-bottom: 24px;
+    }
+    .year-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px 8px 0 0;
+      padding: 10px 16px;
+      border-bottom: 2px solid #c9a227;
+    }
+    .year-header .year-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: #0a1628;
+    }
+    .year-header .year-stats {
+      display: flex;
+      gap: 16px;
+      font-size: 0.75rem;
+      color: #64748b;
+    }
+    .year-header .year-stats b { color: #0a1628; }
+
+    /* ===== STUDENT TABLE ===== */
+    .student-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+    .student-table thead th {
+      background: #0a1628;
+      color: #c9a227;
+      padding: 8px 10px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.72rem;
+    }
+    .student-table thead th:first-child { width: 32px; text-align: center; }
+    .student-table tbody tr:nth-child(even) { background: #f8fafc; }
+    .student-table tbody tr:hover { background: #fef9ee; }
+    .student-table td {
+      padding: 7px 10px;
+      border-bottom: 1px solid #e2e8f0;
+      color: #334155;
+      vertical-align: middle;
+    }
+    .student-table td:first-child { text-align: center; color: #94a3b8; font-size: 0.7rem; }
+    .student-table .hours-cell {
+      font-weight: 700;
+      color: #0a1628;
+      font-family: 'Kanit', sans-serif;
+    }
+    .student-table .hours-cell.pass { color: #16a34a; }
+    .student-table .hours-cell.fail { color: #dc2626; }
+
+    /* Progress mini bar */
+    .mini-bar {
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      width: 80px;
+    }
+    .mini-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+    }
+
+    /* Status badge */
+    .status-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .pass-badge { color: #16a34a; font-weight: 600; }
+    .fail-badge { color: #dc2626; font-weight: 600; }
+    .pending-badge { color: #d97706; font-weight: 600; }
+
+    /* ===== CHART AREA ===== */
+    .chart-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .chart-box {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .chart-box h3 {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #0a1628;
+      margin: 0 0 12px;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    /* Horizontal bar chart */
+    .h-bar-list { display: flex; flex-direction: column; gap: 8px; }
+    .h-bar-item {
+      display: grid;
+      grid-template-columns: 90px 1fr 45px;
+      align-items: center;
+      gap: 8px;
+    }
+    .h-bar-label { font-size: 0.7rem; color: #475569; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .h-bar-track { height: 10px; background: #f1f5f9; border-radius: 999px; overflow: hidden; }
+    .h-bar-fill { height: 100%; border-radius: 999px; transition: width 0.5s; }
+    .h-bar-val { font-size: 0.7rem; color: #64748b; text-align: right; }
+
+    /* Donut chart via SVG */
+    .donut-wrap { display: flex; align-items: center; gap: 16px; }
+    .donut-legend { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.7rem; color: #475569; }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+    /* ===== PAGE FOOTER ===== */
+    .page-footer {
+      position: absolute;
+      bottom: 16px;
+      left: 48px;
+      right: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 8px;
+    }
+
+    /* ===== SIGNATURE SECTION ===== */
+    .sig-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 24px;
+      margin-top: 32px;
+      padding-top: 16px;
+    }
+    .sig-box { text-align: center; }
+    .sig-line {
+      border-bottom: 1px solid #0a1628;
+      margin-bottom: 6px;
+      height: 40px;
+    }
+    .sig-label { font-size: 0.72rem; color: #475569; }
+    .sig-name { font-size: 0.75rem; font-weight: 600; color: #0a1628; }
+
+    /* ===== WATERMARK ===== */
+    .watermark {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-30deg);
+      font-size: 5rem;
+      font-weight: 900;
+      color: rgba(201,162,39,0.05);
+      white-space: nowrap;
+      pointer-events: none;
+      font-family: 'Kanit', sans-serif;
+    }
+
+    /* ===== CERTIFICATE PAGE ===== */
+    .cert-page {
+      background: white;
+      width: 794px;
+      height: 562px; /* A4 landscape */
+      margin: 0 auto 32px;
+      padding: 0;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+      border-radius: 4px;
+      position: relative;
+      overflow: hidden;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .cert-border-outer {
+      position: absolute;
+      inset: 8px;
+      border: 3px solid #c9a227;
+      border-radius: 2px;
+      pointer-events: none;
+    }
+    .cert-border-inner {
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(201,162,39,0.5);
+      border-radius: 1px;
+      pointer-events: none;
+    }
+    .cert-content {
+      position: absolute;
+      inset: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .cert-logo { width: 50px; height: 50px; object-fit: contain; margin-bottom: 8px; }
+    .cert-title-th {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #0a1628;
+      font-family: 'Kanit', sans-serif;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+    .cert-subtitle {
+      font-size: 0.75rem;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .cert-body {
+      font-size: 0.85rem;
+      color: #334155;
+      margin-bottom: 6px;
+      line-height: 1.8;
+    }
+    .cert-name {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: #0a1628;
+      font-family: 'Kanit', sans-serif;
+      border-bottom: 2px solid #c9a227;
+      padding: 4px 32px;
+      margin: 4px 0 8px;
+    }
+    .cert-hours {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #c9a227;
+      margin-bottom: 8px;
+    }
+    .cert-sig-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 16px;
+      width: 80%;
+    }
+    .cert-sig { text-align: center; }
+    .cert-sig-line {
+      border-bottom: 1px solid #0a1628;
+      height: 32px;
+      margin-bottom: 4px;
+    }
+    .cert-sig-label { font-size: 0.68rem; color: #64748b; }
+    .cert-seal {
+      position: absolute;
+      right: 40px;
+      bottom: 40px;
+      width: 70px;
+      height: 70px;
+      border: 3px solid #c9a227;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.5rem;
+      font-weight: 700;
+      color: #c9a227;
+      text-align: center;
+      background: rgba(201,162,39,0.08);
+    }
+    .cert-corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      border-color: #c9a227;
+      border-style: solid;
+      opacity: 0.5;
+    }
+    .cert-corner.tl { top: 22px; left: 22px; border-width: 2px 0 0 2px; }
+    .cert-corner.tr { top: 22px; right: 22px; border-width: 2px 2px 0 0; }
+    .cert-corner.bl { bottom: 22px; left: 22px; border-width: 0 0 2px 2px; }
+    .cert-corner.br { bottom: 22px; right: 22px; border-width: 0 2px 2px 0; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 860px) {
+      .report-page, .cert-page { width: 100%; padding: 24px; }
+      .kpi-row { grid-template-columns: repeat(3, 1fr); }
+      .chart-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body style="background:#060d1a; min-height:100vh;">
+
+<!-- ===== SCREEN CONTROLS ===== -->
+<div class="report-controls screen-only">
+  <div class="logo">
+    <img src="510903.jpg" alt="วพอ." style="width:36px;height:36px;border-radius:50%;object-fit:contain;">
+    <div>
+      <h1>📊 รายงานผลกิจกรรมจิตอาสา</h1>
+      <p>วิทยาลัยพยาบาลทหารอากาศ • ปีการศึกษา 2569</p>
+    </div>
+  </div>
+  <div class="ctrl-group">
+    <select class="ctrl-select" id="report-type" onchange="renderReport()">
+      <option value="summary">📋 รายงานสรุปภาพรวม</option>
+      <option value="class68">📘 ชั้นปีที่ 2 (รุ่น 68)</option>
+      <option value="class67">📗 ชั้นปีที่ 3 (รุ่น 67)</option>
+      <option value="class66">📙 ชั้นปีที่ 4 (รุ่น 66)</option>
+      <option value="class65">📕 ศิษย์เก่า (รุ่น 65)</option>
+      <option value="individual">👤 รายงานสรุปรายบุคคล</option>
+      <option value="cert">🎓 ใบประกาศรายบุคคล</option>
+    </select>
+    <select class="ctrl-select" id="student-select" style="display:none" onchange="renderReport()">
+      <option value="">— เลือกนักเรียน —</option>
+    </select>
+    <a href="teacher-dashboard.html" class="btn-back">← กลับ</a>
+    <button class="btn-print" onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button>
+  </div>
+</div>
+
+<!-- ===== REPORT CONTENT ===== -->
+<div class="report-wrapper" id="report-content">
+  <div style="text-align:center;color:#94a3b8;padding:60px">กำลังโหลดรายงาน...</div>
+</div>
+
+<script>
+// ─── HELPERS ───────────────────────────────────────────────────
+function today() {
+  const d = new Date();
+  const th = ['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน',
+               'กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
+  return `${d.getDate()} ${th[d.getMonth()]} ${d.getFullYear() + 543}`;
+}
+
+function pageNum(n, total) {
+  return `<div class="page-footer">
+    <span>วิทยาลัยพยาบาลทหารอากาศ — รายงานผลกิจกรรมจิตอาสา ปีการศึกษา 2569</span>
+    <span>หน้า ${n} / ${total} | พิมพ์เมื่อ ${today()}</span>
+  </div>`;
+}
+
+function headerBlock(subtitle = '') {
+  return `
+    <div class="page-header">
+      <img src="510903.jpg" alt="วพอ." class="header-logo">
+      <div class="header-texts">
+        <h1>วิทยาลัยพยาบาลทหารอากาศ</h1>
+        <p>Royal Thai Air Force Nursing College • รายงานผลกิจกรรมจิตอาสา ปีการศึกษา 2569</p>
+        ${subtitle ? `<p style="font-weight:600;color:#0a1628;font-size:0.85rem;margin-top:3px;">${subtitle}</p>` : ''}
+      </div>
+      <div class="header-badge">
+        เกณฑ์ผ่าน<br>
+        <span style="font-size:1.2rem;font-weight:800;">50 ชม.</span><br>
+        ต่อปีการศึกษา
+      </div>
+    </div>
+  `;
+}
+
+function miniBar(hours, max = 50) {
+  const pct = Math.min((hours / max) * 100, 100);
+  const col = hours >= 50 ? '#16a34a' : hours >= 30 ? '#c9a227' : '#ef4444';
+  return `<div class="mini-bar"><div class="mini-bar-fill" style="width:${pct}%;background:${col}"></div></div>`;
+}
+
+function statusBadge(passed) {
+  if (passed) return `<span class="pass-badge"><span class="status-dot" style="background:#16a34a"></span>ผ่านเกณฑ์</span>`;
+  return `<span class="fail-badge"><span class="status-dot" style="background:#ef4444"></span>ยังไม่ผ่าน</span>`;
+}
+
+// ─── DATA ──────────────────────────────────────────────────────
+function getAllData() {
+  const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+  const user = App.getCurrentUser();
+  const visibleStudents = user && user.role === 'student'
+    ? students.filter(s => s.student_id === user.student_id)
+    : students;
+  return visibleStudents.map(s => {
+    const sum = App.getStudentSummary(s.student_id);
+    return { ...s, ...sum };
+  });
+}
+
+function getClassData(year) {
+  return getAllData().filter(s => s.class_year === year);
+}
+
+const YEAR_META = {
+  68: { label: 'ชั้นปีที่ 2', sub: 'รุ่น 68', color: '#3b82f6' },
+  67: { label: 'ชั้นปีที่ 3', sub: 'รุ่น 67', color: '#8b5cf6' },
+  66: { label: 'ชั้นปีที่ 4', sub: 'รุ่น 66', color: '#22c55e' },
+  65: { label: 'ศิษย์เก่า', sub: 'รุ่น 65', color: '#f59e0b' },
+  69: { label: 'ชั้นปีที่ 1', sub: 'รุ่น 69', color: '#ec4899' },
+};
+
+// ─── REPORT: SUMMARY ──────────────────────────────────────────
+function renderSummary() {
+  const all = getAllData();
+  const totalPass = all.filter(s => s.passed).length;
+  const totalHours = all.reduce((a, s) => a + (s.totalHours || 0), 0);
+  const avgHours = all.length ? (totalHours / all.length).toFixed(1) : 0;
+  const topStu = [...all].sort((a, b) => (b.totalHours || 0) - (a.totalHours || 0))[0];
+  const pending = all.reduce((a, s) => a + (s.pendingCount || 0), 0);
+  const passRate = all.length ? Math.round((totalPass / all.length) * 100) : 0;
+
+  const yearRows = [69, 68, 67, 66, 65].map(y => {
+    const yData = all.filter(s => s.class_year === y);
+    if (!yData.length) return '';
+    const yPass = yData.filter(s => s.passed).length;
+    const yHours = yData.reduce((a, s) => a + (s.totalHours || 0), 0);
+    const meta = YEAR_META[y] || { label: `รุ่น ${y}`, color: '#94a3b8' };
+    const rate = yData.length ? Math.round((yPass / yData.length) * 100) : 0;
+    return `
+      <tr>
+        <td>${meta.label} <span style="font-size:0.7rem;color:#94a3b8">(${meta.sub})</span></td>
+        <td style="text-align:center">${yData.length}</td>
+        <td style="text-align:center;color:#16a34a;font-weight:700">${yPass}</td>
+        <td style="text-align:center;color:#dc2626;font-weight:700">${yData.length - yPass}</td>
+        <td style="text-align:center">
+          <div style="display:flex;align-items:center;gap:6px;justify-content:center">
+            <div class="mini-bar" style="width:70px"><div class="mini-bar-fill" style="width:${rate}%;background:${meta.color}"></div></div>
+            <span style="font-size:0.75rem;font-weight:700;color:${meta.color}">${rate}%</span>
+          </div>
+        </td>
+        <td style="text-align:center;font-weight:700;color:#c9a227">${yHours}</td>
+        <td style="text-align:center;color:#64748b">${yData.length ? (yHours / yData.length).toFixed(1) : 0}</td>
+      </tr>
+    `;
+  }).join('');
+
+  const catBars = CATEGORIES.slice(0).sort((a, b) => {
+    const ah = all.reduce((s, st) => s + (st.byCategory?.find(c => c.id === a.id)?.hours || 0), 0);
+    const bh = all.reduce((s, st) => s + (st.byCategory?.find(c => c.id === b.id)?.hours || 0), 0);
+    return bh - ah;
+  }).map(cat => {
+    const total = all.reduce((s, st) => s + (st.byCategory?.find(c => c.id === cat.id)?.hours || 0), 0);
+    const maxTotal = Math.max(...CATEGORIES.map(c2 => all.reduce((s, st) => s + (st.byCategory?.find(c => c.id === c2.id)?.hours || 0), 0)), 1);
+    return { ...cat, total, pct: Math.round((total / maxTotal) * 100) };
+  }).filter(c => c.total > 0);
+
+  return `
+  <div class="report-page">
+    <div class="watermark">วพอ. 2569</div>
+    ${headerBlock('รายงานสรุปผลภาพรวมทั้งสถาบัน')}
+
+    <div class="kpi-row">
+      <div class="kpi-box">
+        <div class="val">${all.length}</div>
+        <div class="lbl">นักเรียนทั้งหมด</div>
+      </div>
+      <div class="kpi-box green">
+        <div class="val">${totalPass}</div>
+        <div class="lbl">ผ่านเกณฑ์</div>
+      </div>
+      <div class="kpi-box red">
+        <div class="val">${all.length - totalPass}</div>
+        <div class="lbl">ยังไม่ผ่าน</div>
+      </div>
+      <div class="kpi-box">
+        <div class="val">${passRate}%</div>
+        <div class="lbl">อัตราผ่านเกณฑ์</div>
+      </div>
+      <div class="kpi-box purple">
+        <div class="val">${avgHours}</div>
+        <div class="lbl">ชม.เฉลี่ย/คน</div>
+      </div>
+    </div>
+
+    <!-- Overall progress bar -->
+    <div style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;font-size:0.78rem;color:#64748b;margin-bottom:6px">
+        <span>อัตราผ่านเกณฑ์ทั้งสถาบัน</span>
+        <span style="font-weight:700;color:${passRate >= 80 ? '#16a34a' : '#c9a227'}">${passRate}% (${totalPass}/${all.length} คน)</span>
+      </div>
+      <div style="height:14px;background:#e2e8f0;border-radius:999px;overflow:hidden">
+        <div style="height:100%;width:${passRate}%;background:${passRate >= 80 ? 'linear-gradient(90deg,#16a34a,#22c55e)' : 'linear-gradient(90deg,#c9a227,#f0c849)'};border-radius:999px;transition:width 1s"></div>
+      </div>
+    </div>
+
+    <div class="chart-row">
+      <!-- Class Year Summary Table -->
+      <div class="chart-box" style="grid-column:1/-1">
+        <h3>📊 สรุปผลตามชั้นปี</h3>
+        <table class="student-table">
+          <thead>
+            <tr>
+              <th>ชั้นปี / รุ่น</th>
+              <th style="text-align:center">จำนวน</th>
+              <th style="text-align:center">ผ่านเกณฑ์</th>
+              <th style="text-align:center">ยังไม่ผ่าน</th>
+              <th style="text-align:center">อัตราผ่าน</th>
+              <th style="text-align:center">ชม.รวม</th>
+              <th style="text-align:center">ชม.เฉลี่ย</th>
+            </tr>
+          </thead>
+          <tbody>${yearRows}</tbody>
+        </table>
+      </div>
+
+      <!-- Category breakdown -->
+      <div class="chart-box" style="grid-column:1/-1">
+        <h3>📈 ชั่วโมงรวมตามหมวดหมู่ความดี</h3>
+        <div class="h-bar-list">
+          ${catBars.map(c => `
+            <div class="h-bar-item">
+              <div class="h-bar-label">${c.emoji} ${c.name}</div>
+              <div class="h-bar-track"><div class="h-bar-fill" style="width:${c.pct}%;background:${c.color}"></div></div>
+              <div class="h-bar-val">${c.total} ชม.</div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    ${topStu ? `
+      <div style="background:linear-gradient(135deg,rgba(201,162,39,0.1),rgba(10,22,40,0.3));border:1px solid rgba(201,162,39,0.3);border-radius:10px;padding:14px;margin-top:4px;display:flex;align-items:center;gap:16px">
+        <div style="font-size:2rem">🏆</div>
+        <div>
+          <div style="font-size:0.72rem;color:#64748b">นักเรียนที่มีชั่วโมงความดีสูงสุด</div>
+          <div style="font-size:1rem;font-weight:700;color:#0a1628">${topStu.rank} ${topStu.first_name} ${topStu.last_name}</div>
+          <div style="font-size:0.8rem;color:#c9a227;font-weight:700">${topStu.totalHours} ชั่วโมง • ${YEAR_META[topStu.class_year]?.label || ''}</div>
+        </div>
+      </div>
+    ` : ''}
+
+    ${pageNum(1, 1)}
+  </div>`;
+}
+
+// ─── REPORT: CLASS YEAR ────────────────────────────────────────
+function renderClassReport(year) {
+  const data = getClassData(year).sort((a, b) => (b.totalHours || 0) - (a.totalHours || 0));
+  const meta = YEAR_META[year] || { label: `รุ่น ${year}`, sub: '', color: '#c9a227' };
+  const pass = data.filter(s => s.passed).length;
+  const rate = data.length ? Math.round((pass / data.length) * 100) : 0;
+  const totalH = data.reduce((a, s) => a + (s.totalHours || 0), 0);
+  const avgH = data.length ? (totalH / data.length).toFixed(1) : 0;
+
+  const ROWS_PER_PAGE = 28;
+  const pages = [];
+  for (let i = 0; i < data.length; i += ROWS_PER_PAGE) {
+    pages.push(data.slice(i, i + ROWS_PER_PAGE));
+  }
+
+  return pages.map((pageData, pageIdx) => `
+  <div class="report-page ${pageIdx > 0 ? 'page-break' : ''}">
+    <div class="watermark">วพอ. 2569</div>
+    ${headerBlock(`${meta.label} (${meta.sub}) — รายชื่อนักเรียนทั้งหมด`)}
+
+    ${pageIdx === 0 ? `
+    <div class="kpi-row" style="grid-template-columns:repeat(4,1fr);margin-bottom:16px">
+      <div class="kpi-box"><div class="val">${data.length}</div><div class="lbl">นักเรียนทั้งหมด</div></div>
+      <div class="kpi-box green"><div class="val">${pass}</div><div class="lbl">ผ่านเกณฑ์</div></div>
+      <div class="kpi-box red"><div class="val">${data.length - pass}</div><div class="lbl">ยังไม่ผ่าน</div></div>
+      <div class="kpi-box"><div class="val">${rate}%</div><div class="lbl">อัตราผ่าน</div></div>
+    </div>
+    ` : ''}
+
+    <div class="year-section">
+      <div class="year-header">
+        <div class="year-name">📋 รายชื่อนักเรียน ${meta.label} (${meta.sub}) หน้า ${pageIdx + 1}</div>
+        <div class="year-stats">
+          <span>รวม: <b>${totalH} ชม.</b></span>
+          <span>เฉลี่ย: <b>${avgH} ชม.</b></span>
+          <span>ผ่าน: <b style="color:#16a34a">${pass}/${data.length} คน (${rate}%)</b></span>
+        </div>
+      </div>
+      <table class="student-table">
+        <thead>
+          <tr>
+            <th>ลำดับ</th>
+            <th>รหัส</th>
+            <th>ยศ-ชื่อ-สกุล</th>
+            <th style="text-align:center">รวม ชม.</th>
+            <th>ความคืบหน้า</th>
+            <th>สถานะ</th>
+            <th style="text-align:center">รออนุมัติ</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${pageData.map((s, i) => {
+            const rank = pageIdx * ROWS_PER_PAGE + i + 1;
+            const passClass = s.passed ? 'pass' : 'fail';
+            return `
+            <tr>
+              <td>${rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank}</td>
+              <td style="font-family:monospace;font-size:0.75rem;color:#64748b">${s.student_id}</td>
+              <td style="font-weight:600;color:#0a1628">${s.rank} ${s.first_name} ${s.last_name}</td>
+              <td style="text-align:center"><span class="hours-cell ${passClass}">${s.totalHours || 0}</span></td>
+              <td>${miniBar(s.totalHours || 0)}</td>
+              <td>${statusBadge(s.passed)}</td>
+              <td style="text-align:center;color:#d97706">${s.pendingCount || 0}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    ${pageNum(pageIdx + 1, pages.length)}
+  </div>
+  `).join('');
+}
+
+// ─── REPORT: INDIVIDUAL VOLUNTEER REPORT ──────────────────────
+function renderIndividualReport(studentId) {
+  const all = getAllData();
+  const s = all.find(x => x.student_id === studentId);
+  if (!s) return '<div style="color:white;padding:40px;text-align:center">ไม่พบข้อมูลนักเรียน</div>';
+
+  const deeds = App.getDeeds(studentId).sort((a, b) => new Date(a.activityDate || a.submittedAt) - new Date(b.activityDate || b.submittedAt));
+  
+  const photo = App.getProfilePhoto(studentId);
+  const photoHtml = photo ? `<img src="${photo}" style="width:110px;height:130px;object-fit:cover;border-radius:6px;border:2px solid #c9a227;box-shadow:0 4px 10px rgba(0,0,0,0.15)">` : `<div style="width:110px;height:130px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;border-radius:6px;border:2px dashed #94a3b8;color:#94a3b8;font-weight:700;font-size:2.5rem">?</div>`;
+  
+  // Ranks/Levels
+  let level = 1;
+  let levelTitle = "Cadet Novice (นักเรียนพยาบาลฝึกหัด)";
+  if (s.totalHours >= 50) { level = 8; levelTitle = "Ultimate Sovereign Angel Hero"; }
+  else if (s.totalHours >= 40) { level = 7; levelTitle = "Royal Air Force Nurse Commander"; }
+  else if (s.totalHours >= 30) { level = 6; levelTitle = "Guardian Angel of Health"; }
+  else if (s.totalHours >= 20) { level = 5; levelTitle = "Gold Flight Rescue Hero"; }
+  else if (s.totalHours >= 15) { level = 4; levelTitle = "Silver Care Hero"; }
+  else if (s.totalHours >= 10) { level = 3; levelTitle = "Bronze Service Cadet"; }
+  else if (s.totalHours >= 5) { level = 2; levelTitle = "Cadet Apprentice"; }
+
+  const catRows = s.byCategory.filter(c => c.hours > 0).map(c => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid #e2e8f0;font-size:0.75rem;">
+      <span style="font-weight:600;color:#0a1628;flex:1;text-align:left;">${c.emoji} ${c.name}</span>
+      <span style="font-weight:700;color:#c9a227;">${c.hours} ชม.</span>
+    </div>
+  `).join('');
+
+  const deedRows = deeds.map((d, index) => {
+    const cat = App.getCategoryById(d.categoryId) || { emoji: '⭐', name: 'อื่นๆ' };
+    const statusMap = {
+      approved: '<span style="color:#16a34a;font-weight:600">✓ อนุมัติแล้ว</span>',
+      pending: '<span style="color:#d97706;font-weight:600">⏳ รออนุมัติ</span>',
+      rejected: '<span style="color:#dc2626;font-weight:600">✗ ปฏิเสธ</span>'
+    };
+    return `
+      <tr>
+        <td style="text-align:center">${index + 1}</td>
+        <td style="white-space:nowrap;text-align:center;">${d.activityDate || '-'}</td>
+        <td style="white-space:nowrap;text-align:left;">${cat.emoji} ${cat.name}</td>
+        <td style="text-align:left;">${d.description || '-'}</td>
+        <td style="text-align:center;font-weight:700;color:#0a1628;">${d.hours} ชม.</td>
+        <td style="text-align:center;font-size:0.75rem;">${statusMap[d.status] || '-'}</td>
+        <td style="text-align:center;font-size:0.75rem;color:#64748b;">${d.approvedBy || '-'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  return `
+  <div class="report-page">
+    <div class="watermark">วพอ. 2569</div>
+    ${headerBlock(`รายงานสรุปผลการบันทึกความดีรายบุคคล`)}
+    
+    <div style="display:flex;gap:24px;margin-bottom:24px;align-items:flex-start;background:#f8fafc;padding:16px;border-radius:10px;border:1px solid #e2e8f0;text-align:left;">
+      <div>${photoHtml}</div>
+      <div style="flex:1;display:grid;grid-template-columns:max-content 1fr;row-gap:6px;column-gap:16px;font-size:0.82rem;text-align:left;">
+        <span style="color:#64748b;font-weight:600;">เลขประจำตัว:</span><span style="font-weight:700;color:#0a1628;font-family:monospace;">${s.student_id}</span>
+        <span style="color:#64748b;font-weight:600;">ยศ-ชื่อ-สกุล:</span><span style="font-weight:700;color:#0a1628;">${s.rank} ${s.first_name} ${s.last_name}</span>
+        <span style="color:#64748b;font-weight:600;">ชั้นปี (รุ่น):</span><span style="font-weight:600;color:#0a1628;">${YEAR_META[s.class_year]?.label || ''} (รุ่น ${s.class_year})</span>
+        <span style="color:#64748b;font-weight:600;">อีเมล:</span><span style="font-weight:600;color:#0a1628;">${s.email || '-'}</span>
+        <span style="color:#64748b;font-weight:600;">ระดับสมาชิก:</span><span style="font-weight:700;color:#c9a227;text-transform:uppercase;">★ ${levelTitle} (Lv.${level})</span>
+        <span style="color:#64748b;font-weight:600;">ผลการสะสมชั่วโมง:</span><span>${statusBadge(s.passed)}</span>
+      </div>
+    </div>
+    
+    <div class="chart-row" style="margin-bottom:16px;">
+      <div class="chart-box" style="grid-column: 1 / 3; text-align:left;">
+        <h3 style="margin-bottom:8px;">📊 ความคืบหน้าการสะสมชั่วโมงจิตอาสา</h3>
+        <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#64748b;margin-bottom:4px">
+          <span>ความคืบหน้าทั้งหมด</span>
+          <span style="font-weight:700;color:${s.passed ? '#16a34a' : '#c9a227'}">${s.totalHours} / 50 ชั่วโมง (${Math.min(100, Math.round((s.totalHours/50)*100))}% Completed)</span>
+        </div>
+        <div style="height:10px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:12px;">
+          <div style="height:100%;width:${Math.min(100, (s.totalHours/50)*100)}%;background:${s.passed ? 'linear-gradient(90deg,#16a34a,#22c55e)' : 'linear-gradient(90deg,#c9a227,#f0c849)'};border-radius:999px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-row" style="margin-bottom:24px; align-items: stretch;">
+      <!-- Category breakdown -->
+      <div class="chart-box" style="grid-column: 1 / 2; display: flex; flex-direction: column; text-align:left;">
+        <h3 style="margin-bottom:8px;">📈 สรุปชั่วโมงแยกตามประเภท</h3>
+        <div style="flex:1; display:flex; flex-direction:column; gap:2px;">
+          ${catRows || '<div style="color:#94a3b8;font-size:0.75rem;padding:20px;text-align:center;">ไม่มีข้อมูลประวัติกิจกรรม</div>'}
+        </div>
+      </div>
+
+      <!-- Quick stats box -->
+      <div class="chart-box" style="grid-column: 2 / 3; display: flex; flex-direction: column; justify-content: space-between; text-align:left;">
+        <h3 style="margin-bottom:8px;">📋 สถิติจำนวนรายการบันทึก</h3>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; flex:1;">
+          <div style="background:#f1f5f9; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:800; color:#16a34a;">${s.approvedCount}</div>
+            <div style="font-size:0.65rem; color:#64748b; font-weight:600;">รายการที่อนุมัติ</div>
+          </div>
+          <div style="background:#f1f5f9; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:800; color:#d97706;">${s.pendingCount}</div>
+            <div style="font-size:0.65rem; color:#64748b; font-weight:600;">รายการที่รออนุมัติ</div>
+          </div>
+          <div style="background:#f1f5f9; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:800; color:#dc2626;">${s.rejectedCount}</div>
+            <div style="font-size:0.65rem; color:#64748b; font-weight:600;">รายการที่ถูกปฏิเสธ</div>
+          </div>
+          <div style="background:#f1f5f9; padding:10px; border-radius:6px; text-align:center;">
+            <div style="font-size:1.3rem; font-weight:800; color:#0a1628;">${deeds.length}</div>
+            <div style="font-size:0.65rem; color:#64748b; font-weight:600;">รายการทั้งหมด</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Deeds list table -->
+    <div style="margin-bottom:24px; text-align:left;">
+      <h3 style="font-size:0.8rem;font-weight:700;color:#0a1628;margin:0 0 10px;font-family:'Kanit',sans-serif;">📋 รายละเอียดประวัติกิจกรรมจิตอาสาทั้งหมด</h3>
+      <table class="student-table" style="font-size:0.72rem; width:100%;">
+        <thead>
+          <tr>
+            <th style="width:30px;text-align:center">ลำดับ</th>
+            <th style="width:70px;text-align:center">วันที่ทำกิจกรรม</th>
+            <th style="width:130px;text-align:left;">ประเภทจิตอาสา</th>
+            <th style="text-align:left;">รายละเอียดกิจกรรม</th>
+            <th style="width:50px;text-align:center">ชั่วโมง</th>
+            <th style="width:70px;text-align:center">สถานะ</th>
+            <th style="width:80px;text-align:center">ผู้รับรอง</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${deedRows || '<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b;">- ไม่พบประวัติกิจกรรมจิตอาสาในระบบ -</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Signatures -->
+    <div class="sig-section" style="margin-top:12px;">
+      <div class="sig-box">
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ........................................................</div>
+        <div class="sig-name" style="margin-top:4px;">( ${s.rank} ${s.first_name} ${s.last_name} )</div>
+        <div class="sig-label" style="font-size:0.65rem;">นักเรียนพยาบาลทหารอากาศ ผู้รายงาน</div>
+      </div>
+      <div></div>
+      <div class="sig-box">
+        <div class="sig-line"></div>
+        <div class="sig-label">ลงชื่อ........................................................</div>
+        <div class="sig-name" style="margin-top:4px;">( ........................................................ )</div>
+        <div class="sig-label" style="font-size:0.65rem;">อาจารย์ผู้รับรอง / ผู้ตรวจสอบรายงาน</div>
+      </div>
+    </div>
+
+    ${pageNum(1, 1)}
+  </div>`;
+}
+
+// ─── REPORT: INDIVIDUAL CERTIFICATE ──────────────────────────
+function renderCertificate(studentId) {
+  const all = getAllData();
+  const s = all.find(x => x.student_id === studentId);
+  if (!s) return '<div style="color:white;padding:40px;text-align:center">ไม่พบข้อมูลนักเรียน</div>';
+
+  return `
+  <div class="cert-page">
+    <div class="cert-border-outer"></div>
+    <div class="cert-border-inner"></div>
+    <div class="cert-corner tl"></div>
+    <div class="cert-corner tr"></div>
+    <div class="cert-corner bl"></div>
+    <div class="cert-corner br"></div>
+
+    <div class="cert-content">
+      <img src="510903.jpg" alt="" class="cert-logo">
+      <div class="cert-title-th">วิทยาลัยพยาบาลทหารอากาศ</div>
+      <div style="font-size:0.85rem;font-weight:700;color:#c9a227;letter-spacing:1px;margin-bottom:4px">ROYAL THAI AIR FORCE NURSING COLLEGE</div>
+      <div class="cert-subtitle">ขอมอบใบประกาศเกียรติคุณให้แก่</div>
+      <div class="cert-name">${s.rank} ${s.first_name} ${s.last_name}</div>
+      <div class="cert-body">เนื่องจากได้ปฏิบัติกิจกรรมจิตอาสา ในปีการศึกษา ๒๕๖๙</div>
+      <div class="cert-hours">✅ สะสมได้ ${s.totalHours || 0} ชั่วโมง — ผ่านเกณฑ์ขั้นต่ำ ๕๐ ชั่วโมง</div>
+      <div style="font-size:0.78rem;color:#64748b;margin-bottom:16px">รหัสนักเรียน: ${s.student_id} • ${YEAR_META[s.class_year]?.label || ''} (รุ่น ${s.class_year})</div>
+
+      <div class="cert-sig-row">
+        <div class="cert-sig">
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-label">อาจารย์ผู้รับผิดชอบ</div>
+        </div>
+        <div class="cert-sig">
+          <div class="cert-sig-line"></div>
+          <div class="cert-sig-label">ผู้อำนวยการ วิทยาลัยพยาบาลทหารอากาศ</div>
+        </div>
+      </div>
+      <div style="font-size:0.68rem;color:#94a3b8;margin-top:10px">มอบ ณ วันที่ ${today()}</div>
+    </div>
+
+    <div class="cert-seal">
+      <div>ผ่านเกณฑ์</div>
+      <div style="font-size:0.8rem">✓</div>
+      <div>50 ชม.</div>
+    </div>
+  </div>`;
+}
+
+// ─── MAIN RENDER ──────────────────────────────────────────────
+function renderReport() {
+  const user = App.getCurrentUser();
+  const typeEl = document.getElementById('report-type');
+  const stuSel = document.getElementById('student-select');
+  const content = document.getElementById('report-content');
+  if (user && user.role === 'student') {
+    if (typeEl.value !== 'individual' && typeEl.value !== 'cert') {
+      typeEl.value = 'individual';
+    }
+    stuSel.value = user.student_id;
+  }
+  const type = typeEl.value;
+
+  stuSel.style.display = (type === 'cert' || type === 'individual') ? 'block' : 'none';
+
+  if (type === 'summary') {
+    content.innerHTML = renderSummary();
+  } else if (type.startsWith('class')) {
+    const year = parseInt(type.replace('class', ''));
+    content.innerHTML = renderClassReport(year);
+  } else if (type === 'cert') {
+    const sid = stuSel.value;
+    if (sid) {
+      content.innerHTML = renderCertificate(sid);
+    } else {
+      content.innerHTML = '<div style="color:#94a3b8;text-align:center;padding:60px">เลือกนักเรียนจากเมนูด้านบน</div>';
+    }
+  } else if (type === 'individual') {
+    const sid = stuSel.value;
+    if (sid) {
+      content.innerHTML = renderIndividualReport(sid);
+    } else {
+      content.innerHTML = '<div style="color:#94a3b8;text-align:center;padding:60px">เลือกนักเรียนจากเมนูด้านบน</div>';
+    }
+  }
+}
+
+function populateStudentSelect() {
+  const user = App.getCurrentUser();
+  const all = getAllData().sort((a,b) => a.class_year - b.class_year);
+  const sel = document.getElementById('student-select');
+  sel.innerHTML = '<option value="">— เลือกนักเรียน —</option>';
+  all.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = s.student_id;
+    opt.textContent = `[${s.class_year}] ${s.rank} ${s.first_name} ${s.last_name} (${s.totalHours || 0} ชม.)`;
+    sel.appendChild(opt);
+  });
+}
+
+// ─── INIT ─────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const user = App.requireAuth(['teacher', 'admin', 'student']);
+  if (!user) return;
+  
+  populateStudentSelect();
+
+  // Parse URL parameters for automatic reporting selection
+  const params = new URLSearchParams(window.location.search);
+  const pType = params.get('type');
+  const pStudentId = params.get('studentId');
+  
+  if (user.role === 'student') {
+    document.getElementById('student-select').value = user.student_id;
+    document.getElementById('report-type').value = pType === 'cert' ? 'cert' : 'individual';
+    document.getElementById('student-select').disabled = true;
+  } else {
+    if (pType) {
+      document.getElementById('report-type').value = pType;
+    }
+    if (pStudentId) {
+      document.getElementById('student-select').value = pStudentId;
+    }
+  }
+  
+  renderReport();
+});
+</script>
+</body>
+</html>

@@ -333,7 +333,7 @@
     <script src="data/students_data.js"></script>
     <script src="data/students_photos.js"></script>
     <script src="data/deeds_data.js"></script>
-    <script src="app.js"></script>
+    <script src="app.js?v=72"></script>
     <script>
         let currentUser = null;
         let allSummary = [];
@@ -391,6 +391,9 @@
 
         function loadData() {
             allSummary = App.getAllStudentsSummary();
+            if (currentUser.role === 'student') {
+                allSummary = allSummary.filter(s => s.student_id === currentUser.student_id);
+            }
             // Default sort: highest hours first
             allSummary.sort((a, b) => b.totalHours - a.totalHours);
 
@@ -475,6 +478,7 @@
 
         // ===== MODAL (Reused logic from teacher dash) =====
         function openStuModal(sid) {
+            if (!App.canAccessStudent(sid)) return;
             const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
             const stu = students.find(s => s.student_id === sid);
             if (!stu) return;

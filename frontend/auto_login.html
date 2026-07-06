@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Auto Login</title></head>
+<body>
+<script>
+// Auto-login as top student
+const session = {
+    "student_id": "6703834",
+    "rank": "นพอ.",
+    "first_name": "ฑิตถากร",
+    "last_name": "แน่นอุดร",
+    "full_name": "ฑิตถากร แน่นอุดร",
+    "class_year": 67,
+    "year_level": 3,
+    "password": "6703834",
+    "email": "",
+    "telegram_chat_id": "",
+    "role": "student"
+};
+localStorage.setItem('gooddeeds_session', JSON.stringify(session));
+window.location.href = 'student-dashboard.html';
+</script>
+</body></html>

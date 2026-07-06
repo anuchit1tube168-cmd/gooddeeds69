@@ -94,6 +94,19 @@ def read_students():
     import openpyxl
     wb = openpyxl.load_workbook(EXCEL_FILE, data_only=True)
     students = []
+    
+    # Load existing student profiles to merge edits (prevent data loss)
+    existing_students = {}
+    frontend_json_path = BASE_DIR / "frontend" / "data" / "students.json"
+    if frontend_json_path.exists():
+        try:
+            with open(frontend_json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                existing_students = {s['student_id']: s for s in data}
+            print(f"  Loaded {len(existing_students)} existing student records to preserve edits/passwords.")
+        except Exception as e:
+            print(f"  ⚠️ Failed to load existing students.json for merging: {e}")
+
     for sheet_name, meta in SHEET_CLASS_MAP.items():
         if sheet_name not in wb.sheetnames:
             print(f"  ⚠️  ไม่พบ sheet: {sheet_name}")
@@ -107,18 +120,42 @@ def read_students():
             fname = str(row[3]).strip() if row[3] else ""
             lname = str(row[4]).strip() if row[4] else ""
             row_num += 1
+            
+            password = sid
+            email = ""
+            telegram_chat_id = ""
+            role = "student"
+            class_year = meta["class_year"]
+            year_level = meta["year"]
+            note = ""
+            
+            # Merge edits from existing database if present
+            if sid in existing_students:
+                existing = existing_students[sid]
+                rank = existing.get('rank', rank)
+                fname = existing.get('first_name', fname)
+                lname = existing.get('last_name', lname)
+                password = existing.get('password', password)
+                email = existing.get('email', email)
+                telegram_chat_id = existing.get('telegram_chat_id', telegram_chat_id)
+                role = existing.get('role', role)
+                class_year = existing.get('class_year', class_year)
+                year_level = existing.get('year_level', year_level)
+                note = existing.get('note', note)
+
             students.append({
                 "student_id": sid,
                 "rank": rank,
                 "first_name": fname,
                 "last_name": lname,
                 "full_name": f"{fname} {lname}".strip(),
-                "class_year": meta["class_year"],
-                "year_level": meta["year"],
-                "password": sid,
-                "email": "",
-                "telegram_chat_id": "",
-                "role": "student",
+                "class_year": class_year,
+                "year_level": year_level,
+                "password": password,
+                "email": email,
+                "telegram_chat_id": telegram_chat_id,
+                "role": role,
+                "note": note,
                 "_row_num": row_num,
             })
     # Append Class 69 test students since they are not in the Excel sheets yet
@@ -199,7 +236,122 @@ def read_students():
             "_row_num": 5
         }
     ]
+    # Merge existing class69_students modifications if they exist in the DB
+    for s in class69_students:
+        sid = s['student_id']
+        if sid in existing_students:
+            existing = existing_students[sid]
+            s['rank'] = existing.get('rank', s['rank'])
+            s['first_name'] = existing.get('first_name', s['first_name'])
+            s['last_name'] = existing.get('last_name', s['last_name'])
+            s['full_name'] = existing.get('full_name', s['full_name'])
+            s['class_year'] = existing.get('class_year', s['class_year'])
+            s['year_level'] = existing.get('year_level', s['year_level'])
+            s['password'] = existing.get('password', s['password'])
+            s['email'] = existing.get('email', s['email'])
+            s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
+            s['role'] = existing.get('role', s['role'])
+            s['note'] = existing.get('note', s['note'])
+
     students.extend(class69_students)
+    
+    # Missing historical students from Main 2568.xlsx who are not in the new rosters
+    missing_historical_students = [
+        {
+            "student_id": "6503719",
+            "rank": "นพอ.",
+            "first_name": "นันท์นภัส",
+            "last_name": "เภสัชชา",
+            "full_name": "นันท์นภัส เภสัชชา",
+            "class_year": 65,
+            "year_level": 5,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6503719",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student",
+            "_row_num": 991
+        },
+        {
+            "student_id": "6603775",
+            "rank": "นพอ.",
+            "first_name": "ธิดารัตน์",
+            "last_name": "นิลสังข์",
+            "full_name": "ธิดารัตน์ นิลสังข์",
+            "class_year": 66,
+            "year_level": 4,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6603775",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student",
+            "_row_num": 992
+        },
+        {
+            "student_id": "6703840",
+            "rank": "นพอ.",
+            "first_name": "ดลภัค",
+            "last_name": "แก้วเอก",
+            "full_name": "ดลภัค แก้วเอก",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703840",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student",
+            "_row_num": 993
+        },
+        {
+            "student_id": "6703850",
+            "rank": "นพอ.",
+            "first_name": "ประริชญา",
+            "last_name": "ประสิทธิ์พรม",
+            "full_name": "ประริชญา ประสิทธิ์พรม",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703850",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student",
+            "_row_num": 994
+        },
+        {
+            "student_id": "6703871",
+            "rank": "นพอ.",
+            "first_name": "วีรภัทร",
+            "last_name": "นกดำ",
+            "full_name": "วีรภัทร นกดำ",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703871",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student",
+            "_row_num": 995
+        }
+    ]
+    
+    # Merge existing modifications for missing historical students
+    for s in missing_historical_students:
+        sid = s['student_id']
+        if sid in existing_students:
+            existing = existing_students[sid]
+            s['rank'] = existing.get('rank', s['rank'])
+            s['first_name'] = existing.get('first_name', s['first_name'])
+            s['last_name'] = existing.get('last_name', s['last_name'])
+            s['full_name'] = existing.get('full_name', s['full_name'])
+            s['class_year'] = existing.get('class_year', s['class_year'])
+            s['year_level'] = existing.get('year_level', s['year_level'])
+            s['password'] = existing.get('password', s['password'])
+            s['email'] = existing.get('email', s['email'])
+            s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
+            s['role'] = existing.get('role', s['role'])
+            s['note'] = existing.get('note', s['note'])
+
+    students.extend(missing_historical_students)
     students.sort(key=lambda x: (x["class_year"], x["student_id"]))
     return students
 
@@ -245,11 +397,11 @@ def build_photos(students):
         print(f"  📷 รุ่น {class_year}: จับคู่ {matched}/{len(class_students)} คน (มีรูป {len(sorted_imgs)} ไฟล์)")
         total_matched += matched
 
-    # Map Class 69 students to their initial level 1 Chibi character photo
-    for i in range(1, 6):
-        student_id = f"690000{i}"
-        photo_map[student_id] = "photos/chibi/chibi_lv1.png"
-        total_matched += 1
+    # Assign default photo for anyone who wasn't matched
+    for stu in students:
+        if stu["student_id"] not in photo_map:
+            photo_map[stu["student_id"]] = "photos/chibi/chibi_lv1.png"
+            total_matched += 1
 
     return photo_map, total_matched
 
@@ -265,25 +417,30 @@ def write_photos_js(photo_map):
     output = DATA_DIR / "students_photos.js"
     output.write_text(js, encoding="utf-8")
     
+    # เขียน JSON file
+    json_path = DATA_DIR / "photos.json"
+    json_path.write_text(json.dumps(photo_map, ensure_ascii=False, indent=2), encoding="utf-8")
+    
     # Write to frontend/data/
     frontend_output = BASE_DIR / "frontend" / "data" / "students_photos.js"
+    frontend_json_output = BASE_DIR / "frontend" / "data" / "photos.json"
     frontend_output.parent.mkdir(parents=True, exist_ok=True)
     frontend_output.write_text(js, encoding="utf-8")
+    frontend_json_output.write_text(json.dumps(photo_map, ensure_ascii=False, indent=2), encoding="utf-8")
 
     size_kb = output.stat().st_size / 1024
-    print(f"\n✅ students_photos.js ({size_kb:.0f} KB, เฉพาะ path)")
-    print(f"   Sync-copied to {frontend_output}")
+    print(f"\n✅ students_photos.js ({size_kb:.0f} KB, เฉพาะ path) และ photos.json")
+    print(f"   Sync-copied to {frontend_output} และ photos.json")
     return output
 
 def write_students_js(students, photo_ids):
-    """เขียน students_data.js เฉพาะนักเรียนที่มีรูป"""
-    filtered = [s for s in students if s["student_id"] in photo_ids]
-    clean = [{k: v for k, v in s.items() if not k.startswith("_")} for s in filtered]
+    """เขียน students_data.js ทั้งหมด (นักเรียนทุกคน)"""
+    clean = [{k: v for k, v in s.items() if not k.startswith("_")} for s in students]
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
     js = (
         f"// Auto-generated student data - DO NOT EDIT MANUALLY\n"
         f"// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี\n"
-        f"// เฉพาะนักเรียนที่มีรูปโปรไฟล์: {len(clean)} คน\n\n"
+        f"// นักเรียนทั้งหมด: {len(clean)} คน\n\n"
         "const STUDENTS_DATA = "
         + json.dumps(clean, ensure_ascii=False, indent=2) + ";\n"
     )
@@ -298,7 +455,7 @@ def write_students_js(students, photo_ids):
     print(f"   Sync-copied to {frontend_output}")
 
     from collections import Counter
-    years = Counter(s["class_year"] for s in filtered)
+    years = Counter(s["class_year"] for s in students)
     labels = {68:"ชั้นปีที่ 2", 67:"ชั้นปีที่ 3", 66:"ชั้นปีที่ 4", 65:"ศิษย์เก่า 65"}
     for cy in sorted(years, reverse=True):
         print(f"   รุ่น {cy} ({labels.get(cy,'?')}): {years[cy]} คน")

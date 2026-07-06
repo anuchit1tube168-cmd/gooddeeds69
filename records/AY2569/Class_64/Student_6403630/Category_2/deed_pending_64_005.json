@@ -1,0 +1,25 @@
+{
+    "id": "deed_pending_64_005",
+    "studentId": "6403630",
+    "categoryId": 2,
+    "academicYear": 2569,
+    "hours": 6,
+    "description": "เข้าร่วมกิจกรรมจิตอาสาพัฒนาสิ่งแวดล้อมนอกสถานที่ตามคำสั่ง วพอ. (ทดสอบระบบอนุมัติสด รุ่น 64)",
+    "activityDate": "2026-06-14",
+    "imageUrls": [],
+    "status": "approved",
+    "submittedAt": "2026-06-14T10:05:00.000Z",
+    "approvedBy": "อาจารย์",
+    "approvedAt": "2026-07-06T04:48:55Z",
+    "rejectReason": "",
+    "note": "ตัวอย่างจำลองเพื่อให้อาจารย์ทดสอบอนุมัติสดรุ่น 64",
+    "student": {
+        "student_id": "6403630",
+        "first_name": "กาญจนา",
+        "last_name": "พิชิตชัยปกรณ์",
+        "rank": "นพอ.",
+        "class_year": 64,
+        "year_level": 5,
+        "role": "student"
+    }
+}

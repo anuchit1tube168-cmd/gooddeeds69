@@ -1,0 +1,13 @@
+.DS_Store
+__pycache__/
+*.pyc
+.env
+scratch/
+good-deeds-system/
+graphify-8/
+thai-docx-extracted/
+thai-docx.skill
+thai-docx-skill.zip
+thai-docx/
+.agents/
+.vscode/

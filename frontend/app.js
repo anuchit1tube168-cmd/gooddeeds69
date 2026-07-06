@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const CONFIG = {
     GAS_URL: '', // Google Apps Script Web App URL (ตั้งค่าหลัง deploy)
     TELEGRAM_BOT_TOKEN: '', // ตั้งค่าใน settings
-    MIN_HOURS_PER_YEAR: 36, // เกณฑ์ขั้นต่ำ ชั่วโมง/ปี
+    MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ ชั่วโมง/ปี
     APP_VERSION: '1.1.0',
     ACADEMIC_YEAR: 2569,
 };
@@ -105,6 +105,16 @@ const TEACHERS = [
     { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์' },
 ];
 
+function setAuthCookie(name, value) {
+    if (typeof document === 'undefined') return;
+    document.cookie = `gooddeeds_${name}=${encodeURIComponent(value || '')}; path=/; SameSite=Lax`;
+}
+
+function clearAuthCookie(name) {
+    if (typeof document === 'undefined') return;
+    document.cookie = `gooddeeds_${name}=; path=/; max-age=0; SameSite=Lax`;
+}
+
 // ==================== APP CORE ====================
 const App = {
     // ---------- AUTH ----------
@@ -121,9 +131,11 @@ const App = {
                     return;
                 }
 
-                // Check password (default = student_id, or stored password)
-                const storedPwd = Storage.get('pwd_' + studentId) || student.student_id;
-                if (password !== storedPwd) {
+                // If the student changed their password locally, that password takes priority.
+                const localPwd = Storage.get('pwd_' + cleanId);
+                const expectedPwd = localPwd || student.password || student.student_id;
+
+                if (password !== expectedPwd) {
                     resolve({ success: false, message: 'รหัสผ่านไม่ถูกต้อง' });
                     return;
                 }
@@ -135,6 +147,7 @@ const App = {
                     token: 'local_' + Math.random().toString(36).slice(2)
                 };
                 Storage.set('session', session);
+                this.syncAuthContext(session);
                 resolve({ success: true, user: session });
             }, 600);
         });
@@ -143,13 +156,14 @@ const App = {
     loginTeacher(username, password) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const teacher = TEACHERS.find(t => t.username === username && t.password === password);
+                const teacher = this.getStaffAccounts().find(t => t.username === username && t.password === password);
                 if (!teacher) {
                     resolve({ success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
                     return;
                 }
                 const session = { ...teacher, loginAt: Date.now(), token: 'teacher_' + Math.random().toString(36).slice(2) };
                 Storage.set('session', session);
+                this.syncAuthContext(session);
                 resolve({ success: true, user: session });
             }, 600);
         });
@@ -157,11 +171,95 @@ const App = {
 
     logout() {
         Storage.remove('session');
+        this.clearAuthContext();
         window.location.href = 'index.html';
     },
 
     getCurrentUser() {
-        return Storage.get('session');
+        const user = Storage.get('session');
+        if (user) this.syncAuthContext(user);
+        return user;
+    },
+
+    syncAuthContext(user) {
+        if (!user) user = Storage.get('session');
+        if (!user) {
+            this.clearAuthContext();
+            return;
+        }
+        setAuthCookie('role', user.role || '');
+        setAuthCookie('student_id', user.student_id || '');
+        setAuthCookie('username', user.username || '');
+    },
+
+    clearAuthContext() {
+        clearAuthCookie('role');
+        clearAuthCookie('student_id');
+        clearAuthCookie('username');
+    },
+
+    isBackendMode() {
+        if (typeof window === 'undefined' || !window.location) return false;
+        const { protocol, hostname, port } = window.location;
+        if (protocol !== 'http:' && protocol !== 'https:') return false;
+        const localHosts = ['localhost', '127.0.0.1', '::1'];
+        return localHosts.includes(hostname) && (port === '3000' || port === '');
+    },
+
+    canUseBackendApi() {
+        return this.isBackendMode();
+    },
+
+    getAuthHeaders() {
+        const user = this.getCurrentUser();
+        if (!user) return {};
+        return {
+            'X-GoodDeeds-Role': user.role || '',
+            'X-GoodDeeds-Student-Id': user.student_id || '',
+            'X-GoodDeeds-Username': user.username || '',
+        };
+    },
+
+    canAccessStudent(studentId) {
+        const user = this.getCurrentUser();
+        if (!user) return false;
+        if (user.role === 'teacher' || user.role === 'admin') return true;
+        return user.role === 'student' && String(user.student_id) === String(studentId);
+    },
+
+    getStaffAccounts() {
+        const extraAccounts = Storage.get('staff_accounts') || [];
+        return [...TEACHERS, ...extraAccounts];
+    },
+
+    saveStaffAccounts(accounts) {
+        const builtinUsernames = new Set(TEACHERS.map(t => t.username));
+        const cleanAccounts = (accounts || [])
+            .filter(a => a && a.username && a.password && (a.role === 'teacher' || a.role === 'admin'))
+            .filter(a => !builtinUsernames.has(a.username))
+            .map(a => ({
+                username: String(a.username).trim(),
+                password: String(a.password),
+                role: a.role,
+                name: String(a.name || a.username).trim(),
+            }));
+        Storage.set('staff_accounts', cleanAccounts);
+    },
+
+    addStaffAccount(account) {
+        const accounts = this.getStaffAccounts();
+        if (accounts.some(a => a.username === account.username)) {
+            return { success: false, message: 'มีชื่อผู้ใช้นี้อยู่แล้ว' };
+        }
+        const extraAccounts = Storage.get('staff_accounts') || [];
+        extraAccounts.push({
+            username: String(account.username || '').trim(),
+            password: String(account.password || ''),
+            role: account.role === 'admin' ? 'admin' : 'teacher',
+            name: String(account.name || account.username || '').trim(),
+        });
+        this.saveStaffAccounts(extraAccounts);
+        return { success: true };
     },
 
     requireAuth(allowedRoles = ['student', 'teacher', 'admin']) {
@@ -178,6 +276,46 @@ const App = {
 
     saveDeeds(studentId, deeds) {
         Storage.set('deeds_' + studentId, deeds);
+    },
+
+    async syncDeedsWithBackend(studentId) {
+        if (!this.canUseBackendApi()) return null;
+
+        try {
+            const res = await fetch(`/api/get_deeds?studentId=${studentId}`, {
+                headers: this.getAuthHeaders(),
+            });
+            if (res.ok) {
+                const deeds = await res.json();
+                this.saveDeeds(studentId, deeds);
+                console.log(`🔄 Synced ${deeds.length} deeds from backend for ${studentId}`);
+                return deeds;
+            }
+        } catch (e) {
+            console.error('❌ Failed to sync deeds with backend:', e);
+        }
+        return null;
+    },
+
+    async syncAllDeedsWithBackend() {
+        if (!this.canUseBackendApi()) return null;
+
+        try {
+            const res = await fetch('/api/get_all_deeds', {
+                headers: this.getAuthHeaders(),
+            });
+            if (res.ok) {
+                const allDeeds = await res.json();
+                for (const [sid, deeds] of Object.entries(allDeeds)) {
+                    this.saveDeeds(sid, deeds);
+                }
+                console.log(`🔄 Synced all deeds from backend`);
+                return allDeeds;
+            }
+        } catch (e) {
+            console.error('❌ Failed to sync all deeds with backend:', e);
+        }
+        return null;
     },
 
     async addDeed(deed) {
@@ -203,23 +341,26 @@ const App = {
         this.saveDeeds(studentId, deeds);
         
         // Save to backend via API
-        try {
-            const payload = {
-                ...newDeed,
-                academicYear: 2569,
-                student: user
-            };
-            
-            await fetch('/api/submit_deed', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(payload)
-            });
-            console.log('✅ Sent deed to backend successfully');
-        } catch (error) {
-            console.error('❌ Failed to send deed to backend:', error);
+        if (this.canUseBackendApi()) {
+            try {
+                const payload = {
+                    ...newDeed,
+                    academicYear: 2569,
+                    student: user
+                };
+                
+                await fetch('/api/submit_deed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...this.getAuthHeaders(),
+                    },
+                    body: JSON.stringify(payload)
+                });
+                console.log('✅ Sent deed to backend successfully');
+            } catch (error) {
+                console.error('❌ Failed to send deed to backend:', error);
+            }
         }
         
         return newDeed;
@@ -236,24 +377,27 @@ const App = {
         this.saveDeeds(studentId, deeds);
         
         // Save to backend via API
-        try {
-            await fetch('/api/approve_deed', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    studentId,
-                    deedId,
-                    status,
-                    teacherName,
-                    rejectReason,
-                    deedData: deed
-                })
-            });
-            console.log(`✅ Sent deed [${deedId}] status update [${status}] to backend`);
-        } catch (error) {
-            console.error('❌ Failed to send deed status update to backend:', error);
+        if (this.canUseBackendApi()) {
+            try {
+                await fetch('/api/approve_deed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...this.getAuthHeaders(),
+                    },
+                    body: JSON.stringify({
+                        studentId,
+                        deedId,
+                        status,
+                        teacherName,
+                        rejectReason,
+                        deedData: deed
+                    })
+                });
+                console.log(`✅ Sent deed [${deedId}] status update [${status}] to backend`);
+            } catch (error) {
+                console.error('❌ Failed to send deed status update to backend:', error);
+            }
         }
         
         return deed;
@@ -580,6 +724,83 @@ function printStudentReport(studentId) {
 <script>window.print();</script>
 </body></html>`);
     win.document.close();
+}
+
+// ==================== REAL-TIME EVENTS SYNC (SSE) ====================
+function startRealtimeUpdates() {
+    if (typeof window === 'undefined' || typeof EventSource === 'undefined') return;
+    if (!App.canUseBackendApi()) return;
+
+    const eventSource = new EventSource('/api/events');
+    
+    eventSource.addEventListener('deed_submitted', async (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            console.log("🔔 Real-time: New deed submitted:", data);
+            
+            const user = App.getCurrentUser();
+            if (user) {
+                if (user.role === 'teacher' || user.role === 'admin') {
+                    await App.syncAllDeedsWithBackend();
+                    if (typeof loadDashboardData === 'function') loadDashboardData();
+                    showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${data.studentId}`);
+                } else if (user.student_id === data.studentId) {
+                    await App.syncDeedsWithBackend(data.studentId);
+                    if (typeof loadDashboardData === 'function') loadDashboardData();
+                }
+            }
+        } catch (err) {
+            console.error("Error processing deed_submitted event:", err);
+        }
+    });
+
+    eventSource.addEventListener('deed_approved', async (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            console.log("🔔 Real-time: Deed approved/updated:", data);
+            
+            const user = App.getCurrentUser();
+            if (user) {
+                if (user.role === 'teacher' || user.role === 'admin') {
+                    await App.syncAllDeedsWithBackend();
+                    if (typeof loadDashboardData === 'function') loadDashboardData();
+                } else if (user.student_id === data.studentId) {
+                    await App.syncDeedsWithBackend(data.studentId);
+                    if (typeof loadDashboardData === 'function') loadDashboardData();
+                    showToast(`🎉 กิจกรรมจิตอาสาของคุณได้รับการอนุมัติแล้ว (${data.status})!`);
+                }
+            }
+        } catch (err) {
+            console.error("Error processing deed_approved event:", err);
+        }
+    });
+
+    eventSource.addEventListener('student_updated', async (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            console.log("🔔 Real-time: Student roster updated:", data);
+            
+            const user = App.getCurrentUser();
+            if (user && user.student_id === data.studentId) {
+                showToast("👤 ข้อมูลส่วนตัวของคุณได้รับการอัปเดตแล้ว");
+            }
+            if (typeof loadDashboardData === 'function') loadDashboardData();
+        } catch (err) {
+            console.error("Error processing student_updated event:", err);
+        }
+    });
+    
+    eventSource.onerror = (err) => {
+        console.warn("EventSource disconnected, reconnecting in 3s...", err);
+        eventSource.close();
+        setTimeout(startRealtimeUpdates, 3000);
+    };
+}
+
+if (typeof document !== 'undefined') {
+    document.addEventListener('DOMContentLoaded', () => {
+        startRealtimeUpdates();
+    });
 }
 
 // ========== EXPORT ============

@@ -34,6 +34,18 @@ def main():
     wb = openpyxl.load_workbook(EXCEL_FILE)
     students = []
     
+    # Load existing student profiles to merge edits (prevent data loss)
+    existing_students = {}
+    frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
+    if os.path.exists(frontend_json_path):
+        try:
+            with open(frontend_json_path, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                existing_students = {s['student_id']: s for s in data}
+            print(f"Loaded {len(existing_students)} existing student records to preserve edits/passwords.")
+        except Exception as e:
+            print(f"⚠️ Failed to load existing students.json for merging: {e}")
+
     for sheet_name, meta in SHEET_CLASS_MAP.items():
         if sheet_name not in wb.sheetnames:
             continue
@@ -49,19 +61,41 @@ def main():
             last_name = str(row[4]).strip() if row[4] else ''
             note = str(row[5]).strip() if row[5] else ''
             
+            student_id_str = str(student_id)
+            password = student_id_str
+            email = ''
+            telegram_chat_id = ''
+            role = 'student'
+            class_year = meta['class_year']
+            year_level = meta['year']
+            
+            # Merge edits from existing database if present
+            if student_id_str in existing_students:
+                existing = existing_students[student_id_str]
+                rank = existing.get('rank', rank)
+                first_name = existing.get('first_name', first_name)
+                last_name = existing.get('last_name', last_name)
+                password = existing.get('password', password)
+                email = existing.get('email', email)
+                telegram_chat_id = existing.get('telegram_chat_id', telegram_chat_id)
+                role = existing.get('role', role)
+                class_year = existing.get('class_year', class_year)
+                year_level = existing.get('year_level', year_level)
+                note = existing.get('note', note)
+
             student = {
-                'student_id': str(student_id),
+                'student_id': student_id_str,
                 'rank': rank,
                 'first_name': first_name,
                 'last_name': last_name,
                 'full_name': f"{first_name} {last_name}".strip(),
-                'class_year': meta['class_year'],
-                'year_level': meta['year'],
+                'class_year': class_year,
+                'year_level': year_level,
                 'note': note,
-                'password': str(student_id),  # default password = student_id
-                'email': '',
-                'telegram_chat_id': '',
-                'role': 'student'
+                'password': password,
+                'email': email,
+                'telegram_chat_id': telegram_chat_id,
+                'role': role
             }
             students.append(student)
 
@@ -138,7 +172,118 @@ def main():
             "role": "student"
         }
     ]
+    
+    # Merge existing class69_students modifications if they exist in the DB
+    for s in class69_students:
+        sid = s['student_id']
+        if sid in existing_students:
+            existing = existing_students[sid]
+            s['rank'] = existing.get('rank', s['rank'])
+            s['first_name'] = existing.get('first_name', s['first_name'])
+            s['last_name'] = existing.get('last_name', s['last_name'])
+            s['full_name'] = existing.get('full_name', s['full_name'])
+            s['class_year'] = existing.get('class_year', s['class_year'])
+            s['year_level'] = existing.get('year_level', s['year_level'])
+            s['password'] = existing.get('password', s['password'])
+            s['email'] = existing.get('email', s['email'])
+            s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
+            s['role'] = existing.get('role', s['role'])
+            s['note'] = existing.get('note', s['note'])
+
     students.extend(class69_students)
+    
+    # Missing historical students from Main 2568.xlsx who are not in the new rosters
+    missing_historical_students = [
+        {
+            "student_id": "6503719",
+            "rank": "นพอ.",
+            "first_name": "นันท์นภัส",
+            "last_name": "เภสัชชา",
+            "full_name": "นันท์นภัส เภสัชชา",
+            "class_year": 65,
+            "year_level": 5,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6503719",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student"
+        },
+        {
+            "student_id": "6603775",
+            "rank": "นพอ.",
+            "first_name": "ธิดารัตน์",
+            "last_name": "นิลสังข์",
+            "full_name": "ธิดารัตน์ นิลสังข์",
+            "class_year": 66,
+            "year_level": 4,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6603775",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student"
+        },
+        {
+            "student_id": "6703840",
+            "rank": "นพอ.",
+            "first_name": "ดลภัค",
+            "last_name": "แก้วเอก",
+            "full_name": "ดลภัค แก้วเอก",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703840",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student"
+        },
+        {
+            "student_id": "6703850",
+            "rank": "นพอ.",
+            "first_name": "ประริชญา",
+            "last_name": "ประสิทธิ์พรม",
+            "full_name": "ประริชญา ประสิทธิ์พรม",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703850",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student"
+        },
+        {
+            "student_id": "6703871",
+            "rank": "นพอ.",
+            "first_name": "วีรภัทร",
+            "last_name": "นกดำ",
+            "full_name": "วีรภัทร นกดำ",
+            "class_year": 67,
+            "year_level": 3,
+            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
+            "password": "6703871",
+            "email": "",
+            "telegram_chat_id": "",
+            "role": "student"
+        }
+    ]
+    
+    # Merge existing modifications for missing historical students
+    for s in missing_historical_students:
+        sid = s['student_id']
+        if sid in existing_students:
+            existing = existing_students[sid]
+            s['rank'] = existing.get('rank', s['rank'])
+            s['first_name'] = existing.get('first_name', s['first_name'])
+            s['last_name'] = existing.get('last_name', s['last_name'])
+            s['full_name'] = existing.get('full_name', s['full_name'])
+            s['class_year'] = existing.get('class_year', s['class_year'])
+            s['year_level'] = existing.get('year_level', s['year_level'])
+            s['password'] = existing.get('password', s['password'])
+            s['email'] = existing.get('email', s['email'])
+            s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
+            s['role'] = existing.get('role', s['role'])
+            s['note'] = existing.get('note', s['note'])
+
+    students.extend(missing_historical_students)
     
     # Sort by class year then student_id
     students.sort(key=lambda x: (x['class_year'], x['student_id']))
