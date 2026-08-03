@@ -5,7 +5,7 @@
 
 const LiffHelper = {
     // กำหนด LIFF ID (สามารถเปลี่ยนใน CONFIG หรือตั้งค่าผ่าน UI)
-    liffId: localStorage.getItem('gooddeeds_liff_id') || '',
+    liffId: localStorage.getItem('gooddeeds_liff_id') || '2010948179-Ympqt2bT',
 
     // สถานะการเริ่มต้นใช้งาน LIFF
     isInitialized: false,
