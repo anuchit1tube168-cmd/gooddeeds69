@@ -184,6 +184,22 @@
                     </div>
                 </div>
 
+                <!-- LINE LIFF Setting -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">🟢</span> LINE LIFF Integration (LINE App)</div>
+                    </div>
+                    <div
+                        style="background:rgba(6,199,85,0.08);border:1px solid rgba(6,199,85,0.2);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;font-size:0.82rem;color:var(--text-secondary)">
+                        📱 สำหรับเปิดใช้งานภายในแอป LINE (LINE Developers Console)
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">LINE LIFF ID</label>
+                        <input type="text" class="form-input" id="setting-liff-id"
+                            placeholder="เช่น 1234567890-AbCdEfGh">
+                    </div>
+                </div>
+
                 <!-- Save Button -->
                 <div class="flex gap-8">
                     <button class="btn btn-primary" onclick="saveSettings()" style="flex:1">💾 บันทึกการตั้งค่า</button>
@@ -208,6 +224,7 @@
             document.getElementById('setting-min-hours').value = settings.minHours || 36;
             document.getElementById('setting-year').value = settings.academicYear || 2569;
             document.getElementById('setting-gas-url').value = settings.gasUrl || '';
+            document.getElementById('setting-liff-id').value = settings.liffId || localStorage.getItem('gooddeeds_liff_id') || '';
             renderStaffAccounts();
         }
 
@@ -266,7 +283,9 @@
                 minHours: parseInt(document.getElementById('setting-min-hours').value) || 36,
                 academicYear: parseInt(document.getElementById('setting-year').value) || 2569,
                 gasUrl: document.getElementById('setting-gas-url').value.trim(),
+                liffId: document.getElementById('setting-liff-id').value.trim(),
             };
+            if (s.liffId) localStorage.setItem('gooddeeds_liff_id', s.liffId);
             App.saveSettings(s);
             CONFIG.MIN_HOURS_PER_YEAR = s.minHours;
             showToast('บันทึกการตั้งค่าสำเร็จ ✅', 'success');
