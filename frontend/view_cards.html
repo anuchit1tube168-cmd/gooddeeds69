@@ -707,6 +707,43 @@
         </div>
     </div>
 
+        <!-- BATCH HONOR CARDS SECTION FOR ALL QUALIFIED STUDENTS -->
+        <div style="max-width:1600px; margin: 40px auto 20px; padding:0 10px;">
+            <div style="background:rgba(15,23,42,0.8); border:1px solid var(--gold); border-radius:20px; padding:24px; text-align:center; backdrop-filter:blur(10px); box-shadow:0 10px 30px rgba(0,0,0,0.5);">
+                <h2 style="font-family:'Kanit',sans-serif; color:var(--gold); font-size:1.6rem; margin-bottom:8px;">
+                    🏆 คอลเลกชันการ์ดเกียรติยศสำหรับนักเรียนที่ผ่านเกณฑ์ทุกคน
+                </h2>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
+                    ระบบทำการสร้างการ์ดเกียรติยศให้อัตโนมัติสำหรับนักเรียนพยาบาลทหารอากาศที่มีชั่วโมงจิตอาสาสะสมถึงเกณฑ์ (36+ ชั่วโมง)
+                </p>
+
+                <!-- Filter Controls -->
+                <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:16px;">
+                    <button class="back-btn" onclick="filterBatchCards('all')" id="btn-filter-all" style="background:var(--gold); color:#000;">
+                        🌟 ทั้งหมดที่ผ่านเกณฑ์ (<span id="count-all">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="filterBatchCards(68)" id="btn-filter-68">
+                        🎓 รุ่น 68 (<span id="count-68">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="filterBatchCards(67)" id="btn-filter-67">
+                        🎓 รุ่น 67 (<span id="count-67">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="filterBatchCards(66)" id="btn-filter-66">
+                        🎓 รุ่น 66 (<span id="count-66">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="filterBatchCards(65)" id="btn-filter-65">
+                        🎓 รุ่น 65 (<span id="count-65">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="window.print()" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff; border:none;">
+                        🖨️ พิมพ์การ์ดเกียรติยศทั้งหมด
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dynamic Batch Grid Container -->
+            <div id="batch-cards-container" class="cards-grid" style="margin-top:24px;"></div>
+        </div>
+
     <!-- SCRIPT INCLUDES -->
     <script src="data/students_data.js?v=69"></script>
     <script src="data/students_photos.js?v=69"></script>
@@ -714,6 +751,102 @@
     <script src="app.js?v=72"></script>
 
     <script>
+        let allQualifiedStudents = [];
+        let activeFilter = 'all';
+
+        function renderBatchCards() {
+            const container = document.getElementById('batch-cards-container');
+            if (!container) return;
+
+            const filtered = activeFilter === 'all' 
+                ? allQualifiedStudents 
+                : allQualifiedStudents.filter(item => item.student.class_year == activeFilter);
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">
+                        <p style="font-size:1.2rem;">ไม่พบข้อมูลนักเรียนที่ผ่านเกณฑ์ในหมวดนี้</p>
+                    </div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const s = item.student;
+                const hrs = item.hours;
+                const photoPath = STUDENT_PHOTOS[s.student_id] || `photos/${s.student_id}.jpg`;
+                const isPlatinum = hrs >= 50;
+
+                return `
+                <div class="card-showcase-box">
+                    <div class="starbucks-card-container">
+                        <div class="starbucks-card ${isPlatinum ? 'platinum-level' : 'gold-level'}" style="min-height:220px;">
+                            <div class="card-shine"></div>
+                            <div class="card-header">
+                                <div class="card-brand">
+                                    <img src="510903.jpg" class="card-logo" alt="Logo">
+                                    <div class="card-brand-text">
+                                        <span class="th">วิทยาลัยพยาบาลทหารอากาศ</span>
+                                        <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
+                                    </div>
+                                </div>
+                                <div class="card-level-badge">${isPlatinum ? 'PLATINUM PASS' : 'GOLD PASS'}</div>
+                            </div>
+                            <div class="card-body">
+                                <div class="card-photo-wrap">
+                                    <img src="${photoPath}" alt="photo" onerror="this.outerHTML='?'">
+                                </div>
+                                <div class="card-student-info">
+                                    <div class="card-student-name">${s.rank} ${s.first_name} ${s.last_name}</div>
+                                    <div class="card-student-detail">
+                                        <span>🎫 รหัส: <b>${s.student_id}</b></span>
+                                        <span>📚 รุ่น: <b>${s.class_year}</b></span>
+                                    </div>
+                                </div>
+                                <div class="card-chibi-wrap">
+                                    <img src="photos/chibi/chibi_lv${isPlatinum ? 8 : 4}.png" alt="Chibi">
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                                <div class="card-stars-display">
+                                    <span class="stars-title">รวมชั่วโมงจิตอาสาสะสม</span>
+                                    <div class="stars-row">
+                                        ${'★'.repeat(isPlatinum ? 8 : 5)}
+                                    </div>
+                                </div>
+                                <div class="card-barcode-wrap">
+                                    <div class="card-barcode"></div>
+                                    <span class="card-barcode-text">${hrs.toFixed(1)} ชม. (ผ่านเกณฑ์)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-info-section">
+                        <span class="card-title-badge ${isPlatinum ? 'platinum-badge' : 'gold-badge'}">
+                            ${s.rank} ${s.first_name} ${s.last_name} (${s.student_id})
+                        </span>
+                        <div class="criteria-row" style="margin-top:8px;">
+                            ชั่วโมงสะสม: <b style="color:var(--gold); font-size:1.1rem;">${hrs.toFixed(1)} ชั่วโมง</b> 
+                            <span style="color:#4ade80; margin-left:8px;">✅ ผ่านเกณฑ์ขั้นสูง</span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function filterBatchCards(year) {
+            activeFilter = year;
+            document.querySelectorAll('[id^="btn-filter-"]').forEach(btn => {
+                btn.style.background = 'rgba(255, 255, 255, 0.05)';
+                btn.style.color = '#fff';
+            });
+            const activeBtn = document.getElementById(`btn-filter-${year}`);
+            if (activeBtn) {
+                activeBtn.style.background = 'var(--gold)';
+                activeBtn.style.color = '#000';
+            }
+            renderBatchCards();
+        }
+
         // Draw Barcode Helper
         function renderBarcode(el, code) {
             let html = '';
@@ -729,6 +862,23 @@
         window.addEventListener('load', () => {
             const currentUser = App.requireAuth(['student', 'teacher', 'admin']);
             if (!currentUser) return;
+
+            // Compute all qualified students (>= 36 hours)
+            allQualifiedStudents = STUDENTS_DATA.map(s => {
+                const summ = App.getStudentSummary(s.student_id);
+                return { student: s, hours: summ.totalHours || 0 };
+            }).filter(item => item.hours >= 36)
+              .sort((a, b) => b.hours - a.hours);
+
+            // Update badge counts
+            document.getElementById('count-all').textContent = allQualifiedStudents.length;
+            [68, 67, 66, 65].forEach(yr => {
+                const cnt = allQualifiedStudents.filter(i => i.student.class_year == yr).length;
+                const el = document.getElementById(`count-${yr}`);
+                if (el) el.textContent = cnt;
+            });
+
+            renderBatchCards();
 
             let levels = {
                 welcome: null,
