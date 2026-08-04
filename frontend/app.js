@@ -156,7 +156,16 @@ const App = {
     loginTeacher(username, password) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const teacher = this.getStaffAccounts().find(t => t.username === username && t.password === password);
+                const u = String(username || '').trim();
+                const p = String(password || '').trim();
+                const teacher = this.getStaffAccounts().find(t => {
+                    if (t.username !== u) return false;
+                    if (t.password === p) return true;
+                    // Accept password aliases (e.g. teacher or teacher69, admin or admin69)
+                    if (u === 'teacher' && (p === 'teacher' || p === 'teacher69')) return true;
+                    if (u === 'admin' && (p === 'admin' || p === 'admin69')) return true;
+                    return false;
+                });
                 if (!teacher) {
                     resolve({ success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
                     return;
