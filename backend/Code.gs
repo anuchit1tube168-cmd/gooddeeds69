@@ -59,7 +59,7 @@ function doPost(e) {
 
 // ==================== IMAGE UPLOAD ====================
 function uploadImage(data) {
-  const DEFAULT_FOLDER_ID = '1qExpPnb3kEPLn5e283uXYH2YtWs1EqNb';
+  const DEFAULT_FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
   const mainFolderId = data.folderId || PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || DEFAULT_FOLDER_ID;
   let base64 = data.base64;
   const filename = data.filename || 'upload_' + Date.now() + '.jpg';
