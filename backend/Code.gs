@@ -59,17 +59,27 @@ function doPost(e) {
 
 // ==================== IMAGE UPLOAD ====================
 function uploadImage(data) {
-  const folderId = data.folderId || PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || '';
+  const mainFolderId = data.folderId || PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || '';
   let base64 = data.base64;
   const filename = data.filename || 'upload_' + Date.now() + '.jpg';
   const mimeType = data.mimeType || 'image/jpeg';
+  const studentId = data.studentId || '';
   if (!base64) return { status: 'error', message: 'No base64 image data provided' };
   if (base64.indexOf('base64,') !== -1) base64 = base64.split('base64,')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, filename);
   let file;
-  if (folderId) {
-    const folder = DriveApp.getFolderById(folderId);
-    file = folder.createFile(blob);
+  if (mainFolderId) {
+    let targetFolder = DriveApp.getFolderById(mainFolderId);
+    if (studentId) {
+      const studentFolderName = 'Student_' + studentId;
+      const subfolders = targetFolder.getFoldersByName(studentFolderName);
+      if (subfolders.hasNext()) {
+        targetFolder = subfolders.next();
+      } else {
+        targetFolder = targetFolder.createFolder(studentFolderName);
+      }
+    }
+    file = targetFolder.createFile(blob);
   } else {
     file = DriveApp.createFile(blob);
   }
