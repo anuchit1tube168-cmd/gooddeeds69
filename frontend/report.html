@@ -29,12 +29,15 @@
     }
 
     @media print {
-      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; color-adjust: exact !important; }
       .screen-only { display: none !important; }
       .print-only { display: block !important; }
-      body { background: white !important; }
-      .report-page { box-shadow: none !important; margin: 0 !important; }
+      body { background: white !important; margin: 0 !important; padding: 0 !important; }
+      .report-wrapper { padding: 0 !important; max-width: 100% !important; margin: 0 !important; }
+      .report-page { box-shadow: none !important; margin: 0 !important; width: 100% !important; border: none !important; padding: 10mm 5mm !important; }
       .page-break { page-break-before: always; }
+      tr, table, blockquote, .deed-card-item, .summary-box, .signature-section { page-break-inside: avoid; }
+      @page { size: A4 portrait; margin: 12mm 10mm; }
     }
 
     /* ===== REPORT CONTROLS (screen only) ===== */
