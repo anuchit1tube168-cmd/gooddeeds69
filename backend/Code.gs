@@ -50,10 +50,33 @@ function doPost(e) {
     if (action === 'rejectDeed') return jsonResponse(rejectDeed(data));
     if (action === 'updateProfile') return jsonResponse(updateProfile(data));
     if (action === 'updatePassword') return jsonResponse(updatePassword(data));
+    if (action === 'uploadImage' || data.base64) return jsonResponse(uploadImage(data));
     return jsonResponse({ error: 'Unknown action' });
   } catch (err) {
     return jsonResponse({ error: err.toString() });
   }
+}
+
+// ==================== IMAGE UPLOAD ====================
+function uploadImage(data) {
+  const folderId = data.folderId || PropertiesService.getScriptProperties().getProperty('DRIVE_FOLDER_ID') || '';
+  let base64 = data.base64;
+  const filename = data.filename || 'upload_' + Date.now() + '.jpg';
+  const mimeType = data.mimeType || 'image/jpeg';
+  if (!base64) return { status: 'error', message: 'No base64 image data provided' };
+  if (base64.indexOf('base64,') !== -1) base64 = base64.split('base64,')[1];
+  const blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, filename);
+  let file;
+  if (folderId) {
+    const folder = DriveApp.getFolderById(folderId);
+    file = folder.createFile(blob);
+  } else {
+    file = DriveApp.createFile(blob);
+  }
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  const fileId = file.getId();
+  const fileUrl = 'https://lh3.googleusercontent.com/d/' + fileId;
+  return { status: 'success', fileId: fileId, url: fileUrl };
 }
 
 function jsonResponse(obj) {
