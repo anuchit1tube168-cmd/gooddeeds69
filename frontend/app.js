@@ -507,15 +507,17 @@ const App = {
     saveSettings(s) { Storage.set('settings', s); },
 
     // ---------- TELEGRAM NOTIFY ----------
-    async sendTelegram(chatId, message) {
+    async sendTelegram(chatId, message, replyMarkup = null) {
         const settings = this.getSettings();
         const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
         if (!token || !chatId) return false;
         try {
+            const bodyObj = { chat_id: chatId, text: message, parse_mode: 'HTML' };
+            if (replyMarkup) bodyObj.reply_markup = replyMarkup;
             const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'HTML' })
+                body: JSON.stringify(bodyObj)
             });
             return res.ok;
         } catch { return false; }
@@ -531,7 +533,7 @@ const App = {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': `application/x-www-form-urlencoded`,
                 },
                 body: `message=${encodeURIComponent(message)}`
             });
@@ -562,12 +564,42 @@ const App = {
         const plainMsg = msgLines.join('\n');
 
         const htmlMsg = [
-            `📌 <b>บันทึกความดีใหม่</b>`,
+            `📌 <b>บันทึกความดีใหม่รอการอนุมัติ</b>`,
             `━━━━━━━━━━━━━━━`,
             `👤 <b>${student.rank} ${student.first_name} ${student.last_name}</b>`,
             `🎫 รหัส: ${student.student_id} | ${yearName}`,
             `📂 ${cat.emoji} ${cat.name}`,
             `⏱ <b>${deed.hours} ชม.</b> | 📅 ${deed.activityDate}`,
+            `📝 ${deed.description}`,
+            `━━━━━━━━━━━━━━━`,
+            `⏳ <i>อาจารย์สามารถกดปุ่มอนุมัติข้างล่างได้ทันที</i>`,
+        ].join('\n');
+
+        const replyMarkup = {
+            inline_keyboard: [
+                [
+                    { text: '✅ อนุมัติ (Approve)', callback_data: `approve_${deed.id}_${student.student_id}` },
+                    { text: '❌ ปฏิเสธ (Reject)', callback_data: `reject_${deed.id}_${student.student_id}` }
+                ],
+                [
+                    { text: '🌐 เปิดแผงควบคุมอาจารย์', url: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/teacher-dashboard.html' }
+                ]
+            ]
+        };
+
+        let sentTg = false;
+        const chatId = settings.adminChatId || CONFIG.TELEGRAM_CHAT_ID;
+        if (chatId) {
+            sentTg = await this.sendTelegram(chatId, htmlMsg, replyMarkup);
+        }
+
+        let sentLine = false;
+        if (settings.lineNotifyToken) {
+            sentLine = await this.sendLineNotify(plainMsg);
+        }
+
+        return { sentTg, sentLine };
+    },
             `📝 ${deed.description}`,
             `━━━━━━━━━━━━━━━`,
             `⏳ <i>รออนุมัติจากอาจารย์</i>`,
