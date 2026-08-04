@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================== CONFIG ====================
 const CONFIG = {
     GAS_URL: '', // Google Apps Script Web App URL (ตั้งค่าหลัง deploy)
-    TELEGRAM_BOT_TOKEN: '', // ตั้งค่าใน settings
+    TELEGRAM_BOT_TOKEN: '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k',
+    TELEGRAM_CHAT_ID: '-4839151586',
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ ชั่วโมง/ปี
     APP_VERSION: '1.1.0',
     ACADEMIC_YEAR: 2569,
@@ -492,7 +493,16 @@ const App = {
 
     // ---------- SETTINGS ----------
     getSettings() {
-        return Storage.get('settings') || { telegramToken: '', minHours: CONFIG.MIN_HOURS_PER_YEAR };
+        const s = Storage.get('settings') || {};
+        return {
+            telegramToken: s.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN,
+            adminChatId: s.adminChatId || CONFIG.TELEGRAM_CHAT_ID,
+            minHours: s.minHours || CONFIG.MIN_HOURS_PER_YEAR,
+            academicYear: s.academicYear || CONFIG.ACADEMIC_YEAR,
+            gasUrl: s.gasUrl || CONFIG.GAS_URL,
+            liffId: s.liffId || localStorage.getItem('gooddeeds_liff_id') || '',
+            ...s
+        };
     },
     saveSettings(s) { Storage.set('settings', s); },
 

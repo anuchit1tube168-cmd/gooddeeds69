@@ -15,7 +15,8 @@
 // ==================== CONFIG ====================
 const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID_HERE';
 const MIN_HOURS = 36;
-const TELEGRAM_TOKEN = ''; // หรือเก็บใน PropertiesService
+const TELEGRAM_TOKEN = '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
+const ADMIN_CHAT_ID = '-4839151586';
 
 // ==================== SHEET NAMES ====================
 const SHEETS = {
