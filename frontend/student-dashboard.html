@@ -1071,7 +1071,7 @@
                             <div class="stars-row" id="card-stars-row">
                                 <!-- Stars generated dynamically -->
                             </div>
-                            <div class="stars-count" id="card-stars-count">0 / 50 ชม.</div>
+                            <div class="stars-count" id="card-stars-count">0 / 400 ชม.</div>
                         </div>
                         
                         <div class="card-barcode-wrap">
@@ -1115,7 +1115,7 @@
                         
                         <div class="rpg-stat-row">
                             <span class="stat-label">Volunteer EXP:</span>
-                            <span class="stat-val" id="chibi-exp-text">0 / 50 hours</span>
+                            <span class="stat-val" id="chibi-exp-text">0 / 400 hours</span>
                         </div>
                         
                         <div class="crystal-progress-track">
@@ -1415,32 +1415,32 @@
             let numStars = 1;
             let activeStars = 0;
 
-            if (hours >= 50) {
+            if (hours >= 300) {
                 cardClass = 'platinum-level';
-                badgeText = 'Platinum Pass';
+                badgeText = 'Platinum Celestial Pass';
                 numStars = 8;
                 activeStars = 8;
-            } else if (hours >= 30) {
+            } else if (hours >= 150) {
                 cardClass = 'gold-level';
-                badgeText = 'Gold Member';
+                badgeText = 'Gold Member Pass';
                 numStars = 5;
-                activeStars = Math.min(5, 3 + Math.floor(((hours - 30) / 20) * 2));
-            } else if (hours >= 10) {
+                activeStars = Math.min(5, 3 + Math.floor(((hours - 150) / 150) * 2));
+            } else if (hours >= 36) {
                 cardClass = 'green-level';
-                badgeText = 'Green Member';
+                badgeText = 'Green Member Pass';
                 numStars = 3;
-                activeStars = Math.min(3, 1 + Math.floor(((hours - 10) / 20) * 2));
+                activeStars = Math.min(3, 1 + Math.floor(((hours - 36) / 114) * 2));
             } else {
                 cardClass = 'welcome-level';
-                badgeText = 'Welcome Member';
+                badgeText = 'Welcome Member Pass';
                 numStars = 1;
-                activeStars = hours >= 5 ? 1 : 0;
+                activeStars = hours >= 10 ? 1 : 0;
             }
 
             // Apply card styling
             cardEl.className = `starbucks-card ${cardClass}`;
             badgeEl.textContent = badgeText;
-            countEl.textContent = `${hours} / 50 ชั่วโมง`;
+            countEl.textContent = `${hours.toFixed(1)} / 400 ชั่วโมง`;
 
             // Draw Stars
             let starsHtml = '';
@@ -1509,75 +1509,91 @@
             let stars = "";
             let nextGoal = "";
 
-            if (hours >= 50) {
+            if (hours >= 350) {
+                level = 10;
+                levelTitle = "Celestial Supreme Commander (จอมจักรพรรดิจิตอาสาสวรรค์)";
+                rankTitle = "จอมจักรพรรดิจิตอาสาสวรรค์";
+                chibiEmoji = "🌌";
+                progressPct = 100;
+                stars = "⭐⭐⭐⭐⭐⭐⭐⭐⭐⭐";
+                nextGoal = "🎉🏆 ยินดีด้วย! คุณบรรลุ 350+ ชม. ระดับสูงสุดแห่งจักรวาล ตำนานแห่ง วพอ.!";
+            } else if (hours >= 300) {
+                level = 9;
+                levelTitle = "Platinum Sovereign Angel Hero (อัครเทวทูตปีกทองคำพิเศษ)";
+                rankTitle = "อัครเทวทูตปีกทองคำพิเศษ";
+                chibiEmoji = "💎";
+                progressPct = Math.round((hours / 400) * 100);
+                stars = "⭐⭐⭐⭐⭐⭐⭐⭐⭐";
+                nextGoal = `เป้าหมายถัดไป: อีก ${(350 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.10 จอมจักรพรรดิจิตอาสาสวรรค์!`;
+            } else if (hours >= 250) {
                 level = 8;
                 levelTitle = "Ultimate Sovereign Angel Hero (สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด)";
                 rankTitle = "สุดยอดวีรบุรุษปีกทองคำระดับสูงสุด";
                 chibiEmoji = "🌟";
-                progressPct = 100;
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐⭐⭐⭐⭐⭐";
-                nextGoal = "🎉 ยินดีด้วย! คุณผ่านเกณฑ์ 50 ชม. และบรรลุระดับจิตอาสาสูงสุดของวิทยาลัยพยาบาลทหารอากาศแล้ว!";
-            } else if (hours >= 40) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(300 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.9 อัครเทวทูตปีกทองคำพิเศษ!`;
+            } else if (hours >= 180) {
                 level = 7;
                 levelTitle = "Royal Air Force Nurse Commander (ผู้บัญชาการจิตอาสา วพอ.)";
                 rankTitle = "ผู้บัญชาการจิตอาสา วพอ.";
                 chibiEmoji = "👑";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(50 - hours).toFixed(1)} ชม. เพื่อผ่านเกณฑ์ 50 ชม. และวิวัฒนาการเป็นระดับสูงสุด Lv.8 อัครเทวทูตสวรรค์!`;
-            } else if (hours >= 30) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(250 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.8 สุดยอดวีรบุรุษปีกทองคำ!`;
+            } else if (hours >= 120) {
                 level = 6;
                 levelTitle = "Guardian Angel of Health (เทวทูตผู้พิทักษ์สุขภาพชุมชน)";
                 rankTitle = "เทวทูตผู้พิทักษ์สุขภาพ";
                 chibiEmoji = "👼";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(40 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.7 ผู้บัญชาการจิตอาสา!`;
-            } else if (hours >= 20) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(180 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.7 ผู้บัญชาการจิตอาสา!`;
+            } else if (hours >= 80) {
                 level = 5;
                 levelTitle = "Gold Flight Rescue Hero (ฮีโร่กู้ชีพเวชศาสตร์การบิน)";
                 rankTitle = "ฮีโร่กู้ชีพเวชศาสตร์การบิน";
                 chibiEmoji = "✈️";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(30 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.6 เทวทูตผู้พิทักษ์สุขภาพ!`;
-            } else if (hours >= 15) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(120 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.6 เทวทูตผู้พิทักษ์สุขภาพ!`;
+            } else if (hours >= 50) {
                 level = 4;
                 levelTitle = "Silver Care Hero (วีรบุรุษพยาบาลปีกเงิน)";
                 rankTitle = "วีรบุรุษพยาบาลปีกเงิน";
                 chibiEmoji = "🧑‍⚕️";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(20 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.5 ฮีโร่กู้ชีพเวชศาสตร์การบิน!`;
-            } else if (hours >= 10) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(80 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.5 ฮีโร่กู้ชีพเวชศาสตร์การบิน!`;
+            } else if (hours >= 25) {
                 level = 3;
                 levelTitle = "Bronze Service Cadet (พยาบาลจิตอาสาปีกทองแดง)";
                 rankTitle = "พยาบาลจิตอาสาปีกทองแดง";
                 chibiEmoji = "🩺";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(15 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.4 วีรบุรุษพยาบาลปีกเงิน!`;
-            } else if (hours >= 5) {
+                nextGoal = `เป้าหมายถัดไป: อีก ${(50 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.4 วีรบุรุษพยาบาลปีกเงิน!`;
+            } else if (hours >= 10) {
                 level = 2;
                 levelTitle = "Cadet Apprentice (นักเรียนฝึกงานพยาบาล)";
                 rankTitle = "นักเรียนฝึกงานพยาบาล";
                 chibiEmoji = "📝";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(10 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.3 พยาบาลจิตอาสาปีกทองแดง!`;
+                nextGoal = `เป้าหมายถัดไป: อีก ${(25 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.3 พยาบาลจิตอาสาปีกทองแดง!`;
             } else {
                 level = 1;
                 levelTitle = "Cadet Novice (นักเรียนพยาบาลฝึกหัด)";
                 rankTitle = "นักเรียนพยาบาลฝึกหัด";
                 chibiEmoji = "👶";
-                progressPct = Math.round((hours / 50) * 100);
+                progressPct = Math.round((hours / 400) * 100);
                 stars = "⭐";
-                nextGoal = `เป้าหมายถัดไป: อีก ${(5 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.2 นักเรียนฝึกงานพยาบาล!`;
+                nextGoal = `เป้าหมายถัดไป: อีก ${(10 - hours).toFixed(1)} ชม. เพื่อเลื่อนระดับเป็น Lv.2 นักเรียนฝึกงานพยาบาล!`;
             }
 
             document.getElementById('chibi-level-badge').textContent = `Lv.${level} : ${levelTitle}`;
             document.getElementById('chibi-hero-title').innerHTML = `🦸‍♂️ ฮีโร่จิตอาสา: ${currentUser.first_name}`;
-            document.getElementById('chibi-exp-text').textContent = `${hours} / 50 ชั่วโมง (EXP)`;
+            document.getElementById('chibi-exp-text').textContent = `${hours} / 400 ชั่วโมง (EXP)`;
             document.getElementById('chibi-progress-fill').style.width = `${Math.min(progressPct, 100)}%`;
             document.getElementById('chibi-stars-container').textContent = stars;
             document.getElementById('chibi-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;

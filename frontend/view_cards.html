@@ -524,7 +524,7 @@
                             <div class="stars-row">
                                 <span class="star-icon active">★</span>
                             </div>
-                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                            <span class="stars-count">0 / 400 ชั่วโมง</span>
                         </div>
                         <div class="card-barcode-wrap">
                             <div class="card-barcode" data-barcode=""></div>
@@ -577,7 +577,7 @@
                                 <span class="star-icon active">★</span>
                                 <span class="star-icon">☆</span>
                             </div>
-                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                            <span class="stars-count">0 / 400 ชั่วโมง</span>
                         </div>
                         <div class="card-barcode-wrap">
                             <div class="card-barcode" data-barcode=""></div>
@@ -632,7 +632,7 @@
                                 <span class="star-icon active">★</span>
                                 <span class="star-icon">☆</span>
                             </div>
-                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                            <span class="stars-count">0 / 400 ชั่วโมง</span>
                         </div>
                         <div class="card-barcode-wrap">
                             <div class="card-barcode" data-barcode=""></div>
@@ -690,7 +690,7 @@
                                 <span class="star-icon active">★</span>
                                 <span class="star-icon active">★</span>
                             </div>
-                            <span class="stars-count">0 / 50 ชั่วโมง</span>
+                            <span class="stars-count">0 / 400 ชั่วโมง</span>
                         </div>
                         <div class="card-barcode-wrap">
                             <div class="card-barcode" data-barcode=""></div>
@@ -702,7 +702,7 @@
             <div class="card-info-section">
                 <span class="card-title-badge platinum-badge">Platinum Pass (ผ่านเกณฑ์เด่นชัด)</span>
                 <p class="card-desc">ระดับสูงสุดเหนือระดับจิตอาสาทั่วไป สี Cosmic Black ผสมผสานขอบเรืองแสงนีออนไล่เฉดน้ำเงิน-ม่วง มีดวงดาวระยิบระยับระดับอัศวินสวรรค์ บ่งบอกถึงการทำความดีทะลุเกณฑ์ 50 ชม. อย่างสมบูรณ์แบบ</p>
-                <div class="criteria-row">เกณฑ์ระดับ: <b>50+ ชั่วโมง (ผ่านเกณฑ์สำเร็จ)</b></div>
+                <div class="criteria-row">เกณฑ์ระดับ: <b>300+ ชั่วโมง (ผ่านเกณฑ์สำเร็จ)</b></div>
             </div>
         </div>
     </div>
@@ -774,7 +774,7 @@
                 const s = item.student;
                 const hrs = item.hours;
                 const photoPath = STUDENT_PHOTOS[s.student_id] || `photos/${s.student_id}.jpg`;
-                const isPlatinum = hrs >= 50;
+                const isPlatinum = hrs >= 300;
 
                 return `
                 <div class="card-showcase-box">
@@ -803,7 +803,7 @@
                                     </div>
                                 </div>
                                 <div class="card-chibi-wrap">
-                                    <img src="photos/chibi/chibi_lv${isPlatinum ? 8 : 4}.png" alt="Chibi">
+                                    <img src="photos/chibi/chibi_lv${isPlatinum ? 8 : (hrs >= 150 ? 6 : 4)}.png" alt="Chibi">
                                 </div>
                             </div>
                             <div class="card-footer">
@@ -907,13 +907,13 @@
                     const summ = App.getStudentSummary(s.student_id);
                     const hrs = summ.totalHours || 0;
                     
-                    if (hrs >= 50 && !levels.platinum) {
+                    if (hrs >= 300 && !levels.platinum) {
                         levels.platinum = { student: s, summary: summ };
-                    } else if (hrs >= 30 && hrs < 50 && !levels.gold) {
+                    } else if (hrs >= 150 && hrs < 300 && !levels.gold) {
                         levels.gold = { student: s, summary: summ };
-                    } else if (hrs >= 10 && hrs < 30 && !levels.green) {
+                    } else if (hrs >= 36 && hrs < 150 && !levels.green) {
                         levels.green = { student: s, summary: summ };
-                    } else if (hrs < 10 && !levels.welcome) {
+                    } else if (hrs < 36 && !levels.welcome) {
                         levels.welcome = { student: s, summary: summ };
                     }
                 });
@@ -983,7 +983,7 @@
 
                 // 5. Accumulated Hours
                 const hoursCountEl = cardEl.querySelector('.stars-count');
-                hoursCountEl.textContent = `${hrs.toFixed(1)} / 50 ชั่วโมง`;
+                hoursCountEl.textContent = `${hrs.toFixed(1)} / 400 ชั่วโมง`;
 
                 // 6. Draw Stars
                 const starsRow = cardEl.querySelector('.stars-row');
@@ -992,11 +992,11 @@
                 if (type === 'platinum') {
                     numStars = 8; activeStars = 8;
                 } else if (type === 'gold') {
-                    numStars = 5; activeStars = Math.min(5, 3 + Math.floor(((hrs - 30) / 20) * 2));
+                    numStars = 5; activeStars = Math.min(5, 3 + Math.floor(((hrs - 150) / 150) * 2));
                 } else if (type === 'green') {
-                    numStars = 3; activeStars = Math.min(3, 1 + Math.floor(((hrs - 10) / 20) * 2));
+                    numStars = 3; activeStars = Math.min(3, 1 + Math.floor(((hrs - 36) / 114) * 2));
                 } else {
-                    numStars = 1; activeStars = hrs >= 5 ? 1 : 0;
+                    numStars = 1; activeStars = hrs >= 10 ? 1 : 0;
                 }
 
                 let starsHtml = '';
@@ -1008,13 +1008,15 @@
 
                 // 7. Add Floating Chibi Character by Level
                 let chibiLevel = 1;
-                if (hrs >= 50) chibiLevel = 8;
-                else if (hrs >= 40) chibiLevel = 7;
-                else if (hrs >= 30) chibiLevel = 6;
-                else if (hrs >= 20) chibiLevel = 5;
-                else if (hrs >= 15) chibiLevel = 4;
-                else if (hrs >= 10) chibiLevel = 3;
-                else if (hrs >= 5) chibiLevel = 2;
+                if (hrs >= 350) chibiLevel = 10;
+                else if (hrs >= 300) chibiLevel = 9;
+                else if (hrs >= 250) chibiLevel = 8;
+                else if (hrs >= 180) chibiLevel = 7;
+                else if (hrs >= 120) chibiLevel = 6;
+                else if (hrs >= 80) chibiLevel = 5;
+                else if (hrs >= 50) chibiLevel = 4;
+                else if (hrs >= 25) chibiLevel = 3;
+                else if (hrs >= 10) chibiLevel = 2;
                 else chibiLevel = 1;
 
                 const cardBody = cardEl.querySelector('.card-body');

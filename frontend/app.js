@@ -30,7 +30,7 @@ const CONFIG = {
     GAS_URL: '', // Google Apps Script Web App URL (ตั้งค่าหลัง deploy)
     TELEGRAM_BOT_TOKEN: '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k',
     TELEGRAM_CHAT_ID: '-4839151586',
-    MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ ชั่วโมง/ปี
+    MIN_HOURS_PER_YEAR: 400, // เกณฑ์ขั้นต่ำ ชั่วโมง/ปี (400 ชม.)
     APP_VERSION: '1.1.0',
     ACADEMIC_YEAR: 2569,
 };
