@@ -66,12 +66,33 @@ function uploadImage(data) {
   const filename = data.filename || 'upload_' + Date.now() + '.jpg';
   const mimeType = data.mimeType || 'image/jpeg';
   const studentId = data.studentId || '';
+  
+  // Auto-detect class year e.g. 6803882 -> 68, 6503690 -> 65
+  let classYear = data.classYear || '';
+  if (!classYear && studentId && studentId.length >= 2) {
+    classYear = studentId.substring(0, 2);
+  }
+  
   if (!base64) return { status: 'error', message: 'No base64 image data provided' };
   if (base64.indexOf('base64,') !== -1) base64 = base64.split('base64,')[1];
   const blob = Utilities.newBlob(Utilities.base64Decode(base64), mimeType, filename);
   let file;
   if (mainFolderId) {
-    let targetFolder = DriveApp.getFolderById(mainFolderId);
+    let mainFolder = DriveApp.getFolderById(mainFolderId);
+    let targetFolder = mainFolder;
+    
+    // 1. Auto-route into generation folder (e.g. 'swd 65', 'swd 66', 'swd 67', 'swd 68', 'swd 69')
+    if (classYear) {
+      const genFolderName = 'swd ' + classYear;
+      const genFolders = mainFolder.getFoldersByName(genFolderName);
+      if (genFolders.hasNext()) {
+        targetFolder = genFolders.next();
+      } else {
+        targetFolder = mainFolder.createFolder(genFolderName);
+      }
+    }
+    
+    // 2. Auto-route into individual student subfolder (e.g. 'Student_6803882')
     if (studentId) {
       const studentFolderName = 'Student_' + studentId;
       const subfolders = targetFolder.getFoldersByName(studentFolderName);
