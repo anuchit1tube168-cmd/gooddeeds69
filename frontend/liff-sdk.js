@@ -35,6 +35,8 @@ const LiffHelper = {
                 console.log('👤 LINE Profile Loaded:', this.profile);
                 this.bindCurrentStudentProfile();
                 this.handleAutoLogin();
+            } else if (liff.isInClient()) {
+                liff.login();
             }
             this.updateProfileUI();
             return true;
