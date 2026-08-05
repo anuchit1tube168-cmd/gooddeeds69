@@ -475,6 +475,28 @@
         .starbucks-card.platinum-level .stars-count {
             color: #3b82f6;
         }
+
+        .starbucks-card.diamond-level {
+            background: linear-gradient(135deg, #09152b 0%, #1a2a4a 50%, #0d1e3a 100%);
+            border: 2px solid #00f2fe;
+            box-shadow: 0 15px 40px rgba(0, 242, 254, 0.4), inset 0 0 20px rgba(79, 172, 254, 0.3);
+        }
+        .starbucks-card.diamond-level .card-level-badge {
+            background: linear-gradient(135deg, #00f2fe, #4facfe, #00c6ff);
+            color: #000;
+            font-weight: 800;
+            border-color: #fff;
+            box-shadow: 0 0 15px rgba(0, 242, 254, 0.8);
+            animation: diamond-glow 1.5s infinite alternate;
+        }
+        .starbucks-card.diamond-level .stars-count {
+            color: #00f2fe;
+            font-weight: 800;
+        }
+        @keyframes diamond-glow {
+            0% { box-shadow: 0 0 8px rgba(0,242,254,0.5); transform: scale(1); }
+            100% { box-shadow: 0 0 20px rgba(79,172,254,0.9); transform: scale(1.05); }
+        }
         @keyframes badge-glow {
             0% { box-shadow: 0 0 5px rgba(59,130,246,0.3); }
             100% { box-shadow: 0 0 15px rgba(139,92,246,0.7); }
@@ -758,7 +780,7 @@
     <script src="data/students_photos.js?v=69"></script>
     <script src="data/deeds_data.js?v=105"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=105"></script>
+  <script src="app.js?v=108"></script>
 
     <script>
         let allStudentsList = [];
@@ -810,13 +832,22 @@
                 const s = item.student;
                 const hrs = item.hours;
                 const photoPath = STUDENT_PHOTOS[s.student_id] || `photos/${s.student_id}.jpg`;
-                const isPlatinum = hrs >= 300;
+                const isDiamond = hrs >= 400;
+                const isPlatinum = hrs >= 300 && hrs < 400;
+                const isGold = hrs >= 150 && hrs < 300;
+                const isGreen = hrs >= 36 && hrs < 150;
                 const isPass = hrs >= 36;
+
+                const cardClass = isDiamond ? 'diamond-level' : (isPlatinum ? 'platinum-level' : (isGold ? 'gold-level' : (isGreen ? 'green-level' : 'welcome-level')));
+                const badgeText = isDiamond ? '👑 CROWN DIAMOND 400+' : (isPlatinum ? '💎 PLATINUM PASS' : (isGold ? '🟡 GOLD PASS' : (isGreen ? '🟢 GREEN PASS' : '⚪ WELCOME PASS')));
+                const starCount = isDiamond ? 10 : (isPlatinum ? 8 : (isGold ? 5 : (isGreen ? 3 : 1)));
+                const chibiLv = isDiamond ? 8 : (isPlatinum ? 7 : (isGold ? 6 : (isGreen ? 4 : 1)));
+                const badgeClass = isDiamond ? 'diamond-badge' : (isPlatinum ? 'platinum-badge' : (isGold ? 'gold-badge' : 'green-badge'));
 
                 return `
                 <div class="card-showcase-box">
                     <div class="starbucks-card-container">
-                        <div class="starbucks-card ${isPlatinum ? 'platinum-level' : (hrs >= 150 ? 'gold-level' : (hrs >= 36 ? 'green-level' : 'welcome-level'))}" style="min-height:220px;">
+                        <div class="starbucks-card ${cardClass}" style="min-height:220px;">
                             <div class="card-shine"></div>
                             <div class="card-header">
                                 <div class="card-brand">
@@ -826,7 +857,7 @@
                                         <span class="en">ROYAL THAI AIR FORCE NURSING COLLEGE</span>
                                     </div>
                                 </div>
-                                <div class="card-level-badge">${isPlatinum ? 'PLATINUM PASS' : (hrs >= 150 ? 'GOLD PASS' : (hrs >= 36 ? 'GREEN PASS' : 'WELCOME PASS'))}</div>
+                                <div class="card-level-badge">${badgeText}</div>
                             </div>
                             <div class="card-body">
                                 <div class="card-photo-wrap">
@@ -840,30 +871,30 @@
                                     </div>
                                 </div>
                                 <div class="card-chibi-wrap">
-                                    <img src="photos/chibi/chibi_lv${isPlatinum ? 8 : (hrs >= 150 ? 6 : (hrs >= 36 ? 4 : 1))}.png" alt="Chibi">
+                                    <img src="photos/chibi/chibi_lv${chibiLv}.png" alt="Chibi">
                                 </div>
                             </div>
                             <div class="card-footer">
                                 <div class="card-stars-display">
                                     <span class="stars-title">รวมชั่วโมงจิตอาสาสะสม</span>
                                     <div class="stars-row">
-                                        ${'★'.repeat(isPlatinum ? 8 : (hrs >= 150 ? 5 : (hrs >= 36 ? 3 : 1)))}
+                                        ${'★'.repeat(starCount)}
                                     </div>
                                 </div>
                                 <div class="card-barcode-wrap">
                                     <div class="card-barcode"></div>
-                                    <span class="card-barcode-text">${hrs.toFixed(1)} ชม. (${isPass ? 'ผ่านเกณฑ์' : 'สะสมความดี'})</span>
+                                    <span class="card-barcode-text">${hrs.toFixed(1)} ชม. (${isDiamond ? '👑 เกียรติยศสูงสุด 400+' : (isPass ? 'ผ่านเกณฑ์' : 'สะสมความดี')})</span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="card-info-section">
-                        <span class="card-title-badge ${isPlatinum ? 'platinum-badge' : (hrs >= 150 ? 'gold-badge' : 'green-badge')}">
+                        <span class="card-title-badge ${badgeClass}">
                             ${s.rank} ${s.first_name} ${s.last_name} (${s.student_id})
                         </span>
                         <div class="criteria-row" style="margin-top:8px;">
                             ชั่วโมงสะสม: <b style="color:var(--gold); font-size:1.1rem;">${hrs.toFixed(1)} ชั่วโมง</b> 
-                            <span style="color:${isPass ? '#4ade80' : '#f59e0b'}; margin-left:8px;">${isPass ? '✅ ผ่านเกณฑ์ขั้นต่ำ' : '⏳ กำลังสะสมชั่วโมง'}</span>
+                            <span style="color:${isDiamond ? '#00f2fe' : (isPass ? '#4ade80' : '#f59e0b')}; margin-left:8px;">${isDiamond ? '👑 บรรลุเพดานสูงสุด 400+ ชม.' : (isPass ? '✅ ผ่านเกณฑ์ขั้นต่ำ' : '⏳ กำลังสะสมชั่วโมง')}</span>
                         </div>
                     </div>
                 </div>`;
