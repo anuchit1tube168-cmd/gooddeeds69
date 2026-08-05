@@ -243,6 +243,21 @@
         <!-- การติดต่อ -->
         <div class="section-card">
           <div class="section-title">📬 การติดต่อ & แจ้งเตือน</div>
+
+          <!-- LINE LIFF Status Card -->
+          <div id="line-liff-status-box" style="background:rgba(6,199,85,0.08); border:1px solid rgba(6,199,85,0.3); border-radius:var(--radius-md); padding:14px; margin-bottom:20px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:1.6rem;">🟢</span>
+              <div>
+                <div style="font-weight:700; color:#4ade80; font-size:0.95rem;" id="line-liff-title">📱 เชื่อมต่อบัญชี LINE Official Account</div>
+                <div style="font-size:0.8rem; color:var(--text-muted);" id="line-liff-detail">ดึงข้อมูลโปรไฟล์จาก LINE อัตโนมัติเมื่อเข้าผ่าน LINE App</div>
+              </div>
+            </div>
+            <button type="button" onclick="connectLineLiff()" class="btn btn-sm" style="background:#06c755; color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700; cursor:pointer;" id="btn-line-connect">
+              🟢 เชื่อมต่อ LINE
+            </button>
+          </div>
+
           <form id="contact-form" onsubmit="saveContact(event)">
             <div class="form-group">
               <label class="form-label">อีเมล (สำหรับแจ้งเตือน)</label>
@@ -287,6 +302,7 @@
   <script src="data/deeds_data.js"></script>
   <script src="data/app_settings.js?v=85"></script>
   <script src="app.js?v=90"></script>
+  <script src="liff-sdk.js?v=2"></script>
   <script>
     let currentUser;
 
@@ -368,6 +384,14 @@
       };
       Storage.set('bio_' + currentUser.student_id, bio);
       showToast('บันทึกประวัติส่วนตัวแล้ว ✅', 'success');
+    }
+
+    function connectLineLiff() {
+      if (typeof LiffHelper !== 'undefined') {
+        LiffHelper.login();
+      } else {
+        showToast('กำลังเชื่อมต่อระบบ LINE LIFF...', 'info');
+      }
     }
 
     // ===== ติดต่อ =====
