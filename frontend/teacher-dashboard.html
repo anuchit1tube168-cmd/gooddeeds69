@@ -678,8 +678,16 @@
   <script src="data/students_data.js?v=70"></script>
   <script src="data/students_photos.js?v=70"></script>
   <script src="data/deeds_data.js?v=70"></script>
-  <script src="app.js?v=72"></script>
+  <script src="app.js?v=80"></script>
   <script>
+    // ===== SIDEBAR TOGGLE =====
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      const overlay = document.getElementById('sidebar-overlay');
+      sidebar.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
     // ===== STATE =====
     let teacher = null;
     let pendingDeeds = [];

@@ -600,25 +600,8 @@ const App = {
 
         return { sentTg, sentLine };
     },
-            `📝 ${deed.description}`,
-            `━━━━━━━━━━━━━━━`,
-            `⏳ <i>รออนุมัติจากอาจารย์</i>`,
-        ].join('\n');
 
-        const results = [];
 
-        // Telegram
-        if (settings.telegramToken && settings.adminChatId) {
-            results.push(await this.sendTelegram(settings.adminChatId, htmlMsg));
-        }
-
-        // LINE Notify
-        if (settings.lineNotifyToken) {
-            results.push(await this.sendLineNotify(plainMsg));
-        }
-
-        return results.some(r => r);
-    },
 
     // ---------- UTILS ----------
     formatDate(iso) {
