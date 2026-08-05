@@ -567,15 +567,20 @@ const App = {
         const plainMsg = msgLines.join('\n');
 
         const htmlMsg = [
-            `📌 <b>บันทึกความดีใหม่รอการอนุมัติ</b>`,
-            `━━━━━━━━━━━━━━━`,
-            `👤 <b>${student.rank} ${student.first_name} ${student.last_name}</b>`,
-            `🎫 รหัส: ${student.student_id} | ${yearName}`,
-            `📂 ${cat.emoji} ${cat.name}`,
-            `⏱ <b>${deed.hours} ชม.</b> | 📅 ${deed.activityDate}`,
-            `📝 ${deed.description}`,
-            `━━━━━━━━━━━━━━━`,
-            `⏳ <i>อาจารย์สามารถกดปุ่มอนุมัติข้างล่างได้ทันที</i>`,
+            `🎖️ <b>ใบบันทึกความดีจิตอาสา — วิทยาลัยพยาบาลทหารอากาศ</b>`,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            `👤 <b>ยศ-ชื่อ-สกุล:</b> ${student.rank} ${student.first_name} ${student.last_name}`,
+            `🎫 <b>รหัสประจำตัว:</b> <code>${student.student_id}</code>`,
+            `📚 <b>สังกัด:</b> ${yearName}`,
+            ``,
+            `📂 <b>หมวดหมู่ความดี:</b> ${cat.emoji} ${cat.name}`,
+            `⏱ <b>จำนวนชั่วโมงสะสม:</b> <b>${deed.hours} ชั่วโมง</b>`,
+            `📅 <b>วันที่ปฏิบัติกิจกรรม:</b> ${deed.activityDate}`,
+            ``,
+            `📝 <b>รายละเอียดกิจกรรม:</b>`,
+            `${deed.description}`,
+            `━━━━━━━━━━━━━━━━━━━━━━━`,
+            `⏳ <b>สถานะเอกสาร:</b> <i>รอการตรวจประเมินและอนุมัติจากอาจารย์</i>`,
         ].join('\n');
 
         const replyMarkup = {
