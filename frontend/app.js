@@ -101,7 +101,10 @@ function seedImportedDeeds() {
 seedImportedDeeds();
 
 
-const TEACHERS = [
+const TEACHERS = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.admin && EXCEL_SETTINGS.teacher) ? [
+    EXCEL_SETTINGS.admin,
+    EXCEL_SETTINGS.teacher
+] : [
     { username: 'admin', password: 'admin69', role: 'admin', name: 'ผู้ดูแลระบบ' },
     { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์' },
 ];

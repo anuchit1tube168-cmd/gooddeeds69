@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 sync_all_students.py
-อ่านรายชื่อนักเรียนจาก Excel ทุกไฟล์ที่มี แล้ว export เป็น JSON + JS
-รองรับทั้ง Sheet ชื่อ SWD68, SWD67... และ นพอ.1, นพอ.2...
+อ่านรายชื่อนักเรียนและการตั้งค่าระบบ (Settings) จาก Excel ทุกไฟล์ที่มี แล้ว export เป็น JSON + JS
+รองรับทั้ง Sheet ชื่อ SWD68, SWD67... และ นพอ.1, นพอ.2... รวมถึง Sheet Settings / ตั้งค่าระบบ
 
 ผลลัพธ์:
   data/students.json
   frontend/data/students.json
   frontend/data/students_data.js
+  frontend/data/app_settings.js
 """
 import openpyxl
 import json
@@ -24,11 +25,11 @@ EXCEL_FILES = [
     # ไฟล์อัปเดต
     os.path.join(DATA_DIR, "รายชื่อ_นพอ_อัปเดตล่าสุด_2569.xlsx"),
     # ไฟล์เดิม
+    os.path.join(BASE_DIR, "รายชื่อ นพอ.ปี 69.xlsx"),
     os.path.join(BASE_DIR, "รายชื่อ นพอ.ปี68 ทุกชั้นปี ( 5 ก.พ. 69 ตัดเกาหลี )SWD .xlsx"),
 ]
 
 # ===== Sheet -> class_year mapping =====
-# รองรับทั้ง 2 รูปแบบ
 SHEET_MAP = {
     # รูปแบบ SWD
     'SWD69': 69,
@@ -51,9 +52,7 @@ SHEET_MAP = {
     'นพอ.ปี4': 66,
 }
 
-# ===== ปีการศึกษา -> ชั้นปีที่ =====
 def get_study_year(class_year):
-    """คำนวณชั้นปีจาก class_year (ปี 2569: รุ่น69=ปี1, รุ่น68=ปี2, ...)"""
     mapping = {69: 1, 68: 2, 67: 3, 66: 4, 65: 5, 64: 5}
     return mapping.get(class_year, 5)
 
@@ -74,18 +73,13 @@ def clean_rank(val):
     return s if s else 'นพอ.'
 
 def extract_students_from_sheet(ws, class_year):
-    """Extract students from a single worksheet"""
     students = []
     for row in ws.iter_rows(min_row=5, values_only=True):
         if not row or len(row) < 5:
             continue
         
         student_id = clean_number(row[1])
-        if not student_id:
-            continue
-        
-        # ตรวจ pattern ของรหัสนักเรียน (6 or 7 หลัก)
-        if len(student_id) < 6:
+        if not student_id or len(student_id) < 6:
             continue
         
         rank = clean_rank(row[2])
@@ -106,10 +100,33 @@ def extract_students_from_sheet(ws, class_year):
     
     return students
 
+def extract_settings_from_sheet(ws):
+    settings = {}
+    for row in ws.iter_rows(min_row=2, values_only=True):
+        if not row or not row[0]:
+            continue
+        key = str(row[0]).strip()
+        val = str(row[1]).strip() if row[1] is not None else ''
+        settings[key] = val
+    return settings
+
 def main():
-    all_students = {}  # key: student_id, value: student dict (dedup by ID)
+    all_students = {}
+    app_settings = {
+        "admin": {"username": "admin", "password": "admin69", "role": "admin", "name": "ผู้ดูแลระบบ"},
+        "teacher": {"username": "teacher", "password": "teacher69", "role": "teacher", "name": "อาจารย์"},
+        "telegram": {
+            "bot_token": "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k",
+            "chat_id": "-4839151586"
+        },
+        "config": {
+            "academic_year": 2569,
+            "min_hours": 36,
+            "max_hours": 400
+        }
+    }
     
-    # Load existing data to preserve edits/passwords
+    # Load existing student profiles to preserve custom passwords
     frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
     existing_students = {}
     if os.path.exists(frontend_json_path):
@@ -117,49 +134,53 @@ def main():
             with open(frontend_json_path, 'r', encoding='utf-8') as f:
                 data = json.load(f)
                 existing_students = {s['student_id']: s for s in data}
-            print(f"📋 Loaded {len(existing_students)} existing records to preserve edits")
+            print(f"📋 Loaded {len(existing_students)} existing student records")
         except Exception as e:
             print(f"⚠️ Failed to load existing: {e}")
     
-    # Process each Excel file
     for excel_path in EXCEL_FILES:
         if not os.path.exists(excel_path):
-            print(f"⚠️ ไม่พบไฟล์: {os.path.basename(excel_path)}")
             continue
         
         print(f"\n📂 กำลังอ่าน: {os.path.basename(excel_path)}")
         wb = openpyxl.load_workbook(excel_path, data_only=True)
         
+        # Read Settings if sheet exists
         for sheet_name in wb.sheetnames:
-            # Match sheet name to class_year
-            class_year = None
-            clean_sheet = sheet_name.strip()
-            
-            if clean_sheet in SHEET_MAP:
-                class_year = SHEET_MAP[clean_sheet]
-            elif sheet_name in SHEET_MAP:
-                class_year = SHEET_MAP[sheet_name]
-            else:
-                # Try matching partial
-                for key, cy in SHEET_MAP.items():
-                    if key.strip() == clean_sheet:
-                        class_year = cy
-                        break
-            
-            if class_year is None:
-                print(f"  ⏭️ ข้าม Sheet '{sheet_name}' (ไม่ตรง mapping)")
+            if sheet_name in ['Settings', 'ตั้งค่าระบบ']:
+                s_dict = extract_settings_from_sheet(wb[sheet_name])
+                if s_dict:
+                    if 'admin_username' in s_dict: app_settings['admin']['username'] = s_dict['admin_username']
+                    if 'admin_password' in s_dict: app_settings['admin']['password'] = s_dict['admin_password']
+                    if 'admin_name' in s_dict: app_settings['admin']['name'] = s_dict['admin_name']
+                    if 'teacher_username' in s_dict: app_settings['teacher']['username'] = s_dict['teacher_username']
+                    if 'teacher_password' in s_dict: app_settings['teacher']['password'] = s_dict['teacher_password']
+                    if 'teacher_name' in s_dict: app_settings['teacher']['name'] = s_dict['teacher_name']
+                    if 'telegram_bot_token' in s_dict: app_settings['telegram']['bot_token'] = s_dict['telegram_bot_token']
+                    if 'telegram_chat_id' in s_dict: app_settings['telegram']['chat_id'] = s_dict['telegram_chat_id']
+                    if 'min_hours_per_year' in s_dict: app_settings['config']['min_hours'] = int(s_dict['min_hours_per_year'])
+                    if 'max_hours_scale' in s_dict: app_settings['config']['max_hours'] = int(s_dict['max_hours_scale'])
+                    if 'academic_year' in s_dict: app_settings['config']['academic_year'] = int(s_dict['academic_year'])
+                    print(f"  ⚙️ ดึงข้อมูลการตั้งค่าระบบ (Settings) สำเร็จ! Admin: {app_settings['admin']['username']}, Teacher: {app_settings['teacher']['username']}")
+        
+        # Read Student Roster
+        for sheet_name in wb.sheetnames:
+            if sheet_name in ['Settings', 'ตั้งค่าระบบ']:
                 continue
             
-            ws = wb[sheet_name]
-            students = extract_students_from_sheet(ws, class_year)
+            clean_sheet = sheet_name.strip()
+            class_year = SHEET_MAP.get(clean_sheet) or SHEET_MAP.get(sheet_name)
             
+            if class_year is None:
+                continue
+            
+            students = extract_students_from_sheet(wb[sheet_name], class_year)
             for s in students:
                 sid = s['student_id']
                 if sid not in all_students:
-                    # Merge with existing data (preserve passwords, etc.)
                     if sid in existing_students:
                         merged = existing_students[sid].copy()
-                        merged.update(s)  # Update with new name data
+                        merged.update(s)
                         all_students[sid] = merged
                     else:
                         all_students[sid] = s
@@ -168,10 +189,8 @@ def main():
         
         wb.close()
     
-    # Convert to sorted list
     students_list = sorted(all_students.values(), key=lambda x: (x.get('class_year', 0), x.get('student_id', '')))
     
-    # Summary
     print(f"\n{'='*50}")
     print(f"📊 สรุปรายชื่อทั้งหมด: {len(students_list)} คน")
     years = {}
@@ -182,37 +201,28 @@ def main():
         print(f"   รุ่น {y} (ชั้นปีที่ {get_study_year(y)}): {years[y]} คน")
     print(f"{'='*50}")
     
-    # Write outputs
-    # 1. data/students.json
-    json_path = os.path.join(DATA_DIR, 'students.json')
-    with open(json_path, 'w', encoding='utf-8') as f:
-        json.dump(students_list, f, ensure_ascii=False, indent=2)
-    print(f"\n✅ เขียน {json_path}")
+    # Write JSON files
+    for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
+        with open(p, 'w', encoding='utf-8') as f:
+            json.dump(students_list, f, ensure_ascii=False, indent=2)
+        print(f"✅ เขียน {p}")
     
-    # 2. frontend/data/students.json
-    frontend_dir = os.path.join(BASE_DIR, 'frontend', 'data')
-    os.makedirs(frontend_dir, exist_ok=True)
-    frontend_json = os.path.join(frontend_dir, 'students.json')
-    with open(frontend_json, 'w', encoding='utf-8') as f:
-        json.dump(students_list, f, ensure_ascii=False, indent=2)
-    print(f"✅ เขียน {frontend_json}")
-    
-    # 3. frontend/data/students_data.js
-    js_path = os.path.join(frontend_dir, 'students_data.js')
+    # Write JS files
     js_content = f"// Auto-generated by sync_all_students.py\n"
     js_content += f"// Total: {len(students_list)} students\n"
     js_content += f"const STUDENTS_DATA = {json.dumps(students_list, ensure_ascii=False, indent=2)};\n"
-    with open(js_path, 'w', encoding='utf-8') as f:
-        f.write(js_content)
-    print(f"✅ เขียน {js_path}")
-    
-    # 4. Also update data/students_data.js (legacy path)
-    legacy_js = os.path.join(DATA_DIR, 'students_data.js')
-    with open(legacy_js, 'w', encoding='utf-8') as f:
-        f.write(js_content)
-    print(f"✅ เขียน {legacy_js}")
-    
-    print(f"\n🎉 อัปเดตรายชื่อนักเรียนเสร็จสมบูรณ์!")
+    for p in [os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js'), os.path.join(DATA_DIR, 'students_data.js')]:
+        with open(p, 'w', encoding='utf-8') as f:
+            f.write(js_content)
+        print(f"✅ เขียน {p}")
+        
+    # Write App Settings JS
+    settings_js = f"// Auto-generated from Excel Settings sheet\n"
+    settings_js += f"const EXCEL_SETTINGS = {json.dumps(app_settings, ensure_ascii=False, indent=2)};\n"
+    settings_js_path = os.path.join(BASE_DIR, 'frontend', 'data', 'app_settings.js')
+    with open(settings_js_path, 'w', encoding='utf-8') as f:
+        f.write(settings_js)
+    print(f"✅ เขียน {settings_js_path}")
 
 if __name__ == '__main__':
     main()
