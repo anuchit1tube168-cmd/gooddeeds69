@@ -26,7 +26,8 @@ SETTINGS_DATA = [
     ["teacher_name", "อาจารย์ผู้ควบคุม (Teacher)", "ชื่อแสดงของ Teacher"],
     ["telegram_bot_token", "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k", "Telegram Bot Token"],
     ["telegram_chat_id", "-4839151586", "Telegram Chat ID"],
-    ["min_hours_per_year", "36", "เกณฑ์ชั่วโมงขั้นต่ำต่อปี"],
+    ["min_hours_per_semester", "25", "เกณฑ์ชั่วโมงขั้นต่ำต่อภาคเรียน (เทอม)"],
+    ["min_hours_per_year", "50", "เกณฑ์ชั่วโมงขั้นต่ำต่อปีการศึกษา"],
     ["max_hours_scale", "400", "เพดานชั่วโมงสะสมสูงสุด"],
     ["academic_year", "2569", "ปีการศึกษา"],
 ]

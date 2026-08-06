@@ -121,7 +121,8 @@ def main():
         },
         "config": {
             "academic_year": 2569,
-            "min_hours": 36,
+            "min_hours_semester": 25,
+            "min_hours": 50,
             "max_hours": 400
         }
     }
@@ -158,6 +159,7 @@ def main():
                     if 'teacher_name' in s_dict: app_settings['teacher']['name'] = s_dict['teacher_name']
                     if 'telegram_bot_token' in s_dict: app_settings['telegram']['bot_token'] = s_dict['telegram_bot_token']
                     if 'telegram_chat_id' in s_dict: app_settings['telegram']['chat_id'] = s_dict['telegram_chat_id']
+                    if 'min_hours_per_semester' in s_dict: app_settings['config']['min_hours_semester'] = int(s_dict['min_hours_per_semester'])
                     if 'min_hours_per_year' in s_dict: app_settings['config']['min_hours'] = int(s_dict['min_hours_per_year'])
                     if 'max_hours_scale' in s_dict: app_settings['config']['max_hours'] = int(s_dict['max_hours_scale'])
                     if 'academic_year' in s_dict: app_settings['config']['academic_year'] = int(s_dict['academic_year'])

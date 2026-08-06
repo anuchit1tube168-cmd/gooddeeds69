@@ -18,7 +18,8 @@ const EXCEL_SETTINGS = {
   },
   "config": {
     "academic_year": 2569,
-    "min_hours": 36,
+    "min_hours_semester": 25,
+    "min_hours": 50,
     "max_hours": 400
   }
 };

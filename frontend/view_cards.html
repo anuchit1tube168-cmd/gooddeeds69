@@ -736,13 +736,13 @@
                     🏆 คอลเลกชันการ์ดเกียรติยศสำหรับนักเรียนที่ผ่านเกณฑ์ทุกคน
                 </h2>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:20px;">
-                    ระบบทำการสร้างการ์ดเกียรติยศให้อัตโนมัติสำหรับนักเรียนพยาบาลทหารอากาศที่มีชั่วโมงจิตอาสาสะสมถึงเกณฑ์ (36+ ชั่วโมง)
+                    ระบบทำการสร้างการ์ดเกียรติยศให้อัตโนมัติสำหรับนักเรียนพยาบาลทหารอากาศที่มีชั่วโมงจิตอาสาสะสมถึงเกณฑ์ (50+ ชั่วโมง / ปีการศึกษา)
                 </p>
 
                 <!-- Filter Controls -->
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:16px;">
                     <button class="back-btn" onclick="toggleCardMode('qualified')" id="btn-mode-qualified" style="background:var(--gold); color:#000;">
-                        🌟 ผ่านเกณฑ์ 36+ ชม. (<span id="count-qualified">0</span> คน)
+                        🌟 ผ่านเกณฑ์ 50+ ชม. (<span id="count-qualified">0</span> คน)
                     </button>
                     <button class="back-btn" onclick="toggleCardMode('all')" id="btn-mode-all">
                         👥 นักเรียนทุกคน (<span id="count-all">0</span> คน)
@@ -780,7 +780,7 @@
     <script src="data/students_photos.js?v=69"></script>
     <script src="data/deeds_data.js?v=105"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=108"></script>
+  <script src="app.js?v=110"></script>
 
     <script>
         let allStudentsList = [];
@@ -835,8 +835,8 @@
                 const isDiamond = hrs >= 400;
                 const isPlatinum = hrs >= 300 && hrs < 400;
                 const isGold = hrs >= 150 && hrs < 300;
-                const isGreen = hrs >= 36 && hrs < 150;
-                const isPass = hrs >= 36;
+                const isGreen = hrs >= 50 && hrs < 150;
+                const isPass = hrs >= 50;
 
                 const cardClass = isDiamond ? 'diamond-level' : (isPlatinum ? 'platinum-level' : (isGold ? 'gold-level' : (isGreen ? 'green-level' : 'welcome-level')));
                 const badgeText = isDiamond ? '👑 CROWN DIAMOND 400+' : (isPlatinum ? '💎 PLATINUM PASS' : (isGold ? '🟡 GOLD PASS' : (isGreen ? '🟢 GREEN PASS' : '⚪ WELCOME PASS')));
@@ -923,7 +923,7 @@
                 return { student: s, hours: summ.totalHours || 0 };
             }).sort((a, b) => b.hours - a.hours);
 
-            allQualifiedStudents = allStudentsList.filter(item => item.hours >= 36);
+            allQualifiedStudents = allStudentsList.filter(item => item.hours >= 50);
 
             // Update badge counts
             document.getElementById('count-all').textContent = allStudentsList.length;
