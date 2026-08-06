@@ -1,4 +1,4 @@
-// Auto-generated from 2568 Excel files
+// Auto-updated by telegram_bot_listener.py
 const DEEDS_DATA = [
   {
     "id": "10001",
@@ -94219,5 +94219,47 @@ const DEEDS_DATA = [
     "approved_by": "Aasd",
     "created_at": "2025-11-01T08:00:00Z",
     "updated_at": "2025-11-01T08:00:00Z"
+  },
+  {
+    "id": "test_69_1786008134",
+    "student_id": "6903946",
+    "categoryId": 1,
+    "hours": 4.0,
+    "activityDate": "2026-08-06",
+    "description": "บริจาคโลหิต test (ชั้นปีที่ 1 (รุ่น 69))",
+    "note": "ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย",
+    "imageUrl": "510903.jpg",
+    "status": "pending",
+    "approved_by": "",
+    "created_at": "2026-08-06T16:22:14Z",
+    "updated_at": "2026-08-06T16:22:14Z"
+  },
+  {
+    "id": "test_68_1786008135",
+    "student_id": "6803882",
+    "categoryId": 1,
+    "hours": 4.0,
+    "activityDate": "2026-08-06",
+    "description": "บริจาคโลหิต test (ชั้นปีที่ 2 (รุ่น 68))",
+    "note": "ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย",
+    "imageUrl": "510903.jpg",
+    "status": "approved",
+    "approved_by": "AGis",
+    "created_at": "2026-08-06T16:22:14Z",
+    "updated_at": "2026-08-06T16:22:20Z"
+  },
+  {
+    "id": "test_67_1786008136",
+    "student_id": "6703818",
+    "categoryId": 1,
+    "hours": 4.0,
+    "activityDate": "2026-08-06",
+    "description": "บริจาคโลหิต test (ชั้นปีที่ 3 (รุ่น 67))",
+    "note": "ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย",
+    "imageUrl": "510903.jpg",
+    "status": "pending",
+    "approved_by": "",
+    "created_at": "2026-08-06T16:22:14Z",
+    "updated_at": "2026-08-06T16:22:14Z"
   }
 ];
