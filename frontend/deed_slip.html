@@ -81,7 +81,7 @@
             width: 210mm;
             min-height: 297mm;
             background: #fff;
-            padding: 20mm 20mm 15mm 20mm;
+            padding: 15mm 15mm 12mm 15mm;
             border-radius: 4px;
             box-shadow: 0 15px 40px rgba(0,0,0,0.15);
             position: relative;
@@ -94,7 +94,7 @@
         /* Outer Decorative Border */
         .certificate-frame {
             border: 3px double #0a192f;
-            padding: 15mm;
+            padding: 12mm;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -116,28 +116,28 @@
         /* Header */
         .cert-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
             border-bottom: 2px solid var(--gold);
-            padding-bottom: 15px;
+            padding-bottom: 10px;
         }
 
         .cert-logo {
-            width: 75px;
-            height: 75px;
+            width: 70px;
+            height: 70px;
             object-fit: contain;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
         }
 
         .cert-title-th {
             font-family: 'Kanit', sans-serif;
-            font-size: 1.6rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--primary);
             letter-spacing: 0.5px;
         }
 
         .cert-title-en {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 600;
             color: #64748b;
             letter-spacing: 1px;
@@ -146,13 +146,13 @@
 
         .cert-doc-name {
             font-family: 'Kanit', sans-serif;
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             font-weight: 600;
             color: var(--gold);
-            margin-top: 10px;
+            margin-top: 8px;
             background: #0a192f;
             color: #fff;
-            padding: 6px 20px;
+            padding: 4px 18px;
             display: inline-block;
             border-radius: 20px;
         }
@@ -161,28 +161,46 @@
         .info-section {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 16px;
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-bottom: 12px;
         }
 
         .info-section-title {
             font-family: 'Kanit', sans-serif;
-            font-size: 1.05rem;
+            font-size: 1rem;
             font-weight: 700;
             color: var(--primary);
-            margin-bottom: 12px;
+            margin-bottom: 10px;
             border-bottom: 1px solid #cbd5e1;
             padding-bottom: 4px;
             display: flex;
             justify-content: space-between;
         }
 
+        .student-profile-flex {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .student-photo-box {
+            width: 75px;
+            height: 95px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 2px solid var(--gold);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            background: #e2e8f0;
+            flex-shrink: 0;
+        }
+
         .info-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px 20px;
-            font-size: 0.95rem;
+            gap: 8px 16px;
+            font-size: 0.9rem;
+            flex: 1;
         }
 
         .info-item {
@@ -193,7 +211,7 @@
         .info-label {
             font-weight: 600;
             color: #475569;
-            min-width: 110px;
+            min-width: 105px;
         }
 
         .info-val {
@@ -202,14 +220,34 @@
             flex: 1;
         }
 
+        /* Evidence Photos Grid */
+        .evidence-photos-box {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed #cbd5e1;
+        }
+
+        .evidence-img {
+            max-width: 180px;
+            max-height: 110px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid #cbd5e1;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
         .hours-badge-box {
             background: linear-gradient(135deg, #0a192f, #1e293b);
             color: #fff;
-            padding: 16px;
-            border-radius: 12px;
+            padding: 12px;
+            border-radius: 10px;
             text-align: center;
             border: 2px solid var(--gold);
-            margin: 16px 0;
+            margin: 12px 0;
             display: flex;
             align-items: center;
             justify-content: space-around;
@@ -217,7 +255,7 @@
 
         .hours-val-text {
             font-family: 'Kanit', sans-serif;
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 800;
             color: var(--gold-light);
             line-height: 1;
@@ -225,12 +263,12 @@
 
         /* Verification & Signatures */
         .footer-signatures {
-            margin-top: 30px;
+            margin-top: 20px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 20px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
 
         .sig-box {
@@ -241,15 +279,15 @@
         }
 
         .sig-line {
-            width: 180px;
+            width: 190px;
             border-bottom: 1.5px dashed #64748b;
             margin-bottom: 6px;
-            height: 40px;
+            height: 35px;
         }
 
         .official-seal {
-            width: 80px;
-            height: 80px;
+            width: 75px;
+            height: 75px;
             border: 2px double var(--gold);
             border-radius: 50%;
             display: flex;
@@ -257,16 +295,16 @@
             justify-content: center;
             color: var(--gold);
             font-weight: 700;
-            font-size: 0.7rem;
+            font-size: 0.68rem;
             text-align: center;
             background: rgba(201, 162, 39, 0.05);
-            margin: 0 auto 10px;
+            margin: 0 auto 8px;
         }
 
         .barcode-section {
             border-top: 1px dashed #cbd5e1;
-            padding-top: 12px;
-            margin-top: 20px;
+            padding-top: 10px;
+            margin-top: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -296,7 +334,7 @@
                 border: none;
                 width: 100%;
                 min-height: 100vh;
-                padding: 10mm;
+                padding: 8mm;
             }
         }
     </style>
@@ -324,39 +362,42 @@
             <!-- HEADER -->
             <div>
                 <div class="cert-header">
-                    <img src="510903.jpg" class="cert-logo" alt="RTAF Nursing College Logo" onerror="this.src='https://via.placeholder.com/80?text=RTAF'">
+                    <img src="510903.jpg" class="cert-logo" alt="RTAF Nursing College Logo" onerror="this.src='510903.jpg'">
                     <div class="cert-title-th">วิทยาลัยพยาบาลทหารอากาศ</div>
                     <div class="cert-title-en">ROYAL THAI AIR FORCE NURSING COLLEGE</div>
                     <div><span class="cert-doc-name">ใบบันทึกชั่วโมงความดีจิตอาสา (Individual Honor Slip)</span></div>
                 </div>
 
-                <!-- STUDENT INFO -->
+                <!-- STUDENT INFO WITH PORTRAIT -->
                 <div class="info-section">
                     <div class="info-section-title">
-                        <span>👤 ข้อมูลนักเรียนพยาบาลทหารอากาศ</span>
-                        <span style="color:var(--gold); font-size:0.9rem;" id="slip-academic-year">ปีการศึกษา 2569</span>
+                        <span>👤 ข้อมูลนักเรียนพยาบาลทหารอากาศ (นพอ.)</span>
+                        <span style="color:var(--gold); font-size:0.88rem;" id="slip-academic-year">ปีการศึกษา 2569</span>
                     </div>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <span class="info-label">ยศ - ชื่อ - สกุล:</span>
-                            <span class="info-val" id="student-name">กำลังโหลด...</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">รหัสประจำตัว:</span>
-                            <span class="info-val" id="student-id">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">รุ่น / ชั้นปี:</span>
-                            <span class="info-val" id="student-class">-</span>
-                        </div>
-                        <div class="info-item">
-                            <span class="info-label">สังกัดหน่วยงาน:</span>
-                            <span class="info-val">วิทยาลัยพยาบาลทหารอากาศ</span>
+                    <div class="student-profile-flex">
+                        <img src="photos/chibi/chibi_lv4.png" id="student-portrait" class="student-photo-box" alt="รูปนักเรียน" onerror="this.src='photos/chibi/chibi_lv4.png'">
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">ยศ - ชื่อ - สกุล:</span>
+                                <span class="info-val" id="student-name">กำลังโหลด...</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">รหัสประจำตัว:</span>
+                                <span class="info-val" id="student-id">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">รุ่น / ชั้นปี:</span>
+                                <span class="info-val" id="student-class">-</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">สังกัดหน่วยงาน:</span>
+                                <span class="info-val">วิทยาลัยพยาบาลทหารอากาศ</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- ACTIVITY INFO -->
+                <!-- ACTIVITY INFO WITH EVIDENCE PHOTO -->
                 <div class="info-section">
                     <div class="info-section-title">
                         <span>📋 รายละเอียดกิจกรรมความดีจิตอาสา</span>
@@ -388,18 +429,24 @@
                             <span class="info-val" id="deed-approver">อาจารย์ผู้ควบคุม</span>
                         </div>
                     </div>
+
+                    <!-- EVIDENCE PHOTO CONTAINER -->
+                    <div class="evidence-photos-box" id="evidence-container">
+                        <div style="font-size:0.8rem; color:#64748b; margin-right:8px;">🖼️ ภาพถ่ายหลักฐานกิจกรรม:</div>
+                        <img src="510903.jpg" id="evidence-img" class="evidence-img" alt="ภาพหลักฐานกิจกรรม" onerror="this.src='510903.jpg'">
+                    </div>
                 </div>
 
                 <!-- HOURS HIGHLIGHT BOX -->
                 <div class="hours-badge-box">
                     <div>
-                        <div style="font-size:0.9rem; color:#94a3b8;">จำนวนชั่วโมงที่ได้รับการอนุมัติ</div>
+                        <div style="font-size:0.85rem; color:#94a3b8;">จำนวนชั่วโมงที่ได้รับการอนุมัติ</div>
                         <div class="hours-val-text"><span id="deed-hours">0.0</span> <span style="font-size:1.2rem;">ชั่วโมง</span></div>
                     </div>
                     <div style="border-left:1px solid rgba(255,255,255,0.2); padding-left:20px; text-align:left;">
-                        <div style="font-size:0.85rem; color:#cbd5e1;">ยอดชั่วโมงสะสมรวมล่าสุด</div>
-                        <div style="font-size:1.4rem; font-weight:700; color:#4ade80;"><span id="total-hours">0.0</span> / 400 ชม.</div>
-                        <div style="font-size:0.75rem; color:var(--gold-light);" id="pass-status-text">✅ ผ่านเกณฑ์ขั้นต่ำประจำปีการศึกษา</div>
+                        <div style="font-size:0.8rem; color:#cbd5e1;">ยอดชั่วโมงสะสมรวมล่าสุด</div>
+                        <div style="font-size:1.3rem; font-weight:700; color:#4ade80;"><span id="total-hours">0.0</span> / 400 ชม.</div>
+                        <div style="font-size:0.75rem; color:var(--gold-light);" id="pass-status-text">✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม./ปีการศึกษา</div>
                     </div>
                 </div>
             </div>
@@ -409,7 +456,7 @@
                 <div class="footer-signatures">
                     <div class="sig-box">
                         <div class="sig-line"></div>
-                        <div style="font-weight:700;" id="sig-student-name">( นพพ.................................... )</div>
+                        <div style="font-weight:700;" id="sig-student-name">( นพอ. .................................... )</div>
                         <div style="font-size:0.8rem; color:#64748b; margin-top:2px;">ผู้บันทึกกิจกรรมจิตอาสา</div>
                     </div>
                     <div class="sig-box">
@@ -447,6 +494,8 @@
             let deed = null;
             let student = null;
 
+            function str(v) { return v ? String(v).trim() : ''; }
+
             if (deedId) {
                 deed = (typeof DEEDS_DATA !== 'undefined' ? DEEDS_DATA : []).find(d => str(d.id) === str(deedId));
             }
@@ -462,14 +511,20 @@
                 student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
             }
 
-            function str(v) { return v ? String(v).strip() : ''; }
-            String.prototype.strip = function() { return this.trim(); };
-
             if (student) {
-                document.getElementById('student-name').textContent = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`;
+                const rank = student.rank || 'นพอ.';
+                const fullName = `${rank} ${student.first_name || ''} ${student.last_name || ''}`;
+                document.getElementById('student-name').textContent = fullName;
                 document.getElementById('student-id').textContent = student.student_id;
                 document.getElementById('student-class').textContent = `รุ่น ${student.class_year || '69'} (ชั้นปีที่ ${student.year || 1})`;
-                document.getElementById('sig-student-name').textContent = `( ${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''} )`;
+                document.getElementById('sig-student-name').textContent = `( ${fullName} )`;
+
+                // Load Student Portrait
+                const portraitImg = document.getElementById('student-portrait');
+                const photoUrl = typeof STUDENT_PHOTOS !== 'undefined' && STUDENT_PHOTOS[student.student_id] 
+                    ? STUDENT_PHOTOS[student.student_id] 
+                    : `photos/${student.student_id}.jpg`;
+                portraitImg.src = photoUrl;
             }
 
             if (deed) {
@@ -482,7 +537,7 @@
                 document.getElementById('slip-deed-id').textContent = `รหัสกิจกรรม: DEED-${deed.id}`;
                 document.getElementById('slip-barcode').textContent = `DEED-${deed.id}-${deed.student_id}`;
 
-                const approver = deed.approved_by || deed.signer || 'อาจารย์ผู้ควบคุม';
+                const approver = deed.approved_by || deed.signer || 'อาจารย์ผู้ควบคุมประจำรุ่น';
                 document.getElementById('deed-approver').textContent = approver;
                 document.getElementById('sig-approver-name').textContent = `( ${approver} )`;
 
@@ -495,6 +550,16 @@
                 } else {
                     document.getElementById('deed-status').innerHTML = '❌ ไม่อนุมัติ';
                     document.getElementById('deed-status').style.color = '#dc2626';
+                }
+
+                // Evidence Photo
+                const evidenceImg = document.getElementById('evidence-img');
+                const imgKey = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]);
+                if (imgKey) {
+                    const localImg = App.getImage(imgKey);
+                    evidenceImg.src = localImg || (imgKey.startsWith('http') ? imgKey : `photos/${imgKey}`);
+                } else {
+                    evidenceImg.src = '510903.jpg';
                 }
 
                 // Compute student total hours
