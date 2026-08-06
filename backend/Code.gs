@@ -138,7 +138,7 @@ function uploadImage(data) {
     let targetFolder = mainFolder;
     
     if (classYear) {
-      const genFolderName = 'swd ' + classYear;
+      const genFolderName = 'ปีการศึกษา 2569 (รุ่น ' + classYear + ')';
       const genFolders = mainFolder.getFoldersByName(genFolderName);
       if (genFolders.hasNext()) {
         targetFolder = genFolders.next();
@@ -148,7 +148,8 @@ function uploadImage(data) {
     }
     
     if (studentId) {
-      const studentFolderName = 'Student_' + studentId;
+      const studentName = data.studentName || '';
+      const studentFolderName = studentId + (studentName ? ' - ' + studentName : '');
       const subfolders = targetFolder.getFoldersByName(studentFolderName);
       if (subfolders.hasNext()) {
         targetFolder = subfolders.next();
@@ -156,6 +157,19 @@ function uploadImage(data) {
         targetFolder = targetFolder.createFolder(studentFolderName);
       }
     }
+
+    // Activity Sub-folder
+    const activityName = data.activityName || data.categoryName || '';
+    if (activityName) {
+      const actFolderName = activityName.replace(/[\/\\:*?"<>|]/g, '_');
+      const actFolders = targetFolder.getFoldersByName(actFolderName);
+      if (actFolders.hasNext()) {
+        targetFolder = actFolders.next();
+      } else {
+        targetFolder = targetFolder.createFolder(actFolderName);
+      }
+    }
+
     file = targetFolder.createFile(blob);
   } else {
     file = DriveApp.createFile(blob);
