@@ -1223,16 +1223,17 @@
                     <table class="deed-table">
                         <thead>
                             <tr>
-                                <th style="width: 220px;">ประเภทจิตอาสา</th>
+                                <th style="width: 200px;">ประเภทจิตอาสา</th>
                                 <th>รายละเอียดกิจกรรม</th>
-                                <th style="text-align:center; width: 100px;">ชั่วโมง</th>
-                                <th style="width: 130px;">วันที่ทำกิจกรรม</th>
-                                <th style="width: 120px;">สถานะ</th>
+                                <th style="text-align:center; width: 80px;">ชั่วโมง</th>
+                                <th style="width: 120px;">วันที่ทำกิจกรรม</th>
+                                <th style="width: 110px;">สถานะ</th>
+                                <th style="width: 140px; text-align:center;">ใบบันทึกความดี</th>
                             </tr>
                         </thead>
                         <tbody id="interactive-deeds-body">
                             <tr>
-                                <td colspan="5" style="text-align:center; color:var(--text-muted); padding:24px;">
+                                <td colspan="6" style="text-align:center; color:var(--text-muted); padding:24px;">
                                     ยังไม่มีกิจกรรมบันทึกไว้ในระบบ
                                 </td>
                             </tr>
@@ -1329,7 +1330,7 @@
     <script src="data/students_photos.js?v=70"></script>
     <script src="data/deeds_data.js?v=105"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=110"></script>
+  <script src="app.js?v=115"></script>
     <script src="chibi3d.js?v=1"></script>
     <script src="liff-sdk.js?v=101"></script>
 
@@ -1756,6 +1757,11 @@
                         </td>
                         <td>
                             ${badges[d.status] || ''}
+                        </td>
+                        <td style="text-align:center;">
+                            <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.75rem; padding:4px 8px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                                📄 พิมพ์ PDF
+                            </a>
                         </td>
                     </tr>
                 `;

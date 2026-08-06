@@ -679,7 +679,7 @@
   <script src="data/students_photos.js?v=70"></script>
   <script src="data/deeds_data.js?v=105"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=110"></script>
+  <script src="app.js?v=115"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -1027,12 +1027,14 @@
         const cat = App.getCategoryById(d.categoryId);
         const badges = { pending: '<span class="badge badge-pending">รอ</span>', approved: '<span class="badge badge-approved">✅</span>', rejected: '<span class="badge badge-rejected">❌</span>' };
         const approveBtn = d.status === 'pending' ? `<button class="btn btn-success btn-sm" style="padding:4px 10px;font-size:0.75rem" onclick="quickApprove('${sid}','${d.id}');closeStuModal()">อนุมัติ</button>` : '';
+        const pdfBtn = `<a href="deed_slip.html?id=${d.id}&studentId=${sid}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;text-decoration:none;color:var(--gold);border-color:var(--gold)" title="พิมพ์ใบบันทึกความดี PDF">📄 PDF</a>`;
         return `<div class="deed-row">
       <span>${cat.emoji}</span>
       <span style="flex:1;font-size:0.82rem;color:var(--text-secondary)">${d.description || cat.name}</span>
       <span style="font-size:0.82rem;font-weight:700;color:var(--gold)">${d.hours} ชม.</span>
       ${badges[d.status] || ''}
       ${approveBtn}
+      ${pdfBtn}
     </div>`;
       }).join('');
 

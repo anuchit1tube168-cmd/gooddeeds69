@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบบันทึกความดีจิตอาสา — วิทยาลัยพยาบาลทหารอากาศ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&family=Kanit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a192f;
+            --navy-dark: #07111e;
+            --gold: #c9a227;
+            --gold-light: #f3e5ab;
+            --text-dark: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #e2e8f0;
+            color: var(--text-dark);
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .no-print-bar {
+            width: 100%;
+            max-width: 800px;
+            background: #1e293b;
+            color: #fff;
+            padding: 14px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn-print {
+            background: linear-gradient(135deg, #c9a227, #a07818);
+            color: #000;
+            font-weight: 700;
+            font-family: 'Kanit', sans-serif;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(201, 162, 39, 0.4);
+            transition: all 0.2s ease;
+        }
+
+        .btn-print:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(201, 162, 39, 0.6);
+        }
+
+        .btn-back {
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        /* A4 Page Container */
+        .a4-page {
+            width: 210mm;
+            min-height: 297mm;
+            background: #fff;
+            padding: 20mm 20mm 15mm 20mm;
+            border-radius: 4px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* Outer Decorative Border */
+        .certificate-frame {
+            border: 3px double #0a192f;
+            padding: 15mm;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .corner-gold {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--gold);
+        }
+        .corner-tl { top: -6px; left: -6px; border-right: none; border-bottom: none; }
+        .corner-tr { top: -6px; right: -6px; border-left: none; border-bottom: none; }
+        .corner-bl { bottom: -6px; left: -6px; border-right: none; border-top: none; }
+        .corner-br { bottom: -6px; right: -6px; border-left: none; border-top: none; }
+
+        /* Header */
+        .cert-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--gold);
+            padding-bottom: 15px;
+        }
+
+        .cert-logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .cert-title-th {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.5px;
+        }
+
+        .cert-title-en {
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #64748b;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .cert-doc-name {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--gold);
+            margin-top: 10px;
+            background: #0a192f;
+            color: #fff;
+            padding: 6px 20px;
+            display: inline-block;
+            border-radius: 20px;
+        }
+
+        /* Body Details Grid */
+        .info-section {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+        }
+
+        .info-section-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 12px;
+            border-bottom: 1px solid #cbd5e1;
+            padding-bottom: 4px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px 20px;
+            font-size: 0.95rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: baseline;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #475569;
+            min-width: 110px;
+        }
+
+        .info-val {
+            font-weight: 700;
+            color: var(--primary);
+            flex: 1;
+        }
+
+        .hours-badge-box {
+            background: linear-gradient(135deg, #0a192f, #1e293b);
+            color: #fff;
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            border: 2px solid var(--gold);
+            margin: 16px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+        }
+
+        .hours-val-text {
+            font-family: 'Kanit', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--gold-light);
+            line-height: 1;
+        }
+
+        /* Verification & Signatures */
+        .footer-signatures {
+            margin-top: 30px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .sig-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .sig-line {
+            width: 180px;
+            border-bottom: 1.5px dashed #64748b;
+            margin-bottom: 6px;
+            height: 40px;
+        }
+
+        .official-seal {
+            width: 80px;
+            height: 80px;
+            border: 2px double var(--gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gold);
+            font-weight: 700;
+            font-size: 0.7rem;
+            text-align: center;
+            background: rgba(201, 162, 39, 0.05);
+            margin: 0 auto 10px;
+        }
+
+        .barcode-section {
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 12px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.75rem;
+            color: #64748b;
+        }
+
+        .barcode-bars {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: #e2e8f0;
+            padding: 4px 10px;
+            border-radius: 4px;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .no-print-bar {
+                display: none !important;
+            }
+            .a4-page {
+                box-shadow: none;
+                border: none;
+                width: 100%;
+                min-height: 100vh;
+                padding: 10mm;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-bar">
+        <div>
+            <span style="font-weight:700; font-family:'Kanit',sans-serif; color:var(--gold);">📄 ใบบันทึกความดีจิตอาสาส่วนบุคคล</span>
+            <span style="font-size:0.85rem; color:#94a3b8; margin-left:10px;">วิทยาลัยพยาบาลทหารอากาศ</span>
+        </div>
+        <div style="display:flex; gap:10px;">
+            <a href="student-dashboard.html" class="btn-back">🏠 กลับแดชบอร์ด</a>
+            <button class="btn-print" onclick="window.print()">🖨️ พิมพ์เอกสาร / บันทึกเป็น PDF</button>
+        </div>
+    </div>
+
+    <div class="a4-page">
+        <div class="certificate-frame">
+            <div class="corner-gold corner-tl"></div>
+            <div class="corner-gold corner-tr"></div>
+            <div class="corner-gold corner-bl"></div>
+            <div class="corner-gold corner-br"></div>
+
+            <!-- HEADER -->
+            <div>
+                <div class="cert-header">
+                    <img src="510903.jpg" class="cert-logo" alt="RTAF Nursing College Logo" onerror="this.src='https://via.placeholder.com/80?text=RTAF'">
+                    <div class="cert-title-th">วิทยาลัยพยาบาลทหารอากาศ</div>
+                    <div class="cert-title-en">ROYAL THAI AIR FORCE NURSING COLLEGE</div>
+                    <div><span class="cert-doc-name">ใบบันทึกชั่วโมงความดีจิตอาสา (Individual Honor Slip)</span></div>
+                </div>
+
+                <!-- STUDENT INFO -->
+                <div class="info-section">
+                    <div class="info-section-title">
+                        <span>👤 ข้อมูลนักเรียนพยาบาลทหารอากาศ</span>
+                        <span style="color:var(--gold); font-size:0.9rem;" id="slip-academic-year">ปีการศึกษา 2569</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <span class="info-label">ยศ - ชื่อ - สกุล:</span>
+                            <span class="info-val" id="student-name">กำลังโหลด...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">รหัสประจำตัว:</span>
+                            <span class="info-val" id="student-id">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">รุ่น / ชั้นปี:</span>
+                            <span class="info-val" id="student-class">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">สังกัดหน่วยงาน:</span>
+                            <span class="info-val">วิทยาลัยพยาบาลทหารอากาศ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ACTIVITY INFO -->
+                <div class="info-section">
+                    <div class="info-section-title">
+                        <span>📋 รายละเอียดกิจกรรมความดีจิตอาสา</span>
+                        <span style="color:#059669; font-size:0.85rem;" id="slip-deed-id">รหัสกิจกรรม: -</span>
+                    </div>
+                    <div class="info-grid">
+                        <div class="info-item" style="grid-column: 1 / -1;">
+                            <span class="info-label">หมวดหมู่กิจกรรม:</span>
+                            <span class="info-val" id="deed-category" style="color:var(--gold);">กำลังโหลด...</span>
+                        </div>
+                        <div class="info-item" style="grid-column: 1 / -1;">
+                            <span class="info-label">ชื่อ/รายละเอียด:</span>
+                            <span class="info-val" id="deed-description">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">วันที่ปฏิบัติงาน:</span>
+                            <span class="info-val" id="deed-date">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">สถานที่ปฏิบัติงาน:</span>
+                            <span class="info-val" id="deed-location">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">สถานะการอนุมัติ:</span>
+                            <span class="info-val" id="deed-status" style="color:#059669;">✅ อนุมัติเรียบร้อย</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">ผู้อนุมัติกิจกรรม:</span>
+                            <span class="info-val" id="deed-approver">อาจารย์ผู้ควบคุม</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- HOURS HIGHLIGHT BOX -->
+                <div class="hours-badge-box">
+                    <div>
+                        <div style="font-size:0.9rem; color:#94a3b8;">จำนวนชั่วโมงที่ได้รับการอนุมัติ</div>
+                        <div class="hours-val-text"><span id="deed-hours">0.0</span> <span style="font-size:1.2rem;">ชั่วโมง</span></div>
+                    </div>
+                    <div style="border-left:1px solid rgba(255,255,255,0.2); padding-left:20px; text-align:left;">
+                        <div style="font-size:0.85rem; color:#cbd5e1;">ยอดชั่วโมงสะสมรวมล่าสุด</div>
+                        <div style="font-size:1.4rem; font-weight:700; color:#4ade80;"><span id="total-hours">0.0</span> / 400 ชม.</div>
+                        <div style="font-size:0.75rem; color:var(--gold-light);" id="pass-status-text">✅ ผ่านเกณฑ์ขั้นต่ำประจำปีการศึกษา</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FOOTER SIGNATURES & VERIFICATION -->
+            <div>
+                <div class="footer-signatures">
+                    <div class="sig-box">
+                        <div class="sig-line"></div>
+                        <div style="font-weight:700;" id="sig-student-name">( นพพ.................................... )</div>
+                        <div style="font-size:0.8rem; color:#64748b; margin-top:2px;">ผู้บันทึกกิจกรรมจิตอาสา</div>
+                    </div>
+                    <div class="sig-box">
+                        <div class="official-seal">ตราประทับ<br>วพอ. Digital</div>
+                        <div class="sig-line"></div>
+                        <div style="font-weight:700;" id="sig-approver-name">( อาจารย์ผู้ควบคุมประจำรุ่น )</div>
+                        <div style="font-size:0.8rem; color:#64748b; margin-top:2px;">อาจารย์ผู้ตรวจประเมินอนุมัติ</div>
+                    </div>
+                </div>
+
+                <div class="barcode-section">
+                    <div>
+                        <b>ระบบบันทึกความดีจิตอาสาออนไลน์</b> · วิทยาลัยพยาบาลทหารอากาศ
+                        <br>เอกสารฉบับนี้สร้างอัตโนมัติจากระบบข้อมูลสารสนเทศ วพอ. 2569
+                    </div>
+                    <div style="text-align:right;">
+                        <div class="barcode-bars" id="slip-barcode">DEED-2569-0000</div>
+                        <div style="font-size:0.7rem; color:#94a3b8; margin-top:2px;" id="slip-timestamp">ออกเอกสารเมื่อ: 2026-08-06</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JS Scripts -->
+    <script src="data/students_data.js"></script>
+    <script src="data/deeds_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        function loadSlipData() {
+            const params = new URLSearchParams(window.location.search);
+            const deedId = params.get('id');
+            const studentId = params.get('studentId');
+
+            let deed = null;
+            let student = null;
+
+            if (deedId) {
+                deed = (typeof DEEDS_DATA !== 'undefined' ? DEEDS_DATA : []).find(d => str(d.id) === str(deedId));
+            }
+
+            if (!deed && studentId) {
+                const sDeeds = (typeof DEEDS_DATA !== 'undefined' ? DEEDS_DATA : []).filter(d => str(d.student_id) === str(studentId));
+                if (sDeeds.length) deed = sDeeds[sDeeds.length - 1];
+            }
+
+            if (deed) {
+                student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(deed.student_id));
+            } else if (studentId) {
+                student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
+            }
+
+            function str(v) { return v ? String(v).strip() : ''; }
+            String.prototype.strip = function() { return this.trim(); };
+
+            if (student) {
+                document.getElementById('student-name').textContent = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`;
+                document.getElementById('student-id').textContent = student.student_id;
+                document.getElementById('student-class').textContent = `รุ่น ${student.class_year || '69'} (ชั้นปีที่ ${student.year || 1})`;
+                document.getElementById('sig-student-name').textContent = `( ${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''} )`;
+            }
+
+            if (deed) {
+                const cat = App.getCategoryById(deed.categoryId);
+                document.getElementById('deed-category').textContent = `${cat.emoji || '⭐'} ${cat.name || 'กิจกรรมจิตอาสา'}`;
+                document.getElementById('deed-description').textContent = deed.description || deed.title || 'บันทึกความดีจิตอาสาประจำบุคคล';
+                document.getElementById('deed-date').textContent = App.formatDate(deed.activityDate || deed.event_date);
+                document.getElementById('deed-location').textContent = deed.note || deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
+                document.getElementById('deed-hours').textContent = (deed.hours || 0).toFixed(1);
+                document.getElementById('slip-deed-id').textContent = `รหัสกิจกรรม: DEED-${deed.id}`;
+                document.getElementById('slip-barcode').textContent = `DEED-${deed.id}-${deed.student_id}`;
+
+                const approver = deed.approved_by || deed.signer || 'อาจารย์ผู้ควบคุม';
+                document.getElementById('deed-approver').textContent = approver;
+                document.getElementById('sig-approver-name').textContent = `( ${approver} )`;
+
+                if (deed.status === 'approved') {
+                    document.getElementById('deed-status').innerHTML = '✅ อนุมัติเรียบร้อยแล้ว';
+                    document.getElementById('deed-status').style.color = '#059669';
+                } else if (deed.status === 'pending') {
+                    document.getElementById('deed-status').innerHTML = '⏳ รอการตรวจประเมิน';
+                    document.getElementById('deed-status').style.color = '#d97706';
+                } else {
+                    document.getElementById('deed-status').innerHTML = '❌ ไม่อนุมัติ';
+                    document.getElementById('deed-status').style.color = '#dc2626';
+                }
+
+                // Compute student total hours
+                const summ = App.getStudentSummary(deed.student_id);
+                document.getElementById('total-hours').textContent = (summ.totalHours || 0).toFixed(1);
+                if (summ.totalHours >= 50) {
+                    document.getElementById('pass-status-text').textContent = '✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม./ปีการศึกษาเรียบร้อยแล้ว';
+                } else {
+                    document.getElementById('pass-status-text').textContent = `⏳ กำลังสะสมความดี (ขาดอีก ${(50 - summ.totalHours).toFixed(1)} ชม.)`;
+                }
+            }
+
+            document.getElementById('slip-timestamp').textContent = `ออกเอกสารเมื่อ: ${new Date().toLocaleDateString('th-TH')}`;
+
+            if (params.get('autoprint') === 'true') {
+                setTimeout(() => window.print(), 800);
+            }
+        }
+
+        window.addEventListener('load', loadSlipData);
+    </script>
+</body>
+</html>
