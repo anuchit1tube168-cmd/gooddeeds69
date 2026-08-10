@@ -102,10 +102,29 @@ const LiffHelper = {
             if (student && (!App.getCurrentUser() || App.getCurrentUser().student_id !== studentId)) {
                 console.log('🚀 LIFF Auto-login for student:', student.student_id);
                 App.setSession('student', student);
-                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-                    window.location.href = 'student-dashboard.html';
-                }
             }
+        }
+
+        const params = new URLSearchParams(window.location.search);
+        const targetPage = params.get('page');
+        if (targetPage && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/')) {
+            if (targetPage === 'cards' || targetPage === 'starbucks') {
+                window.location.href = 'view_cards.html';
+                return;
+            } else if (targetPage === 'submit') {
+                window.location.href = 'submit-deed.html';
+                return;
+            } else if (targetPage === 'history') {
+                window.location.href = 'history.html';
+                return;
+            } else if (targetPage === 'ranking') {
+                window.location.href = 'ranking.html';
+                return;
+            }
+        }
+
+        if (studentId && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/')) {
+            window.location.href = 'student-dashboard.html';
         }
     },
 
