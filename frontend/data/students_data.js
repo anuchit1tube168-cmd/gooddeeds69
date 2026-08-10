@@ -1,6 +1,4 @@
-// Auto-generated student data - DO NOT EDIT MANUALLY
-// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี
-
+// Auto-generated student data
 const STUDENTS_DATA = [
   {
     "student_id": "6403626",
@@ -1869,12 +1867,14 @@ const STUDENTS_DATA = [
     "full_name": "กรกนก วิไลลักษณ์",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมวด 3 (หน.มว.3) | ชื่อเล่น: แบม | โทร: 0945353716",
+    "position": "หัวหน้าหมวด 3 (หน.มว.3)",
     "password": "6603754",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "แบม",
+    "phone": "0945353716"
   },
   {
     "student_id": "6603755",
@@ -1884,12 +1884,14 @@ const STUDENTS_DATA = [
     "full_name": "กฤตินันท์ ฉิมพาลี",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 2 หมวด 3 (หน.หมู่ 2 มว.3) | ชื่อเล่น: เดียร์ | โทร: 0972454582",
+    "position": "หัวหน้าหมู่ 2 หมวด 3 (หน.หมู่ 2 มว.3)",
     "password": "6603755",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "เดียร์",
+    "phone": "0972454582"
   },
   {
     "student_id": "6603756",
@@ -1914,12 +1916,14 @@ const STUDENTS_DATA = [
     "full_name": "กัลยาณี นารีพล",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมวดนักเรียน ชั้นปีที่ 1 (หน.มว.นพอ.ปี 1) | ชื่อเล่น: โฟกัส | โทร: 0963133373",
+    "position": "หัวหน้าหมวดนักเรียน ชั้นปีที่ 1 (หน.มว.นพอ.ปี 1)",
     "password": "6603757",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "โฟกัส",
+    "phone": "0963133373"
   },
   {
     "student_id": "6603758",
@@ -1944,12 +1948,14 @@ const STUDENTS_DATA = [
     "full_name": "เกรียงเดช รักถิ่นเดิม",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 1 หมวด 3 (หน.หมู่ 1 มว.3) | ชื่อเล่น: บาส | โทร: 0952600512",
+    "position": "หัวหน้าหมู่ 1 หมวด 3 (หน.หมู่ 1 มว.3)",
     "password": "6603759",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "บาส",
+    "phone": "0952600512"
   },
   {
     "student_id": "6603760",
@@ -1959,12 +1965,14 @@ const STUDENTS_DATA = [
     "full_name": "ฉัตรชนก กันสาตร",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 3 หมวด 3 (หน.หมู่ 3 มว.3) | ชื่อเล่น: เอแคร์ | โทร: 0956900325",
+    "position": "หัวหน้าหมู่ 3 หมวด 3 (หน.หมู่ 3 มว.3)",
     "password": "6603760",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "เอแคร์",
+    "phone": "0956900325"
   },
   {
     "student_id": "6603761",
@@ -2034,12 +2042,14 @@ const STUDENTS_DATA = [
     "full_name": "ชายชาญ ไทยรินทร์",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 1 หมวด 1 (หน.หมู่ 1 มว.1) | ชื่อเล่น: กิ๊ฟ | โทร: 0992703561",
+    "position": "หัวหน้าหมู่ 1 หมวด 1 (หน.หมู่ 1 มว.1)",
     "password": "6603765",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "กิ๊ฟ",
+    "phone": "0992703561"
   },
   {
     "student_id": "6603766",
@@ -2064,12 +2074,14 @@ const STUDENTS_DATA = [
     "full_name": "ณัฐนรินทร์ เต่าไธสง",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 1 หมวด 2 (หน.หมู่ 1 มว.2) | ชื่อเล่น: ชมพู่ | โทร: 0618937307",
+    "position": "หัวหน้าหมู่ 1 หมวด 2 (หน.หมู่ 1 มว.2)",
     "password": "6603767",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "ชมพู่",
+    "phone": "0618937307"
   },
   {
     "student_id": "6603768",
@@ -2124,12 +2136,14 @@ const STUDENTS_DATA = [
     "full_name": "ทวิกา สอิ้งแก้ว",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 2 หมวด 4 (หน.หมู่ 2 มว.4) | ชื่อเล่น: ปิ่น | โทร: 0931033102",
+    "position": "หัวหน้าหมู่ 2 หมวด 4 (หน.หมู่ 2 มว.4)",
     "password": "6603771",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "ปิ่น",
+    "phone": "0931033102"
   },
   {
     "student_id": "6603772",
@@ -2154,12 +2168,14 @@ const STUDENTS_DATA = [
     "full_name": "ธัญชนก ไชยปรุง",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้านักเรียน (หน.นพอ.) | ชื่อเล่น: อั้ม | โทร: 0946254405",
+    "position": "หัวหน้านักเรียน (หน.นพอ.)",
     "password": "6603773",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "อั้ม",
+    "phone": "0946254405"
   },
   {
     "student_id": "6603774",
@@ -2378,12 +2394,14 @@ const STUDENTS_DATA = [
     "full_name": "ปาจีรนันท์ ปิงขุนทด",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมวดนักเรียน ชั้นปีที่ 2 (หน.มว.นพอ.ปี 2) | ชื่อเล่น: บีโบว์ | โทร: 0912518908",
+    "position": "หัวหน้าหมวดนักเรียน ชั้นปีที่ 2 (หน.มว.นพอ.ปี 2)",
     "password": "6603788",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "บีโบว์",
+    "phone": "0912518908"
   },
   {
     "student_id": "6603789",
@@ -2603,12 +2621,14 @@ const STUDENTS_DATA = [
     "full_name": "ศิริพร คล้ายแก้ว",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 2 หมวด 2 (หน.หมู่ 2 มว.2) | ชื่อเล่น: ปอย | โทร: 0649593565",
+    "position": "หัวหน้าหมู่ 2 หมวด 2 (หน.หมู่ 2 มว.2)",
     "password": "6603803",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "ปอย",
+    "phone": "0649593565"
   },
   {
     "student_id": "6603804",
@@ -2663,12 +2683,14 @@ const STUDENTS_DATA = [
     "full_name": "สถิตย์ภรณ์ นวลขวัญ",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 3 หมวด 2 (หน.หมู่ 3 มว.2) | ชื่อเล่น: น้ำ | โทร: 0987077568",
+    "position": "หัวหน้าหมู่ 3 หมวด 2 (หน.หมู่ 3 มว.2)",
     "password": "6603807",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "น้ำ",
+    "phone": "0987077568"
   },
   {
     "student_id": "6603808",
@@ -2678,12 +2700,14 @@ const STUDENTS_DATA = [
     "full_name": "สุชานันท์ ดิสระมุณี",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 2 หมวด 1 (หน.หมู่ 2 มว.1) | ชื่อเล่น: การ์ตูน | โทร: 0869310773",
+    "position": "หัวหน้าหมู่ 2 หมวด 1 (หน.หมู่ 2 มว.1)",
     "password": "6603808",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "การ์ตูน",
+    "phone": "0869310773"
   },
   {
     "student_id": "6603809",
@@ -2693,12 +2717,14 @@ const STUDENTS_DATA = [
     "full_name": "สุณัญญา แก้วเจริญ",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 1 หมวด 4 (หน.หมู่ 1 มว.4) | ชื่อเล่น: ปิ่น | โทร: 0984478160",
+    "position": "หัวหน้าหมู่ 1 หมวด 4 (หน.หมู่ 1 มว.4)",
     "password": "6603809",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "ปิ่น",
+    "phone": "0984478160"
   },
   {
     "student_id": "6603810",
@@ -2708,12 +2734,14 @@ const STUDENTS_DATA = [
     "full_name": "สุพิชชา โคตวงค์",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมวด 4 (หน.มว.4) | ชื่อเล่น: เจน | โทร: 0934127858",
+    "position": "หัวหน้าหมวด 4 (หน.มว.4)",
     "password": "6603810",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "เจน",
+    "phone": "0934127858"
   },
   {
     "student_id": "6603811",
@@ -2723,12 +2751,14 @@ const STUDENTS_DATA = [
     "full_name": "สุภานัน ธรรมรักษา",
     "class_year": 66,
     "year_level": 4,
-    "note": "",
-    "position": "นักเรียนพยาบาล",
+    "note": "ตำแหน่ง: หัวหน้าหมู่ 3 หมวด 1 (หน.หมู่ 3 มว.1) | ชื่อเล่น: เฟิร์ส | โทร: 0816862629",
+    "position": "หัวหน้าหมู่ 3 หมวด 1 (หน.หมู่ 3 มว.1)",
     "password": "6603811",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "nickname": "เฟิร์ส",
+    "phone": "0816862629"
   },
   {
     "student_id": "6603812",

@@ -70,6 +70,8 @@ def main():
             year_level = meta['year']
             
             position = 'นักเรียนพยาบาล'
+            nickname = ''
+            phone = ''
 
             # Merge edits from existing database if present
             if student_id_str in existing_students:
@@ -85,6 +87,8 @@ def main():
                 year_level = existing.get('year_level', year_level)
                 note = existing.get('note', note)
                 position = existing.get('position', position)
+                nickname = existing.get('nickname', nickname)
+                phone = existing.get('phone', phone)
 
             student = {
                 'student_id': student_id_str,
@@ -92,6 +96,8 @@ def main():
                 'first_name': first_name,
                 'last_name': last_name,
                 'full_name': f"{first_name} {last_name}".strip(),
+                'nickname': nickname,
+                'phone': phone,
                 'class_year': class_year,
                 'year_level': year_level,
                 'note': note,
