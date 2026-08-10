@@ -286,7 +286,53 @@ const App = {
 
     // ---------- GOOD DEEDS DATA ----------
     getDeeds(studentId) {
-        return Storage.get('deeds_' + studentId) || [];
+        let localDeeds = Storage.get('deeds_' + studentId) || [];
+        let globalDeeds = [];
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            globalDeeds = DEEDS_DATA.filter(d => String(d.student_id || d.studentId) === String(studentId));
+        }
+
+        if (!localDeeds || localDeeds.length === 0) {
+            return globalDeeds;
+        }
+
+        // Merge: Update status from global DEEDS_DATA if available
+        const mergedMap = new Map();
+        globalDeeds.forEach(d => {
+            const sid = String(d.id);
+            mergedMap.set(sid, {
+                id: d.id,
+                studentId: d.student_id || d.studentId,
+                student_id: d.student_id || d.studentId,
+                categoryId: d.categoryId || d.category_id || 7,
+                hours: parseFloat(d.hours || 0),
+                description: d.description || d.title || '',
+                activityDate: d.activityDate || d.event_date || '',
+                imageUrls: d.imageUrls || (d.imageUrl ? [d.imageUrl] : []),
+                status: d.status || 'approved',
+                submittedAt: d.created_at || d.submittedAt || '',
+                approvedBy: d.approved_by || d.approvedBy || '',
+                approved_by: d.approved_by || d.approvedBy || '',
+                approvedAt: d.updated_at || d.approvedAt || '',
+                rejectReason: d.rejectReason || '',
+                note: d.note || '',
+            });
+        });
+
+        localDeeds.forEach(d => {
+            const key = String(d.id);
+            if (mergedMap.has(key)) {
+                const globalDeed = mergedMap.get(key);
+                d.status = globalDeed.status;
+                d.approvedBy = globalDeed.approvedBy;
+                d.approved_by = globalDeed.approved_by;
+                d.hours = globalDeed.hours || d.hours;
+            } else {
+                mergedMap.set(key, d);
+            }
+        });
+
+        return Array.from(mergedMap.values());
     },
 
     saveDeeds(studentId, deeds) {
