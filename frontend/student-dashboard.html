@@ -1054,7 +1054,7 @@
                             <div class="card-student-detail">
                                 <span>🎫 รหัส: <b id="card-student-id">-</b></span>
                                 <span>📚 รุ่น: <b id="card-student-year">-</b></span>
-                                <span>📧 อีเมล: <b id="card-student-email">-</b></span>
+                                <span>🎖️ ตำแหน่ง: <b id="card-student-position">นักเรียนพยาบาล</b></span>
                             </div>
                         </div>
                         
@@ -1326,11 +1326,11 @@
     </div>
 
     <!-- SCRIPT INCLUDES -->
-    <script src="data/students_data.js?v=90"></script>
+    <script src="data/students_data.js?v=135"></script>
     <script src="data/students_photos.js?v=70"></script>
-    <script src="data/deeds_data.js?v=105"></script>
+    <script src="data/deeds_data.js?v=135"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=126"></script>
+  <script src="app.js?v=135"></script>
     <script src="chibi3d.js?v=1"></script>
     <script src="liff-sdk.js?v=101"></script>
 
@@ -1375,7 +1375,8 @@
             document.getElementById('card-student-name').textContent = fullName;
             document.getElementById('card-student-id').textContent = currentUser.student_id;
             document.getElementById('card-student-year').textContent = currentUser.class_year ? 'รุ่น ' + currentUser.class_year : '-';
-            document.getElementById('card-student-email').textContent = currentUser.email || '-';
+            const posEl = document.getElementById('card-student-position');
+            if (posEl) posEl.textContent = currentUser.position || 'นักเรียนพยาบาล';
 
             // Avatar photo
             const photoUrl = App.getProfilePhoto(currentUser.student_id);

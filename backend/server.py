@@ -648,6 +648,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 last_name = payload.get('lastName', '')
                 class_year = int(payload.get('classYear', 69))
                 email = payload.get('email', '')
+                position = payload.get('position', 'นักเรียนพยาบาล')
                 
                 # Update in frontend/data/students.json
                 frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
@@ -670,6 +671,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         s['full_name'] = f"{first_name} {last_name}".strip()
                         s['class_year'] = class_year
                         s['email'] = email
+                        s['position'] = position
                         if class_year == 69: s['year_level'] = 1
                         elif class_year == 68: s['year_level'] = 2
                         elif class_year == 67: s['year_level'] = 3

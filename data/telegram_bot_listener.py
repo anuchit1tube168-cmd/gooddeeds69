@@ -94,6 +94,13 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
                 f.write(js_content)
         print(f"✅ DB Updated for student {student_id}: status={new_status}")
         
+        # Auto-create individual student folder & PDF slip
+        try:
+            subprocess.run(["python3", os.path.join(DATA_DIR, "organize_student_records.py")], cwd=BASE_DIR, check=False)
+            print("📂 Auto-created individual student folder and PDF slip!")
+        except Exception as e:
+            print(f"⚠️ Organize error: {e}")
+
         # Trigger background git push
         push_updates_to_github_bg(f"อนุมัติความดี {student_id} โดย {approver_name}")
         
@@ -148,7 +155,8 @@ def process_callback_query(cb):
         total_hrs = calculate_student_total_hours(student_id)
         is_pass = total_hrs >= 50
 
-        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE
+        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE WITH PDF SLIP LINK & BUTTON
+        pdf_slip_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/deed_slip.html?id={deed_id}&studentId={student_id}"
         reply_html = f"""🎉 <b>อนุมัติความดีเรียบร้อยแล้ว!</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}
@@ -159,13 +167,22 @@ def process_callback_query(cb):
 👩‍🏫 <b>อนุมัติโดย:</b> {approver_name} (ผ่าน Telegram)
 📊 <b>ชั่วโมงสะสมรวมล่าสุด:</b> <b>{total_hrs:.1f} / 400 ชม.</b> ({'✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม.' if is_pass else '⏳ สะสมความดี'})
 ━━━━━━━━━━━━━━━━━━━━━━━
+📄 <b>ใบบันทึกความดีส่วนบุคคล (PDF):</b>
+<a href="{pdf_slip_url}">เปิดดู / พิมพ์ใบบันทึกความดี A4 (PDF Slip)</a>
 🌐 <i>อัปเดตข้อมูลขึ้นระบบ GitHub Pages เรียบร้อยแล้ว</i>"""
 
         send_telegram_request('sendMessage', {
             'chat_id': CHAT_ID,
             'text': reply_html,
             'parse_mode': 'HTML',
-            'reply_to_message_id': msg_id
+            'reply_to_message_id': msg_id,
+            'reply_markup': {
+                'inline_keyboard': [
+                    [
+                        {'text': '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', 'url': pdf_slip_url}
+                    ]
+                ]
+            }
         })
 
     elif is_reject:
