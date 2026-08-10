@@ -3,16 +3,17 @@
 telegram_bot_listener.py
 สคริปต์จัดการ Telegram Bot Callback Query แบบอัตโนมัติ (Continuous Long-Polling Listener)
 เมื่ออาจารย์กดปุ่ม [ ✅ อนุมัติ ] หรือ [ ❌ ปฏิเสธ ] ในกลุ่ม Telegram:
-1. แสดงป๊อปอัปแจ้งเตือนใน Telegram (answerCallbackQuery)
+1. ส่ง answerCallbackQuery ตอบกลับ Telegram ทันทีภายใน 0.5 วินาที เพื่อแสดงป๊อปอัปเด้งแจ้งเตือนอาจารย์บนหน้าจอ
 2. อัปเดตสถานะในฐานข้อมูล deeds.json และ deeds_data.js
 3. ส่งข้อความตอบกลับใหม่ (Reply Message) ตอบกลับข้อความเดิมอย่างเป็นทางการ
-4. ซิงค์และพุชข้อมูลขึ้น GitHub Pages อัตโนมัติ
+4. พุชข้อมูลขึ้น GitHub Pages อัตโนมัติใน Background
 """
 import urllib.request
 import json
 import os
 import time
 import subprocess
+import threading
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
@@ -25,7 +26,7 @@ def send_telegram_request(method, payload):
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
     try:
-        with urllib.request.urlopen(req, timeout=15) as resp:
+        with urllib.request.urlopen(req, timeout=10) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ Telegram API Error ({method}): {e}")
@@ -50,13 +51,16 @@ def calculate_student_total_hours(student_id):
             total += float(d.get('hours', 0))
     return total
 
-def push_updates_to_github(msg="Auto-update deed status from Telegram"):
-    try:
-        subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True)
-        subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, check=True)
-        print("🚀 Successfully pushed updates to GitHub Pages!")
-    except Exception as e:
-        print(f"⚠️ Git push error: {e}")
+def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
+    def run_push():
+        try:
+            subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True)
+            subprocess.run(["git", "commit", "-m", msg], cwd=BASE_DIR, check=False)
+            subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, check=True)
+            print("🚀 Successfully pushed updates to GitHub Pages in background!")
+        except Exception as e:
+            print(f"⚠️ Background Git push error: {e}")
+    threading.Thread(target=run_push, daemon=True).start()
 
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
@@ -91,7 +95,7 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
         print(f"✅ DB Updated for student {student_id}: status={new_status}")
         
         # Trigger background git push
-        push_updates_to_github(f"อนุมัติความดี {student_id} โดย {approver_name}")
+        push_updates_to_github_bg(f"อนุมัติความดี {student_id} โดย {approver_name}")
         
     return target_deed
 
@@ -120,21 +124,31 @@ def process_callback_query(cb):
     students_map = load_students()
     student = students_map.get(student_id, {})
     student_name = f"{student.get('rank', 'นพอ.')} {student.get('first_name', '')} {student.get('last_name', '')}".strip()
+    if not student_name or student_name == 'นพอ.':
+        student_name = f"นพอ. รหัส {student_id}"
     cy = student.get('class_year', '69')
 
+    # STEP 1: IMMEDIATELY ANSWER TELEGRAM CALLBACK QUERY (NO DELAY!)
     if is_approve:
-        target_deed = update_deed_status_in_db(student_id, deed_id, 'approved', approver_name)
-        total_hrs = calculate_student_total_hours(student_id)
-        is_pass = total_hrs >= 50
-
-        # Answer Callback Popup
         send_telegram_request('answerCallbackQuery', {
             'callback_query_id': cb_id,
             'text': f"✅ อนุมัติความดีของ {student_name} เรียบร้อยแล้ว!",
             'show_alert': True
         })
+    else:
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': f"❌ ปฏิเสธบันทึกความดีของ {student_name} เรียบร้อยแล้ว",
+            'show_alert': True
+        })
 
-        # Send Official Reply Message
+    # STEP 2: UPDATE DATABASE
+    if is_approve:
+        target_deed = update_deed_status_in_db(student_id, deed_id, 'approved', approver_name)
+        total_hrs = calculate_student_total_hours(student_id)
+        is_pass = total_hrs >= 50
+
+        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE
         reply_html = f"""🎉 <b>อนุมัติความดีเรียบร้อยแล้ว!</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}
@@ -156,12 +170,6 @@ def process_callback_query(cb):
 
     elif is_reject:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'rejected', approver_name)
-        
-        send_telegram_request('answerCallbackQuery', {
-            'callback_query_id': cb_id,
-            'text': f"❌ ปฏิเสธบันทึกความดีของ {student_name} เรียบร้อยแล้ว",
-            'show_alert': True
-        })
 
         reply_html = f"""❌ <b>แจ้งปฏิเสธบันทึกความดี</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -181,7 +189,7 @@ def process_callback_query(cb):
         })
 
 def start_listener_loop():
-    print("🤖 Telegram Bot Listener Daemon started (24/7 Long-Polling)...")
+    print("🤖 Telegram Bot Listener Daemon started (24/7 Long-Polling Instant Reaction)...")
     offset = 0
     while True:
         try:
