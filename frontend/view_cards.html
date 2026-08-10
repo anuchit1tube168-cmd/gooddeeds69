@@ -776,11 +776,11 @@
         </div>
 
     <!-- SCRIPT INCLUDES -->
-    <script src="data/students_data.js?v=200"></script>
+    <script src="data/students_data.js?v=210"></script>
     <script src="data/students_photos.js?v=69"></script>
-    <script src="data/deeds_data.js?v=200"></script>
+    <script src="data/deeds_data.js?v=210"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=200"></script>
+  <script src="app.js?v=210"></script>
 
     <script>
         let allStudentsList = [];
@@ -865,9 +865,11 @@
                                 </div>
                                 <div class="card-student-info">
                                     <div class="card-student-name">${s.rank} ${s.first_name} ${s.last_name}</div>
+                                    ${s.position && s.position !== 'นักเรียนพยาบาล' ? `<div style="margin-top:2px"><span class="executive-badge">🎖️ ${s.position}</span></div>` : ''}
                                     <div class="card-student-detail">
                                         <span>🎫 รหัส: <b>${s.student_id}</b></span>
                                         <span>📚 รุ่น: <b>${s.class_year}</b></span>
+                                        <span>🎖️ ตำแหน่ง: <b>${s.position || 'นักเรียนพยาบาล'}</b></span>
                                     </div>
                                 </div>
                                 <div class="card-chibi-wrap">

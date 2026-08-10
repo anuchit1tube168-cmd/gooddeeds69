@@ -1051,6 +1051,7 @@
                         
                         <div class="card-student-info">
                             <div class="card-student-name" id="card-student-name">กำลังโหลด...</div>
+                            <div id="card-exec-badge-wrap" style="margin-top:2px"></div>
                             <div class="card-student-detail">
                                 <span>🎫 รหัส: <b id="card-student-id">-</b></span>
                                 <span>📚 รุ่น: <b id="card-student-year">-</b></span>
@@ -1326,13 +1327,13 @@
     </div>
 
     <!-- SCRIPT INCLUDES -->
-    <script src="data/students_data.js?v=200"></script>
+    <script src="data/students_data.js?v=210"></script>
     <script src="data/students_photos.js?v=70"></script>
-    <script src="data/deeds_data.js?v=200"></script>
+    <script src="data/deeds_data.js?v=210"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=200"></script>
+  <script src="app.js?v=210"></script>
     <script src="chibi3d.js?v=1"></script>
-    <script src="liff-sdk.js?v=200"></script>
+    <script src="liff-sdk.js?v=210"></script>
 
     <script>
         let currentUser = null;
@@ -1377,6 +1378,14 @@
             document.getElementById('card-student-year').textContent = currentUser.class_year ? 'รุ่น ' + currentUser.class_year : '-';
             const posEl = document.getElementById('card-student-position');
             if (posEl) posEl.textContent = currentUser.position || 'นักเรียนพยาบาล';
+            const execBadgeWrap = document.getElementById('card-exec-badge-wrap');
+            if (execBadgeWrap) {
+                if (currentUser.position && currentUser.position !== 'นักเรียนพยาบาล') {
+                    execBadgeWrap.innerHTML = `<span class="executive-badge">🎖️ ${currentUser.position}</span>`;
+                } else {
+                    execBadgeWrap.innerHTML = '';
+                }
+            }
 
             // Avatar photo
             const photoUrl = App.getProfilePhoto(currentUser.student_id);
