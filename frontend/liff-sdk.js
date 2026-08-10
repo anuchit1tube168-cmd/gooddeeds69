@@ -120,6 +120,11 @@ const LiffHelper = {
             } else if (targetPage === 'ranking') {
                 window.location.href = 'ranking.html';
                 return;
+            } else if (targetPage === 'slip' || targetPage === 'deed') {
+                const deedId = params.get('id') || '';
+                const studentId = params.get('studentId') || '';
+                window.location.href = `deed_slip.html?id=${deedId}&studentId=${studentId}`;
+                return;
             }
         }
 

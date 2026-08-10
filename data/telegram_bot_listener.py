@@ -155,8 +155,8 @@ def process_callback_query(cb):
         total_hrs = calculate_student_total_hours(student_id)
         is_pass = total_hrs >= 50
 
-        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE WITH PDF SLIP LINK & BUTTON
-        pdf_slip_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/deed_slip.html?id={deed_id}&studentId={student_id}"
+        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE WITH LINE LIFF PDF SLIP LINK & BUTTON
+        pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={deed_id}&studentId={student_id}"
         reply_html = f"""🎉 <b>อนุมัติความดีเรียบร้อยแล้ว!</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}
