@@ -301,7 +301,7 @@
   <script src="data/students_photos.js"></script>
   <script src="data/deeds_data.js"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=125"></script>
+  <script src="app.js?v=126"></script>
   <script src="liff-sdk.js?v=101"></script>
   <script>
     let currentUser;
@@ -420,9 +420,10 @@
       if (np !== cp) { err.classList.add('show'); return; }
       err.classList.remove('show');
       Storage.set('pwd_' + currentUser.student_id, np);
+      App.updateProfile({ password: np });
       document.getElementById('new-password').value = '';
       document.getElementById('confirm-password').value = '';
-      showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐', 'success');
+      showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐 ใช้รหัสผ่านใหม่เข้าสู่ระบบได้ทันที', 'success');
     }
 
     init();
