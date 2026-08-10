@@ -164,6 +164,9 @@ const App = {
                 };
                 Storage.set('session', session);
                 this.syncAuthContext(session);
+                if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
+                    LiffHelper.bindCurrentStudentProfile();
+                }
                 resolve({ success: true, user: session });
             }, 600);
         });
