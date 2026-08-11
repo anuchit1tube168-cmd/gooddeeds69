@@ -559,12 +559,12 @@ const App = {
     getSettings() {
         const s = Storage.get('settings') || {};
         return {
-            telegramToken: s.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN,
-            adminChatId: s.adminChatId || CONFIG.TELEGRAM_CHAT_ID,
-            minHours: s.minHours || CONFIG.MIN_HOURS_PER_YEAR,
-            academicYear: s.academicYear || CONFIG.ACADEMIC_YEAR,
-            gasUrl: s.gasUrl || CONFIG.GAS_URL,
-            liffId: s.liffId || localStorage.getItem('gooddeeds_liff_id') || '',
+            academicYear: 2569,
+            minHoursSemester: 25,
+            minHoursYear: 50,
+            telegramToken: CONFIG.TELEGRAM_BOT_TOKEN,
+            lineNotifyToken: '',
+            adminChatId: CONFIG.TELEGRAM_CHAT_ID,
             ...s
         };
     },
@@ -574,9 +574,10 @@ const App = {
     async sendTelegram(chatId, message, replyMarkup = null) {
         const settings = this.getSettings();
         const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
-        if (!token || !chatId) return false;
+        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
+        if (!token || !targetChatId) return false;
         try {
-            const bodyObj = { chat_id: chatId, text: message, parse_mode: 'HTML' };
+            const bodyObj = { chat_id: targetChatId, text: message, parse_mode: 'HTML' };
             if (replyMarkup) bodyObj.reply_markup = replyMarkup;
             const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
@@ -657,7 +658,8 @@ const App = {
         };
 
         let sentTg = false;
-        const chatId = settings.adminChatId || CONFIG.TELEGRAM_CHAT_ID;
+        const rawChatId = settings.adminChatId && String(settings.adminChatId).trim() ? String(settings.adminChatId).trim() : '';
+        const chatId = rawChatId || CONFIG.TELEGRAM_CHAT_ID;
         if (chatId) {
             sentTg = await this.sendTelegram(chatId, htmlMsg, replyMarkup);
         }
