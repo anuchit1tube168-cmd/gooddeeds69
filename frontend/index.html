@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1000">
+    <link rel="stylesheet" href="style.css?v=1100">
     <style>
         body {
             display: flex;
@@ -398,11 +398,11 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
 
-    <script src="data/students_data.js?v=1000"></script>
-    <script src="data/deeds_data.js?v=1000"></script>
+    <script src="data/students_data.js?v=1100"></script>
+    <script src="data/deeds_data.js?v=1100"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=1000"></script>
-    <script src="liff-sdk.js?v=1000"></script>
+  <script src="app.js?v=1100"></script>
+    <script src="liff-sdk.js?v=1100"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -504,41 +504,44 @@
 
             if (studentIdInput) {
                 studentIdInput.addEventListener('input', () => {
-                    const sid = studentIdInput.value.trim().replace(/^นพอ\.?\s*/, '');
-                    
-                    // Only lookup if at least 5 digits
-                    if (sid.length >= 5) {
-                        const student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [])
-                            .find(s => s.student_id === sid);
+                    const rawVal = studentIdInput.value.trim();
+                    if (!rawVal) {
+                        emblemRing.innerHTML = `<img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ">`;
+                        loginHeaderTitle.textContent = "ระบบบันทึกความดี";
+                        loginHeaderSubtitle.innerHTML = `วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569`;
+                        return;
+                    }
 
-                        if (student) {
-                            // Get photo or initials
-                            const photo = App.getProfilePhoto(student.student_id);
-                            if (photo) {
-                                emblemRing.innerHTML = `<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
-                            } else {
-                                const initials = (student.first_name || '?')[0];
-                                emblemRing.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--navy);background:linear-gradient(135deg, var(--gold-dark), var(--gold));border-radius:50%;">${initials}</div>`;
-                            }
-                            
-                            // Calculate Level (Consistent with the 8-level system)
-                            const summary = App.getStudentSummary(student.student_id);
-                            const hours = summary.totalHours || 0;
-                            let lvlTitle = "Lv.1 Cadet Novice";
-                            let emoji = "👶";
-                            
-                            if (hours >= 40) { lvlTitle = "Lv.8 Ultimate Sovereign"; emoji = "🌟"; }
-                            else if (hours >= 36) { lvlTitle = "Lv.7 Nurse Commander"; emoji = "👑"; }
-                            else if (hours >= 30) { lvlTitle = "Lv.6 Guardian Angel"; emoji = "👼"; }
-                            else if (hours >= 20) { lvlTitle = "Lv.5 Flight Rescue"; emoji = "✈️"; }
-                            else if (hours >= 15) { lvlTitle = "Lv.4 Silver Care Hero"; emoji = "🧑‍⚕️"; }
-                            else if (hours >= 10) { lvlTitle = "Lv.3 Bronze Service"; emoji = "🩺"; }
-                            else if (hours >= 5) { lvlTitle = "Lv.2 Cadet Apprentice"; emoji = "📝"; }
+                    const student = (typeof App !== 'undefined' && App.findStudent) ? App.findStudent(rawVal) : null;
 
-                            loginHeaderTitle.innerHTML = `ยินดีต้อนรับ ${student.rank} ${student.first_name} ${emoji}`;
-                            loginHeaderSubtitle.innerHTML = `<span style="color:var(--gold);font-weight:700;">${lvlTitle}</span> (สะสมแล้ว ${hours} ชม.จิตอาสา)`;
-                            return;
+                    if (student) {
+                        // Get photo or initials
+                        const photo = App.getProfilePhoto(student.student_id);
+                        if (photo) {
+                            emblemRing.innerHTML = `<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
+                        } else {
+                            const initials = (student.first_name || '?')[0];
+                            emblemRing.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;font-weight:700;color:var(--navy);background:linear-gradient(135deg, var(--gold-dark), var(--gold));border-radius:50%;">${initials}</div>`;
                         }
+                        
+                        // Calculate Level (Consistent with the 8-level system)
+                        const summary = App.getStudentSummary(student.student_id);
+                        const hours = summary.totalHours || 0;
+                        let lvlTitle = "Lv.1 Cadet Novice";
+                        let emoji = "👶";
+                        
+                        if (hours >= 40) { lvlTitle = "Lv.8 Ultimate Sovereign"; emoji = "🌟"; }
+                        else if (hours >= 36) { lvlTitle = "Lv.7 Nurse Commander"; emoji = "👑"; }
+                        else if (hours >= 30) { lvlTitle = "Lv.6 Guardian Angel"; emoji = "👼"; }
+                        else if (hours >= 20) { lvlTitle = "Lv.5 Flight Rescue"; emoji = "✈️"; }
+                        else if (hours >= 15) { lvlTitle = "Lv.4 Silver Care Hero"; emoji = "🧑‍⚕️"; }
+                        else if (hours >= 10) { lvlTitle = "Lv.3 Bronze Service"; emoji = "🩺"; }
+                        else if (hours >= 5) { lvlTitle = "Lv.2 Cadet Apprentice"; emoji = "📝"; }
+
+                        const nickStr = student.nickname ? ` (${student.nickname})` : '';
+                        loginHeaderTitle.innerHTML = `ยินดีต้อนรับ ${student.rank} ${student.first_name}${nickStr} ${emoji}`;
+                        loginHeaderSubtitle.innerHTML = `<span style="color:var(--gold);font-weight:700;">${lvlTitle}</span> (รุ่น ${student.class_year} | สะสมแล้ว ${hours} ชม.จิตอาสา)`;
+                        return;
                     }
                     
                     // Fallback to default

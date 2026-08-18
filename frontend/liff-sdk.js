@@ -99,37 +99,20 @@ const LiffHelper = {
 
         if (studentId && typeof App !== 'undefined') {
             const student = App.getStudentById ? App.getStudentById(studentId) : null;
-            if (student && (!App.getCurrentUser() || App.getCurrentUser().student_id !== studentId)) {
+            if (student) {
                 console.log('🚀 LIFF Auto-login for student:', student.student_id);
-                App.setSession('student', student);
+                if (App.setSession) {
+                    App.setSession('student', student);
+                }
+                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+                    window.location.href = 'student-dashboard.html';
+                    return;
+                }
+            } else {
+                // Invalid or outdated mapping, clear it
+                delete mappings[lineUserId];
+                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
             }
-        }
-
-        const params = new URLSearchParams(window.location.search);
-        const targetPage = params.get('page');
-        if (targetPage && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/')) {
-            if (targetPage === 'cards' || targetPage === 'starbucks') {
-                window.location.href = 'view_cards.html';
-                return;
-            } else if (targetPage === 'submit') {
-                window.location.href = 'submit-deed.html';
-                return;
-            } else if (targetPage === 'history') {
-                window.location.href = 'history.html';
-                return;
-            } else if (targetPage === 'ranking') {
-                window.location.href = 'ranking.html';
-                return;
-            } else if (targetPage === 'slip' || targetPage === 'deed') {
-                const deedId = params.get('id') || '';
-                const studentId = params.get('studentId') || '';
-                window.location.href = `deed_slip.html?id=${deedId}&studentId=${studentId}`;
-                return;
-            }
-        }
-
-        if (studentId && (window.location.pathname.endsWith('index.html') || window.location.pathname === '/')) {
-            window.location.href = 'student-dashboard.html';
         }
     },
 

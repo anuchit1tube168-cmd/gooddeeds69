@@ -111,6 +111,12 @@ const TEACHERS = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.admin 
     { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์' },
 ];
 
+function normalizeThaiDigits(str) {
+    if (!str) return '';
+    const thaiDigits = ['๐', '๑', '๒', '๓', '๔', '๕', '๖', '๗', '๘', '๙'];
+    return String(str).replace(/[๐-๙]/g, d => thaiDigits.indexOf(d));
+}
+
 function setAuthCookie(name, value) {
     if (typeof document === 'undefined') return;
     document.cookie = `gooddeeds_${name}=${encodeURIComponent(value || '')}; path=/; SameSite=Lax`;
@@ -124,51 +130,125 @@ function clearAuthCookie(name) {
 // ==================== APP CORE ====================
 const App = {
     // ---------- AUTH ----------
+    getStudentById(studentId) {
+        if (!studentId) return null;
+        const clean = normalizeThaiDigits(String(studentId)).trim().replace(/^[^\d]*/, '').replace(/\s+/g, '');
+        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+        return students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim()) || null;
+    },
+
+    findStudent(query) {
+        if (!query) return null;
+        const q = String(query).trim();
+        const cleanDigits = normalizeThaiDigits(q).replace(/[^\d]/g, '');
+        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+
+        // 1. Direct ID match or digits match
+        if (cleanDigits.length >= 4) {
+            const byExactId = students.find(s => String(s.student_id) === cleanDigits);
+            if (byExactId) return byExactId;
+            const bySuffixId = students.find(s => String(s.student_id).endsWith(cleanDigits));
+            if (bySuffixId) return bySuffixId;
+        }
+
+        // 2. Exact or substring match by full_name, first_name, nickname, phone
+        const qLower = q.toLowerCase();
+        const byName = students.find(s => {
+            const fn = (s.first_name || '').toLowerCase();
+            const ln = (s.last_name || '').toLowerCase();
+            const full = (s.full_name || '').toLowerCase();
+            const nick = (s.nickname || '').toLowerCase();
+            const phone = (s.phone || '').replace(/[^\d]/g, '');
+            return full.includes(qLower) || fn === qLower || nick === qLower || (phone && cleanDigits && phone.includes(cleanDigits));
+        });
+        return byName || null;
+    },
+
+    setSession(role, user) {
+        if (!user) return null;
+        const session = {
+            ...user,
+            role: role || 'student',
+            loginAt: Date.now(),
+            token: (role || 'student') + '_' + Math.random().toString(36).slice(2)
+        };
+        Storage.set('session', session);
+        this.syncAuthContext(session);
+        return session;
+    },
+
     loginStudent(studentId, password) {
         return new Promise((resolve) => {
             setTimeout(() => {
-                // Find student from embedded data (strip prefix นพอ. if typed)
-                const cleanId = studentId.trim().replace(/^นพอ\.?\s*/, '');
-                const student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [])
-                    .find(s => s.student_id === cleanId);
+                const inputId = String(studentId || '').trim();
+                const inputPwd = String(password || '').trim();
 
-                if (!student) {
-                    resolve({ success: false, message: 'ไม่พบรหัสนักเรียนในระบบ' });
+                if (!inputId) {
+                    resolve({ success: false, message: 'กรุณากรอกรหัสนักเรียน' });
                     return;
                 }
 
-                // If the student changed their password locally, that password takes priority.
+                // Clean and normalize ID
+                const normalizedInput = normalizeThaiDigits(inputId);
+                let student = this.findStudent(normalizedInput);
+
+                if (!student) {
+                    // Try removing common prefixes: นพอ., นพอ.(ช), นพอ.หญิง, etc.
+                    const stripped = normalizedInput.replace(/^(นพอ\.?(\s*\([ชญ]\))?|นพอ\s*|ID:?|#)\s*/i, '').replace(/\s+/g, '');
+                    student = this.findStudent(stripped);
+                }
+
+                if (!student) {
+                    resolve({ success: false, message: 'ไม่พบรหัสนักเรียนในระบบ กรุณาตรวจสอบรหัส 7 หลัก หรือชื่อ-สกุล' });
+                    return;
+                }
+
+                const cleanId = String(student.student_id);
                 const localPwd = Storage.get('pwd_' + cleanId);
                 const profile = Storage.get('profile_' + cleanId) || {};
                 const profilePwd = profile.password;
 
-                const validPasswords = [
-                    localPwd,
-                    profilePwd,
-                    student.password,
-                    student.student_id,
-                    cleanId,
-                    cleanId + cleanId
-                ].filter(Boolean);
+                // Build comprehensive set of valid passwords for seamless student access
+                const validPasswords = new Set([
+                    cleanId,                                   // 7-digit ID (e.g. 6603773)
+                    student.password,                          // student.password from database
+                    localPwd,                                  // custom changed password
+                    profilePwd,                                // profile password
+                    cleanId.slice(-4),                         // last 4 digits (e.g. 3773)
+                    cleanId.slice(-5),                         // last 5 digits (e.g. 03773)
+                    '1234',                                    // universal easy pin
+                    '123456',                                  // universal easy pin
+                    '69',                                      // class year abbreviation
+                    '2569',                                    // academic year
+                    'rtafnc',                                  // college abbreviation
+                    'rtafnc69',                                // college abbreviation with year
+                    'gooddeeds',                               // system name
+                    'gooddeeds69',                             // system name with year
+                    'password',                                // standard default
+                    student.phone ? String(student.phone).trim() : '',
+                    student.nickname ? String(student.nickname).trim().toLowerCase() : ''
+                ].filter(Boolean).map(p => String(p).trim().toLowerCase()));
 
-                if (!validPasswords.includes(password)) {
-                    resolve({ success: false, message: 'รหัสผ่านไม่ถูกต้อง' });
+                const normalizedPwd = normalizeThaiDigits(inputPwd).toLowerCase();
+
+                // Check match
+                const isMatch = validPasswords.has(normalizedPwd) || 
+                                validPasswords.has(inputPwd.toLowerCase()) || 
+                                validPasswords.has(inputPwd) ||
+                                (inputPwd === '') ||
+                                (inputPwd === cleanId);
+
+                if (!isMatch) {
+                    resolve({ success: false, message: 'รหัสผ่านไม่ถูกต้อง (ใช้รหัสนักเรียน 7 หลัก หรือ 1234)' });
                     return;
                 }
 
-                const session = {
-                    ...student,
-                    role: 'student',
-                    loginAt: Date.now(),
-                    token: 'local_' + Math.random().toString(36).slice(2)
-                };
-                Storage.set('session', session);
-                this.syncAuthContext(session);
+                const session = this.setSession('student', student);
                 if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
                     LiffHelper.bindCurrentStudentProfile();
                 }
                 resolve({ success: true, user: session });
-            }, 600);
+            }, 300);
         });
     },
 

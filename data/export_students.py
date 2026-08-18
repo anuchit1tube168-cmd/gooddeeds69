@@ -320,7 +320,9 @@ def main():
         f.write("// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี\n\n")
         f.write("const STUDENTS_DATA = ")
         json.dump(students, f, ensure_ascii=False, indent=2)
-        f.write(";\n")
+        f.write(";\n\n")
+        f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
+        f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
     
     print(f"Saved to {js_path}")
 
@@ -337,7 +339,9 @@ def main():
         f.write("// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี\n\n")
         f.write("const STUDENTS_DATA = ")
         json.dump(students, f, ensure_ascii=False, indent=2)
-        f.write(";\n")
+        f.write(";\n\n")
+        f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
+        f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
         
     print(f"Sync-copied to {frontend_js_path}")
 
