@@ -378,6 +378,35 @@ const App = {
     },
 
     // ---------- GOOD DEEDS DATA ----------
+    deduplicateDeeds(deedsList) {
+        if (!Array.isArray(deedsList)) return [];
+        const seenIds = new Set();
+        const seenSignatures = new Set();
+        const result = [];
+
+        deedsList.forEach(d => {
+            if (!d) return;
+            const id = String(d.id || '');
+            const cat = d.categoryId || d.category_id || 7;
+            const dt = String(d.activityDate || d.event_date || '').trim();
+            const desc = String(d.description || d.title || '').trim().toLowerCase().replace(/\s+/g, '');
+            const hrs = parseFloat(d.hours || 0);
+
+            // Deduplicate by ID
+            if (id && seenIds.has(id)) return;
+
+            // Deduplicate by Content Signature for exact duplicates
+            const sig = `${cat}_${dt}_${desc}_${hrs}`;
+            if (dt && desc && seenSignatures.has(sig)) return;
+
+            if (id) seenIds.add(id);
+            if (dt && desc) seenSignatures.add(sig);
+            result.push(d);
+        });
+
+        return result;
+    },
+
     getDeeds(studentId) {
         let localDeeds = Storage.get('deeds_' + studentId) || [];
         let globalDeeds = [];
@@ -386,7 +415,7 @@ const App = {
         }
 
         if (!localDeeds || localDeeds.length === 0) {
-            return globalDeeds;
+            return this.deduplicateDeeds(globalDeeds);
         }
 
         // Merge: Update status from global DEEDS_DATA if available
@@ -425,11 +454,11 @@ const App = {
             }
         });
 
-        return Array.from(mergedMap.values());
+        return this.deduplicateDeeds(Array.from(mergedMap.values()));
     },
 
     saveDeeds(studentId, deeds) {
-        Storage.set('deeds_' + studentId, deeds);
+        Storage.set('deeds_' + studentId, this.deduplicateDeeds(deeds));
     },
 
     async syncDeedsWithBackend(studentId) {
