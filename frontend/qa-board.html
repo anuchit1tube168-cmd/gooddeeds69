@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>กระดานถาม-ตอบความดีจิตอาสา | วพอ.พอ. 2569</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=2800">
+    <style>
+        .qa-container {
+            max-width: 860px;
+            margin: 0 auto;
+        }
+
+        .qa-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin-bottom: 16px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .qa-card:hover {
+            border-color: rgba(201, 162, 39, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .qa-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .qa-author {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qa-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--gold-bg);
+            border: 1px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            color: var(--gold);
+            font-weight: 700;
+        }
+
+        .qa-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .qa-content {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 14px;
+            white-space: pre-wrap;
+        }
+
+        .qa-badge-cat {
+            background: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .qa-badge-answered {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .qa-badge-pending {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .qa-answers-box {
+            background: rgba(10, 22, 40, 0.5);
+            border-radius: var(--radius-md);
+            border-left: 3px solid var(--gold);
+            padding: 14px 16px;
+            margin-top: 14px;
+        }
+
+        .qa-answer-item {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .qa-answer-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .qa-answer-author {
+            font-size: 0.82rem;
+            font-weight: 700;
+            color: var(--gold);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .qa-answer-text {
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .qa-ask-card {
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.6) 0%, rgba(10, 22, 40, 0.9) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-xl);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP NAV -->
+    <nav class="top-nav">
+        <div style="display:flex;align-items:center;gap:12px">
+            <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="เปิดเมนู">☰</button>
+            <a href="index.html" class="nav-brand">
+                <img src="510903.jpg" alt="โลโก้" style="width:2rem;height:2rem;object-fit:contain;border-radius:50%;">
+                <div class="nav-brand-text">
+                    <span class="title">กระดานถาม-ตอบ</span>
+                    <span class="subtitle">วพอ.พอ. 2569</span>
+                </div>
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn btn-outline btn-sm" onclick="history.back()">← กลับ</button>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลักนักเรียน</a>
+                <a href="teacher-dashboard.html" class="sidebar-item"><span class="icon">👩‍🏫</span> แดชบอร์ดอาจารย์</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="qa-board.html" class="sidebar-item active"><span class="icon">💬</span> กระดานถาม-ตอบ</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <div class="qa-container">
+                <div class="flex items-center justify-between mb-24" style="flex-wrap:wrap; gap:12px;">
+                    <div>
+                        <h1 style="display:flex;align-items:center;gap:10px;">💬 กระดานถาม-ตอบ (Q&A Board)</h1>
+                        <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">
+                            สอบถามข้อสงสัยเรื่องเกณฑ์ชั่วโมง กิจกรรมจิตอาสา หรือติดต่ออาจารย์ผู้ควบคุม
+                        </p>
+                    </div>
+                    <button class="btn btn-primary" onclick="toggleAskForm()">➕ ตั้งคำถามใหม่</button>
+                </div>
+
+                <!-- ASK FORM -->
+                <div class="qa-ask-card" id="ask-form-container" style="display:none;">
+                    <div style="font-size:1.15rem; font-weight:700; color:var(--gold); margin-bottom:16px;">
+                        ✍️ เขียนคำถาม / ข้อสงสัยใหม่
+                    </div>
+                    <form onsubmit="submitQuestion(event)">
+                        <div class="form-group">
+                            <label class="form-label">หัวข้อคำถาม *</label>
+                            <input type="text" class="form-input" id="q-title" placeholder="เช่น บริจาคพลาสมานับชั่วโมงอย่างไร?" required>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">หมวดหมู่</label>
+                                <select class="form-select" id="q-cat">
+                                    <option value="ทั่วไป">📌 ทั่วไป / เกณฑ์ชั่วโมง</option>
+                                    <option value="บริจาคโลหิต">🩸 บริจาคโลหิต/พลาสมา</option>
+                                    <option value="งานภายนอก">🌐 โครงการภายนอก วพอ.</option>
+                                    <option value="งานภายใน">🏥 ช่วยเหลืองานภายใน วพอ.</option>
+                                    <option value="การแนบหลักฐาน">📸 การแนบรูป/เอกสาร</option>
+                                    <option value="อื่นๆ">💬 อื่นๆ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">รายละเอียดคำถาม *</label>
+                            <textarea class="form-textarea" id="q-content" rows="4" placeholder="พิมพ์รายละเอียดข้อสงสัย..." required></textarea>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" class="btn btn-outline" onclick="toggleAskForm()">ยกเลิก</button>
+                            <button type="submit" class="btn btn-primary">🚀 โพสต์คำถาม</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- FILTER TABS -->
+                <div class="flex items-center gap-8 mb-20" style="overflow-x:auto; padding-bottom:4px;">
+                    <button class="filter-pill active" id="f-all" onclick="filterQA('all', this)">ทั้งหมด (<span id="cnt-all">0</span>)</button>
+                    <button class="filter-pill" id="f-answered" onclick="filterQA('answered', this)">✅ ตอบแล้ว (<span id="cnt-answered">0</span>)</button>
+                    <button class="filter-pill" id="f-pending" onclick="filterQA('pending', this)">⏳ รออาจารย์ตอบ (<span id="cnt-pending">0</span>)</button>
+                </div>
+
+                <!-- QA LIST -->
+                <div id="qa-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <script src="data/students_data.js?v=2800"></script>
+    <script src="data/deeds_data.js?v=2800"></script>
+    <script src="data/app_settings.js?v=85"></script>
+    <script src="app.js?v=2800"></script>
+    <script>
+        let currentUser = null;
+        let qaData = [];
+        let activeFilter = 'all';
+
+        const DEFAULT_QA = [
+            {
+                id: 'qa_1',
+                title: 'บริจาคโลหิต / เกล็ดเลือด / พลาสมา ได้ครั้งละกี่ชั่วโมง?',
+                category: 'บริจาคโลหิต',
+                content: 'ขอสอบถามอาจารย์ค่ะ ถ้าไปบริจาคโลหิตหรือพลาสมาที่สภากาชาด จะได้รับการบันทึกกี่ชั่วโมงคะ และต้องแนบหลักฐานอะไรบ้าง?',
+                author: 'นพอ. ธีราพร (รุ่น 68)',
+                authorId: '6803907',
+                role: 'student',
+                createdAt: '2026-08-18T10:00:00Z',
+                answers: [
+                    {
+                        author: 'อาจารย์ผู้ควบคุม (Teacher)',
+                        role: 'teacher',
+                        content: 'บริจาคโลหิตหรือพลาสมาได้รับการบันทึกครั้งละ 4 ชั่วโมงครับ โดยให้แนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิตครับ ✅',
+                        createdAt: '2026-08-18T14:30:00Z'
+                    }
+                ]
+            },
+            {
+                id: 'qa_2',
+                title: 'เกณฑ์ชั่วโมงขั้นต่ำประจำปีการศึกษา 2569 คือเท่าไหร่?',
+                category: 'ทั่วไป',
+                content: 'นักเรียนทุกชั้นปีต้องสะสมชั่วโมงจิตอาสาขั้นต่ำคนละเท่าไหร่จึงจะถือว่าผ่านเกณฑ์คะ?',
+                author: 'นพอ. ฐิติกานต์ (รุ่น 68)',
+                authorId: '6803893',
+                role: 'student',
+                createdAt: '2026-08-19T09:15:00Z',
+                answers: [
+                    {
+                        author: 'ผู้ดูแลระบบ (Admin)',
+                        role: 'admin',
+                        content: 'เกณฑ์ขั้นต่ำคือ 50 ชั่วโมงต่อปีการศึกษาครับ (หรือเฉลี่ย 25 ชม./ภาคการศึกษา) หากสะสมครบระบบจะออกเกียรติบัตรผ่านเกณฑ์ให้อัตโนมัติครับ 🏆',
+                        createdAt: '2026-08-19T11:00:00Z'
+                    }
+                ]
+            }
+        ];
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebar-overlay').classList.toggle('show');
+        }
+
+        function init() {
+            currentUser = App.getCurrentUser();
+            loadQAData();
+        }
+
+        function loadQAData() {
+            const saved = Storage.get('qa_posts');
+            if (saved && Array.isArray(saved) && saved.length > 0) {
+                qaData = saved;
+            } else {
+                qaData = DEFAULT_QA;
+                Storage.set('qa_posts', qaData);
+            }
+            renderQA();
+        }
+
+        function toggleAskForm() {
+            const form = document.getElementById('ask-form-container');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function filterQA(status, btn) {
+            document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            activeFilter = status;
+            renderQA();
+        }
+
+        function renderQA() {
+            const cntAll = qaData.length;
+            const cntAns = qaData.filter(q => q.answers && q.answers.length > 0).length;
+            const cntPend = cntAll - cntAns;
+
+            document.getElementById('cnt-all').textContent = cntAll;
+            document.getElementById('cnt-answered').textContent = cntAns;
+            document.getElementById('cnt-pending').textContent = cntPend;
+
+            let filtered = qaData;
+            if (activeFilter === 'answered') {
+                filtered = filtered.filter(q => q.answers && q.answers.length > 0);
+            } else if (activeFilter === 'pending') {
+                filtered = filtered.filter(q => !q.answers || q.answers.length === 0);
+            }
+
+            const listEl = document.getElementById('qa-list');
+            if (!filtered.length) {
+                listEl.innerHTML = `<div class="empty-state" style="text-align:center;padding:40px;"><div style="font-size:3rem">💬</div><p style="color:var(--text-muted)">ยังไม่มีกระทู้ในหมวดนี้</p></div>`;
+                return;
+            }
+
+            const isTeacher = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+
+            listEl.innerHTML = filtered.map(q => {
+                const isAnswered = q.answers && q.answers.length > 0;
+                const statusBadge = isAnswered 
+                    ? `<span class="qa-badge-answered">✅ ตอบแล้ว (${q.answers.length})</span>` 
+                    : `<span class="qa-badge-pending">⏳ รออาจารย์ตอบ</span>`;
+
+                const answersHtml = (q.answers || []).map(ans => `
+                    <div class="qa-answer-item">
+                        <div class="qa-answer-author">
+                            <span>👩‍🏫 ${ans.author}</span>
+                            <span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;margin-left:auto">${App.formatDate(ans.createdAt)}</span>
+                        </div>
+                        <div class="qa-answer-text">${ans.content}</div>
+                    </div>
+                `).join('');
+
+                const answerFormHtml = isTeacher ? `
+                    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.1);">
+                        <div style="font-size:0.8rem; font-weight:700; color:var(--gold); margin-bottom:6px;">💬 ตอบคำถามนี้ (ในฐานะอาจารย์):</div>
+                        <div style="display:flex; gap:8px;">
+                            <input type="text" class="form-input" id="ans-input-${q.id}" placeholder="พิมพ์คำตอบให้อาจารย์..." style="font-size:0.85rem; padding:8px 12px;">
+                            <button class="btn btn-primary btn-sm" onclick="submitAnswer('${q.id}')">ส่งคำตอบ</button>
+                        </div>
+                    </div>
+                ` : '';
+
+                return `
+                    <div class="qa-card" id="${q.id}">
+                        <div class="qa-header">
+                            <div class="qa-author">
+                                <div class="qa-avatar">${(q.author || '?')[0]}</div>
+                                <div>
+                                    <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary)">${q.author}</div>
+                                    <div style="font-size:0.75rem;color:var(--text-muted)">โพสต์เมื่อ ${App.formatDate(q.createdAt)}</div>
+                                </div>
+                            </div>
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <span class="qa-badge-cat">${q.category}</span>
+                                ${statusBadge}
+                            </div>
+                        </div>
+                        <div class="qa-title">${q.title}</div>
+                        <div class="qa-content">${q.content}</div>
+
+                        ${isAnswered ? `<div class="qa-answers-box">${answersHtml}</div>` : ''}
+                        ${answerFormHtml}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function submitQuestion(e) {
+            e.preventDefault();
+            const title = document.getElementById('q-title').value.trim();
+            const category = document.getElementById('q-cat').value;
+            const content = document.getElementById('q-content').value.trim();
+
+            if (!title || !content) return;
+
+            let authorName = 'นพอ. ผู้ไม่ประสงค์ออกนาม';
+            let authorId = 'guest';
+            if (currentUser) {
+                authorName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                if (currentUser.class_year) authorName += ` (รุ่น ${currentUser.class_year})`;
+                authorId = currentUser.student_id || currentUser.username;
+            }
+
+            const newQ = {
+                id: 'qa_' + Date.now(),
+                title,
+                category,
+                content,
+                author: authorName,
+                authorId,
+                role: currentUser ? currentUser.role : 'student',
+                createdAt: new Date().toISOString(),
+                answers: []
+            };
+
+            qaData.unshift(newQ);
+            Storage.set('qa_posts', qaData);
+
+            document.getElementById('q-title').value = '';
+            document.getElementById('q-content').value = '';
+            toggleAskForm();
+            renderQA();
+            showToast('โพสต์คำถามเรียบร้อยแล้ว ✅', 'success');
+
+            // Notify Telegram if configured
+            const settings = App.getSettings();
+            if (settings.telegramToken && settings.adminChatId) {
+                App.sendTelegram(settings.adminChatId, `💬 <b>คำถามใหม่ในกระดาน Q&A</b>\nโดย: ${authorName}\nหัวข้อ: ${title}\nเนื้อหา: ${content}`);
+            }
+        }
+
+        function submitAnswer(qId) {
+            const input = document.getElementById(`ans-input-${qId}`);
+            if (!input) return;
+            const ansText = input.value.trim();
+            if (!ansText) {
+                showToast('กรุณากรอกคำตอบ', 'warning');
+                return;
+            }
+
+            const q = qaData.find(item => item.id === qId);
+            if (!q) return;
+
+            const teacherName = currentUser ? (currentUser.name || currentUser.username || 'อาจารย์ผู้ควบคุม') : 'อาจารย์ผู้ควบคุม';
+
+            q.answers = q.answers || [];
+            q.answers.push({
+                author: teacherName,
+                role: 'teacher',
+                content: ansText,
+                createdAt: new Date().toISOString()
+            });
+
+            Storage.set('qa_posts', qaData);
+            renderQA();
+            showToast('ตอบคำถามเรียบร้อยแล้ว ✅', 'success');
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
