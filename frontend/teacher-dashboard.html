@@ -17,7 +17,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2100">
+  <link rel="stylesheet" href="style.css?v=2200">
   <style>
     /* ===== KPI CARDS ===== */
     .kpi-grid {
@@ -669,11 +669,11 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=2100"></script>
+  <script src="data/students_data.js?v=2200"></script>
   <script src="data/students_photos.js?v=70"></script>
-  <script src="data/deeds_data.js?v=2100"></script>
+  <script src="data/deeds_data.js?v=2200"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=2100"></script>
+  <script src="app.js?v=2200"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -923,14 +923,14 @@
       <td>
         <div style="font-weight:600;color:var(--text-primary);display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
           <span>${s.rank} ${s.first_name} ${s.last_name}</span>
-          ${s.student.nickname ? `<span style="font-size:0.75rem;color:var(--gold)">(${s.student.nickname})</span>` : ''}
-          ${hasPos ? `<span class="executive-badge" style="font-size:0.65rem;padding:1px 6px">🎖️ ${s.student.position}</span>` : ''}
+          ${(s.nickname || s.student?.nickname) ? `<span style="font-size:0.75rem;color:var(--gold)">(${s.nickname || s.student?.nickname})</span>` : ''}
+          ${hasPos ? `<span class="executive-badge" style="font-size:0.65rem;padding:1px 6px">🎖️ ${pos}</span>` : ''}
         </div>
       </td>
       <td>
         ${isAlumni 
           ? `<span class="badge" style="background:rgba(168,85,247,0.15);color:#c084fc;border:1px solid rgba(168,85,247,0.3)">🎓 ศิษย์เก่า (รุ่น ${s.class_year})</span>` 
-          : `<span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3)">ปี ${s.student.year_level || ''} (รุ่น ${s.class_year})</span>`}
+          : `<span class="badge" style="background:rgba(59,130,246,0.15);color:#60a5fa;border:1px solid rgba(59,130,246,0.3)">ปี ${s.year_level || s.student?.year_level || ''} (รุ่น ${s.class_year})</span>`}
       </td>
       <td style="font-weight:700;color:var(--gold)">${s.totalHours} ชม.</td>
       <td>
@@ -1300,8 +1300,8 @@
     <div>${photoHtml}</div>
     <div class="info-grid">
       <div class="k">รหัสนักเรียน:</div><div class="v">${stu.student_id}</div>
-      <div class="k">ยศ-ชื่อ-สกุล:</div><div class="v">${stu.rank} ${stu.first_name} ${stu.last_name} ${stu.student.nickname ? `(${stu.student.nickname})` : ''}</div>
-      <div class="k">ตำแหน่งหน้าที่:</div><div class="v">${stu.student.position || 'นักเรียนพยาบาล'}</div>
+      <div class="k">ยศ-ชื่อ-สกุล:</div><div class="v">${stu.rank} ${stu.first_name} ${stu.last_name} ${(stu.nickname || stu.student?.nickname) ? `(${stu.nickname || stu.student?.nickname})` : ''}</div>
+      <div class="k">ตำแหน่งหน้าที่:</div><div class="v">${stu.position || stu.student?.position || 'นักเรียนพยาบาล'}</div>
       <div class="k">ชั้นปี / รุ่น:</div><div class="v">${App.getYearName(stu.class_year)}</div>
       <div class="k">สถานะการประเมิน:</div><div class="v" style="color:${stu.passed ? '#16a34a' : (isAlumni ? '#64748b' : '#dc2626')}">${isAlumni ? '🎓 ศิษย์เก่า' : (stu.passed ? '✓ ผ่านเกณฑ์ (≥50 ชม.)' : '⏳ อยู่ระหว่างสะสมความดี')}</div>
     </div>
@@ -1464,11 +1464,11 @@
       const alumniStudents = allSummary.filter(s => ![69, 68, 67, 66].includes(Number(s.class_year)));
 
       const activeRows = activeStudents.map(s => {
-        const pos = s.student.position && s.student.position !== 'นักเรียนพยาบาล' ? ` [${s.student.position}]` : '';
+        const pos = (s.position || s.student?.position) && (s.position || s.student?.position) !== 'นักเรียนพยาบาล' ? ` [${s.position || s.student?.position}]` : '';
         return `<tr>
           <td style="padding:8px 10px; border:1px solid #cbd5e1; font-weight:bold;">${s.student_id}</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1;">${s.rank} ${s.first_name} ${s.last_name}${pos}</td>
-          <td style="padding:8px 10px; border:1px solid #cbd5e1;">ปี ${s.student.year_level || ''} (รุ่น ${s.class_year})</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1;">ปี ${s.year_level || s.student?.year_level || ''} (รุ่น ${s.class_year})</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#0f172a;">${Number(s.totalHours).toFixed(1)} ชม.</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:${s.passed ? '#16a34a' : '#dc2626'}; font-weight:bold;">${s.passed ? '✓ ผ่านเกณฑ์' : '⏳ สะสมความดี'}</td>
         </tr>`;
@@ -1662,6 +1662,8 @@
     window.printAllReport = printAllReport;
     window.sendReportToTelegram = sendReportToTelegram;
     window.toggleSidebar = toggleSidebar;
+    window.loadData = loadData;
+    window.init = init;
 
     init();
   </script>

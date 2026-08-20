@@ -37,6 +37,9 @@ const CONFIG = {
     ACADEMIC_YEAR: 2569,
 };
 
+if (typeof window !== 'undefined') window.CONFIG = CONFIG;
+if (typeof globalThis !== 'undefined') globalThis.CONFIG = CONFIG;
+
 // ==================== CATEGORIES ====================
 const CATEGORIES = [
     { id: 1, name: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', emoji: '🩸', color: '#ef4444', bg: 'rgba(239,68,68,0.1)' },
@@ -49,6 +52,9 @@ const CATEGORIES = [
     { id: 8, name: 'กิจกรรมจงรักภักดีต่อสถาบัน', emoji: '👑', color: '#ec4899', bg: 'rgba(236,72,153,0.1)' },
     { id: 9, name: 'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', emoji: '🎖️', color: '#a855f7', bg: 'rgba(168,85,247,0.1)' },
 ];
+
+if (typeof window !== 'undefined') window.CATEGORIES = CATEGORIES;
+if (typeof globalThis !== 'undefined') globalThis.CATEGORIES = CATEGORIES;
 
 // ==================== STORAGE ====================
 const Storage = {
