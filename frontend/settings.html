@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=1900">
+    <link rel="stylesheet" href="style.css?v=2000">
 </head>
 
 <body>
@@ -196,7 +196,24 @@
                     <div class="form-group">
                         <label class="form-label">LINE LIFF ID</label>
                         <input type="text" class="form-input" id="setting-liff-id"
-                            placeholder="เช่น 1234567890-AbCdEfGh">
+                            placeholder="เช่น 2010948179-Ympqt2bT">
+                    </div>
+                </div>
+
+                <!-- LINE OA Messaging API (Broadcast & Flex Message) -->
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title"><span class="icon">💬</span> LINE Official Account (Messaging API / Flex Message)</div>
+                    </div>
+                    <div
+                        style="background:rgba(6,199,85,0.08);border:1px solid rgba(6,199,85,0.2);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;font-size:0.82rem;color:var(--text-secondary)">
+                        📢 สำหรับส่ง <strong>LINE Flex Message</strong> แจ้งเตือนรายบุคคล (Push) หรือส่งหานักเรียนทุกคน (Broadcast)
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Channel Access Token (Long-lived)</label>
+                        <input type="password" class="form-input" id="setting-line-channel-token"
+                            placeholder="วาง Channel Access Token จาก LINE Developers Console">
+                        <div class="form-hint">รับได้ที่ LINE Developers → Messaging API → Channel access token</div>
                     </div>
                 </div>
 
@@ -213,7 +230,7 @@
     <script src="data/students_data.js"></script>
     <script src="data/deeds_data.js"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=1900"></script>
+  <script src="app.js?v=2000"></script>
     <script>
         function init() {
             const currentUser = App.requireAuth(['admin']);
@@ -226,6 +243,7 @@
             document.getElementById('setting-year').value = settings.academicYear || 2569;
             document.getElementById('setting-gas-url').value = settings.gasUrl || '';
             document.getElementById('setting-liff-id').value = settings.liffId || localStorage.getItem('gooddeeds_liff_id') || '';
+            document.getElementById('setting-line-channel-token').value = settings.lineChannelToken || '';
             renderStaffAccounts();
         }
 
@@ -285,6 +303,7 @@
                 academicYear: parseInt(document.getElementById('setting-year').value) || 2569,
                 gasUrl: document.getElementById('setting-gas-url').value.trim(),
                 liffId: document.getElementById('setting-liff-id').value.trim(),
+                lineChannelToken: document.getElementById('setting-line-channel-token').value.trim(),
             };
             if (s.liffId) localStorage.setItem('gooddeeds_liff_id', s.liffId);
             App.saveSettings(s);
