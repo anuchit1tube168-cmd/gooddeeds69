@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3300">
+    <link rel="stylesheet" href="style.css?v=3301">
     <style>
         .qa-container {
             max-width: 860px;
@@ -31,6 +31,17 @@
         .qa-card:hover {
             border-color: rgba(201, 162, 39, 0.4);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .qa-card.pinned {
+            border-color: rgba(201, 162, 39, 0.6);
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.05) 0%, var(--card-bg) 100%);
+        }
+
+        .qa-card.announcement {
+            border-color: rgba(59, 130, 246, 0.6);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, var(--card-bg) 100%);
+            border-width: 2px;
         }
 
         .qa-header {
@@ -60,6 +71,12 @@
             font-size: 1.1rem;
             color: var(--gold);
             font-weight: 700;
+        }
+
+        .qa-avatar.admin-avatar {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2));
+            border-color: #ef4444;
+            color: #ef4444;
         }
 
         .qa-title {
@@ -108,6 +125,36 @@
             font-weight: 600;
         }
 
+        .qa-badge-admin {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(245, 158, 11, 0.2));
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .qa-badge-pinned {
+            background: rgba(201, 162, 39, 0.2);
+            color: var(--gold);
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        .qa-badge-announce {
+            background: rgba(59, 130, 246, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 20px;
+            padding: 2px 10px;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
         .qa-answers-box {
             background: rgba(10, 22, 40, 0.5);
             border-radius: var(--radius-md);
@@ -149,6 +196,108 @@
             padding: 24px;
             margin-bottom: 24px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .qa-admin-actions {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.08);
+        }
+
+        .qa-admin-btn {
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            border-radius: 16px;
+            border: 1px solid;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+        }
+
+        .qa-admin-btn.pin {
+            color: var(--gold);
+            border-color: rgba(201, 162, 39, 0.4);
+        }
+
+        .qa-admin-btn.pin:hover {
+            background: rgba(201, 162, 39, 0.15);
+        }
+
+        .qa-admin-btn.delete {
+            color: #f87171;
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .qa-admin-btn.delete:hover {
+            background: rgba(239, 68, 68, 0.15);
+        }
+
+        .qa-admin-btn.reply {
+            color: #60a5fa;
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .qa-admin-btn.reply:hover {
+            background: rgba(59, 130, 246, 0.15);
+        }
+
+        .qa-stats-bar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .qa-stat-card {
+            flex: 1;
+            min-width: 120px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            text-align: center;
+        }
+
+        .qa-stat-num {
+            font-size: 1.6rem;
+            font-weight: 800;
+            font-family: 'Kanit', sans-serif;
+        }
+
+        .qa-stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .reply-form-inline {
+            margin-top: 10px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .reply-form-inline input {
+            flex: 1;
+        }
+
+        @media (max-width: 600px) {
+            .qa-stats-bar {
+                gap: 8px;
+            }
+
+            .qa-stat-card {
+                min-width: 80px;
+                padding: 10px 8px;
+            }
+
+            .qa-stat-num {
+                font-size: 1.2rem;
+            }
         }
     </style>
 </head>
@@ -210,10 +359,33 @@
                     <div>
                         <h1 style="display:flex;align-items:center;gap:10px;">💬 กระดานถาม-ตอบ (Q&A Board)</h1>
                         <p style="color:var(--text-muted);font-size:0.9rem;margin-top:4px;">
-                            สอบถามข้อสงสัยเรื่องเกณฑ์ชั่วโมง กิจกรรมจิตอาสา หรือติดต่ออาจารย์ผู้ควบคุม
+                            สอบถามข้อสงสัยเรื่องเกณฑ์ชั่วโมง กิจกรรมจิตอาสา หรือติดต่ออาจารย์/ผู้ดูแลระบบ
                         </p>
                     </div>
-                    <button class="btn btn-primary" onclick="toggleAskForm()">➕ ตั้งคำถามใหม่</button>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="toggleAskForm()">➕ ตั้งคำถามใหม่</button>
+                        <button class="btn btn-outline" id="btn-announce" style="display:none;" onclick="toggleAnnounceForm()">📢 ประกาศ (Admin)</button>
+                    </div>
+                </div>
+
+                <!-- STATS BAR -->
+                <div class="qa-stats-bar">
+                    <div class="qa-stat-card">
+                        <div class="qa-stat-num" style="color:var(--gold)" id="stat-total">0</div>
+                        <div class="qa-stat-label">กระทู้ทั้งหมด</div>
+                    </div>
+                    <div class="qa-stat-card">
+                        <div class="qa-stat-num" style="color:#4ade80" id="stat-answered">0</div>
+                        <div class="qa-stat-label">ตอบแล้ว</div>
+                    </div>
+                    <div class="qa-stat-card">
+                        <div class="qa-stat-num" style="color:#fbbf24" id="stat-pending">0</div>
+                        <div class="qa-stat-label">รอตอบ</div>
+                    </div>
+                    <div class="qa-stat-card">
+                        <div class="qa-stat-num" style="color:#93c5fd" id="stat-announce">0</div>
+                        <div class="qa-stat-label">ประกาศ</div>
+                    </div>
                 </div>
 
                 <!-- ASK FORM -->
@@ -250,11 +422,33 @@
                     </form>
                 </div>
 
+                <!-- ANNOUNCE FORM (ADMIN ONLY) -->
+                <div class="qa-ask-card" id="announce-form-container" style="display:none;">
+                    <div style="font-size:1.15rem; font-weight:700; color:#93c5fd; margin-bottom:16px;">
+                        📢 โพสต์ประกาศ (Admin / อาจารย์)
+                    </div>
+                    <form onsubmit="submitAnnouncement(event)">
+                        <div class="form-group">
+                            <label class="form-label">หัวข้อประกาศ *</label>
+                            <input type="text" class="form-input" id="ann-title" placeholder="เช่น แจ้ง: กำหนดส่งรายงานจิตอาสาภาคเรียน 1/69" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">เนื้อหาประกาศ *</label>
+                            <textarea class="form-textarea" id="ann-content" rows="4" placeholder="เนื้อหาประกาศสำหรับนักเรียนทุกคน..." required></textarea>
+                        </div>
+                        <div style="display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" class="btn btn-outline" onclick="toggleAnnounceForm()">ยกเลิก</button>
+                            <button type="submit" class="btn btn-primary" style="background:linear-gradient(135deg,#3b82f6,#60a5fa)">📢 โพสต์ประกาศ</button>
+                        </div>
+                    </form>
+                </div>
+
                 <!-- FILTER TABS -->
                 <div class="flex items-center gap-8 mb-20" style="overflow-x:auto; padding-bottom:4px;">
                     <button class="filter-pill active" id="f-all" onclick="filterQA('all', this)">ทั้งหมด (<span id="cnt-all">0</span>)</button>
                     <button class="filter-pill" id="f-answered" onclick="filterQA('answered', this)">✅ ตอบแล้ว (<span id="cnt-answered">0</span>)</button>
-                    <button class="filter-pill" id="f-pending" onclick="filterQA('pending', this)">⏳ รออาจารย์ตอบ (<span id="cnt-pending">0</span>)</button>
+                    <button class="filter-pill" id="f-pending" onclick="filterQA('pending', this)">⏳ รอตอบ (<span id="cnt-pending">0</span>)</button>
+                    <button class="filter-pill" id="f-announce" onclick="filterQA('announce', this)">📢 ประกาศ (<span id="cnt-announce">0</span>)</button>
                 </div>
 
                 <!-- QA LIST -->
@@ -266,16 +460,29 @@
     <!-- TOAST -->
     <div class="toast-container" id="toast-container"></div>
 
-    <script src="data/students_data.js?v=3300"></script>
-    <script src="data/deeds_data.js?v=3300"></script>
+    <script src="data/students_data.js?v=3301"></script>
+    <script src="data/deeds_data.js?v=3301"></script>
     <script src="data/app_settings.js?v=85"></script>
-    <script src="app.js?v=3300"></script>
+    <script src="app.js?v=3301"></script>
     <script>
         let currentUser = null;
         let qaData = [];
         let activeFilter = 'all';
 
         const DEFAULT_QA = [
+            {
+                id: 'qa_ann_welcome',
+                title: '📢 ยินดีต้อนรับสู่กระดานถาม-ตอบความดีจิตอาสา ปีการศึกษา 2569',
+                category: 'ประกาศ',
+                content: 'กระดานนี้เปิดให้นักเรียนพยาบาลทุกชั้นปีสอบถามข้อสงสัยเกี่ยวกับเกณฑ์ชั่วโมงจิตอาสา การบันทึกความดี และการแนบหลักฐาน\n\nอาจารย์และ Admin จะตอบคำถามให้เร็วที่สุดครับ 🙏\n\nเกณฑ์ขั้นต่ำ: 50 ชั่วโมงต่อปีการศึกษา',
+                author: 'ผู้ดูแลระบบ (Admin)',
+                authorId: 'admin',
+                role: 'admin',
+                isAnnouncement: true,
+                pinned: true,
+                createdAt: '2026-08-15T08:00:00Z',
+                answers: []
+            },
             {
                 id: 'qa_1',
                 title: 'บริจาคโลหิต / เกล็ดเลือด / พลาสมา ได้ครั้งละกี่ชั่วโมง?',
@@ -289,7 +496,7 @@
                     {
                         author: 'อาจารย์ผู้ควบคุม (Teacher)',
                         role: 'teacher',
-                        content: 'บริจาคโลหิตหรือพลาสมาได้รับการบันทึกครั้งละ 4 ชั่วโมงครับ โดยให้แนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิตครับ ✅',
+                        content: 'บริจาคโลหิตหรือพลาสมาได้รับการบันทึกครั้งละ 4 ชั่วโมง สูงสุด 16 ชม./ภาค โดยให้แนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิตครับ ✅',
                         createdAt: '2026-08-18T14:30:00Z'
                     }
                 ]
@@ -319,8 +526,16 @@
             document.getElementById('sidebar-overlay').classList.toggle('show');
         }
 
+        function isAdmin() {
+            return currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+        }
+
         function init() {
             currentUser = App.getCurrentUser();
+            // Show admin buttons
+            if (isAdmin()) {
+                document.getElementById('btn-announce').style.display = 'inline-flex';
+            }
             loadQAData();
         }
 
@@ -338,6 +553,13 @@
         function toggleAskForm() {
             const form = document.getElementById('ask-form-container');
             form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('announce-form-container').style.display = 'none';
+        }
+
+        function toggleAnnounceForm() {
+            const form = document.getElementById('announce-form-container');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            document.getElementById('ask-form-container').style.display = 'none';
         }
 
         function filterQA(status, btn) {
@@ -349,77 +571,119 @@
 
         function renderQA() {
             const cntAll = qaData.length;
-            const cntAns = qaData.filter(q => q.answers && q.answers.length > 0).length;
-            const cntPend = cntAll - cntAns;
+            const cntAns = qaData.filter(q => !q.isAnnouncement && q.answers && q.answers.length > 0).length;
+            const cntPend = qaData.filter(q => !q.isAnnouncement && (!q.answers || q.answers.length === 0)).length;
+            const cntAnn = qaData.filter(q => q.isAnnouncement).length;
 
             document.getElementById('cnt-all').textContent = cntAll;
             document.getElementById('cnt-answered').textContent = cntAns;
             document.getElementById('cnt-pending').textContent = cntPend;
+            document.getElementById('cnt-announce').textContent = cntAnn;
+
+            document.getElementById('stat-total').textContent = cntAll;
+            document.getElementById('stat-answered').textContent = cntAns;
+            document.getElementById('stat-pending').textContent = cntPend;
+            document.getElementById('stat-announce').textContent = cntAnn;
 
             let filtered = qaData;
             if (activeFilter === 'answered') {
-                filtered = filtered.filter(q => q.answers && q.answers.length > 0);
+                filtered = filtered.filter(q => !q.isAnnouncement && q.answers && q.answers.length > 0);
             } else if (activeFilter === 'pending') {
-                filtered = filtered.filter(q => !q.answers || q.answers.length === 0);
+                filtered = filtered.filter(q => !q.isAnnouncement && (!q.answers || q.answers.length === 0));
+            } else if (activeFilter === 'announce') {
+                filtered = filtered.filter(q => q.isAnnouncement);
             }
+
+            // Sort: pinned first, then by date
+            filtered.sort((a, b) => {
+                if (a.pinned && !b.pinned) return -1;
+                if (!a.pinned && b.pinned) return 1;
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
 
             const listEl = document.getElementById('qa-list');
             if (!filtered.length) {
-                listEl.innerHTML = `<div class="empty-state" style="text-align:center;padding:40px;"><div style="font-size:3rem">💬</div><p style="color:var(--text-muted)">ยังไม่มีกระทู้ในหมวดนี้</p></div>`;
+                listEl.innerHTML = '<div class="empty-state" style="text-align:center;padding:40px;"><div style="font-size:3rem">💬</div><p style="color:var(--text-muted)">ยังไม่มีกระทู้ในหมวดนี้</p></div>';
                 return;
             }
 
-            const isTeacher = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+            const admin = isAdmin();
 
             listEl.innerHTML = filtered.map(q => {
                 const isAnswered = q.answers && q.answers.length > 0;
-                const statusBadge = isAnswered 
-                    ? `<span class="qa-badge-answered">✅ ตอบแล้ว (${q.answers.length})</span>` 
-                    : `<span class="qa-badge-pending">⏳ รออาจารย์ตอบ</span>`;
+                const isAnn = q.isAnnouncement;
 
-                const answersHtml = (q.answers || []).map(ans => `
-                    <div class="qa-answer-item">
-                        <div class="qa-answer-author">
-                            <span>👩‍🏫 ${ans.author}</span>
-                            <span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;margin-left:auto">${App.formatDate(ans.createdAt)}</span>
-                        </div>
-                        <div class="qa-answer-text">${ans.content}</div>
-                    </div>
-                `).join('');
+                // Build badges
+                let badges = '';
+                if (q.pinned) badges += '<span class="qa-badge-pinned">📌 ปักหมุด</span>';
+                if (isAnn) badges += '<span class="qa-badge-announce">📢 ประกาศ</span>';
+                if (q.role === 'admin' || q.role === 'teacher') badges += '<span class="qa-badge-admin">🛡️ Admin</span>';
+                badges += '<span class="qa-badge-cat">' + q.category + '</span>';
+                if (!isAnn) {
+                    badges += isAnswered
+                        ? '<span class="qa-badge-answered">\u2705 ตอบแล้ว (' + q.answers.length + ')</span>'
+                        : '<span class="qa-badge-pending">\u23F3 รอตอบ</span>';
+                }
 
-                const answerFormHtml = isTeacher ? `
-                    <div style="margin-top:14px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.1);">
-                        <div style="font-size:0.8rem; font-weight:700; color:var(--gold); margin-bottom:6px;">💬 ตอบคำถามนี้ (ในฐานะอาจารย์):</div>
-                        <div style="display:flex; gap:8px;">
-                            <input type="text" class="form-input" id="ans-input-${q.id}" placeholder="พิมพ์คำตอบให้อาจารย์..." style="font-size:0.85rem; padding:8px 12px;">
-                            <button class="btn btn-primary btn-sm" onclick="submitAnswer('${q.id}')">ส่งคำตอบ</button>
-                        </div>
-                    </div>
-                ` : '';
+                // Answers
+                const answersHtml = (q.answers || []).map(ans => {
+                    const isAdminAns = ans.role === 'admin' || ans.role === 'teacher';
+                    return '<div class="qa-answer-item">' +
+                        '<div class="qa-answer-author">' +
+                            '<span>' + (isAdminAns ? '\uD83D\uDC69\u200D\uD83C\uDFEB ' : '\uD83D\uDCAC ') + ans.author + '</span>' +
+                            (isAdminAns ? ' <span class="qa-badge-admin" style="font-size:0.65rem;">\uD83D\uDEE1\uFE0F Admin</span>' : '') +
+                            '<span style="font-size:0.75rem;color:var(--text-muted);font-weight:400;margin-left:auto">' + App.formatDate(ans.createdAt) + '</span>' +
+                        '</div>' +
+                        '<div class="qa-answer-text">' + ans.content + '</div>' +
+                    '</div>';
+                }).join('');
 
-                return `
-                    <div class="qa-card" id="${q.id}">
-                        <div class="qa-header">
-                            <div class="qa-author">
-                                <div class="qa-avatar">${(q.author || '?')[0]}</div>
-                                <div>
-                                    <div style="font-weight:600;font-size:0.9rem;color:var(--text-primary)">${q.author}</div>
-                                    <div style="font-size:0.75rem;color:var(--text-muted)">โพสต์เมื่อ ${App.formatDate(q.createdAt)}</div>
-                                </div>
-                            </div>
-                            <div style="display:flex;gap:6px;align-items:center;">
-                                <span class="qa-badge-cat">${q.category}</span>
-                                ${statusBadge}
-                            </div>
-                        </div>
-                        <div class="qa-title">${q.title}</div>
-                        <div class="qa-content">${q.content}</div>
+                // Reply form (admin/teacher)
+                const replyFormHtml = admin ? '<div class="reply-form-inline" id="reply-form-' + q.id + '" style="display:none;">' +
+                    '<input type="text" class="form-input" id="ans-input-' + q.id + '" placeholder="\u0E1E\u0E34\u0E21\u0E1E\u0E4C\u0E04\u0E33\u0E15\u0E2D\u0E1A..." style="font-size:0.85rem; padding:8px 12px;">' +
+                    '<button class="btn btn-primary btn-sm" onclick="submitAnswer(\'' + q.id + '\')">\u0E2A\u0E48\u0E07</button>' +
+                '</div>' : '';
 
-                        ${isAnswered ? `<div class="qa-answers-box">${answersHtml}</div>` : ''}
-                        ${answerFormHtml}
-                    </div>
-                `;
+                // Admin actions
+                let adminActionsHtml = '';
+                if (admin) {
+                    adminActionsHtml = '<div class="qa-admin-actions">' +
+                        '<button class="qa-admin-btn pin" onclick="togglePin(\'' + q.id + '\')">' + (q.pinned ? '\uD83D\uDCCC \u0E16\u0E2D\u0E14\u0E2B\u0E21\u0E38\u0E14' : '\uD83D\uDCCC \u0E1B\u0E31\u0E01\u0E2B\u0E21\u0E38\u0E14') + '</button>' +
+                        '<button class="qa-admin-btn reply" onclick="showReplyForm(\'' + q.id + '\')">\uD83D\uDCAC \u0E15\u0E2D\u0E1A</button>' +
+                        '<button class="qa-admin-btn delete" onclick="deleteQuestion(\'' + q.id + '\')">\uD83D\uDDD1\uFE0F \u0E25\u0E1A</button>' +
+                    '</div>';
+                }
+
+                const cardClass = 'qa-card' + (q.pinned ? ' pinned' : '') + (isAnn ? ' announcement' : '');
+                const avatarClass = 'qa-avatar' + (q.role === 'admin' || q.role === 'teacher' ? ' admin-avatar' : '');
+
+                return '<div class="' + cardClass + '" id="' + q.id + '">' +
+                    '<div class="qa-header">' +
+                        '<div class="qa-author">' +
+                            '<div class="' + avatarClass + '">' + (q.author || '?')[0] + '</div>' +
+                            '<div>' +
+                                '<div style="font-weight:600;font-size:0.9rem;color:var(--text-primary)">' + q.author + '</div>' +
+                                '<div style="font-size:0.75rem;color:var(--text-muted)">\u0E42\u0E1E\u0E2A\u0E15\u0E4C\u0E40\u0E21\u0E37\u0E48\u0E2D ' + App.formatDate(q.createdAt) + '</div>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;">' + badges + '</div>' +
+                    '</div>' +
+                    '<div class="qa-title">' + q.title + '</div>' +
+                    '<div class="qa-content">' + q.content + '</div>' +
+                    (isAnswered ? '<div class="qa-answers-box">' + answersHtml + '</div>' : '') +
+                    replyFormHtml +
+                    adminActionsHtml +
+                '</div>';
             }).join('');
+        }
+
+        function showReplyForm(qId) {
+            const form = document.getElementById('reply-form-' + qId);
+            if (form) {
+                form.style.display = form.style.display === 'none' ? 'flex' : 'none';
+                const input = document.getElementById('ans-input-' + qId);
+                if (input) input.focus();
+            }
         }
 
         function submitQuestion(e) {
@@ -432,20 +696,23 @@
 
             let authorName = 'นพอ. ผู้ไม่ประสงค์ออกนาม';
             let authorId = 'guest';
+            let role = 'student';
             if (currentUser) {
-                authorName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
-                if (currentUser.class_year) authorName += ` (รุ่น ${currentUser.class_year})`;
+                authorName = (currentUser.rank || 'นพอ.') + ' ' + (currentUser.first_name || '') + ' ' + (currentUser.last_name || '');
+                authorName = authorName.trim();
+                if (currentUser.class_year) authorName += ' (รุ่น ' + currentUser.class_year + ')';
                 authorId = currentUser.student_id || currentUser.username;
+                role = currentUser.role || 'student';
             }
 
             const newQ = {
                 id: 'qa_' + Date.now(),
-                title,
-                category,
-                content,
+                title: title,
+                category: category,
+                content: content,
                 author: authorName,
-                authorId,
-                role: currentUser ? currentUser.role : 'student',
+                authorId: authorId,
+                role: role,
                 createdAt: new Date().toISOString(),
                 answers: []
             };
@@ -462,12 +729,48 @@
             // Notify Telegram if configured
             const settings = App.getSettings();
             if (settings.telegramToken && settings.adminChatId) {
-                App.sendTelegram(settings.adminChatId, `💬 <b>คำถามใหม่ในกระดาน Q&A</b>\nโดย: ${authorName}\nหัวข้อ: ${title}\nเนื้อหา: ${content}`);
+                App.sendTelegram(settings.adminChatId, '\uD83D\uDCAC <b>\u0E04\u0E33\u0E16\u0E32\u0E21\u0E43\u0E2B\u0E21\u0E48\u0E43\u0E19\u0E01\u0E23\u0E30\u0E14\u0E32\u0E19 Q&A</b>\n\u0E42\u0E14\u0E22: ' + authorName + '\n\u0E2B\u0E31\u0E27\u0E02\u0E49\u0E2D: ' + title + '\n\u0E40\u0E19\u0E37\u0E49\u0E2D\u0E2B\u0E32: ' + content);
             }
         }
 
+        function submitAnnouncement(e) {
+            e.preventDefault();
+            const title = document.getElementById('ann-title').value.trim();
+            const content = document.getElementById('ann-content').value.trim();
+
+            if (!title || !content) return;
+
+            let authorName = 'ผู้ดูแลระบบ (Admin)';
+            if (currentUser) {
+                authorName = currentUser.name || currentUser.username || 'ผู้ดูแลระบบ (Admin)';
+            }
+
+            const newAnn = {
+                id: 'qa_ann_' + Date.now(),
+                title: '📢 ' + title,
+                category: 'ประกาศ',
+                content: content,
+                author: authorName,
+                authorId: currentUser ? (currentUser.student_id || currentUser.username) : 'admin',
+                role: 'admin',
+                isAnnouncement: true,
+                pinned: true,
+                createdAt: new Date().toISOString(),
+                answers: []
+            };
+
+            qaData.unshift(newAnn);
+            Storage.set('qa_posts', qaData);
+
+            document.getElementById('ann-title').value = '';
+            document.getElementById('ann-content').value = '';
+            toggleAnnounceForm();
+            renderQA();
+            showToast('📢 โพสต์ประกาศเรียบร้อยแล้ว', 'success');
+        }
+
         function submitAnswer(qId) {
-            const input = document.getElementById(`ans-input-${qId}`);
+            const input = document.getElementById('ans-input-' + qId);
             if (!input) return;
             const ansText = input.value.trim();
             if (!ansText) {
@@ -482,8 +785,8 @@
 
             q.answers = q.answers || [];
             q.answers.push({
-                author: teacherName,
-                role: 'teacher',
+                author: teacherName + ' (Admin)',
+                role: currentUser ? (currentUser.role || 'admin') : 'admin',
                 content: ansText,
                 createdAt: new Date().toISOString()
             });
@@ -491,6 +794,23 @@
             Storage.set('qa_posts', qaData);
             renderQA();
             showToast('ตอบคำถามเรียบร้อยแล้ว ✅', 'success');
+        }
+
+        function togglePin(qId) {
+            const q = qaData.find(item => item.id === qId);
+            if (!q) return;
+            q.pinned = !q.pinned;
+            Storage.set('qa_posts', qaData);
+            renderQA();
+            showToast(q.pinned ? '📌 ปักหมุดเรียบร้อย' : '📌 ถอดหมุดเรียบร้อย', 'success');
+        }
+
+        function deleteQuestion(qId) {
+            if (!confirm('ต้องการลบกระทู้นี้จริงหรือไม่?')) return;
+            qaData = qaData.filter(item => item.id !== qId);
+            Storage.set('qa_posts', qaData);
+            renderQA();
+            showToast('🗑️ ลบกระทู้เรียบร้อยแล้ว', 'success');
         }
 
         init();
