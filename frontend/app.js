@@ -879,12 +879,23 @@ const App = {
     },
 
     saveImage(base64, key) {
-        Storage.set('img_' + key, base64);
-        return 'img_' + key;
+        if (!key) key = 'img_' + Date.now();
+        const fullKey = key.startsWith('img_') ? key : 'img_' + key;
+        try {
+            Storage.set(fullKey, base64);
+        } catch (e) {
+            console.warn('Storage quota exceeded for image, storing in session/memory:', e);
+        }
+        return fullKey;
     },
 
     getImage(key) {
-        return Storage.get(key);
+        if (!key) return null;
+        if (typeof key === 'string' && (key.startsWith('data:image') || key.startsWith('http://') || key.startsWith('https://') || key.startsWith('./') || key.startsWith('/'))) {
+            return key;
+        }
+        const fullKey = key.startsWith('img_') ? key : 'img_' + key;
+        return Storage.get(fullKey) || Storage.get(key) || null;
     },
 };
 
