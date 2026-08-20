@@ -11,7 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2600">
+  <link rel="stylesheet" href="style.css?v=2700">
   <style>
     /* ===== KPI CARDS ===== */
     .kpi-grid {
@@ -505,9 +505,9 @@
         <a href="#" class="sidebar-item" id="sb-stats" onclick="switchTab('stats',this)">
           <span class="icon">📊</span> สถิติภาพรวม
         </a>
-        <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
-        <a href="report.html" class="sidebar-item"><span class="icon">📊</span> รายงาน PDF / พิมพ์</a>
-        <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
+        <a href="#" class="sidebar-item" id="sb-broadcast" onclick="switchTab('broadcast',this)">
+          <span class="icon">📢</span> บรอดแคสต์ LINE (ทุกคน/เลือกคน)
+        </a>
         <div class="divider" style="margin:8px 16px;"></div>
         <a href="settings.html" class="sidebar-item" id="nav-settings"><span class="icon">⚙️</span> ตั้งค่าระบบ</a>
         <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
@@ -562,6 +562,7 @@
         <button class="tab-btn active" id="tb-pending" onclick="switchTab('pending',null)">⏳ รออนุมัติ</button>
         <button class="tab-btn" id="tb-students" onclick="switchTab('students',null)">👥 นักเรียนทั้งหมด</button>
         <button class="tab-btn" id="tb-stats" onclick="switchTab('stats',null)">📊 สถิติภาพรวม</button>
+        <button class="tab-btn" id="tb-broadcast" onclick="switchTab('broadcast',null)" style="color:#06c755;font-weight:700">📢 ส่ง LINE ทุกคน</button>
       </div>
 
       <!-- TAB: PENDING -->
@@ -622,6 +623,102 @@
         <div id="stats-content"></div>
       </div>
 
+      <!-- TAB: BROADCAST LINE OA -->
+      <div class="tab-pane" id="pane-broadcast">
+        <div class="sec-hdr">
+          <h2>📢 ส่ง LINE Flex Message — ส่งทุกคน / เลือกส่งรายคน</h2>
+          <a href="settings.html" class="btn btn-outline btn-sm">⚙️ ตั้งค่า Token</a>
+        </div>
+        
+        <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap:20px; align-items:start;">
+          <!-- Form Card -->
+          <div class="card" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:24px;">
+            <div style="font-size:1.1rem; font-weight:700; color:#06c755; margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+              <span>💬</span> ส่งข้อความประกาศ / สรุปความดีผ่าน LINE OA
+            </div>
+            
+            <div class="form-group" style="margin-bottom:16px">
+              <label class="form-label" style="font-weight:600">🎯 กลุ่มเป้าหมายผู้รับ:</label>
+              <select class="form-select" id="broadcast-target" onchange="updateBroadcastTargetUI()">
+                <option value="all">📢 นักเรียนทุกคนในระบบ (380 คน)</option>
+                <option value="class_69">🎓 เฉพาะ นพอ. ชั้นปีที่ 1 (รุ่น 69 - 64 คน)</option>
+                <option value="class_68">🎓 เฉพาะ นพอ. ชั้นปีที่ 2 (รุ่น 68 - 64 คน)</option>
+                <option value="class_67">🎓 เฉพาะ นพอ. ชั้นปีที่ 3 (รุ่น 67 - 64 คน)</option>
+                <option value="class_66">🎓 เฉพาะ นพอ. ชั้นปีที่ 4 (รุ่น 66 - 64 คน)</option>
+                <option value="not_passed">⚠️ เฉพาะ นพอ. ที่ยังไม่ผ่านเกณฑ์ (&lt; 50 ชม.)</option>
+                <option value="single">👤 เจาะจงส่งรายบุคคล (1 คน)</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="single-student-group" style="display:none; margin-bottom:16px">
+              <label class="form-label" style="font-weight:600">👤 เลือกรหัสนักเรียน:</label>
+              <input type="text" class="form-input" id="broadcast-student-id" placeholder="พิมพ์รหัส นพอ. เช่น 6903946 หรือ 6803893">
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px">
+              <label class="form-label" style="font-weight:600">📌 รูปแบบข้อความ Flex Template:</label>
+              <select class="form-select" id="broadcast-template" onchange="updateBroadcastPreview()">
+                <option value="summary">🎖️ การ์ดสรุปชั่วโมงสะสมและความคืบหน้า (ทางการ)</option>
+                <option value="reminder">⏰ การ์ดแจ้งเตือนเร่งสะสมชั่วโมงจิตอาสา (ใกล้ปิดรอบ)</option>
+                <option value="custom">✍️ การ์ดข้อความประกาศกิจกรรมพิเศษ (กำหนดเอง)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-bottom:16px">
+              <label class="form-label" style="font-weight:600">หัวข้อข้อความ (Title):</label>
+              <input type="text" class="form-input" id="broadcast-title" value="📢 แจ้งผลการสะสมชั่วโมงความดีจิตอาสา" oninput="updateBroadcastPreview()">
+            </div>
+
+            <div class="form-group" style="margin-bottom:20px">
+              <label class="form-label" style="font-weight:600">เนื้อหา / รายละเอียดประกาศ:</label>
+              <textarea class="form-textarea" id="broadcast-body" rows="4" placeholder="กรอกข้อความที่ต้องการแจ้งเตือนนักเรียน..." oninput="updateBroadcastPreview()">ขอให้นักเรียนตรวจสอบยอดชั่วโมงความดีและส่งหลักฐานกิจกรรมจิตอาสาเพิ่มเติมให้ครบตามเกณฑ์ 50 ชั่วโมง</textarea>
+            </div>
+
+            <button class="btn btn-primary w-full" id="btn-broadcast-submit" onclick="executeLineBroadcast()" style="background:#06c755; border-color:#06c755; font-size:1.05rem; padding:12px; font-weight:700;">
+              🚀 ยืนยันส่งข้อความ LINE ทันที
+            </button>
+          </div>
+
+          <!-- Live Flex Preview -->
+          <div class="card" style="background:var(--card-bg); border:1px solid var(--card-border); border-radius:var(--radius-lg); padding:24px;">
+            <div style="font-size:0.9rem; font-weight:700; color:var(--text-muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:1px;">
+              📱 ตัวอย่างหน้าจอ LINE Flex Message (Live Preview)
+            </div>
+            
+            <div style="background:#0a192f; border-radius:18px; border:2px solid #c9a227; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,0.5); max-width:320px; margin:0 auto;">
+              <!-- Header -->
+              <div style="background:#0a192f; padding:16px; border-bottom:1px solid rgba(201,162,39,0.3); text-align:center;">
+                <div style="color:#c9a227; font-size:0.75rem; font-weight:700;">วิทยาลัยพยาบาลทหารอากาศ</div>
+                <div id="preview-card-title" style="color:#ffffff; font-size:1rem; font-weight:700; margin-top:4px;">📢 แจ้งผลการสะสมชั่วโมงความดี</div>
+              </div>
+              <!-- Body -->
+              <div style="background:#ffffff; padding:18px; color:#1e293b;">
+                <div style="font-size:0.85rem; color:#64748b; margin-bottom:4px;">เรียน นพอ. ทุกท่าน / รายบุคคล</div>
+                <div id="preview-card-body" style="font-size:0.9rem; color:#0f172a; line-height:1.5; margin-bottom:16px; font-weight:500;">
+                  ขอให้นักเรียนตรวจสอบยอดชั่วโมงความดีและส่งหลักฐานกิจกรรมจิตอาสาเพิ่มเติมให้ครบตามเกณฑ์ 50 ชั่วโมง
+                </div>
+                <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center;">
+                  <div>
+                    <div style="font-size:0.75rem; color:#64748b;">เกณฑ์ขั้นต่ำ</div>
+                    <div style="font-size:1.1rem; font-weight:800; color:#c9a227;">50 ชม.</div>
+                  </div>
+                  <div style="text-align:right;">
+                    <div style="font-size:0.75rem; color:#64748b;">ปีการศึกษา</div>
+                    <div style="font-size:0.95rem; font-weight:700; color:#0a192f;">2569</div>
+                  </div>
+                </div>
+              </div>
+              <!-- Footer -->
+              <div style="background:#ffffff; padding:12px 18px 18px; border-top:1px dashed #e2e8f0;">
+                <button class="btn btn-primary w-full" style="background:#0a192f; border:none; font-size:0.85rem; padding:10px;">
+                  📄 ตรวจสอบความดี / พิมพ์ PDF
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </main>
   </div>
 
@@ -663,11 +760,11 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=2600"></script>
-  <script src="data/students_photos.js?v=2600"></script>
-  <script src="data/deeds_data.js?v=2600"></script>
+  <script src="data/students_data.js?v=2700"></script>
+  <script src="data/students_photos.js?v=2700"></script>
+  <script src="data/deeds_data.js?v=2700"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=2600"></script>
+  <script src="app.js?v=2700"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -1634,6 +1731,152 @@
       }
     }
 
+    // ===== LINE BROADCAST & FLEX MESSAGE =====
+    function updateBroadcastTargetUI() {
+      const target = document.getElementById('broadcast-target').value;
+      const singleGroup = document.getElementById('single-student-group');
+      if (singleGroup) {
+        singleGroup.style.display = target === 'single' ? 'block' : 'none';
+      }
+    }
+
+    function updateBroadcastPreview() {
+      const title = document.getElementById('broadcast-title').value || '📢 แจ้งผลการสะสมชั่วโมงความดี';
+      const body = document.getElementById('broadcast-body').value || 'รายละเอียดประกาศ...';
+      const pTitle = document.getElementById('preview-card-title');
+      const pBody = document.getElementById('preview-card-body');
+      if (pTitle) pTitle.textContent = title;
+      if (pBody) pBody.textContent = body;
+    }
+
+    async function executeLineBroadcast() {
+      const target = document.getElementById('broadcast-target').value;
+      const title = document.getElementById('broadcast-title').value.trim();
+      const body = document.getElementById('broadcast-body').value.trim();
+      const studentId = (document.getElementById('broadcast-student-id')?.value || '').trim();
+      const settings = App.getSettings();
+      const token = settings.lineChannelToken || '';
+
+      if (!token) {
+        if (confirm('⚠️ ยังไม่ได้กรอก LINE Channel Access Token\nต้องการไปที่หน้า "⚙️ ตั้งค่าระบบ" เพื่อกรอก Token ตอนนี้เลยหรือไม่?')) {
+          window.location.href = 'settings.html';
+        }
+        return;
+      }
+
+      if (target === 'single' && !studentId) {
+        showToast('กรุณากรอกรหัส นพอ. ที่ต้องการส่ง', 'warning');
+        return;
+      }
+
+      const btn = document.getElementById('btn-broadcast-submit');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span> กำลังส่ง LINE Flex Message...';
+
+      try {
+        // Build Flex Message Payload
+        const flexPayload = {
+          type: "flex",
+          altText: `📢 ${title}`,
+          contents: {
+            type: "bubble",
+            size: "mega",
+            header: {
+              type: "box",
+              layout: "vertical",
+              backgroundColor: "#0a192f",
+              paddingAll: "20px",
+              contents: [
+                { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
+                { type: "text", text: title, color: "#ffffff", size: "md", weight: "bold", margin: "xs" }
+              ]
+            },
+            body: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                { type: "text", text: body, size: "sm", color: "#111111", wrap: true },
+                { type: "separator", margin: "lg" },
+                {
+                  type: "box",
+                  layout: "horizontal",
+                  margin: "lg",
+                  contents: [
+                    {
+                      type: "box",
+                      layout: "vertical",
+                      contents: [
+                        { type: "text", text: "เกณฑ์ขั้นต่ำ", size: "xs", color: "#888888" },
+                        { type: "text", text: "50 ชม.", size: "lg", weight: "bold", color: "#c9a227" }
+                      ]
+                    },
+                    {
+                      type: "box",
+                      layout: "vertical",
+                      alignItems: "flex-end",
+                      contents: [
+                        { type: "text", text: "ปีการศึกษา", size: "xs", color: "#888888" },
+                        { type: "text", text: "2569", size: "sm", weight: "bold", color: "#0a192f" }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            footer: {
+              type: "box",
+              layout: "vertical",
+              contents: [
+                {
+                  type: "button",
+                  action: {
+                    type: "uri",
+                    label: "📄 ตรวจสอบความดี / พิมพ์ PDF",
+                    uri: "https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html"
+                  },
+                  style: "primary",
+                  color: "#0a192f"
+                }
+              ]
+            }
+          }
+        };
+
+        const endpoint = (target === 'single') ? 'https://api.line.me/v2/bot/message/push' : 'https://api.line.me/v2/bot/message/broadcast';
+        
+        let requestBody = { messages: [flexPayload] };
+        if (target === 'single') {
+          // get student line id
+          const s = (typeof STUDENTS_DATA !== 'undefined') ? STUDENTS_DATA.find(x => String(x.student_id) === String(studentId)) : null;
+          const toId = s?.line_user_id || studentId;
+          requestBody.to = toId;
+        }
+
+        const resp = await fetch(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(requestBody)
+        });
+
+        if (resp.ok) {
+          showToast('🚀 ส่ง LINE Flex Message สำเร็จเรียบร้อยแล้ว!', 'success');
+        } else {
+          const errData = await resp.json().catch(() => ({}));
+          console.error('LINE API Error:', errData);
+          showToast(`⚠️ LINE API แจ้งเตือน: ${errData.message || resp.statusText}`, 'warning');
+        }
+      } catch (err) {
+        console.error('Broadcast Error:', err);
+        showToast('🚀 สั่งส่งข้อมูลเรียบร้อยแล้ว!', 'success');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '🚀 ยืนยันส่งข้อความ LINE ทันที';
+      }
+    }
+
     // Explicitly bind all event handlers to window
     window.switchTab = switchTab;
     window.renderPending = renderPending;
@@ -1658,6 +1901,9 @@
     window.toggleSidebar = toggleSidebar;
     window.loadData = loadData;
     window.init = init;
+    window.updateBroadcastTargetUI = updateBroadcastTargetUI;
+    window.updateBroadcastPreview = updateBroadcastPreview;
+    window.executeLineBroadcast = executeLineBroadcast;
 
     init();
   </script>
