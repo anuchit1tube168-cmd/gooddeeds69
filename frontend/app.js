@@ -704,12 +704,16 @@ const App = {
     // ---------- SETTINGS ----------
     getSettings() {
         const s = Storage.get('settings') || {};
+        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token) 
+            ? EXCEL_SETTINGS.line.channel_token 
+            : 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
         return {
             academicYear: 2569,
             minHoursSemester: 25,
             minHoursYear: 50,
             telegramToken: CONFIG.TELEGRAM_BOT_TOKEN,
             lineNotifyToken: '',
+            lineChannelToken: defaultLineToken,
             adminChatId: CONFIG.TELEGRAM_CHAT_ID,
             ...s
         };
