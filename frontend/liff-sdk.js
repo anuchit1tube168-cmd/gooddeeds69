@@ -87,6 +87,20 @@ const LiffHelper = {
                 profileData.linePictureUrl = linePic;
                 App.updateProfile(profileData);
                 console.log('🔗 Bound LINE Profile to Student:', currentUser.student_id, lineName);
+
+                // Sync to backend if available
+                if (App.canUseBackendApi && App.canUseBackendApi()) {
+                    fetch('/api/bind_line', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', ...(App.getAuthHeaders ? App.getAuthHeaders() : {}) },
+                        body: JSON.stringify({
+                            studentId: currentUser.student_id,
+                            lineUserId,
+                            lineDisplayName: lineName,
+                            linePictureUrl: linePic
+                        })
+                    }).catch(err => console.warn('⚠️ Bind LINE sync error:', err));
+                }
             }
         }
     },

@@ -740,6 +740,59 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 response = {'status': 'error', 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"❌ Error updating student: {e}")
+        elif self.path == '/api/bind_line':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                student_id = payload.get('studentId')
+                line_user_id = payload.get('lineUserId')
+                line_name = payload.get('lineDisplayName', '')
+                line_pic = payload.get('linePictureUrl', '')
+                
+                if student_id and line_user_id:
+                    for json_p in [
+                        os.path.join(BASE_DIR, 'data', 'students.json'),
+                        os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
+                    ]:
+                        if os.path.exists(json_p):
+                            with open(json_p, 'r', encoding='utf-8') as f:
+                                stu_list = json.load(f)
+                            for s in stu_list:
+                                if str(s.get('student_id')) == str(student_id):
+                                    s['line_user_id'] = line_user_id
+                                    s['line_display_name'] = line_name
+                                    s['line_picture_url'] = line_pic
+                                    break
+                            with open(json_p, 'w', encoding='utf-8') as f:
+                                json.dump(stu_list, f, ensure_ascii=False, indent=2)
+
+                    # Update JS files
+                    for js_p in [
+                        os.path.join(BASE_DIR, 'data', 'students_data.js'),
+                        os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js')
+                    ]:
+                        if os.path.exists(js_p):
+                            with open(os.path.join(BASE_DIR, 'frontend', 'data', 'students.json'), 'r', encoding='utf-8') as f:
+                                stu_list = json.load(f)
+                            js_content = "// Auto-generated student data - DO NOT EDIT MANUALLY\n"
+                            js_content += "const STUDENTS_DATA = " + json.dumps(stu_list, ensure_ascii=False, indent=2) + ";\n\n"
+                            js_content += "if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n"
+                            js_content += "if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n"
+                            with open(js_p, 'w', encoding='utf-8') as f:
+                                f.write(js_content)
+
+                    print(f"🔗 Bound LINE ID ({line_user_id[:8]}... - {line_name}) to student {student_id}")
+
+                self.send_response(200)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
+            except Exception as e:
+                self.send_response(500)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                self.wfile.write(json.dumps({'status': 'error', 'message': str(e)}).encode('utf-8'))
         else:
             self.send_response(404)
             self.end_headers()
