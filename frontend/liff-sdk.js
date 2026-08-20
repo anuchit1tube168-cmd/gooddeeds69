@@ -89,8 +89,8 @@ const LiffHelper = {
     bindCurrentStudentProfile() {
         if (!this.profile) return;
         const lineUserId = this.profile.userId;
-        const lineName = this.profile.displayName;
-        const linePic = this.profile.pictureUrl;
+        const lineName = this.profile.displayName || 'LINE User';
+        const linePic = this.profile.pictureUrl || '';
 
         // Save mapping
         const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
@@ -108,6 +108,29 @@ const LiffHelper = {
                 profileData.linePictureUrl = linePic;
                 App.updateProfile(profileData);
                 console.log('🔗 Bound LINE Profile to Student:', currentUser.student_id, lineName);
+
+                // Send Telegram Notification immediately
+                try {
+                    const studentName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                    const cy = currentUser.class_year || '69';
+                    const settings = App.getSettings();
+                    const tgToken = settings.telegramToken || '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
+                    const tgChat = settings.adminChatId || '-4839151586';
+
+                    if (tgToken && tgChat) {
+                        App.sendTelegram(tgChat, 
+                            `🔗 <b>ผูก LINE LIFF สำเร็จ (เปิดผ่าน LIFF)!</b>\n` +
+                            `━━━━━━━━━━━━━━━━━━\n` +
+                            `👤 LINE: <b>${lineName}</b>\n` +
+                            `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code>\n` +
+                            `📛 ชื่อ: <b>${studentName}</b> (รุ่น ${cy})\n` +
+                            `🆔 LINE User ID: <code>${lineUserId}</code>\n` +
+                            `✅ บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว`
+                        );
+                    }
+                } catch (tge) {
+                    console.warn('⚠️ Telegram notify error:', tge);
+                }
 
                 // Sync to backend if available
                 if (App.canUseBackendApi && App.canUseBackendApi()) {
