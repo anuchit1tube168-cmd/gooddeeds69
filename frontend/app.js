@@ -872,11 +872,37 @@ const App = {
         showToast(msg, type);
     },
 
-    // ---------- IMAGE HANDLING ----------
-    imageToBase64(file) {
+    // ---------- IMAGE HANDLING (AUTO-COMPRESSION FOR 250+ CONCURRENT USERS) ----------
+    imageToBase64(file, maxWidth = 1000, maxHeight = 1000, quality = 0.75) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
-            reader.onload = e => resolve(e.target.result);
+            reader.onload = e => {
+                const img = new Image();
+                img.onload = () => {
+                    let w = img.width;
+                    let h = img.height;
+
+                    if (w > maxWidth || h > maxHeight) {
+                        if (w > h) {
+                            h = Math.round((h * maxWidth) / w);
+                            w = maxWidth;
+                        } else {
+                            w = Math.round((w * maxHeight) / h);
+                            h = maxHeight;
+                        }
+                    }
+
+                    const canvas = document.createElement('canvas');
+                    canvas.width = w;
+                    canvas.height = h;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, w, h);
+                    const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+                    resolve(compressedBase64);
+                };
+                img.onerror = () => resolve(e.target.result); // Fallback to raw if image parse fails
+                img.src = e.target.result;
+            };
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
@@ -888,7 +914,7 @@ const App = {
         try {
             Storage.set(fullKey, base64);
         } catch (e) {
-            console.warn('Storage quota exceeded for image, storing in session/memory:', e);
+            console.warn('Storage quota warning, storing in memory session fallback:', e);
         }
         return fullKey;
     },
