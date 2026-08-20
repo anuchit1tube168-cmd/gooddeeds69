@@ -1,4 +1,4 @@
-// Auto-generated student photos — 2026-07-06 11:49
+// Auto-generated student photos — 2026-08-20 10:36
 // นักเรียนที่มีรูป: 321 คน  DO NOT EDIT MANUALLY
 // รูปถูกเก็บเป็นไฟล์ JPEG ใน frontend/photos/
 const STUDENT_PHOTOS = {
@@ -57,6 +57,7 @@ const STUDENT_PHOTOS = {
   "6803934": "photos/6803934.jpg",
   "6803935": "photos/6803935.jpg",
   "6803936": "photos/6803936.jpg",
+  "6803937": "photos/6803937.jpg",
   "6803938": "photos/6803938.jpg",
   "6803939": "photos/6803939.jpg",
   "6803940": "photos/6803940.jpg",
@@ -317,7 +318,6 @@ const STUDENT_PHOTOS = {
   "6703840": "photos/chibi/chibi_lv1.png",
   "6703850": "photos/chibi/chibi_lv1.png",
   "6703871": "photos/chibi/chibi_lv1.png",
-  "6803937": "photos/chibi/chibi_lv1.png",
   "6900001": "photos/chibi/chibi_lv1.png",
   "6900002": "photos/chibi/chibi_lv1.png",
   "6900003": "photos/chibi/chibi_lv1.png",
