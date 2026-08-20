@@ -17,7 +17,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=1500">
+  <link rel="stylesheet" href="style.css?v=1600">
   <style>
     /* ===== KPI CARDS ===== */
     .kpi-grid {
@@ -669,11 +669,11 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=1500"></script>
+  <script src="data/students_data.js?v=1600"></script>
   <script src="data/students_photos.js?v=70"></script>
-  <script src="data/deeds_data.js?v=1500"></script>
+  <script src="data/deeds_data.js?v=1600"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=1500"></script>
+  <script src="app.js?v=1600"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -749,6 +749,26 @@
       renderPending();
       renderStudents();
       renderStats();
+    }
+
+    // ===== TAB NAVIGATION =====
+    function switchTab(name, sidebarEl) {
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.sidebar-item').forEach(s => s.classList.remove('active'));
+
+      const pane = document.getElementById('pane-' + name);
+      if (pane) pane.classList.add('active');
+
+      const tb = document.getElementById('tb-' + name);
+      if (tb) tb.classList.add('active');
+
+      if (sidebarEl) {
+        sidebarEl.classList.add('active');
+      } else {
+        const sb = document.getElementById('sb-' + name);
+        if (sb) sb.classList.add('active');
+      }
     }
 
     // ===== PENDING TAB =====
