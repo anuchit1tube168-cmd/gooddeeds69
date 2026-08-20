@@ -151,15 +151,28 @@ const App = {
             if (bySuffixId) return bySuffixId;
         }
 
-        // 2. Exact or substring match by full_name, first_name, nickname, phone
+        // 2. Clean prefixes (นพอ., นพอ.(ช), นพอ.หญิง, จ.ต.หญิง, ร.ต.หญิง, etc.)
+        const strippedName = q
+            .replace(/^(นพอ\.?(\s*\([ชญ]\))?|นพอ\s*|จ\.ต\.หญิง|พ\.อ\.ท\.หญิง|ร\.ต\.หญิง|ID:?|#)\s*/i, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .toLowerCase();
+
         const qLower = q.toLowerCase();
         const byName = students.find(s => {
             const fn = (s.first_name || '').toLowerCase();
             const ln = (s.last_name || '').toLowerCase();
-            const full = (s.full_name || '').toLowerCase();
+            const full = (s.full_name || `${fn} ${ln}`).toLowerCase();
             const nick = (s.nickname || '').toLowerCase();
             const phone = (s.phone || '').replace(/[^\d]/g, '');
-            return full.includes(qLower) || fn === qLower || nick === qLower || (phone && cleanDigits && phone.includes(cleanDigits));
+
+            return full === strippedName ||
+                   full.includes(strippedName) ||
+                   (strippedName && strippedName.includes(fn) && (!ln || strippedName.includes(ln))) ||
+                   fn === strippedName ||
+                   nick === strippedName ||
+                   full.includes(qLower) ||
+                   (phone && cleanDigits && phone.includes(cleanDigits));
         });
         return byName || null;
     },
