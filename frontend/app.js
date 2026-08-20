@@ -437,7 +437,7 @@ const App = {
             return this.deduplicateDeeds(globalDeeds);
         }
 
-        // Merge: Update status from global DEEDS_DATA if available
+        // Merge: Global deeds as base, overlay with localDeeds (latest user status actions)
         const mergedMap = new Map();
         globalDeeds.forEach(d => {
             const sid = String(d.id);
@@ -464,10 +464,15 @@ const App = {
             const key = String(d.id);
             if (mergedMap.has(key)) {
                 const globalDeed = mergedMap.get(key);
-                d.status = globalDeed.status;
-                d.approvedBy = globalDeed.approvedBy;
-                d.approved_by = globalDeed.approved_by;
-                d.hours = globalDeed.hours || d.hours;
+                mergedMap.set(key, {
+                    ...globalDeed,
+                    ...d,
+                    status: d.status || globalDeed.status,
+                    approvedBy: d.approvedBy || globalDeed.approvedBy,
+                    approved_by: d.approved_by || globalDeed.approved_by,
+                    rejectReason: d.rejectReason !== undefined ? d.rejectReason : globalDeed.rejectReason,
+                    hours: d.hours !== undefined ? d.hours : globalDeed.hours
+                });
             } else {
                 mergedMap.set(key, d);
             }
@@ -570,13 +575,26 @@ const App = {
 
     async updateDeedStatus(studentId, deedId, status, teacherName, rejectReason = '') {
         const deeds = this.getDeeds(studentId);
-        const deed = deeds.find(d => d.id === deedId);
+        const deed = deeds.find(d => String(d.id) === String(deedId));
         if (!deed) return null;
         deed.status = status;
         deed.approvedBy = teacherName;
+        deed.approved_by = teacherName;
         deed.approvedAt = new Date().toISOString();
         deed.rejectReason = rejectReason;
         this.saveDeeds(studentId, deeds);
+
+        // Update in memory DEEDS_DATA if present
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            const gd = DEEDS_DATA.find(d => String(d.id) === String(deedId));
+            if (gd) {
+                gd.status = status;
+                gd.approved_by = teacherName;
+                gd.approvedBy = teacherName;
+                gd.approvedAt = deed.approvedAt;
+                gd.rejectReason = rejectReason;
+            }
+        }
         
         // Save to backend via API
         if (this.canUseBackendApi()) {
