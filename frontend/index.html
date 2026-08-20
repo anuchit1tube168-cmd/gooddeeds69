@@ -324,6 +324,26 @@
 
             <!-- Student Login -->
             <div class="login-form-section active" id="section-student">
+                <!-- LINE LIFF Fast Login / Direct Connect Banner -->
+                <div id="liff-login-banner" style="background: linear-gradient(135deg, rgba(6, 199, 85, 0.15) 0%, rgba(10, 22, 40, 0.9) 100%); border: 1px solid rgba(6, 199, 85, 0.4); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; text-align: center;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px;">
+                        <span style="font-size:1.4rem;">💬</span>
+                        <span style="font-weight:700; color:#4ade80; font-size:0.95rem;">เข้าใช้งานผ่าน LINE Official Account</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;" id="liff-status-desc">
+                        เปิดผ่าน LINE App เพื่อล็อกอินและบันทึก LINE ID รับแจ้งเตือนอัตโนมัติ
+                    </div>
+                    <a href="https://liff.line.me/2010948179-Ympqt2bT" id="btn-open-liff" class="btn btn-full btn-sm" style="background:#06c755; color:#ffffff; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:8px; padding:10px;">
+                        <span>📱</span> เปิดผ่าน LINE LIFF (แนะนำ)
+                    </a>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:12px; margin: 16px 0; color:var(--text-muted); font-size:0.75rem;">
+                    <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+                    <span>หรือเข้าสู่ระบบด้วยรหัสนักเรียน</span>
+                    <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
+                </div>
+
                 <form id="form-student" onsubmit="handleLogin(event,'student')">
                     <div class="form-group">
                         <label class="form-label">รหัสนักเรียน <span class="required">*</span></label>
@@ -398,11 +418,12 @@
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
 
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="data/students_data.js?v=3300"></script>
     <script src="data/deeds_data.js?v=3300"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=3300"></script>
-    <script src="liff-sdk.js?v=3300"></script>
+    <script src="app.js?v=3301"></script>
+    <script src="liff-sdk.js?v=3301"></script>
     <script>
         // Tab switch
         function switchTab(tab) {

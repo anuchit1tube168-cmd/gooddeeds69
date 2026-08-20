@@ -20,21 +20,42 @@ const LiffHelper = {
             return false;
         }
 
+        // Dynamically load LIFF SDK if missing
         if (typeof liff === 'undefined') {
-            console.warn('⚠️ LINE LIFF SDK ยังไม่ถูกโหลด');
+            await new Promise((resolve) => {
+                const script = document.createElement('script');
+                script.src = 'https://static.line-scdn.net/liff/edge/2/sdk.js';
+                script.onload = () => {
+                    console.log('📦 LINE LIFF SDK CDN loaded dynamically!');
+                    resolve();
+                };
+                script.onerror = () => {
+                    console.warn('⚠️ Could not load LINE LIFF SDK from CDN');
+                    resolve();
+                };
+                document.head.appendChild(script);
+            });
+        }
+
+        if (typeof liff === 'undefined') {
+            console.warn('⚠️ LINE LIFF SDK ยังไม่พร้อมใช้งาน');
             return false;
         }
 
         try {
             await liff.init({ liffId: this.liffId });
             this.isInitialized = true;
-            console.log('✅ LINE LIFF initialized successfully!');
+            console.log('✅ LINE LIFF initialized successfully! InClient:', liff.isInClient(), 'LoggedIn:', liff.isLoggedIn());
 
             if (liff.isLoggedIn()) {
-                this.profile = await liff.getProfile();
-                console.log('👤 LINE Profile Loaded:', this.profile);
-                this.bindCurrentStudentProfile();
-                this.handleAutoLogin();
+                try {
+                    this.profile = await liff.getProfile();
+                    console.log('👤 LINE Profile Loaded:', this.profile);
+                    this.bindCurrentStudentProfile();
+                    this.handleAutoLogin();
+                } catch (pe) {
+                    console.warn('⚠️ Could not get LINE profile:', pe);
+                }
             } else if (liff.isInClient()) {
                 liff.login();
             }
