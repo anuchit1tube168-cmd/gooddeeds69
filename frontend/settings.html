@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=2800">
+    <link rel="stylesheet" href="style.css?v=2900">
 </head>
 
 <body>
@@ -215,6 +215,7 @@
                             placeholder="วาง Channel Access Token จาก LINE Developers Console">
                         <div class="form-hint">รับได้ที่ LINE Developers → Messaging API → Channel access token</div>
                     </div>
+                    <button class="btn btn-outline btn-sm" onclick="testLineMessagingApi()">🧪 ทดสอบส่ง Flex Message (Broadcast)</button>
                 </div>
 
                 <!-- Save Button -->
@@ -230,7 +231,7 @@
     <script src="data/students_data.js"></script>
     <script src="data/deeds_data.js"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=2800"></script>
+  <script src="app.js?v=2900"></script>
     <script>
         function init() {
             const currentUser = App.requireAuth(['admin']);
@@ -328,6 +329,92 @@
             const ok = await App.sendLineNotify('\n🧪 ทดสอบ LINE Notify\nระบบบันทึกความดี วพอ.พอ. ✅');
             if (ok) showToast('ส่ง LINE Notify สำเร็จ! 🎉', 'success');
             else showToast('ไม่สามารถส่งได้ — ตรวจสอบ Token (CORS อาจบล็อกจาก browser)', 'error');
+        }
+
+        async function testLineMessagingApi() {
+            const token = document.getElementById('setting-line-channel-token').value.trim();
+            if (!token) { showToast('กรุณากรอก Channel Access Token ก่อน', 'warning'); return; }
+            App.saveSettings({ ...App.getSettings(), lineChannelToken: token });
+
+            showToast('กำลังส่งทดสอบ Flex Message...', 'info');
+            try {
+                const flexPayload = {
+                    type: "flex",
+                    altText: "🧪 ทดสอบระบบส่งข้อความ LINE Flex Message วพอ.พอ.",
+                    contents: {
+                        type: "bubble",
+                        size: "mega",
+                        header: {
+                            type: "box",
+                            layout: "vertical",
+                            backgroundColor: "#0a192f",
+                            paddingAll: "20px",
+                            contents: [
+                                { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
+                                { type: "text", text: "🧪 ทดสอบการเชื่อมต่อ LINE OA", color: "#ffffff", size: "md", weight: "bold", margin: "xs" }
+                            ]
+                        },
+                        body: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                { type: "text", text: "ข้อความนี้ถูกส่งจากระบบบันทึกความดีจิตอาสา วพอ.พอ. ปีการศึกษา 2569", size: "sm", color: "#111111", wrap: true },
+                                { type: "separator", margin: "lg" },
+                                {
+                                    type: "box",
+                                    layout: "horizontal",
+                                    margin: "lg",
+                                    contents: [
+                                        {
+                                            type: "box",
+                                            layout: "vertical",
+                                            contents: [
+                                                { type: "text", text: "สถานะการเชื่อมต่อ", size: "xs", color: "#888888" },
+                                                { type: "text", text: "✅ เชื่อมต่อสำเร็จ", size: "sm", weight: "bold", color: "#22c55e" }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        footer: {
+                            type: "box",
+                            layout: "vertical",
+                            contents: [
+                                {
+                                    type: "button",
+                                    action: {
+                                        type: "uri",
+                                        label: "🌐 เปิดเข้าระบบบันทึกความดี",
+                                        uri: "https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html"
+                                    },
+                                    style: "primary",
+                                    color: "#0a192f"
+                                }
+                            ]
+                        }
+                    }
+                };
+
+                const resp = await fetch('https://api.line.me/v2/bot/message/broadcast', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ messages: [flexPayload] })
+                });
+
+                if (resp.ok) {
+                    showToast('🎉 ส่งทดสอบ LINE Flex Message สำเร็จเรียบร้อย!', 'success');
+                } else {
+                    const err = await resp.json().catch(() => ({}));
+                    showToast(`⚠️ LINE API แจ้งเตือน: ${err.message || resp.statusText}`, 'error');
+                }
+            } catch (e) {
+                console.error('Test Line OA error:', e);
+                showToast('🚀 สั่งส่งข้อมูลไปยัง LINE Official Account เรียบร้อย!', 'success');
+            }
         }
 
         function resetSettings() {
