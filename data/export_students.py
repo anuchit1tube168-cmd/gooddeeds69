@@ -109,98 +109,57 @@ def main():
             }
             students.append(student)
 
-    # Append Class 69 test students since they are not in the Excel sheets yet
-    class69_students = [
-        {
-            "student_id": "6900001",
-            "rank": "นพอ.",
-            "first_name": "กิตติภพ",
-            "last_name": "ทองดี",
-            "full_name": "กิตติภพ ทองดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900001",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student"
-        },
-        {
-            "student_id": "6900002",
-            "rank": "นพอ.",
-            "first_name": "พรนภัส",
-            "last_name": "จิตใจดี",
-            "full_name": "พรนภัส จิตใจดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900002",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student"
-        },
-        {
-            "student_id": "6900003",
-            "rank": "นพอ.",
-            "first_name": "วรเมธ",
-            "last_name": "รักสงบ",
-            "full_name": "วรเมธ รักสงบ",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900003",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student"
-        },
-        {
-            "student_id": "6900004",
-            "rank": "นพอ.",
-            "first_name": "ชนม์นิภา",
-            "last_name": "มีสุข",
-            "full_name": "ชนม์นิภา มีสุข",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900004",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student"
-        },
-        {
-            "student_id": "6900005",
-            "rank": "นพอ.",
-            "first_name": "ปองพล",
-            "last_name": "คนดี",
-            "full_name": "ปองพล คนดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900005",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student"
-        }
-    ]
-    
-    # Merge existing class69_students modifications if they exist in the DB
-    for s in class69_students:
-        sid = s['student_id']
-        if sid in existing_students:
-            existing = existing_students[sid]
-            s['rank'] = existing.get('rank', s['rank'])
-            s['first_name'] = existing.get('first_name', s['first_name'])
-            s['last_name'] = existing.get('last_name', s['last_name'])
-            s['full_name'] = existing.get('full_name', s['full_name'])
-            s['class_year'] = existing.get('class_year', s['class_year'])
-            s['year_level'] = existing.get('year_level', s['year_level'])
-            s['password'] = existing.get('password', s['password'])
-            s['email'] = existing.get('email', s['email'])
-            s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
-            s['role'] = existing.get('role', s['role'])
-            s['note'] = existing.get('note', s['note'])
-
-    students.extend(class69_students)
+    # Load official Class 69 students from 'รายชื่อ นพอ.ปี 69.xlsx' sheet 'นพอ.ปี1'
+    excel_69_path = os.path.join(BASE_DIR, "รายชื่อ นพอ.ปี 69.xlsx")
+    if os.path.exists(excel_69_path):
+        try:
+            wb69 = openpyxl.load_workbook(excel_69_path, data_only=True)
+            if 'นพอ.ปี1' in wb69.sheetnames:
+                ws69 = wb69['นพอ.ปี1']
+                for r in range(5, ws69.max_row + 1):
+                    sid = ws69.cell(r, 2).value
+                    rank_v = ws69.cell(r, 3).value
+                    fname_v = ws69.cell(r, 4).value
+                    lname_v = ws69.cell(r, 5).value
+                    note_v = ws69.cell(r, 6).value
+                    
+                    if not sid or not fname_v:
+                        continue
+                    try:
+                        sid_str = str(int(float(sid)))
+                    except:
+                        sid_str = str(sid).strip()
+                        
+                    s = {
+                        'student_id': sid_str,
+                        'rank': str(rank_v).strip() if rank_v else 'นพอ.',
+                        'first_name': str(fname_v).strip(),
+                        'last_name': str(lname_v).strip() if lname_v else '',
+                        'full_name': f"{str(fname_v).strip()} {str(lname_v).strip() if lname_v else ''}".strip(),
+                        'nickname': '',
+                        'phone': '',
+                        'class_year': 69,
+                        'year_level': 1,
+                        'note': str(note_v).strip() if note_v else 'นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 1 (รุ่น 69)',
+                        'position': 'นักเรียนพยาบาล',
+                        'password': sid_str,
+                        'email': '',
+                        'telegram_chat_id': '',
+                        'line_user_id': '',
+                        'line_display_name': '',
+                        'line_picture_url': '',
+                        'role': 'student'
+                    }
+                    
+                    if sid_str in existing_students:
+                        existing = existing_students[sid_str]
+                        for k, v in existing.items():
+                            if v and not s.get(k):
+                                s[k] = v
+                    students.append(s)
+                print(f"✅ Loaded {len([s for s in students if s['class_year'] == 69])} official Class 69 students from {excel_69_path}")
+        except Exception as e:
+            print(f"⚠️ Error reading Class 69 workbook: {e}")
     
     # Missing historical students from Main 2568.xlsx who are not in the new rosters
     missing_historical_students = [
