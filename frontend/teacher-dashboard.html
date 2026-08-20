@@ -17,7 +17,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=1200">
+  <link rel="stylesheet" href="style.css?v=1300">
   <style>
     /* ===== KPI CARDS ===== */
     .kpi-grid {
@@ -669,11 +669,11 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=1200"></script>
+  <script src="data/students_data.js?v=1300"></script>
   <script src="data/students_photos.js?v=70"></script>
-  <script src="data/deeds_data.js?v=1200"></script>
+  <script src="data/deeds_data.js?v=1300"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=1200"></script>
+  <script src="app.js?v=1300"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -751,6 +751,107 @@
       renderStats();
     }
 
+    // ===== PENDING TAB =====
+    function renderPending() {
+      const q = (document.getElementById('pend-search')?.value || '').toLowerCase();
+      let list = pendingDeeds;
+      if (q) {
+        list = list.filter(d => {
+          const s = d.student || {};
+          return (s.student_id || '').includes(q) || 
+                 (s.first_name || '').toLowerCase().includes(q) || 
+                 (s.last_name || '').toLowerCase().includes(q) ||
+                 (d.description || '').toLowerCase().includes(q);
+        });
+      }
+      const c = document.getElementById('pending-list');
+      if (!c) return;
+      if (!list.length) {
+        c.innerHTML = `<div class="empty-state"><div class="icon">✅</div><p>ไม่มีรายการรออนุมัติ</p></div>`;
+        return;
+      }
+
+      c.innerHTML = list.map(d => {
+        const cat = App.getCategoryById(d.categoryId);
+        const s = d.student || {};
+        const imgs = (d.imageUrls || []).map(key => {
+          const src = App.getImage(key);
+          return src ? `<img class="pcard-img" src="${src}" onclick="showLightbox('${key}')" alt="หลักฐาน">` : '';
+        }).join('');
+        return `<div class="pcard" id="pc-${d.id}">
+      <div class="pcard-top">
+        <div class="pcard-info">
+          <div class="pcard-name">👤 ${s.rank || 'นพอ.'} ${s.first_name || ''} ${s.last_name || ''}
+            <span class="badge badge-blue" style="margin-left:6px">${s.class_year ? 'รุ่น ' + s.class_year : ''}</span>
+            <span class="badge badge-gold" style="margin-left:4px">รหัส ${s.student_id || ''}</span>
+          </div>
+          <div class="pcard-cat">${cat.emoji} ${cat.name}</div>
+          <div class="pcard-desc">${d.description || '-'}</div>
+          <div class="pcard-meta">
+            <span>📅 วันที่ทำ: ${App.formatDate(d.activityDate)}</span>
+            <span>📤 ส่งเมื่อ: ${App.formatDate(d.submittedAt)}</span>
+            ${d.note ? `<span>💬 ${d.note}</span>` : ''}
+          </div>
+          ${imgs ? `<div class="pcard-imgs">${imgs}</div>` : ''}
+        </div>
+        <div class="pcard-hours"><div class="num">${d.hours}</div><div class="unit">ชม.</div></div>
+      </div>
+      <div class="pcard-actions">
+        <button class="btn btn-outline btn-sm" onclick="openStuModal('${s.student_id}')">👁️ ดูโปรไฟล์</button>
+        <button class="btn btn-danger btn-sm" onclick="openRejectModal('${s.student_id}','${d.id}')">❌ ปฏิเสธ</button>
+        <button class="btn btn-success btn-sm" onclick="quickApprove('${s.student_id}','${d.id}')">✅ อนุมัติ</button>
+      </div>
+    </div>`;
+      }).join('');
+    }
+
+    async function quickApprove(studentId, deedId) {
+      const u = App.getCurrentUser();
+      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      await App.updateDeedStatus(studentId, deedId, 'approved', approverName);
+      showToast('✅ อนุมัติความดีเรียบร้อยแล้ว', 'success');
+      loadData();
+    }
+
+    async function approveAll() {
+      if (!pendingDeeds.length) {
+        showToast('ไม่มีรายการรออนุมัติ', 'info');
+        return;
+      }
+      if (!confirm(`ต้องการอนุมัติรายการความดีทั้งหมด ${pendingDeeds.length} รายการ หรือไม่?`)) return;
+      const u = App.getCurrentUser();
+      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      for (const d of pendingDeeds) {
+        const sid = d.student?.student_id || d.studentId;
+        await App.updateDeedStatus(sid, d.id, 'approved', approverName);
+      }
+      showToast(`✅ อนุมัติความดีทั้งหมด ${pendingDeeds.length} รายการเรียบร้อยแล้ว`, 'success');
+      loadData();
+    }
+
+    let rejectTarget = null;
+    function openRejectModal(studentId, deedId) {
+      rejectTarget = { studentId, deedId };
+      document.getElementById('reject-reason').value = '';
+      document.getElementById('reject-modal').classList.add('open');
+    }
+
+    function closeRejectModal() {
+      document.getElementById('reject-modal').classList.remove('open');
+      rejectTarget = null;
+    }
+
+    async function confirmReject() {
+      if (!rejectTarget) return;
+      const reason = document.getElementById('reject-reason').value.trim() || 'หลักฐานไม่ชัดเจนหรือไม่ตรงตามเกณฑ์';
+      const u = App.getCurrentUser();
+      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      await App.updateDeedStatus(rejectTarget.studentId, rejectTarget.deedId, 'rejected', approverName, reason);
+      closeRejectModal();
+      showToast('❌ ปฏิเสธรายการความดีเรียบร้อยแล้ว', 'warning');
+      loadData();
+    }
+
     // ===== STUDENTS TABLE =====
     function setYearFilter(val, btn) {
       document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
@@ -768,7 +869,7 @@
       } else if (yearFilter === 'alumni') {
         data = data.filter(s => ![69, 68, 67, 66].includes(Number(s.class_year)));
       } else if (yearFilter === 'exec') {
-        data = data.filter(s => s.student.position && s.student.position !== 'นักเรียนพยาบาล');
+        data = data.filter(s => (s.position || s.student?.position) && (s.position || s.student?.position) !== 'นักเรียนพยาบาล');
       } else if (yearFilter === 'pass') {
         data = data.filter(s => s.passed && [69, 68, 67, 66].includes(Number(s.class_year)));
       } else if (yearFilter === 'fail') {
@@ -779,12 +880,12 @@
 
       if (q) {
         data = data.filter(s =>
-          s.student_id.includes(q) ||
+          (s.student_id || '').includes(q) ||
           (s.first_name || '').toLowerCase().includes(q) ||
           (s.last_name || '').toLowerCase().includes(q) ||
           (s.rank || '').toLowerCase().includes(q) ||
-          (s.student.position || '').toLowerCase().includes(q) ||
-          (s.student.nickname || '').toLowerCase().includes(q)
+          ((s.position || s.student?.position || '')).toLowerCase().includes(q) ||
+          ((s.nickname || s.student?.nickname || '')).toLowerCase().includes(q)
         );
       }
 
@@ -795,7 +896,8 @@
         const isAlumni = ![69, 68, 67, 66].includes(Number(s.class_year));
         const pct = Math.min((s.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
         const col = s.passed ? '#22c55e' : (pct > 60 ? '#f59e0b' : '#ef4444');
-        const hasPos = s.student.position && s.student.position !== 'นักเรียนพยาบาล';
+        const pos = s.position || s.student?.position;
+        const hasPos = pos && pos !== 'นักเรียนพยาบาล';
 
         return `<tr style="cursor:pointer" onclick="openStuModal('${s.student_id}')">
       <td class="id-cell">${s.student_id}</td>

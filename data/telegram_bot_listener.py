@@ -65,7 +65,7 @@ def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
     if not os.path.exists(deeds_file):
-        return False
+        return None
     
     with open(deeds_file, 'r', encoding='utf-8') as f:
         deeds = json.load(f)
@@ -73,26 +73,44 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     updated = False
     target_deed = None
     
-    for d in deeds:
-        if (str(d.get('id')) == str(deed_id) or str(d.get('student_id')) == str(student_id)) and d.get('status') == 'pending':
-            d['status'] = new_status
-            d['approved_by'] = approver_name
-            d['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
-            target_deed = d
-            updated = True
-            break
+    # 1. Match by exact deed_id
+    if deed_id:
+        for d in deeds:
+            if str(d.get('id')) == str(deed_id):
+                d['status'] = new_status
+                d['approved_by'] = approver_name
+                d['approvedBy'] = approver_name
+                d['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+                d['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+                target_deed = d
+                updated = True
+                break
+                
+    # 2. Fallback: Match by student_id and pending status
+    if not updated and student_id:
+        for d in deeds:
+            if str(d.get('student_id')) == str(student_id) and d.get('status') == 'pending':
+                d['status'] = new_status
+                d['approved_by'] = approver_name
+                d['approvedBy'] = approver_name
+                d['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+                d['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+                target_deed = d
+                updated = True
+                break
             
-    if updated:
-        # Save deeds.json
-        with open(deeds_file, 'w', encoding='utf-8') as f:
-            json.dump(deeds, f, ensure_ascii=False, indent=2)
+    if updated and target_deed:
+        # Save deeds.json in both locations
+        for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
+            with open(json_p, 'w', encoding='utf-8') as f:
+                json.dump(deeds, f, ensure_ascii=False, indent=2)
             
         # Update JS files
-        js_content = f"// Auto-updated by telegram_bot_listener.py\nconst DEEDS_DATA = {json.dumps(deeds, ensure_ascii=False, indent=2)};\n"
+        js_content = f"// Auto-updated by telegram_bot_listener.py\nconst DEEDS_DATA = {json.dumps(deeds, ensure_ascii=False, indent=2)};\n\nif (typeof window !== 'undefined') {{ window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
         for js_p in [os.path.join(DATA_DIR, 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
             with open(js_p, 'w', encoding='utf-8') as f:
                 f.write(js_content)
-        print(f"✅ DB Updated for student {student_id}: status={new_status}")
+        print(f"✅ DB Updated for student {student_id} (Deed: {target_deed.get('id')}): status={new_status}")
         
         # Auto-create individual student folder & PDF slip
         try:
@@ -117,16 +135,22 @@ def process_callback_query(cb):
     if not approver_name:
         approver_name = "อาจารย์ผู้ควบคุม"
 
-    is_approve = 'approve' in data_str
-    is_reject = 'reject' in data_str
+    is_approve = data_str.startswith('approve_')
+    is_reject = data_str.startswith('reject_')
 
     if not is_approve and not is_reject:
         return
 
-    # Extract IDs from callback_data (e.g. approve_10001_6803882)
-    parts = data_str.split('_')
-    student_id = parts[-1]
-    deed_id = parts[1] if len(parts) > 2 else ''
+    # Extract IDs robustly from callback_data (e.g. approve_deed_1787189912345_6803893 or approve_10001_6803882)
+    action = 'approve' if is_approve else 'reject'
+    rest = data_str[len(action) + 1:] # e.g. "deed_1787189912345_6803893" or "10001_6803882"
+    parts = rest.rsplit('_', 1)
+    if len(parts) == 2:
+        deed_id = parts[0]
+        student_id = parts[1]
+    else:
+        deed_id = ''
+        student_id = parts[0]
 
     students_map = load_students()
     student = students_map.get(student_id, {})
