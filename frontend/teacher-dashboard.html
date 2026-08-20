@@ -11,7 +11,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="style.css?v=2900">
+  <link rel="stylesheet" href="style.css?v=3000">
   <style>
     /* ===== KPI CARDS ===== */
     .kpi-grid {
@@ -585,12 +585,24 @@
       <div class="tab-pane" id="pane-students">
         <div class="sec-hdr">
           <h2>👥 นักเรียนทั้งหมด</h2>
-          <button class="btn btn-outline btn-sm" onclick="printAllReport()">🖨️ พิมพ์สรุปทั้งหมด</button>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn btn-outline btn-sm" onclick="printAllReport()">🖨️ พิมพ์สรุปทั้งหมด</button>
+          </div>
         </div>
-          <button class="filter-pill" onclick="setYearFilter('pass',this)">✅ ผ่าน</button>
-          <button class="filter-pill" onclick="setYearFilter('fail',this)">⚠️ ยังไม่ผ่าน</button>
-          <div class="filter-search">
-            <input type="text" class="form-input" id="stu-search" placeholder="🔍 ค้นหาชื่อ / รหัส..."
+
+        <!-- Filter Pills Bar -->
+        <div class="filter-bar" style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:16px;">
+          <button class="filter-pill active" id="flt-all" onclick="setYearFilter('all',this)">ทั้งหมด (380)</button>
+          <button class="filter-pill" id="flt-active" onclick="setYearFilter('active',this)">🎓 ปี 1-4 ปัจจุบัน</button>
+          <button class="filter-pill" id="flt-69" onclick="setYearFilter('69',this)">🌱 ปี 1 (รุ่น 69)</button>
+          <button class="filter-pill" id="flt-68" onclick="setYearFilter('68',this)">🌿 ปี 2 (รุ่น 68)</button>
+          <button class="filter-pill" id="flt-67" onclick="setYearFilter('67',this)">🌳 ปี 3 (รุ่น 67)</button>
+          <button class="filter-pill" id="flt-66" onclick="setYearFilter('66',this)">👑 ปี 4 (รุ่น 66)</button>
+          <button class="filter-pill" id="flt-pass" onclick="setYearFilter('pass',this)">✅ ผ่านเกณฑ์ (≥50 ชม.)</button>
+          <button class="filter-pill" id="flt-fail" onclick="setYearFilter('fail',this)">⚠️ ยังไม่ผ่าน (&lt;50 ชม.)</button>
+          <button class="filter-pill" id="flt-alumni" onclick="setYearFilter('alumni',this)">🎓 ศิษย์เก่า</button>
+          <div class="filter-search" style="margin-left:auto;min-width:240px;">
+            <input type="text" class="form-input" id="stu-search" placeholder="🔍 ค้นหาชื่อ / รหัส / ชื่อเล่น..."
               oninput="renderStudents()">
           </div>
         </div>
@@ -763,11 +775,11 @@
   </div>
 
   <div class="toast-container" id="toast-container"></div>
-  <script src="data/students_data.js?v=2900"></script>
-  <script src="data/students_photos.js?v=2900"></script>
-  <script src="data/deeds_data.js?v=2900"></script>
+  <script src="data/students_data.js?v=3000"></script>
+  <script src="data/students_photos.js?v=3000"></script>
+  <script src="data/deeds_data.js?v=3000"></script>
   <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=2900"></script>
+  <script src="app.js?v=3000"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -1037,6 +1049,7 @@
       <td>${s.pendingCount > 0 ? `<span class="badge badge-pending">${s.pendingCount}</span>` : '-'}</td>
       <td>
         <div style="display:flex;gap:4px">
+          <button class="btn btn-outline btn-sm" title="ส่ง LINE Flex Message หานักเรียนคนนี้" style="color:#06c755;border-color:rgba(6,199,85,0.4)" onclick="event.stopPropagation();quickSendStudentLine('${s.student_id}')">💬 LINE</button>
           <button class="btn btn-outline btn-sm" title="ส่งออก Word (.docx)" onclick="event.stopPropagation();downloadDocxReport('${s.student_id}')">📝</button>
           <button class="btn btn-outline btn-sm" title="เปิดดูการ์ดเกียรติยศ 3D" onclick="event.stopPropagation();window.open('view_cards.html?studentId=${s.student_id}','_blank')">💳</button>
         </div>
@@ -1880,6 +1893,29 @@
       }
     }
 
+    function quickSendStudentLine(studentId) {
+      // Switch to broadcast tab and pre-fill single student ID
+      switchTab('broadcast', document.getElementById('sb-broadcast') || document.getElementById('tb-broadcast'));
+      const targetSelect = document.getElementById('broadcast-target');
+      if (targetSelect) {
+        targetSelect.value = 'single';
+        updateBroadcastTargetUI();
+      }
+      const stuInput = document.getElementById('broadcast-student-id');
+      if (stuInput) {
+        stuInput.value = studentId;
+      }
+      const s = (typeof STUDENTS_DATA !== 'undefined') ? STUDENTS_DATA.find(x => String(x.student_id) === String(studentId)) : null;
+      if (s) {
+        const titleInput = document.getElementById('broadcast-title');
+        const bodyInput = document.getElementById('broadcast-body');
+        if (titleInput) titleInput.value = `📢 แจ้งยอดชั่วโมงความดี: ${s.rank || 'นพอ.'} ${s.first_name || ''}`;
+        if (bodyInput) bodyInput.value = `สวัสดีครับ/ค่ะ นพอ. ${s.first_name} ขณะนี้มียอดชั่วโมงสะสมรวมอยู่ในระบบ ขอให้ตรวจสอบข้อมูลและบันทึกกิจกรรมความดีเพิ่มเติมครับ`;
+        updateBroadcastPreview();
+      }
+      showToast(`เลือกส่งหา นพอ. รหัส ${studentId} เรียบร้อยแล้ว`, 'info');
+    }
+
     // Explicitly bind all event handlers to window
     window.switchTab = switchTab;
     window.renderPending = renderPending;
@@ -1907,6 +1943,7 @@
     window.updateBroadcastTargetUI = updateBroadcastTargetUI;
     window.updateBroadcastPreview = updateBroadcastPreview;
     window.executeLineBroadcast = executeLineBroadcast;
+    window.quickSendStudentLine = quickSendStudentLine;
 
     init();
   </script>
