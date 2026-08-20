@@ -154,6 +154,209 @@ const LiffHelper = {
             titleEl.textContent = '📱 เชื่อมต่อบัญชี LINE Official Account';
             detailEl.textContent = 'กดปุ่มเพื่อล็อกอินและรับแจ้งเตือนผ่าน LINE';
         }
+    },
+
+    // ---------- FLEX MESSAGE TEMPLATES ----------
+    createDeedFlex(deed, student) {
+        const cat = (typeof App !== 'undefined' && App.getCategoryById) ? App.getCategoryById(deed.categoryId) : { emoji: '🎖️', name: 'กิจกรรมจิตอาสา' };
+        const statusText = deed.status === 'approved' ? '✅ อนุมัติแล้ว' : (deed.status === 'rejected' ? '❌ ปฏิเสธ' : '⏳ รอตรวจประเมิน');
+        const statusColor = deed.status === 'approved' ? '#22c55e' : (deed.status === 'rejected' ? '#ef4444' : '#f59e0b');
+        const slipUrl = `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/deed_slip.html?id=${deed.id}&studentId=${student.student_id}&autoprint=true`;
+
+        return {
+            type: "flex",
+            altText: `🎖️ ใบบันทึกความดี: ${student.first_name} (${deed.hours} ชม.)`,
+            contents: {
+                type: "bubble",
+                size: "mega",
+                header: {
+                    type: "box",
+                    layout: "vertical",
+                    backgroundColor: "#0a192f",
+                    paddingAll: "20px",
+                    contents: [
+                        {
+                            type: "text",
+                            text: "วิทยาลัยพยาบาลทหารอากาศ",
+                            color: "#c9a227",
+                            size: "xs",
+                            weight: "bold"
+                        },
+                        {
+                            type: "text",
+                            text: "ใบบันทึกความดีจิตอาสา ๒๕๖๙",
+                            color: "#ffffff",
+                            size: "lg",
+                            weight: "bold",
+                            margin: "xs"
+                        }
+                    ]
+                },
+                body: {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                        {
+                            type: "box",
+                            layout: "horizontal",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "👤 นพอ.:",
+                                    size: "sm",
+                                    color: "#888888",
+                                    flex: 2
+                                },
+                                {
+                                    type: "text",
+                                    text: `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}`,
+                                    size: "sm",
+                                    weight: "bold",
+                                    color: "#111111",
+                                    flex: 5
+                                }
+                            ]
+                        },
+                        {
+                            type: "box",
+                            layout: "horizontal",
+                            margin: "sm",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: "🎫 รหัส:",
+                                    size: "sm",
+                                    color: "#888888",
+                                    flex: 2
+                                },
+                                {
+                                    type: "text",
+                                    text: `${student.student_id} (รุ่น ${student.class_year || '69'})`,
+                                    size: "sm",
+                                    color: "#333333",
+                                    flex: 5
+                                }
+                            ]
+                        },
+                        {
+                            type: "separator",
+                            margin: "lg"
+                        },
+                        {
+                            type: "box",
+                            layout: "vertical",
+                            margin: "lg",
+                            contents: [
+                                {
+                                    type: "text",
+                                    text: `${cat.emoji} ${cat.name}`,
+                                    size: "xs",
+                                    color: "#3b82f6",
+                                    weight: "bold"
+                                },
+                                {
+                                    type: "text",
+                                    text: deed.description || "กิจกรรมจิตอาสา",
+                                    size: "sm",
+                                    color: "#111111",
+                                    wrap: true,
+                                    margin: "xs"
+                                }
+                            ]
+                        },
+                        {
+                            type: "box",
+                            layout: "horizontal",
+                            margin: "lg",
+                            contents: [
+                                {
+                                    type: "box",
+                                    layout: "vertical",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: "ชั่วโมงกิจกรรม",
+                                            size: "xs",
+                                            color: "#888888"
+                                        },
+                                        {
+                                            type: "text",
+                                            text: `${deed.hours} ชม.`,
+                                            size: "xl",
+                                            weight: "bold",
+                                            color: "#c9a227"
+                                        }
+                                    ]
+                                },
+                                {
+                                    type: "box",
+                                    layout: "vertical",
+                                    alignItems: "flex-end",
+                                    contents: [
+                                        {
+                                            type: "text",
+                                            text: "สถานะ",
+                                            size: "xs",
+                                            color: "#888888"
+                                        },
+                                        {
+                                            type: "text",
+                                            text: statusText,
+                                            size: "sm",
+                                            weight: "bold",
+                                            color: statusColor
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                footer: {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                        {
+                            type: "button",
+                            action: {
+                                type: "uri",
+                                label: "📄 พิมพ์ใบบันทึกความดี (A4 Slip)",
+                                uri: slipUrl
+                            },
+                            style: "primary",
+                            color: "#0a192f"
+                        }
+                    ]
+                }
+            }
+        };
+    },
+
+    // Share Flex Message via LINE App (Share Target Picker)
+    async shareFlex(flexPayload) {
+        if (typeof liff === 'undefined' || !liff.isLoggedIn || !liff.isLoggedIn()) {
+            alert('กรุณาเปิดผ่าน LINE LIFF เพื่อแชร์ข้อความ');
+            return false;
+        }
+        try {
+            if (liff.isApiAvailable('shareTargetPicker')) {
+                const res = await liff.shareTargetPicker([flexPayload]);
+                if (res) {
+                    alert('📤 แชร์ข้อความ Flex Message สำเร็จเรียบร้อยแล้ว!');
+                    return true;
+                }
+            } else if (liff.isInClient()) {
+                await liff.sendMessages([flexPayload]);
+                alert('📤 ส่งข้อความ Flex Message เข้าแชทเรียบร้อยแล้ว!');
+                return true;
+            } else {
+                alert('อุปกรณ์ของคุณไม่รองรับการแชร์ข้อความ LINE โดยตรง');
+            }
+        } catch (err) {
+            console.error('❌ Share Flex Error:', err);
+            alert('เกิดข้อผิดพลาดในการแชร์: ' + err.message);
+        }
+        return false;
     }
 };
 
