@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==================== CONFIG ====================
 const CONFIG = {
-    GAS_URL: '', // Google Apps Script Web App URL (ตั้งค่าหลัง deploy)
+    GAS_URL: 'https://script.google.com/macros/s/AKfycbwXxl93Zhuv7t5VIKg9sZGdXH7TxyMvEAe3AHF0ZFO85rp1S-vOw4-cNVBX-LfxukrSqg/exec', // Google Apps Script Web App URL
     TELEGRAM_BOT_TOKEN: '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k',
     TELEGRAM_CHAT_ID: '-4839151586',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
