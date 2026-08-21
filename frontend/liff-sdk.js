@@ -111,38 +111,44 @@ const LiffHelper = {
                 App.updateProfile(profileData);
                 console.log('🔗 Bound LINE Profile to User:', userKey, lineName, currentUser.role);
 
-                // Send Telegram Notification immediately
-                try {
-                    let displayName = '';
-                    let roleTitle = '';
-                    if (currentUser.role === 'admin') {
-                        displayName = currentUser.name || 'ผู้ดูแลระบบ (Admin)';
-                        roleTitle = '🛡️ บัญชี: ผู้ดูแลระบบ (Super Admin)';
-                    } else if (currentUser.role === 'teacher') {
-                        displayName = currentUser.name || 'อาจารย์ผู้ควบคุม';
-                        roleTitle = '👩‍🏫 บัญชี: อาจารย์ผู้ควบคุม (Teacher)';
-                    } else {
-                        displayName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
-                        roleTitle = `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code> (รุ่น ${currentUser.class_year || '69'})`;
-                    }
+                // Send Telegram Notification ONLY ONCE per student
+                const notifiedKey = 'gooddeeds_line_notified_' + userKey;
+                const alreadyNotified = localStorage.getItem(notifiedKey);
 
-                    const settings = App.getSettings();
-                    const tgToken = settings.telegramToken || '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
-                    const tgChat = settings.adminChatId || '-4839151586';
+                if (!alreadyNotified) {
+                    try {
+                        let displayName = '';
+                        let roleTitle = '';
+                        if (currentUser.role === 'admin') {
+                            displayName = currentUser.name || 'ผู้ดูแลระบบ (Admin)';
+                            roleTitle = '🛡️ บัญชี: ผู้ดูแลระบบ (Super Admin)';
+                        } else if (currentUser.role === 'teacher') {
+                            displayName = currentUser.name || 'อาจารย์ผู้ควบคุม';
+                            roleTitle = '👩‍🏫 บัญชี: อาจารย์ผู้ควบคุม (Teacher)';
+                        } else {
+                            displayName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                            roleTitle = `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code> (รุ่น ${currentUser.class_year || '69'})`;
+                        }
 
-                    if (tgToken && tgChat) {
-                        App.sendTelegram(tgChat, 
-                            `🔗 <b>ผูกบัญชี LINE สำเร็จ (เปิดผ่าน LIFF SMART DBS)!</b>\n` +
-                            `━━━━━━━━━━━━━━━━━━\n` +
-                            `👤 LINE: <b>${lineName}</b>\n` +
-                            `📛 ชื่อ: <b>${displayName}</b>\n` +
-                            `${roleTitle}\n` +
-                            `🆔 LINE User ID: <code>${lineUserId}</code>\n` +
-                            `✅ บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว`
-                        );
+                        const settings = App.getSettings();
+                        const tgToken = settings.telegramToken || '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
+                        const tgChat = settings.adminChatId || '-4839151586';
+
+                        if (tgToken && tgChat) {
+                            App.sendTelegram(tgChat, 
+                                `🔗 <b>ผูกบัญชี LINE สำเร็จ (เปิดผ่าน LIFF SMART DBS)!</b>\n` +
+                                `━━━━━━━━━━━━━━━━━━\n` +
+                                `👤 LINE: <b>${lineName}</b>\n` +
+                                `📛 ชื่อ: <b>${displayName}</b>\n` +
+                                `${roleTitle}\n` +
+                                `🆔 LINE User ID: <code>${lineUserId}</code>\n` +
+                                `✅ บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว`
+                            );
+                            localStorage.setItem(notifiedKey, 'true');
+                        }
+                    } catch (tge) {
+                        console.warn('⚠️ Telegram notify error:', tge);
                     }
-                } catch (tge) {
-                    console.warn('⚠️ Telegram notify error:', tge);
                 }
 
                 // Sync to Google Apps Script (Cloud Google Sheets) if configured
