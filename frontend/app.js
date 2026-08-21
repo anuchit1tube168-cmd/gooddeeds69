@@ -42,7 +42,7 @@ if (typeof globalThis !== 'undefined') globalThis.CONFIG = CONFIG;
 
 // ==================== CATEGORIES & RULES ====================
 const CATEGORIES = [
-    { id: 1, name: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', emoji: '🩸', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', maxHours: 16, defaultHours: 8, ruleNote: 'บันทึกได้ครั้งละ 4 ชั่วโมง (แนบรูปสมุด/ใบรับรอง)' },
+    { id: 1, name: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', emoji: '🩸', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', maxHours: 16, defaultHours: 8, ruleNote: 'บันทึกครั้งละ 8 ชั่วโมง (สูงสุด 16 ชม./ภาคเรียน) โดยแนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิต' },
     { id: 2, name: 'โครงการภายนอก (คำสั่ง วพอ.)', emoji: '🌐', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', maxHours: 8, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน (แนบคำสั่ง/ภาพถ่าย)' },
     { id: 3, name: 'ช่วยเหลืองานภายใน วพอ.', emoji: '🏥', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', maxHours: 8, defaultHours: 2, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน' },
     { id: 4, name: 'เข้าอบรมที่ วพอ. จัดให้', emoji: '📚', color: '#06b6d4', bg: 'rgba(6,182,212,0.1)', maxHours: 6, defaultHours: 3, ruleNote: 'บันทึกตามช่วงเวลาอบรม สูงสุดไม่เกิน 6 ชม./วัน' },
