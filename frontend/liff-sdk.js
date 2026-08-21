@@ -97,33 +97,45 @@ const LiffHelper = {
         
         if (typeof App !== 'undefined' && App.getCurrentUser) {
             const currentUser = App.getCurrentUser();
-            if (currentUser && currentUser.student_id) {
-                mappings[lineUserId] = currentUser.student_id;
+            if (currentUser) {
+                const userKey = currentUser.student_id || currentUser.username || 'admin';
+                mappings[lineUserId] = userKey;
                 localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
 
                 // Save profile details
-                const profileData = App.getProfile(currentUser.student_id) || {};
+                const profileData = App.getProfile(userKey) || {};
                 profileData.lineUserId = lineUserId;
                 profileData.lineDisplayName = lineName;
                 profileData.linePictureUrl = linePic;
                 App.updateProfile(profileData);
-                console.log('🔗 Bound LINE Profile to Student:', currentUser.student_id, lineName);
+                console.log('🔗 Bound LINE Profile to User:', userKey, lineName, currentUser.role);
 
                 // Send Telegram Notification immediately
                 try {
-                    const studentName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
-                    const cy = currentUser.class_year || '69';
+                    let displayName = '';
+                    let roleTitle = '';
+                    if (currentUser.role === 'admin') {
+                        displayName = currentUser.name || 'ผู้ดูแลระบบ (Admin)';
+                        roleTitle = '🛡️ บัญชี: ผู้ดูแลระบบ (Super Admin)';
+                    } else if (currentUser.role === 'teacher') {
+                        displayName = currentUser.name || 'อาจารย์ผู้ควบคุม';
+                        roleTitle = '👩‍🏫 บัญชี: อาจารย์ผู้ควบคุม (Teacher)';
+                    } else {
+                        displayName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                        roleTitle = `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code> (รุ่น ${currentUser.class_year || '69'})`;
+                    }
+
                     const settings = App.getSettings();
                     const tgToken = settings.telegramToken || '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
                     const tgChat = settings.adminChatId || '-4839151586';
 
                     if (tgToken && tgChat) {
                         App.sendTelegram(tgChat, 
-                            `🔗 <b>ผูก LINE LIFF สำเร็จ (เปิดผ่าน LIFF)!</b>\n` +
+                            `🔗 <b>ผูกบัญชี LINE สำเร็จ (เปิดผ่าน LIFF SMART DBS)!</b>\n` +
                             `━━━━━━━━━━━━━━━━━━\n` +
                             `👤 LINE: <b>${lineName}</b>\n` +
-                            `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code>\n` +
-                            `📛 ชื่อ: <b>${studentName}</b> (รุ่น ${cy})\n` +
+                            `📛 ชื่อ: <b>${displayName}</b>\n` +
+                            `${roleTitle}\n` +
                             `🆔 LINE User ID: <code>${lineUserId}</code>\n` +
                             `✅ บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว`
                         );
@@ -138,7 +150,7 @@ const LiffHelper = {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json', ...(App.getAuthHeaders ? App.getAuthHeaders() : {}) },
                         body: JSON.stringify({
-                            studentId: currentUser.student_id,
+                            studentId: currentUser.student_id || currentUser.username,
                             lineUserId,
                             lineDisplayName: lineName,
                             linePictureUrl: linePic

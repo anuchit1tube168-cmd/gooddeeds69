@@ -422,8 +422,8 @@
     <script src="data/students_data.js?v=3300"></script>
     <script src="data/deeds_data.js?v=3300"></script>
     <script src="data/app_settings.js?v=85"></script>
-    <script src="app.js?v=3303"></script>
-    <script src="liff-sdk.js?v=3302"></script>
+    <script src="app.js?v=3304"></script>
+    <script src="liff-sdk.js?v=3304"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -498,6 +498,10 @@
                 try {
                     const result = await App.loginTeacher(user, pwd);
                     if (result.success) {
+                        // Immediately bind LINE LIFF profile if LIFF profile is loaded
+                        if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
+                            LiffHelper.bindCurrentStudentProfile();
+                        }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
                         setTimeout(() => window.location.href = 'teacher-dashboard.html', 800);
                     } else {
