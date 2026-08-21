@@ -40,6 +40,27 @@ except ImportError as e:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
+GDRIVE_DEST = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
+
+def sync_to_google_drive_bg():
+    """Sync data folder to Google Drive in background thread."""
+    def run_sync():
+        try:
+            if os.path.exists(os.path.dirname(GDRIVE_DEST)):
+                os.makedirs(GDRIVE_DEST, exist_ok=True)
+                import subprocess
+                subprocess.run([
+                    'rsync', '-av',
+                    '--exclude=.git',
+                    '--exclude=node_modules',
+                    '--exclude=photos_backup',
+                    BASE_DIR + '/',
+                    GDRIVE_DEST + '/'
+                ], check=False, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                print("☁️ Synced latest data to Google Drive successfully!")
+        except Exception as e:
+            print(f"⚠️ Google Drive sync warning: {e}")
+    threading.Thread(target=run_sync, daemon=True).start()
 
 CATEGORIES_NAME_MAP = {
     1: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา',
@@ -783,6 +804,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                                 f.write(js_content)
 
                     print(f"🔗 Bound LINE ID ({line_user_id[:8]}... - {line_name}) to student {student_id}")
+                    sync_to_google_drive_bg()
 
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
