@@ -1333,9 +1333,9 @@
     <script src="data/students_photos.js?v=3300"></script>
     <script src="data/deeds_data.js?v=3300"></script>
     <script src="data/app_settings.js?v=85"></script>
-    <script src="app.js?v=3307"></script>
+    <script src="app.js?v=3308"></script>
     <script src="chibi3d.js?v=1"></script>
-    <script src="liff-sdk.js?v=3304"></script>
+    <script src="liff-sdk.js?v=3308"></script>
 
     <script>
         let currentUser = null;
@@ -1354,6 +1354,17 @@
         async function init() {
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
+
+            // Automatically bind LINE Profile if opened via LIFF
+            if (typeof LiffHelper !== 'undefined') {
+                if (LiffHelper.profile) {
+                    LiffHelper.bindCurrentStudentProfile();
+                } else if (typeof liff !== 'undefined') {
+                    LiffHelper.init().then(() => {
+                        if (LiffHelper.profile) LiffHelper.bindCurrentStudentProfile();
+                    });
+                }
+            }
 
             if (App.canUseBackendApi()) {
                 await App.syncDeedsWithBackend(currentUser.student_id);
