@@ -196,6 +196,44 @@
             padding: 24px;
             margin-bottom: 24px;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+        .qa-reaction-bar {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 14px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            flex-wrap: wrap;
+        }
+
+        .qa-react-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .qa-react-btn:hover {
+            background: rgba(201, 162, 39, 0.15);
+            border-color: rgba(201, 162, 39, 0.4);
+            color: var(--gold);
+            transform: translateY(-2px);
+        }
+
+        .qa-react-btn.active {
+            background: rgba(201, 162, 39, 0.25);
+            border-color: var(--gold);
+            color: var(--gold);
+            font-weight: 700;
+            box-shadow: 0 0 10px rgba(201, 162, 39, 0.3);
         }
 
         .qa-admin-actions {
@@ -657,6 +695,23 @@
                     '</div>';
                 }
 
+                // Reactions HTML
+                const reactions = q.reactions || { like: 0, heart: 0, helpful: 0 };
+                const userReactions = (Storage.get('qa_user_reacts') || {})[q.id] || {};
+                const reactionsHtml = `
+                    <div class="qa-reaction-bar">
+                        <button class="qa-react-btn ${userReactions.like ? 'active' : ''}" onclick="toggleReaction('${q.id}', 'like')">
+                            👍 <span>${reactions.like || 0}</span>
+                        </button>
+                        <button class="qa-react-btn ${userReactions.heart ? 'active' : ''}" onclick="toggleReaction('${q.id}', 'heart')">
+                            ❤️ <span>${reactions.heart || 0}</span>
+                        </button>
+                        <button class="qa-react-btn ${userReactions.helpful ? 'active' : ''}" onclick="toggleReaction('${q.id}', 'helpful')">
+                            💡 มีประโยชน์ <span>${reactions.helpful || 0}</span>
+                        </button>
+                    </div>
+                `;
+
                 const cardClass = 'qa-card' + (q.pinned ? ' pinned' : '') + (isAnn ? ' announcement' : '');
                 const avatarClass = 'qa-avatar' + (q.role === 'admin' || q.role === 'teacher' ? ' admin-avatar' : '');
 
@@ -674,6 +729,7 @@
                     '<div class="qa-title">' + q.title + '</div>' +
                     '<div class="qa-content">' + q.content + '</div>' +
                     (isAnswered ? '<div class="qa-answers-box">' + answersHtml + '</div>' : '') +
+                    reactionsHtml +
                     replyFormHtml +
                     adminActionsHtml +
                 '</div>';
@@ -833,6 +889,31 @@
             Storage.set('qa_posts', qaData);
             renderQA();
             showToast('🗑️ ลบกระทู้เรียบร้อยแล้ว', 'success');
+        }
+
+        // ===== REACTIONS SYSTEM =====
+        function toggleReaction(qId, type) {
+            const q = qaData.find(item => item.id === qId);
+            if (!q) return;
+
+            q.reactions = q.reactions || { like: 0, heart: 0, helpful: 0 };
+            const allUserReacts = Storage.get('qa_user_reacts') || {};
+            const qReacts = allUserReacts[qId] || {};
+
+            if (qReacts[type]) {
+                // Toggle off
+                q.reactions[type] = Math.max(0, (q.reactions[type] || 1) - 1);
+                delete qReacts[type];
+            } else {
+                // Toggle on
+                q.reactions[type] = (q.reactions[type] || 0) + 1;
+                qReacts[type] = true;
+            }
+
+            allUserReacts[qId] = qReacts;
+            Storage.set('qa_user_reacts', allUserReacts);
+            Storage.set('qa_posts', qaData);
+            renderQA();
         }
 
         init();
