@@ -144,6 +144,24 @@ const LiffHelper = {
                     console.warn('⚠️ Telegram notify error:', tge);
                 }
 
+                // Sync to Google Apps Script (Cloud Google Sheets) if configured
+                const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (App.getSettings ? App.getSettings().gasUrl : '');
+                if (gasUrl) {
+                    fetch(gasUrl, {
+                        method: 'POST',
+                        mode: 'no-cors',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            action: 'bind_line',
+                            studentId: currentUser.student_id || currentUser.username,
+                            lineUserId,
+                            lineDisplayName: lineName,
+                            linePictureUrl: linePic
+                        })
+                    }).then(() => console.log('☁️ Synced LINE ID to Google Apps Script'))
+                      .catch(err => console.warn('⚠️ GAS Sync Error:', err));
+                }
+
                 // Sync to backend if available
                 if (App.canUseBackendApi && App.canUseBackendApi()) {
                     fetch('/api/bind_line', {
