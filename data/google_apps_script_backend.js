@@ -178,6 +178,40 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Deed recorded and Master Sheet updated' })).setMimeType(ContentService.MimeType.JSON);
   }
   
+  // 3. ส่ง LINE Message (Proxy ผ่าน Google Server แก้ CORS 100%)
+  if (action === 'send_line_message') {
+    var lineToken = params.token || 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    var target = params.target || 'broadcast';
+    var messages = params.messages || [];
+    var to = params.to || '';
+    
+    var endpoint = (target === 'single') ? 'https://api.line.me/v2/bot/message/push' : 'https://api.line.me/v2/bot/message/broadcast';
+    var reqPayload = { messages: messages };
+    if (target === 'single' && to) {
+      reqPayload.to = to;
+    }
+    
+    try {
+      var options = {
+        method: 'post',
+        contentType: 'application/json',
+        headers: { 'Authorization': 'Bearer ' + lineToken },
+        payload: JSON.stringify(reqPayload),
+        muteHttpExceptions: true
+      };
+      var response = UrlFetchApp.fetch(endpoint, options);
+      var code = response.getResponseCode();
+      var respText = response.getContentText();
+      return ContentService.createTextOutput(JSON.stringify({
+        status: (code === 200) ? 'success' : 'error',
+        code: code,
+        response: respText
+      })).setMimeType(ContentService.MimeType.JSON);
+    } catch (le) {
+      return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: le.message })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  
   return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unknown action' })).setMimeType(ContentService.MimeType.JSON);
 }
 
