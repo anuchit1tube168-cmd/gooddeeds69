@@ -43,7 +43,8 @@ const LiffHelper = {
         }
 
         try {
-            await liff.init({ liffId: this.liffId });
+            // Only initialize in silent mode without invoking login redirects
+            await liff.init({ liffId: this.liffId, withLoginOnExternalBrowser: false });
             this.isInitialized = true;
             console.log('✅ LINE LIFF initialized successfully! InClient:', liff.isInClient(), 'LoggedIn:', liff.isLoggedIn());
 

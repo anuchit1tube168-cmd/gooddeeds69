@@ -1355,15 +1355,9 @@
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
 
-            // Automatically bind LINE Profile if opened via LIFF
-            if (typeof LiffHelper !== 'undefined') {
-                if (LiffHelper.profile) {
-                    LiffHelper.bindCurrentStudentProfile();
-                } else if (typeof liff !== 'undefined') {
-                    LiffHelper.init().then(() => {
-                        if (LiffHelper.profile) LiffHelper.bindCurrentStudentProfile();
-                    });
-                }
+            // Safely save current session
+            if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
+                LiffHelper.bindCurrentStudentProfile();
             }
 
             if (App.canUseBackendApi()) {
