@@ -36,8 +36,58 @@ function doPost(e) {
   } catch (err) {
     params = e.parameter;
   }
+  var action = (params && params.action) ? params.action : '';
   
-  var action = params.action || '';
+  // 0. เริ่มต้นใส่รายชื่อนักเรียนทั้งหมด 380 คนลงในตาราง Master ทันที
+  if (action === 'init_all_students') {
+    var studentList = params.students || [];
+    var sheet = getOrCreateMasterSheet(ss);
+    var existingData = sheet.getDataRange().getValues();
+    var existingIds = {};
+    for (var i = 1; i < existingData.length; i++) {
+      existingIds[String(existingData[i][1])] = i + 1; // Map studentId to Row number
+    }
+    
+    var rowsToAppend = [];
+    var currentCount = existingData.length - 1;
+    
+    for (var sIdx = 0; sIdx < studentList.length; sIdx++) {
+      var st = studentList[sIdx];
+      var sId = String(st.student_id);
+      if (!existingIds[sId]) {
+        currentCount++;
+        var rowNum = currentCount + 1;
+        rowsToAppend.push([
+          currentCount,
+          sId,
+          st.rank || 'นพอ.',
+          st.first_name || '',
+          st.last_name || '',
+          'รุ่น ' + (st.class_year || '69'),
+          0, 0, 0, 0, 0, 0, 0, 0, 0,
+          '=SUM(G' + rowNum + ':O' + rowNum + ')',
+          '50 ชม./ปี',
+          '=IF(P' + rowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
+          'Lv.1 ปีกทองฝึกหัด',
+          st.line_user_id || '',
+          st.line_display_name || '',
+          new Date()
+        ]);
+      } else {
+        // Update line id if present
+        var r = existingIds[sId];
+        if (st.line_user_id) sheet.getRange(r, 20).setValue(st.line_user_id);
+        if (st.line_display_name) sheet.getRange(r, 21).setValue(st.line_display_name);
+      }
+    }
+    
+    if (rowsToAppend.length > 0) {
+      var startRow = sheet.getLastRow() + 1;
+      sheet.getRange(startRow, 1, rowsToAppend.length, rowsToAppend[0].length).setValues(rowsToAppend);
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Populated ' + rowsToAppend.length + ' students' })).setMimeType(ContentService.MimeType.JSON);
+  }
   
   // 1. ผูก LINE ID + อัปเดต Profile ใน Folder
   if (action === 'bind_line') {
@@ -51,7 +101,7 @@ function doPost(e) {
     var data = sheet.getDataRange().getValues();
     var found = false;
     
-    for (var i = 2; i < data.length; i++) {
+    for (var i = 1; i < data.length; i++) {
       if (String(data[i][1]) === studentId) { // Column B is Student ID
         sheet.getRange(i + 1, 20).setValue(lineUserId); // Col T: LINE User ID
         sheet.getRange(i + 1, 21).setValue(lineDisplayName); // Col U: LINE Display Name
@@ -59,6 +109,26 @@ function doPost(e) {
         found = true;
         break;
       }
+    }
+    
+    if (!found) {
+      var newRowNum = sheet.getLastRow() + 1;
+      sheet.appendRow([
+        sheet.getLastRow(),
+        studentId,
+        'นพอ.',
+        '',
+        '',
+        'รุ่น 69',
+        0, 0, 0, 0, 0, 0, 0, 0, 0,
+        '=SUM(G' + newRowNum + ':O' + newRowNum + ')',
+        '50 ชม./ปี',
+        '=IF(P' + newRowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
+        'Lv.1 ปีกทองฝึกหัด',
+        lineUserId,
+        lineDisplayName,
+        new Date()
+      ]);
     }
     
     // 1.2 Update profile.json in Student Folder
