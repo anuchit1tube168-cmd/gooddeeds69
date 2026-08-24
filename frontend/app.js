@@ -429,8 +429,11 @@ const App = {
     getDeeds(studentId) {
         let localDeeds = Storage.get('deeds_' + studentId) || [];
         let globalDeeds = [];
+        
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
             globalDeeds = DEEDS_DATA.filter(d => String(d.student_id || d.studentId) === String(studentId));
+        } else if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
+            globalDeeds = IMPORTED_DEEDS[String(studentId)] || [];
         }
 
         if (!localDeeds || localDeeds.length === 0) {
