@@ -18,8 +18,10 @@ const EXCEL_SETTINGS = {
     "chat_id": "-4839151586"
   },
   "line": {
+    "line_oa_id": "@586diwio",
+    "line_oa_url": "https://line.me/R/ti/p/@586diwio",
     "channel_token": "vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=",
-    "bot_name": "SMART DBS RTAFNC (ฟ้าใส)"
+    "bot_name": "SMART DBS RTAFNC (@586diwio)"
   },
   "config": {
     "academic_year": 2569,
