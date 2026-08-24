@@ -38,55 +38,55 @@ function doPost(e) {
   }
   var action = (params && params.action) ? params.action : '';
   
-  // 0. เริ่มต้นใส่รายชื่อนักเรียนทั้งหมด 380 คนลงในตาราง Master ทันที
+  // 0. เริ่มต้นใส่รายชื่อนักเรียนทั้งหมด 380 คนลงในตาราง Master ทันที (พร้อมยอดยกมาจากปี 2568)
   if (action === 'init_all_students') {
     var studentList = params.students || [];
     var sheet = getOrCreateMasterSheet(ss);
-    var existingData = sheet.getDataRange().getValues();
-    var existingIds = {};
-    for (var i = 1; i < existingData.length; i++) {
-      existingIds[String(existingData[i][1])] = i + 1; // Map studentId to Row number
+    
+    // Clear old data rows if resetting
+    var lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
     }
     
     var rowsToAppend = [];
-    var currentCount = existingData.length - 1;
-    
     for (var sIdx = 0; sIdx < studentList.length; sIdx++) {
       var st = studentList[sIdx];
       var sId = String(st.student_id);
-      if (!existingIds[sId]) {
-        currentCount++;
-        var rowNum = currentCount + 1;
-        rowsToAppend.push([
-          currentCount,
-          sId,
-          st.rank || 'นพอ.',
-          st.first_name || '',
-          st.last_name || '',
-          'รุ่น ' + (st.class_year || '69'),
-          0, 0, 0, 0, 0, 0, 0, 0, 0,
-          '=SUM(G' + rowNum + ':O' + rowNum + ')',
-          '50 ชม./ปี',
-          '=IF(P' + rowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
-          'Lv.1 ปีกทองฝึกหัด',
-          st.line_user_id || '',
-          st.line_display_name || '',
-          new Date()
-        ]);
-      } else {
-        // Update line id if present
-        var r = existingIds[sId];
-        if (st.line_user_id) sheet.getRange(r, 20).setValue(st.line_user_id);
-        if (st.line_display_name) sheet.getRange(r, 21).setValue(st.line_display_name);
-      }
+      var rowNum = sIdx + 2;
+      var cat = st.categories || [0,0,0,0,0,0,0,0,0];
+      
+      rowsToAppend.push([
+        sIdx + 1,
+        sId,
+        st.rank || 'นพอ.',
+        st.first_name || '',
+        st.last_name || '',
+        'รุ่น ' + (st.class_year || '69'),
+        cat[0] || 0,
+        cat[1] || 0,
+        cat[2] || 0,
+        cat[3] || 0,
+        cat[4] || 0,
+        cat[5] || 0,
+        cat[6] || 0,
+        cat[7] || 0,
+        cat[8] || 0,
+        '=SUM(G' + rowNum + ':O' + rowNum + ')',
+        '50 ชม./ปี',
+        '=IF(P' + rowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
+        st.level_title || 'Lv.1 ปีกทองฝึกหัด',
+        st.line_user_id || '',
+        st.line_display_name || '',
+        new Date()
+      ]);
     }
     
     if (rowsToAppend.length > 0) {
-      var startRow = sheet.getLastRow() + 1;
-      sheet.getRange(startRow, 1, rowsToAppend.length, rowsToAppend[0].length).setValues(rowsToAppend);
+      sheet.getRange(2, 1, rowsToAppend.length, rowsToAppend[0].length).setValues(rowsToAppend);
     }
     
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Populated ' + rowsToAppend.length + ' students' })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Populated ' + rowsToAppend.length + ' students with complete history' })).setMimeType(ContentService.MimeType.JSON);
   }
   
   // 1. ผูก LINE ID + อัปเดต Profile ใน Folder

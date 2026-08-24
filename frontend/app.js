@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==================== CONFIG ====================
 const CONFIG = {
-    GAS_URL: 'https://script.google.com/macros/s/AKfycbysAE_888ubxVXIztt_cGVbth4wEWqyE-8wpvZgidRszXqcY14SLAqJ6oEdugQMzPK_jw/exec', // Google Apps Script Enterprise Cloud Web App (Master 380 Live)
+    GAS_URL: 'https://script.google.com/macros/s/AKfycbyqCjf9F5xbM_RDCthpFgYxo2k73_2RJOuUlMiRcEj08gVmYGoywLTu1XiCWfiws5LoIg/exec', // Google Apps Script Enterprise Cloud Web App (Master 380 + History Live)
     TELEGRAM_BOT_TOKEN: '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k',
     TELEGRAM_CHAT_ID: '-4839151586',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
