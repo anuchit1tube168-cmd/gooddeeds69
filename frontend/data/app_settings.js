@@ -4,7 +4,8 @@ const EXCEL_SETTINGS = {
     "username": "admin",
     "password": "admin69",
     "role": "admin",
-    "name": "ผู้ดูแลระบบ (Admin)"
+    "name": "ผู้ดูแลระบบ (Admin)",
+    "line_user_id": "Ueac3a1d2c5cd552e25ac0a710703ff0c"
   },
   "teacher": {
     "username": "teacher",
