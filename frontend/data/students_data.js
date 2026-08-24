@@ -1,4 +1,4 @@
-// Auto-generated students data
+// Auto-generated student data - DO NOT EDIT MANUALLY
 const STUDENTS_DATA = [
   {
     "student_id": "6403626",
@@ -2491,7 +2491,9 @@ const STUDENTS_DATA = [
     "password": "6603776",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U7912e37253fb5a138cf3864fcfb06e7e",
+    "line_display_name": "22 Naphachanok"
   },
   {
     "student_id": "6603777",
@@ -4677,7 +4679,9 @@ const STUDENTS_DATA = [
     "password": "6803905",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U90a9bec01c818da2cefe912fa61c46ec",
+    "line_display_name": "24 ธนพล (รถบัส)"
   },
   {
     "student_id": "6803906",
@@ -4949,7 +4953,9 @@ const STUDENTS_DATA = [
     "password": "6803921",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U65ec9660e5ee604ba670341050c9400f",
+    "line_display_name": "40 พิชญาภรณ์"
   },
   {
     "student_id": "6803922",
@@ -4983,7 +4989,9 @@ const STUDENTS_DATA = [
     "password": "6803923",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U8beafc187373a29777c80b32ebddf516",
+    "line_display_name": "42พิมพ์ณัฐชยา น้ำข้าว"
   },
   {
     "student_id": "6803924",
@@ -5087,7 +5095,9 @@ const STUDENTS_DATA = [
     "password": "6803929",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U41a73d9bea006b70fcc5981732f84ec0",
+    "line_display_name": "48 ยลภาม (ชมพู่)"
   },
   {
     "student_id": "6803930",
@@ -5104,7 +5114,9 @@ const STUDENTS_DATA = [
     "password": "6803930",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U5617b131a521866412354693210a2ad2",
+    "line_display_name": "49 ยุพารัตน์ (บอม)"
   },
   {
     "student_id": "6803931",
@@ -6644,3 +6656,6 @@ const STUDENTS_DATA = [
     "role": "student"
   }
 ];
+
+if (typeof window !== "undefined") { window.STUDENTS_DATA = STUDENTS_DATA; }
+if (typeof globalThis !== "undefined") { globalThis.STUDENTS_DATA = STUDENTS_DATA; }
