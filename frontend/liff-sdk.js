@@ -56,14 +56,11 @@ const LiffHelper = {
                 } catch (pe) {
                     console.warn('⚠️ Could not get LINE profile:', pe);
                 }
-            } else if (!liff.isInClient()) {
-                // Only prompt login if opened outside LINE in-app browser
-                // In LINE App, LIFF initializes session automatically
             }
             this.updateProfileUI();
             return true;
         } catch (err) {
-            console.error('❌ LIFF Initialization failed:', err);
+            console.warn('ℹ️ Running in direct web mode (LIFF bypassed):', err);
             return false;
         }
     },
