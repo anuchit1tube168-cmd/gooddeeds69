@@ -272,3 +272,66 @@ function getOrCreateSheet(ss, name, headers) {
   }
   return sheet;
 }
+
+function setupAllStudentFolders() {
+  var root = DriveApp.getFolderById(ROOT_FOLDER_ID);
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var sheet = getOrCreateMasterSheet(ss);
+  var data = sheet.getDataRange().getValues();
+  
+  var yearFolders = {
+    'รุ่น 69': getOrCreateSubFolder(root, '01_ชั้นปีที่ 1 (รุ่น 69)'),
+    'รุ่น 68': getOrCreateSubFolder(root, '02_ชั้นปีที่ 2 (รุ่น 68)'),
+    'รุ่น 67': getOrCreateSubFolder(root, '03_ชั้นปีที่ 3 (รุ่น 67)'),
+    'รุ่น 66': getOrCreateSubFolder(root, '04_ชั้นปีที่ 4 (รุ่น 66)'),
+    'รุ่น 65': getOrCreateSubFolder(root, '05_ศิษย์เก่า (รุ่น 65)'),
+    'รุ่น 64': getOrCreateSubFolder(root, '06_ศิษย์เก่า (รุ่น 64)')
+  };
+  
+  var created = 0;
+  for (var i = 1; i < data.length; i++) {
+    var sid = String(data[i][1]);
+    var rank = String(data[i][2]);
+    var fname = String(data[i][3]);
+    var lname = String(data[i][4]);
+    var cyear = String(data[i][5]);
+    
+    var parentFolder = yearFolders[cyear] || root;
+    var folderName = sid + ' - ' + rank + ' ' + fname + ' ' + lname;
+    var sFolder = getOrCreateSubFolder(parentFolder, folderName);
+    
+    // Sub-folders inside student folder
+    getOrCreateSubFolder(sFolder, '01_หลักฐานภาพถ่ายความดี');
+    getOrCreateSubFolder(sFolder, '02_เอกสารรับรอง_Word_PDF');
+    
+    // Create profile.json
+    var profileObj = {
+      student_id: sid,
+      rank: rank,
+      first_name: fname,
+      last_name: lname,
+      class_year: cyear,
+      line_user_id: String(data[i][19] || ''),
+      line_display_name: String(data[i][20] || ''),
+      total_hours: data[i][15] || 0,
+      grade_status: data[i][17] || 'ยังไม่ผ่าน ❌',
+      last_updated: new Date().toISOString()
+    };
+    
+    var files = sFolder.getFilesByName('profile.json');
+    if (!files.hasNext()) {
+      sFolder.createFile('profile.json', JSON.stringify(profileObj, null, 2), 'application/json');
+    }
+    created++;
+  }
+  
+  return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
+}
+
+function getOrCreateSubFolder(parent, name) {
+  var folders = parent.getFoldersByName(name);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return parent.createFolder(name);
+}
