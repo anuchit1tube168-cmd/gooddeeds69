@@ -432,7 +432,12 @@ const LiffHelper = {
     }
 };
 
-// Auto initialize on load
+// Safe conditional initialize on load
 window.addEventListener('load', () => {
-    LiffHelper.init();
+    // Check if liff is present and valid
+    if (typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
+        try {
+            LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
+        } catch(e) {}
+    }
 });
