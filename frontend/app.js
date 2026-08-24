@@ -547,6 +547,24 @@ const App = {
         deeds.push(newDeed);
         this.saveDeeds(studentId, deeds);
         
+        // Sync to Google Apps Script (Cloud Google Sheets) if configured
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl) {
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'submit_deed',
+                    deed: {
+                        ...newDeed,
+                        student: user
+                    }
+                })
+            }).then(() => console.log('☁️ Synced Deed to Google Apps Script'))
+              .catch(err => console.warn('⚠️ GAS Deed Sync Error:', err));
+        }
+
         // Save to backend via API
         if (this.canUseBackendApi()) {
             try {
