@@ -1,6 +1,4 @@
-// Auto-generated student data - DO NOT EDIT MANUALLY
-// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี
-
+// Auto-generated students data
 const STUDENTS_DATA = [
   {
     "student_id": "6403626",
@@ -4473,7 +4471,9 @@ const STUDENTS_DATA = [
     "password": "6803893",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U645a0525db42dbf85899208921c44cd3",
+    "line_display_name": "12ฐิติกานต์(แอปเปิ้ล)"
   },
   {
     "student_id": "6803894",
@@ -5034,7 +5034,9 @@ const STUDENTS_DATA = [
     "password": "6803926",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U590c31aa19705e9ea253f459f4192b99",
+    "line_display_name": "45 ภัทราพร (พั้นช์)"
   },
   {
     "student_id": "6803927",
@@ -5306,7 +5308,9 @@ const STUDENTS_DATA = [
     "password": "6803942",
     "email": "",
     "telegram_chat_id": "",
-    "role": "student"
+    "role": "student",
+    "line_user_id": "U7611abdecd4e095af558aa8a5e40deb2",
+    "line_display_name": "61อชิรญา (ครีม)"
   },
   {
     "student_id": "6803943",
@@ -6640,6 +6644,3 @@ const STUDENTS_DATA = [
     "role": "student"
   }
 ];
-
-if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }
-if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }
