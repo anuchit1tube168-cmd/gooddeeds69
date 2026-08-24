@@ -331,9 +331,112 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                         }])
                     continue
 
-                # ── GENERAL MESSAGE → Forward to Telegram ──
+                # ── SMART AI KNOWLEDGE BASE & STATUS CHECK ──
+                lower_t = text.lower()
                 cached = line_users_cache.get(line_user_id, {})
                 bound_sid = cached.get('student_id', '')
+
+                # 1. ขอตรวจสอบชั่วโมง / เช็คคะแนนความดี
+                if any(w in lower_t for w in ['ชั่วโมง', 'เช็คชั่วโมง', 'กี่ชั่วโมง', 'สถานะ', 'คะแนน', 'ผ่านไหม', 'ยอดสะสม', 'เกรด']):
+                    if bound_sid:
+                        st = find_student_by_id(bound_sid)
+                        if st:
+                            s_name = f"{st.get('rank','นพอ.')} {st.get('first_name','')} {st.get('last_name','')}"
+                            # Calculate hours from deeds
+                            deeds_file = os.path.join(DATA_DIR, 'deeds_data.js')
+                            total_hrs = 0.0
+                            cat_hrs = {i: 0.0 for i in range(1, 10)}
+                            try:
+                                with open(deeds_file, 'r', encoding='utf-8') as df:
+                                    dc = df.read()
+                                m = re.search(r'const IMPORTED_DEEDS\s*=\s*(\{.*?\});\s*$', dc, re.DOTALL)
+                                if m:
+                                    dmap = json.loads(m.group(1))
+                                    for d in dmap.get(bound_sid, []):
+                                        h = float(d.get('hours', 0))
+                                        cid = int(d.get('categoryId', 1))
+                                        if 1 <= cid <= 9: cat_hrs[cid] += h
+                                        total_hrs += h
+                            except: pass
+                            
+                            grade_status = 'ผ่านเกณฑ์แล้ว ✅' if total_hrs >= 50 else f'ขาดอีก {50 - total_hrs:.1f} ชม. ⏳'
+                            
+                            send_line_reply(reply_token, [{
+                                'type': 'flex',
+                                'altText': f'สรุปชั่วโมงจิตอาสา - {s_name}',
+                                'contents': {
+                                    'type': 'bubble',
+                                    'size': 'mega',
+                                    'header': {
+                                        'type': 'box', 'layout': 'vertical', 'backgroundColor': '#0a192f', 'paddingAll': '20px',
+                                        'contents': [
+                                            {'type': 'text', 'text': 'วิทยาลัยพยาบาลทหารอากาศ', 'color': '#c9a227', 'size': 'xs', 'weight': 'bold'},
+                                            {'type': 'text', 'text': '📊 สรุปชั่วโมงจิตอาสารายบุคคล', 'color': '#ffffff', 'size': 'md', 'weight': 'bold', 'margin': 'xs'}
+                                        ]
+                                    },
+                                    'body': {
+                                        'type': 'box', 'layout': 'vertical',
+                                        'contents': [
+                                            {'type': 'text', 'text': s_name, 'size': 'sm', 'weight': 'bold', 'color': '#0a192f'},
+                                            {'type': 'text', 'text': f'รหัส {bound_sid} | รุ่น {st.get("class_year", "69")}', 'size': 'xs', 'color': '#64748b', 'margin': 'xs'},
+                                            {'type': 'separator', 'margin': 'lg'},
+                                            {
+                                                'type': 'box', 'layout': 'horizontal', 'margin': 'lg',
+                                                'contents': [
+                                                    {
+                                                        'type': 'box', 'layout': 'vertical',
+                                                        'contents': [
+                                                            {'type': 'text', 'text': 'ชั่วโมงสะสมรวม', 'size': 'xs', 'color': '#888888'},
+                                                            {'type': 'text', 'text': f'{total_hrs:.1f} ชม.', 'size': 'xl', 'weight': 'bold', 'color': '#c9a227'}
+                                                        ]
+                                                    },
+                                                    {
+                                                        'type': 'box', 'layout': 'vertical', 'alignItems': 'flex-end',
+                                                        'contents': [
+                                                            {'type': 'text', 'text': 'สถานะประเมิน', 'size': 'xs', 'color': '#888888'},
+                                                            {'type': 'text', 'text': grade_status, 'size': 'sm', 'weight': 'bold', 'color': '#16a34a' if total_hrs >= 50 else '#dc2626'}
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    'footer': {
+                                        'type': 'box', 'layout': 'vertical',
+                                        'contents': [
+                                            {
+                                                'type': 'button',
+                                                'action': {'type': 'uri', 'label': '📱 เปิดระบบบันทึกความดี', 'uri': 'https://liff.line.me/2010948179-Ympqt2bT'},
+                                                'style': 'primary', 'color': '#0a192f'
+                                            }
+                                        ]
+                                    }
+                                }
+                            }])
+                            continue
+                    else:
+                        send_line_reply(reply_token, [{
+                            'type': 'text',
+                            'text': 'กรุณาพิมพ์ "รหัสนักเรียน 7 หลัก" เพื่อผูกบัญชีก่อนตรวจสอบชั่วโมงค่ะ\nเช่น: 6803893 😊'
+                        }])
+                        continue
+
+                # 2. ถามเกณฑ์บริจาคเลือด / กฎ 9 หมวด / เกณฑ์ผ่าน
+                if any(w in lower_t for w in ['บริจาคเลือด', 'เลือด', 'บริจาคโลหิต']):
+                    send_line_reply(reply_token, [{
+                        'type': 'text',
+                        'text': '🩸 **เกณฑ์การบริจาคโลหิต (หมวด 1):**\n━━━━━━━━━━━━━━━\n- ได้รับ **8 ชั่วโมง / ครั้ง**\n- ต้องแนบรูปถ่ายใบรับรองการบริจาคโลหิต หรือรูปถ่ายขณะบริจาค\n- บันทึกในระบบและรออาจารย์อนุมัติค่ะ 🩺'
+                    }])
+                    continue
+
+                if any(w in lower_t for w in ['เกณฑ์', 'กี่ชม', 'ขั้นต่ำ', '50']):
+                    send_line_reply(reply_token, [{
+                        'type': 'text',
+                        'text': '📜 **เกณฑ์จิตอาสา วพอ. 2569:**\n━━━━━━━━━━━━━━━\n- ขั้นต่ำ **50 ชั่วโมง / ปีการศึกษา**\n- หรือ **25 ชั่วโมง / ภาคเรียน**\n- แบ่งออกเป็น 9 หมวดหมู่กิจกรรม\n- สะสมครบจะได้รับเกียรติบัตรและเครื่องหมายปีกทองค่ะ 🎖️'
+                    }])
+                    continue
+
+                # ── GENERAL MESSAGE → Forward to Telegram ──
                 student_info = ''
                 if bound_sid:
                     st = find_student_by_id(bound_sid)
@@ -358,7 +461,7 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                 # Auto-reply in LINE
                 send_line_reply(reply_token, [{
                     'type': 'text',
-                    'text': f'ได้รับข้อความแล้วค่ะ 📩\nอาจารย์/Admin จะตอบกลับให้เร็วที่สุด 🙏'
+                    'text': f'ได้รับข้อความแล้วค่ะ 📩\nบอทฟ้าใสได้ส่งเรื่องให้อาจารย์เรียบร้อยแล้วค่ะ 🙏'
                 }])
 
 
