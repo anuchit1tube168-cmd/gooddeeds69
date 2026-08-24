@@ -212,7 +212,192 @@ function doPost(e) {
     }
   }
   
+  // 4. รับ LINE Webhook Events โดยตรงบน Google Cloud (ทำงาน 24 ชม. ไม่ต้องเปิดคอม)
+  if (params && params.events) {
+    var events = params.events || [];
+    var lineToken = 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    
+    for (var evIdx = 0; evIdx < events.length; evIdx++) {
+      var ev = events[evIdx];
+      var replyToken = ev.replyToken;
+      var userId = ev.source ? ev.source.userId : '';
+      
+      if (ev.type === 'message' && ev.message && ev.message.type === 'text') {
+        var userText = String(ev.message.text || '').trim();
+        var lowerText = userText.toLowerCase();
+        
+        // 4.1 ถ้าพิมพ์รหัสนักเรียน 7 หลัก
+        if (/^\d{7}$/.test(userText)) {
+          var sheet = getOrCreateMasterSheet(ss);
+          var data = sheet.getDataRange().getValues();
+          var studentFound = null;
+          var foundRow = -1;
+          
+          for (var r = 1; r < data.length; r++) {
+            if (String(data[r][1]) === userText) {
+              studentFound = data[r];
+              foundRow = r + 1;
+              break;
+            }
+          }
+          
+          if (studentFound) {
+            sheet.getRange(foundRow, 20).setValue(userId);
+            sheet.getRange(foundRow, 22).setValue(new Date());
+            
+            var sName = studentFound[2] + ' ' + studentFound[3] + ' ' + studentFound[4];
+            var flexMsg = {
+              type: "flex",
+              altText: "✅ ผูกบัญชีสำเร็จ - " + sName,
+              contents: {
+                type: "bubble",
+                size: "kilo",
+                header: {
+                  type: "box", layout: "vertical", backgroundColor: "#0a192f", paddingAll: "16px",
+                  contents: [{ type: "text", text: "✅ ผูกบัญชี LINE สำเร็จ!", color: "#4ade80", weight: "bold", size: "md" }]
+                },
+                body: {
+                  type: "box", layout: "vertical",
+                  contents: [
+                    { type: "text", text: sName, weight: "bold", size: "sm", color: "#0a192f" },
+                    { type: "text", text: "รหัส " + userText + " | " + studentFound[5], size: "xs", color: "#64748b", margin: "xs" },
+                    { type: "separator", margin: "md" },
+                    { type: "text", text: "คุณจะได้รับการแจ้งเตือนผลการอนุมัติและสรุปชั่วโมงผ่าน LINE อัตโนมัติค่ะ", size: "xxs", color: "#475569", wrap: true, margin: "md" }
+                  ]
+                },
+                footer: {
+                  type: "box", layout: "vertical",
+                  contents: [{
+                    type: "button",
+                    action: { type: "uri", label: "📱 เปิดระบบบันทึกความดี", uri: "https://liff.line.me/2010948179-Ympqt2bT" },
+                    style: "primary", color: "#0a192f"
+                  }]
+                }
+              }
+            };
+            replyLineMessage(replyToken, [flexMsg], lineToken);
+          } else {
+            replyLineMessage(replyToken, [{ type: "text", text: "❌ ไม่พบรหัสนักเรียน " + userText + " ในฐานข้อมูล วพอ. 2569 ค่ะ" }], lineToken);
+          }
+          continue;
+        }
+        
+        // 4.2 เช็คชั่วโมงสะสม / ยอดคะแนน
+        if (lowerText.indexOf('ชั่วโมง') !== -1 || lowerText.indexOf('เช็ค') !== -1 || lowerText.indexOf('ยอด') !== -1 || lowerText.indexOf('ผ่าน') !== -1) {
+          var sheet = getOrCreateMasterSheet(ss);
+          var data = sheet.getDataRange().getValues();
+          var studentFound = null;
+          
+          for (var r = 1; r < data.length; r++) {
+            if (String(data[r][19]) === userId) {
+              studentFound = data[r];
+              break;
+            }
+          }
+          
+          if (studentFound) {
+            var sName = studentFound[2] + ' ' + studentFound[3] + ' ' + studentFound[4];
+            var totHours = parseFloat(studentFound[15] || 0);
+            var grade = studentFound[17] || (totHours >= 50 ? 'ผ่านเกณฑ์ ✅' : 'ยังไม่ผ่าน ❌');
+            
+            var flexMsg = {
+              type: "flex",
+              altText: "📊 สรุปชั่วโมงจิตอาสา - " + sName,
+              contents: {
+                type: "bubble",
+                size: "mega",
+                header: {
+                  type: "box", layout: "vertical", backgroundColor: "#0a192f", paddingAll: "20px",
+                  contents: [
+                    { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
+                    { type: "text", text: "📊 สรุปชั่วโมงจิตอาสารายบุคคล", color: "#ffffff", size: "md", weight: "bold", margin: "xs" }
+                  ]
+                },
+                body: {
+                  type: "box", layout: "vertical",
+                  contents: [
+                    { type: "text", text: sName, size: "sm", weight: "bold", color: "#0a192f" },
+                    { type: "text", text: "รหัส " + studentFound[1] + " | " + studentFound[5], size: "xs", color: "#64748b", margin: "xs" },
+                    { type: "separator", margin: "lg" },
+                    {
+                      type: "box", layout: "horizontal", margin: "lg",
+                      contents: [
+                        {
+                          type: "box", layout: "vertical",
+                          contents: [
+                            { type: "text", text: "ชั่วโมงสะสมรวม", size: "xs", color: "#888888" },
+                            { type: "text", text: totHours.toFixed(1) + " ชม.", size: "xl", weight: "bold", color: "#c9a227" }
+                          ]
+                        },
+                        {
+                          type: "box", layout: "vertical", alignItems: "flex-end",
+                          contents: [
+                            { type: "text", text: "ผลการประเมิน", size: "xs", color: "#888888" },
+                            { type: "text", text: grade, size: "sm", weight: "bold", color: (totHours >= 50 ? "#16a34a" : "#dc2626") }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                },
+                footer: {
+                  type: "box", layout: "vertical",
+                  contents: [{
+                    type: "button",
+                    action: { type: "uri", label: "📱 เปิดระบบบันทึกความดี", uri: "https://liff.line.me/2010948179-Ympqt2bT" },
+                    style: "primary", color: "#0a192f"
+                  }]
+                }
+              }
+            };
+            replyLineMessage(replyToken, [flexMsg], lineToken);
+          } else {
+            replyLineMessage(replyToken, [{ type: "text", text: "กรุณาพิมพ์ \"รหัสนักเรียน 7 หลัก\" เพื่อผูกบัญชีก่อนตรวจสอบชั่วโมงค่ะ 😊" }], lineToken);
+          }
+          continue;
+        }
+        
+        // 4.3 ถามเรื่องบริจาคเลือด
+        if (lowerText.indexOf('บริจาคเลือด') !== -1 || lowerText.indexOf('เลือด') !== -1 || lowerText.indexOf('โลหิต') !== -1) {
+          replyLineMessage(replyToken, [{
+            type: "text",
+            text: "🩸 เกณฑ์การบริจาคโลหิต (หมวด 1):\n━━━━━━━━━━━━━━━\n- ได้รับ 8 ชั่วโมง / ครั้ง\n- ต้องแนบรูปถ่ายใบรับรองหรือรูปขณะบริจาค\n- บันทึกในระบบและรออาจารย์อนุมัติค่ะ 🩺"
+          }], lineToken);
+          continue;
+        }
+        
+        // 4.4 ถามเกณฑ์ทั่วไป
+        if (lowerText.indexOf('เกณฑ์') !== -1 || lowerText.indexOf('กี่') !== -1) {
+          replyLineMessage(replyToken, [{
+            type: "text",
+            text: "📜 เกณฑ์จิตอาสา วพอ. 2569:\n━━━━━━━━━━━━━━━\n- ขั้นต่ำ 50 ชั่วโมง / ปีการศึกษา (25 ชม./เทอม)\n- แบ่งเป็น 9 หมวดกิจกรรม\n- สะสมครบจะได้รับเกียรติบัตรปีกทองค่ะ 🎖️"
+          }], lineToken);
+          continue;
+        }
+        
+        // Default response
+        replyLineMessage(replyToken, [{
+          type: "text",
+          text: "สวัสดีค่ะ บอทฟ้าใส ยินดีให้บริการค่ะ 🌸\n\n📌 สิ่งที่สามารถพิมพ์ถามได้:\n- พิมพ์ \"รหัสนักเรียน 7 หลัก\" เพื่อผูกบัญชี\n- พิมพ์ \"เช็คชั่วโมง\" เพื่อดูยอดสะสมและเกรด\n- พิมพ์ \"บริจาคเลือด\" เพื่อดูเกณฑ์หมวด 1\n- พิมพ์ \"เกณฑ์\" เพื่อดูข้อกำหนดชั่วโมงจิตอาสาค่ะ 😊"
+        }], lineToken);
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
+  }
+  
   return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unknown action' })).setMimeType(ContentService.MimeType.JSON);
+}
+
+function replyLineMessage(replyToken, messages, token) {
+  var url = 'https://api.line.me/v2/bot/message/reply';
+  var options = {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'Authorization': 'Bearer ' + token },
+    payload: JSON.stringify({ replyToken: replyToken, messages: messages }),
+    muteHttpExceptions: true
+  };
+  UrlFetchApp.fetch(url, options);
 }
 
 // -------------------------------------------------------------
