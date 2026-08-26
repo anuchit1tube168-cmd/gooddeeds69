@@ -375,7 +375,12 @@
             ${d.note ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">💬 ${d.note}</div>` : ''}
             ${rejectBox}
             ${images ? `<div class="images-row">${images}</div>` : ''}
-            ${canDelete ? `<div style="margin-top:8px"><button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="deleteDeed('${d.id}')">🗑️ ลบรายการ</button></div>` : ''}
+            <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
+              <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:4px 10px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                📄 พิมพ์ PDF ใบความดี
+              </a>
+              ${canDelete ? `<button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="deleteDeed('${d.id}')">🗑️ ลบ</button>` : ''}
+            </div>
           </div>
           <div class="deed-card-right">
             <div class="deed-hours-big">${d.hours}</div>

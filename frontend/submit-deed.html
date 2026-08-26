@@ -659,6 +659,11 @@
             e.preventDefault();
             hideFormAlert();
 
+            const hours = parseFloat(document.getElementById('hours').value) || 0;
+            const description = document.getElementById('description').value.trim();
+            const activityDate = document.getElementById('activity-date').value;
+            const note = document.getElementById('note') ? document.getElementById('note').value.trim() : '';
+
             if (!selectedCategoryId) {
                 document.getElementById('cat-error').classList.add('show');
                 showFormAlert('กรุณาเลือกหมวดหมู่ความดี');
