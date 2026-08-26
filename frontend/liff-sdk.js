@@ -43,13 +43,24 @@ const LiffHelper = {
         }
 
         try {
-            // Standby mode - do not trigger OAuth redirect to access.line.me
-            console.log('ℹ️ GoodDeeds Web Mode Active (Direct Smooth Access)');
+            await liff.init({ liffId: this.liffId });
             this.isInitialized = true;
+            console.log('✅ LINE LIFF initialized successfully! InClient:', liff.isInClient(), 'LoggedIn:', liff.isLoggedIn());
+
+            if (liff.isLoggedIn()) {
+                try {
+                    this.profile = await liff.getProfile();
+                    console.log('👤 LINE Profile Loaded:', this.profile);
+                    this.bindCurrentStudentProfile();
+                    this.handleAutoLogin();
+                } catch (pe) {
+                    console.warn('⚠️ Could not get LINE profile:', pe);
+                }
+            }
             this.updateProfileUI();
             return true;
         } catch (err) {
-            console.warn('ℹ️ Running in direct web mode:', err);
+            console.warn('ℹ️ LIFF Init Note:', err);
             return false;
         }
     },
