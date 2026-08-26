@@ -473,7 +473,8 @@
                             LiffHelper.bindCurrentStudentProfile();
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'student-dashboard.html', 800);
+                        const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                        setTimeout(() => window.location.href = base + 'student-dashboard.html', 800);
                     } else {
                         showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -503,7 +504,8 @@
                             LiffHelper.bindCurrentStudentProfile();
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'teacher-dashboard.html', 800);
+                        const base2 = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                        setTimeout(() => window.location.href = base2 + 'teacher-dashboard.html', 800);
                     } else {
                         showAlert(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -521,8 +523,9 @@
         window.addEventListener('load', () => {
             const user = App.getCurrentUser();
             if (user) {
-                if (user.role === 'student') window.location.href = 'student-dashboard.html';
-                else window.location.href = 'teacher-dashboard.html';
+                const base = window.location.href.substring(0, window.location.href.lastIndexOf('/') + 1);
+                if (user.role === 'student') window.location.href = base + 'student-dashboard.html';
+                else window.location.href = base + 'teacher-dashboard.html';
             }
 
             // Dynamic look-up for Student ID
