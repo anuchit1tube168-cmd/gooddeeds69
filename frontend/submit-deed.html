@@ -371,15 +371,28 @@
                             rows="4" required style="font-size: 1rem; line-height: 1.6; padding: 16px; border-radius: var(--radius-md);"></textarea>
                     </div>
 
+                    <!-- Approver / Supervisor -->
+                    <div class="form-group" style="margin-bottom: 24px;">
+                        <label class="form-label">5. อาจารย์ผู้ควบคุม / ผู้รับรองกิจกรรม</label>
+                        <select class="form-input" id="approver-select" style="padding: 12px 14px; font-size: 1rem; margin-bottom: 8px; cursor: pointer;" onchange="onSelectApproverPreset(this.value)">
+                            <option value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์" selected>น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์ (ผู้บังคับหมวด / อาจารย์ผู้ควบคุม)</option>
+                            <option value="ร.อ.อนุชิต ทำจะดี">ร.อ.อนุชิต ทำจะดี (นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ)</option>
+                            <option value="น.อ.หญิง สุมาลี รัตนโชติ">น.อ.หญิง สุมาลี รัตนโชติ (ผู้อำนวยการวิทยาลัยพยาบาลทหารอากาศ)</option>
+                            <option value="น.อ.หญิง พิชญาภา สิทธิชัย">น.อ.หญิง พิชญาภา สิทธิชัย (รองผู้อำนวยการฯ)</option>
+                            <option value="custom">✏️ ระบุชื่ออาจารย์/ผู้รับรองท่านอื่น...</option>
+                        </select>
+                        <input type="text" class="form-input" id="approver-name" value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์" placeholder="พิมพ์ ยศ ชื่อ นามสกุล อาจารย์ผู้รับรอง..." style="padding: 12px 14px; font-size: 1rem;">
+                    </div>
+
                     <!-- Note -->
                     <div class="form-group" style="margin-bottom: 28px;">
-                        <label class="form-label">5. หมายเหตุ (ถ้ามี)</label>
-                        <input type="text" class="form-input" id="note" placeholder="ข้อมูลเพิ่มเติมสำหรับอาจารย์..." style="padding: 14px; font-size: 1rem;">
+                        <label class="form-label">6. หมายเหตุ / สถานที่ (ถ้ามี)</label>
+                        <input type="text" class="form-input" id="note" placeholder="เช่น วิทยาลัยพยาบาลทหารอากาศ หรือ ข้อมูลเพิ่มเติม..." style="padding: 14px; font-size: 1rem;">
                     </div>
 
                     <!-- Image Upload -->
                     <div class="form-group" style="margin-bottom: 32px;">
-                        <label class="form-label">6. แนบรูปภาพหลักฐาน (ถ้ามี)</label>
+                        <label class="form-label">7. แนบรูปภาพหลักฐาน (ถ้ามี)</label>
                         <div class="upload-zone" id="upload-zone" style="background: rgba(10, 22, 40, 0.4); border: 2px dashed rgba(30, 58, 110, 0.8); border-radius: var(--radius-lg); padding: 40px 20px;"
                             onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)"
                             ondrop="handleDrop(event)">
@@ -655,6 +668,16 @@
         }
         function hideFormAlert() { document.getElementById('form-alert').classList.remove('show'); }
 
+        function onSelectApproverPreset(val) {
+            const input = document.getElementById('approver-name');
+            if (val === 'custom') {
+                input.value = '';
+                input.focus();
+            } else {
+                input.value = val;
+            }
+        }
+
         async function handleSubmit(e) {
             e.preventDefault();
             hideFormAlert();
@@ -663,6 +686,7 @@
             const description = document.getElementById('description').value.trim();
             const activityDate = document.getElementById('activity-date').value;
             const note = document.getElementById('note') ? document.getElementById('note').value.trim() : '';
+            const approverName = document.getElementById('approver-name') ? document.getElementById('approver-name').value.trim() : 'น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์';
 
             if (!selectedCategoryId) {
                 document.getElementById('cat-error').classList.add('show');
@@ -698,6 +722,9 @@
                 description,
                 activityDate,
                 note,
+                approver: approverName,
+                signer: approverName,
+                approved_by: approverName,
                 imageUrls: imageKeys,
             });
 

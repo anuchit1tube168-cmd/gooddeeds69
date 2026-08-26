@@ -254,10 +254,23 @@
             <img id="evidence-img" src="510903.jpg" alt="หลักฐาน">
         </div>
 
-        <!-- Approver Name -->
-        <div style="margin-top: 14px;">
-            <label style="font-size:0.85rem; color:#94a3b8;">✍️ ชื่ออาจารย์ผู้ตรวจประเมิน/อนุมัติ:</label>
-            <input type="text" id="approver-name" class="approver-input" value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์">
+        <!-- Approver Name Selection -->
+        <div style="margin-top: 16px; background:rgba(255,255,255,0.03); padding:14px; border-radius:10px; border:1px solid rgba(255,255,255,0.08);">
+            <label style="font-size:0.88rem; color:var(--gold); font-weight:600; display:flex; justify-content:space-between; align-items:center;">
+                <span>✍️ ผู้ตรวจประเมิน / ผู้อนุมัติกิจกรรม:</span>
+                <span style="font-size:0.75rem; color:#94a3b8; font-weight:normal;">เลือกหรือพิมพ์ชื่อได้อิสระ</span>
+            </label>
+            
+            <!-- Quick Preset Select -->
+            <select id="approver-select" class="approver-input" style="margin-bottom:8px; cursor:pointer;" onchange="onSelectApprover(this.value)">
+                <option value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์" selected>น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์ (ผู้บังคับหมวด / อาจารย์ผู้ควบคุม)</option>
+                <option value="ร.อ.อนุชิต ทำจะดี">ร.อ.อนุชิต ทำจะดี (นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ)</option>
+                <option value="น.อ.หญิง สุมาลี รัตนโชติ">น.อ.หญิง สุมาลี รัตนโชติ (ผู้อำนวยการวิทยาลัยพยาบาลทหารอากาศ)</option>
+                <option value="น.อ.หญิง พิชญาภา สิทธิชัย">น.อ.หญิง พิชญาภา สิทธิชัย (รองผู้อำนวยการฯ)</option>
+                <option value="custom">✏️ พิมพ์ชื่อ-ยศ ผู้ตรวจประเมินเอง...</option>
+            </select>
+
+            <input type="text" id="approver-name" class="approver-input" placeholder="พิมพ์ ยศ ชื่อ นามสกุล และตำแหน่ง..." value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์">
         </div>
 
         <!-- E-Signature Pad -->
@@ -396,6 +409,16 @@
             }
 
             initSignaturePad();
+        }
+
+        function onSelectApprover(val) {
+            const input = document.getElementById('approver-name');
+            if (val === 'custom') {
+                input.value = '';
+                input.focus();
+            } else {
+                input.value = val;
+            }
         }
 
         async function handleAction(status) {
