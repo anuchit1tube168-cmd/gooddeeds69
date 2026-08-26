@@ -356,6 +356,19 @@
             }
 
             if (deed) {
+                // Strict Approval Guard: Only allow approved deeds to generate official PDF slip
+                if (deed.status !== 'approved') {
+                    document.body.innerHTML = `
+                        <div style="text-align:center; padding:50px 20px; font-family:'Sarabun',sans-serif; color:#0f172a; max-width:500px; margin:40px auto; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
+                            <div style="font-size:3rem; margin-bottom:16px;">🔒</div>
+                            <h2 style="color:#0b2f64; margin-bottom:8px;">ยังไม่สามารถพิมพ์แบบบันทึกความดีได้</h2>
+                            <p style="color:#64748b; margin-bottom:24px;">รายการนี้อยู่ระหว่าง <b>รออาจารย์ผู้ตรวจประเมินอนุมัติและลงนาม</b> เมื่อได้รับการอนุมัติแล้วจึงจะสามารถพิมพ์/บันทึกเป็น PDF ได้ครับ</p>
+                            <a href="history.html" style="background:#0284c7; color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:600;">← กลับหน้ารวมประวัติ</a>
+                        </div>
+                    `;
+                    return;
+                }
+
                 const cat = App.getCategoryById(deed.categoryId || deed.category_id);
                 document.getElementById('doc-category-name').textContent = cat.name || 'ช่วยเหลืองานภายใน วพอ.';
                 document.getElementById('doc-activity-title').textContent = deed.description || deed.title || 'กิจกรรมจิตอาสา';
@@ -378,6 +391,20 @@
                 
                 const approver = deed.approved_by || deed.approvedBy || deed.signer || 'น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์';
                 document.getElementById('doc-approver-name').textContent = approver;
+
+                // Render Digital Signature if available
+                if (deed.signatureKey) {
+                    const sigSrc = App.getImage(deed.signatureKey);
+                    if (sigSrc) {
+                        const sigContainer = document.querySelector('.signature-section');
+                        if (sigContainer) {
+                            const sigImg = document.createElement('img');
+                            sigImg.src = sigSrc;
+                            sigImg.style.cssText = 'height: 45px; max-width: 160px; object-fit: contain; margin-bottom: -15px; z-index: 2; position: relative;';
+                            sigContainer.insertBefore(sigImg, sigContainer.children[1]);
+                        }
+                    }
+                }
 
                 const evidenceImg = document.getElementById('doc-evidence-img');
                 const imgKey = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]);

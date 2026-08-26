@@ -282,7 +282,7 @@
     <script src="data/students_data.js?v=3315"></script>
     <script src="data/deeds_data.js?v=3324"></script>
     <script src="data/app_settings.js?v=85"></script>
-  <script src="app.js?v=3360"></script>
+  <script src="app.js?v=3380"></script>
     <script>
         let currentUser = null;
         let allDeeds = [];
@@ -375,10 +375,14 @@
             ${d.note ? `<div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px">💬 ${d.note}</div>` : ''}
             ${rejectBox}
             ${images ? `<div class="images-row">${images}</div>` : ''}
-            <div style="margin-top:8px; display:flex; gap:8px; align-items:center;">
-              <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:4px 10px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+            <div style="margin-top:8px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+              ${d.status === 'approved' ? `
+              <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="font-size:0.75rem; padding:4px 10px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600;">
                 📄 พิมพ์ PDF ใบความดี
-              </a>
+              </a>` : `
+              <span style="font-size:0.75rem; color:#94a3b8; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px; border:1px dashed rgba(255,255,255,0.15);">
+                🔒 พิมพ์ PDF ได้เมื่ออาจารย์อนุมัติแล้ว
+              </span>`}
               ${canDelete ? `<button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="deleteDeed('${d.id}')">🗑️ ลบ</button>` : ''}
             </div>
           </div>

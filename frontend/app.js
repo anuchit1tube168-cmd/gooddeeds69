@@ -819,8 +819,11 @@ const App = {
         const replyMarkup = {
             inline_keyboard: [
                 [
-                    { text: '✅ อนุมัติ (Approve)', callback_data: `approve_${deed.id}_${student.student_id}` },
-                    { text: '❌ ปฏิเสธ (Reject)', callback_data: `reject_${deed.id}_${student.student_id}` }
+                    { text: '✅ อนุมัติด่วน', callback_data: `approve_${deed.id}_${student.student_id}` },
+                    { text: '❌ ปฏิเสธ', callback_data: `reject_${deed.id}_${student.student_id}` }
+                ],
+                [
+                    { text: '✍️ ตรวจสอบ & เซ็นชื่อดิจิทัล', url: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id=${deed.id}&studentId=${student.student_id}` }
                 ],
                 [
                     { text: '🌐 เปิดแผงควบคุมอาจารย์', url: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/teacher-dashboard.html' }

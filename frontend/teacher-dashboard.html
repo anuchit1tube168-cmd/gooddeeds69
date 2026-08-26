@@ -791,7 +791,7 @@
   <script src="data/students_photos.js?v=3340"></script>
   <script src="data/deeds_data.js?v=3340"></script>
   <script src="data/app_settings.js?v=3340"></script>
-  <script src="app.js?v=3360"></script>
+  <script src="app.js?v=3380"></script>
   <script src="liff-sdk.js?v=3360"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
@@ -937,8 +937,9 @@
       </div>
       <div class="pcard-actions">
         <button class="btn btn-outline btn-sm" onclick="openStuModal('${s.student_id}')">👁️ ดูโปรไฟล์</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.4);" onclick="window.open('approve_sign.html?id=${d.id}&studentId=${s.student_id}','_blank')">✍️ ตรวจ & เซ็นชื่อ</button>
         <button class="btn btn-danger btn-sm" onclick="openRejectModal('${s.student_id}','${d.id}')">❌ ปฏิเสธ</button>
-        <button class="btn btn-success btn-sm" onclick="quickApprove('${s.student_id}','${d.id}')">✅ อนุมัติ</button>
+        <button class="btn btn-success btn-sm" onclick="quickApprove('${s.student_id}','${d.id}')">✅ อนุมัติด่วน</button>
       </div>
     </div>`;
       }).join('');

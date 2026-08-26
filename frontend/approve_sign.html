@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบตรวจอนุมัติและเซ็นชื่อดิจิทัล — วิทยาลัยพยาบาลทหารอากาศ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a192f;
+            --navy-dark: #07111e;
+            --gold: #c9a227;
+            --green: #22c55e;
+            --red: #ef4444;
+            --text-dark: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #07111e;
+            color: #f8fafc;
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        .approve-card {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+            margin-bottom: 30px;
+        }
+
+        .header {
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 14px;
+            margin-bottom: 16px;
+        }
+
+        .header img {
+            width: 65px;
+            height: 65px;
+            object-fit: contain;
+            margin-bottom: 8px;
+        }
+
+        .header h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.25rem;
+            color: var(--gold);
+        }
+
+        .header p {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Deed Details Box */
+        .deed-details {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 18px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        .row { display: flex; justify-content: space-between; border-bottom: 1px dashed rgba(255,255,255,0.06); padding: 4px 0; }
+        .row:last-child { border-bottom: none; }
+        .label { color: #94a3b8; }
+        .val { font-weight: 600; color: #fff; text-align: right; }
+
+        /* Photo Evidence */
+        .photo-preview {
+            width: 100%;
+            max-height: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.15);
+            margin: 12px 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .photo-preview img {
+            max-width: 100%;
+            max-height: 250px;
+            object-fit: contain;
+        }
+
+        /* Signature Canvas Box */
+        .sig-container {
+            margin-top: 16px;
+        }
+
+        .sig-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1rem;
+            color: var(--gold);
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .canvas-box {
+            width: 100%;
+            height: 160px;
+            background: #ffffff;
+            border-radius: 8px;
+            border: 2px dashed #0a192f;
+            position: relative;
+            touch-action: none;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            cursor: crosshair;
+        }
+
+        .sig-hint {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #94a3b8;
+            font-size: 0.85rem;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .sig-tools {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            font-size: 0.85rem;
+        }
+
+        .btn-clear {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            padding: 5px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        .actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-approve {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: #fff;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.4);
+            transition: transform 0.2s;
+        }
+        .btn-approve:hover { transform: translateY(-2px); }
+
+        .btn-reject {
+            background: rgba(239, 68, 68, 0.15);
+            color: #fca5a5;
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 12px;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .approver-input {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.95rem;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="approve-card">
+        <div class="header">
+            <img src="510903.jpg" alt="วพอ.">
+            <h1>ระบบตรวจอนุมัติและลงนามดิจิทัล</h1>
+            <p>วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ</p>
+        </div>
+
+        <div class="deed-details" id="deed-info">
+            <div class="row">
+                <span class="label">👤 นักเรียนผู้ยื่น:</span>
+                <span class="val" id="stu-name">กำลังโหลด...</span>
+            </div>
+            <div class="row">
+                <span class="label">🎫 รหัสนักเรียน:</span>
+                <span class="val" id="stu-id">-</span>
+            </div>
+            <div class="row">
+                <span class="label">📂 หมวดหมู่:</span>
+                <span class="val" id="deed-cat" style="color:var(--gold);">-</span>
+            </div>
+            <div class="row">
+                <span class="label">📝 รายละเอียด:</span>
+                <span class="val" id="deed-desc">-</span>
+            </div>
+            <div class="row">
+                <span class="label">📅 วันที่ทำกิจกรรม:</span>
+                <span class="val" id="deed-date">-</span>
+            </div>
+            <div class="row">
+                <span class="label">⏱️ จำนวนชั่วโมงที่ขอ:</span>
+                <span class="val" id="deed-hours" style="color:#4ade80; font-size:1.1rem;">- ชม.</span>
+            </div>
+        </div>
+
+        <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:4px;">🖼️ ภาพถ่ายหลักฐานที่แนบ:</div>
+        <div class="photo-preview">
+            <img id="evidence-img" src="510903.jpg" alt="หลักฐาน">
+        </div>
+
+        <!-- Approver Name -->
+        <div style="margin-top: 14px;">
+            <label style="font-size:0.85rem; color:#94a3b8;">✍️ ชื่ออาจารย์ผู้ตรวจประเมิน/อนุมัติ:</label>
+            <input type="text" id="approver-name" class="approver-input" value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์">
+        </div>
+
+        <!-- E-Signature Pad -->
+        <div class="sig-container">
+            <div class="sig-title">
+                <span>🖋️ ลายมือชื่ออาจารย์ผู้ตรวจประเมิน:</span>
+            </div>
+            <div class="canvas-box" id="canvas-wrap">
+                <canvas id="sig-canvas"></canvas>
+                <div class="sig-hint" id="sig-hint">✍️ ใช้นิ้วหรือปากกาเซ็นชื่อในกรอบนี้</div>
+            </div>
+            <div class="sig-tools">
+                <span style="color:#64748b; font-size:0.75rem;">ลายเซ็นจะถูกประทับลงในแบบบันทึก A4 PDF อัตโนมัติ</span>
+                <button class="btn-clear" onclick="clearSignature()">🗑️ ล้างลายเซ็น</button>
+            </div>
+        </div>
+
+        <!-- Approval Actions -->
+        <div class="actions">
+            <button class="btn-reject" onclick="handleAction('rejected')">❌ ไม่อนุมัติ</button>
+            <button class="btn-approve" onclick="handleAction('approved')">✅ อนุมัติ & ประทับลายเซ็น</button>
+        </div>
+    </div>
+
+    <script src="data/students_data.js"></script>
+    <script src="data/deeds_data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        let canvas, ctx, isDrawing = false, hasSignature = false;
+        let currentDeed = null, currentStudent = null;
+
+        function initSignaturePad() {
+            canvas = document.getElementById('sig-canvas');
+            ctx = canvas.getContext('2d');
+
+            function resizeCanvas() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * 2;
+                canvas.height = rect.height * 2;
+                ctx.scale(2, 2);
+                ctx.strokeStyle = '#0b2f64';
+                ctx.lineWidth = 2.5;
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+            }
+            resizeCanvas();
+
+            function getPos(e) {
+                const rect = canvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return {
+                    x: clientX - rect.left,
+                    y: clientY - rect.top
+                };
+            }
+
+            function startDraw(e) {
+                isDrawing = true;
+                hasSignature = true;
+                document.getElementById('sig-hint').style.display = 'none';
+                const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(pos.x, pos.y);
+            }
+
+            function draw(e) {
+                if (!isDrawing) return;
+                e.preventDefault();
+                const pos = getPos(e);
+                ctx.lineTo(pos.x, pos.y);
+                ctx.stroke();
+            }
+
+            function stopDraw() { isDrawing = false; }
+
+            canvas.addEventListener('mousedown', startDraw);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDraw);
+            canvas.addEventListener('mouseleave', stopDraw);
+
+            canvas.addEventListener('touchstart', startDraw, { passive: false });
+            canvas.addEventListener('touchmove', draw, { passive: false });
+            canvas.addEventListener('touchend', stopDraw);
+        }
+
+        function clearSignature() {
+            if (!ctx || !canvas) return;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+            document.getElementById('sig-hint').style.display = 'block';
+        }
+
+        function loadDeedData() {
+            const params = new URLSearchParams(window.location.search);
+            const deedId = params.get('id');
+            const studentId = params.get('studentId');
+
+            function str(v) { return v ? String(v).trim() : ''; }
+
+            if (deedId) {
+                currentDeed = (typeof DEEDS_DATA !== 'undefined' ? DEEDS_DATA : []).find(d => str(d.id) === str(deedId));
+            }
+
+            if (!currentDeed && studentId) {
+                const sDeeds = (typeof DEEDS_DATA !== 'undefined' ? DEEDS_DATA : []).filter(d => str(d.student_id || d.studentId) === str(studentId));
+                if (sDeeds.length) currentDeed = sDeeds[sDeeds.length - 1];
+            }
+
+            if (currentDeed) {
+                const sid = currentDeed.student_id || currentDeed.studentId;
+                currentStudent = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
+            } else if (studentId) {
+                currentStudent = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
+            }
+
+            if (currentStudent) {
+                const rank = currentStudent.rank || 'นพอ.';
+                document.getElementById('stu-name').textContent = rank + ' ' + (currentStudent.first_name || '') + ' ' + (currentStudent.last_name || '');
+                document.getElementById('stu-id').textContent = currentStudent.student_id;
+            }
+
+            if (currentDeed) {
+                const cat = App.getCategoryById(currentDeed.categoryId || currentDeed.category_id);
+                document.getElementById('deed-cat').textContent = (cat.emoji || '⭐') + ' ' + (cat.name || 'กิจกรรมจิตอาสา');
+                document.getElementById('deed-desc').textContent = currentDeed.description || currentDeed.title || '-';
+                document.getElementById('deed-date').textContent = App.formatDate(currentDeed.activityDate || currentDeed.event_date);
+                document.getElementById('deed-hours').textContent = (currentDeed.hours || 0) + ' ชม.';
+
+                const evidenceImg = document.getElementById('evidence-img');
+                const imgKey = currentDeed.imageUrl || (currentDeed.imageUrls && currentDeed.imageUrls[0]);
+                if (imgKey) {
+                    const localImg = App.getImage(imgKey);
+                    evidenceImg.src = localImg || (imgKey.startsWith('http') ? imgKey : 'photos/' + imgKey);
+                }
+            }
+
+            initSignaturePad();
+        }
+
+        async function handleAction(status) {
+            const approverName = document.getElementById('approver-name').value.trim() || 'อาจารย์ผู้ตรวจประเมิน';
+            let sigDataUrl = '';
+            
+            if (hasSignature && canvas) {
+                sigDataUrl = canvas.toDataURL('image/png');
+            }
+
+            if (currentDeed && currentStudent) {
+                // Save signature image key
+                let sigKey = '';
+                if (sigDataUrl) {
+                    sigKey = 'sig_' + currentDeed.id;
+                    App.saveImage(sigDataUrl, sigKey);
+                }
+
+                // Update deed
+                currentDeed.signatureKey = sigKey;
+                await App.updateDeedStatus(currentStudent.student_id, currentDeed.id, status, approverName);
+
+                alert(status === 'approved' ? '✅ อนุมัติและประทับลายมือชื่อเรียบร้อยแล้ว!' : '❌ บันทึกสถานะปฏิเสธแล้ว');
+
+                // Redirect to slip or dashboard
+                if (status === 'approved') {
+                    window.location.href = 'deed_slip.html?id=' + currentDeed.id + '&studentId=' + currentStudent.student_id;
+                } else {
+                    window.location.href = 'teacher-dashboard.html';
+                }
+            } else {
+                alert('ดำเนินการสำเร็จ');
+                window.location.href = 'teacher-dashboard.html';
+            }
+        }
+
+        window.addEventListener('load', loadDeedData);
+    </script>
+</body>
+</html>

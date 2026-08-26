@@ -1333,7 +1333,7 @@
     <script src="data/students_photos.js?v=3340"></script>
     <script src="data/deeds_data.js?v=3340"></script>
     <script src="data/app_settings.js?v=3340"></script>
-    <script src="app.js?v=3360"></script>
+    <script src="app.js?v=3380"></script>
     <script src="chibi3d.js?v=1"></script>
     <script src="liff-sdk.js?v=3360"></script>
 
@@ -1776,9 +1776,12 @@
                             ${badges[d.status] || ''}
                         </td>
                         <td style="text-align:center;">
-                            <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.75rem; padding:4px 8px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px;">
+                            ${d.status === 'approved' ? `
+                            <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.75rem; padding:4px 8px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600;">
                                 📄 พิมพ์ PDF
-                            </a>
+                            </a>` : `
+                            <span style="font-size:0.75rem; color:var(--text-muted);">🔒 รออนุมัติ</span>
+                            `}
                         </td>
                     </tr>
                 `;
