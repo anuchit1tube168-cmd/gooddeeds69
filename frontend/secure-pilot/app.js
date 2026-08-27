@@ -4,7 +4,7 @@
   const app = document.getElementById("app");
   const bridge = document.getElementById("api-bridge");
   const callbacks = new Map();
-  const state = { sessionToken: sessionStorage.getItem("gd_session") || "", user: null, deeds: [], members: [], membersLoaded: false, issuedCredential: null, tab: "records", busy: false, loginRole: "student", liffReady: false, liffLoggedIn: false, liffError: "" };
+  const state = { sessionToken: sessionStorage.getItem("gd_session") || "", user: null, deeds: [], members: [], membersLoaded: false, issuedCredential: null, tab: "records", busy: false, loginRole: "student", liffReady: false, liffLoggedIn: false, liffError: "", liffPilotOnly: false };
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[char]);
   const statusLabel = (value) => ({pending:"รอตรวจ",approved:"อนุมัติแล้ว",rejected:"ไม่อนุมัติ"})[value] || value;
@@ -55,7 +55,7 @@
   }
 
   function renderLogin() {
-    const lineStatus = state.liffError ? `<div class="line-status error">LINE LIFF: ${escapeHtml(state.liffError)}</div>` : state.liffLoggedIn ? '<div class="line-status ok">เชื่อมต่อบัญชี LINE แล้ว</div>' : '<div class="line-status">นักเรียนเปิดผ่าน LINE เพื่อเข้าสู่ระบบและรับผลการอนุมัติ</div>';
+    const lineStatus = state.liffPilotOnly ? '<div class="line-status">โหมด Pilot: เปิดทดสอบด้วยบัญชีระบบก่อน แล้ว LIFF จะทำงานเมื่อสลับเข้าหน้าเดิม</div>' : state.liffError ? `<div class="line-status error">LINE LIFF: ${escapeHtml(state.liffError)}</div>` : state.liffLoggedIn ? '<div class="line-status ok">เชื่อมต่อบัญชี LINE แล้ว</div>' : '<div class="line-status">นักเรียนเปิดผ่าน LINE เพื่อเข้าสู่ระบบและรับผลการอนุมัติ</div>';
     app.innerHTML = `<main class="login"><section class="login-card"><div class="login-mark"><img src="510903.jpg" alt="ตราวิทยาลัยพยาบาลทหารอากาศ" width="92" height="92"></div><div class="pilot-badge">SECURE PILOT · LIFF VERIFIED</div><h1>ระบบบันทึกความดีจิตอาสา</h1><p>วิทยาลัยพยาบาลทหารอากาศ · ปีการศึกษา 2569</p><div class="login-tabs" role="tablist" aria-label="ประเภทผู้ใช้งาน"><button type="button" class="login-tab ${state.loginRole === "student" ? "active" : ""}" data-login-role="student" role="tab" aria-selected="${state.loginRole === "student"}">นักเรียน</button><button type="button" class="login-tab ${state.loginRole === "staff" ? "active" : ""}" data-login-role="staff" role="tab" aria-selected="${state.loginRole === "staff"}">อาจารย์ / ผู้ดูแล</button></div><div class="line-box"><button type="button" id="line-login" class="btn btn-line" ${state.liffReady && !state.liffLoggedIn ? "" : "hidden"}>เข้าสู่ระบบด้วย LINE</button>${lineStatus}</div><form id="login-form"><div class="field"><label for="username">รหัสนักเรียน / ชื่อผู้ใช้</label><input id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" required></div><div class="field"><label for="password">รหัสผ่าน</label><input id="password" name="password" type="password" autocomplete="current-password" required></div><button class="btn btn-primary" style="width:100%;margin-top:7px" type="submit">${state.loginRole === "student" && state.liffLoggedIn ? "ผูกบัญชีนักเรียนกับ LINE และเข้าสู่ระบบ" : "เข้าสู่ระบบอย่างปลอดภัย"}</button></form><div class="security-strip"><b>🔒 LINE user ID ตรวจสอบที่ Apps Script</b>GitHub เก็บเฉพาะหน้าเว็บ ไม่เก็บรายชื่อนักเรียน รหัสผ่าน Channel token หรือ Channel secret</div><div class="login-note">การผูก LINE ครั้งแรกต้องยืนยันด้วยรหัสนักเรียนและรหัสผ่าน</div></section></main>`;
     document.getElementById("login-form").addEventListener("submit", login);
     const lineButton = document.getElementById("line-login");
@@ -184,6 +184,10 @@
 
   async function initializeLiff() {
     if (!CONFIG.LIFF_ID || !window.liff) return;
+    if (CONFIG.LIFF_ENDPOINT_PATH && location.pathname !== CONFIG.LIFF_ENDPOINT_PATH) {
+      state.liffPilotOnly = true;
+      return;
+    }
     try {
       await window.liff.init({ liffId: CONFIG.LIFF_ID });
       state.liffReady = true;

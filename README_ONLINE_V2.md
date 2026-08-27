@@ -9,7 +9,7 @@
 
 หน้า Pilot: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/`
 
-เปิดผ่าน LIFF โดยต่อ path จาก LIFF URL เดิม: `https://liff.line.me/2010948179-Ympqt2bT/secure-pilot/`
+LIFF ID เดิมมี Endpoint เป็น `.../frontend/index.html` จึงห้ามต่อ `/secure-pilot/` ท้าย LIFF URL เพราะจะกลายเป็น `index.html/secure-pilot/` และ 404 หน้า Pilot จึงปิดปุ่ม LINE ไว้โดยตั้ง `LIFF_ENDPOINT_PATH` ให้ตรงหน้าเดิม
 
 Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
@@ -37,12 +37,14 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 ## การทำงานของ LINE LIFF
 
-1. นักเรียนเปิด LIFF URL ที่ลงท้าย `/secure-pilot/`
-2. หน้าเว็บส่ง `liff.getIDToken()` ไป Apps Script โดยไม่ส่งค่าจาก `getDecodedIDToken()` มาเป็นหลักฐานยืนยันตัวตน
-3. Apps Script ตรวจ ID token กับ LINE และตรวจว่า `aud` ตรง `LINE_LOGIN_CHANNEL_ID`
-4. การใช้งานครั้งแรก นักเรียนยืนยันรหัสนักเรียน/รหัสผ่านเพื่อผูก `sub` (LINE user ID) กับสมาชิกหนึ่งบัญชี
-5. ครั้งต่อไป LIFF เข้าระบบได้จาก LINE โดยไม่ต้องกรอกรหัสผ่านซ้ำ ตราบใดที่ session/ID token ยังใช้ได้
-6. เมื่ออาจารย์อนุมัติหรือไม่อนุมัติ Apps Script ส่งผลด้วย Messaging API ไปยัง `lineUserId` ที่ผูกไว้
+1. ระหว่าง Pilot ให้ทดสอบหน้าเว็บตรงและบัญชีระบบก่อน โดยยังไม่เปลี่ยน LIFF/Rich Menu เดิม
+2. หลังทดสอบ Apps Script ผ่าน ให้คัดลอกไฟล์ Pilot ทับเฉพาะ frontend หลักแบบ atomic commit เพื่อให้ Endpoint เดิม `frontend/index.html` โหลดระบบใหม่
+3. นักเรียนเปิด LIFF URL เดิม ไม่ต่อ path เพิ่ม
+4. หน้าเว็บส่ง `liff.getIDToken()` ไป Apps Script โดยไม่ส่งค่าจาก `getDecodedIDToken()` มาเป็นหลักฐานยืนยันตัวตน
+5. Apps Script ตรวจ ID token กับ LINE และตรวจว่า `aud` ตรง `LINE_LOGIN_CHANNEL_ID`
+6. การใช้งานครั้งแรก นักเรียนยืนยันรหัสนักเรียน/รหัสผ่านเพื่อผูก `sub` (LINE user ID) กับสมาชิกหนึ่งบัญชี
+7. ครั้งต่อไป LIFF เข้าระบบได้จาก LINE โดยไม่ต้องกรอกรหัสผ่านซ้ำ ตราบใดที่ session/ID token ยังใช้ได้
+8. เมื่ออาจารย์อนุมัติหรือไม่อนุมัติ Apps Script ส่งผลด้วย Messaging API ไปยัง `lineUserId` ที่ผูกไว้
 
 Channel access token และ Channel secret ห้ามอยู่ใน `config.js` หรือไฟล์ GitHub ส่วน LIFF ID ไม่ใช่ secret จึงอยู่ใน frontend ได้
 
@@ -90,7 +92,7 @@ Channel access token และ Channel secret ห้ามอยู่ใน `co
 
 เว็บตรง: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/`
 
-LIFF: `https://liff.line.me/2010948179-Ympqt2bT/secure-pilot/`
+LIFF หลังสลับหน้าเดิม: `https://liff.line.me/2010948179-Ympqt2bT`
 
 หน้าเดิมยังไม่ถูกสลับออกจนกว่า Apps Script v2 จะผ่านการทดสอบ end-to-end
 
