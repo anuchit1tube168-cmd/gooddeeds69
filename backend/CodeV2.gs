@@ -10,11 +10,14 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.1.0',
+  VERSION: '2.2.0',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
   MAX_EVIDENCE_BYTES: 2 * 1024 * 1024,
+  MIGRATION_DEED_BATCH: 250,
+  MIGRATION_EVIDENCE_BATCH: 25,
+  LEGACY_ASSET_BASE: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/',
   SHEETS: {
     MEMBERS: 'MembersV2',
     RECORDS: 'GoodDeedRecordsV2',
@@ -264,6 +267,201 @@ function createMember_(session, payload, requestId) {
   const member = findMember_(function(row) { return String(row.username).toLowerCase() === username; });
   audit_(session.memberId, 'member.created', 'member', member.memberId, { username: username, studentId: studentId, role: role }, requestId);
   return { member: publicUser_(member), temporaryPassword: temporaryPassword };
+}
+
+/**
+ * Legacy migration utilities
+ * Required Script Properties:
+ * - LEGACY_STUDENTS_FILE_ID: private Drive JSON created for v2
+ * - LEGACY_DEEDS_FILE_ID: private Drive JSON created for v2
+ *
+ * Run startLegacyMigration() once after setupSystem() and bootstrapOwnerAdmin().
+ * It imports users without reusing legacy plaintext passwords, then migrates deeds
+ * and evidence in small batches. The trigger removes itself when complete.
+ */
+function startLegacyMigration() {
+  ensureSetup_();
+  const members = importLegacyStudents_();
+  stopLegacyMigrationTrigger_();
+  ScriptApp.newTrigger('legacyMigrationWorker_').timeBased().everyMinutes(5).create();
+  const firstBatch = legacyMigrationWorker_();
+  console.log('LEGACY_MIGRATION_STARTED members=' + JSON.stringify(members) + ' batch=' + JSON.stringify(firstBatch));
+}
+
+function legacyMigrationWorker_() {
+  const deedResult = importLegacyDeedsBatch_();
+  if (!deedResult.done) return { phase: 'deeds', result: deedResult };
+  const evidenceResult = migrateLegacyEvidenceBatch_();
+  if (evidenceResult.done) {
+    stopLegacyMigrationTrigger_();
+    const now = new Date().toISOString();
+    PropertiesService.getScriptProperties().setProperty('LEGACY_MIGRATION_COMPLETED_AT', now);
+    upsertConfig_('legacyMigrationCompletedAt', now);
+    audit_('system', 'legacy.migration.completed', 'system', 'migration-v2', evidenceResult, 'legacy-migration-complete');
+  }
+  return { phase: 'evidence', result: evidenceResult };
+}
+
+function stopLegacyMigration() {
+  stopLegacyMigrationTrigger_();
+  console.log('LEGACY_MIGRATION_STOPPED');
+}
+
+function importLegacyStudents_() {
+  const students = loadLegacyJson_('LEGACY_STUDENTS_FILE_ID');
+  if (!Array.isArray(students)) throw new Error('ไฟล์รายชื่อนักเรียนเดิมไม่ใช่ JSON array');
+  const table = table_(GD.SHEETS.MEMBERS);
+  const existingUsernames = new Set(table.rows.map(function(row) { return String(row.username).toLowerCase(); }));
+  const existingStudentIds = new Set(table.rows.map(function(row) { return String(row.studentId); }));
+  const now = new Date().toISOString();
+  const values = [];
+  const credentials = [['studentId','displayName','cohort','temporaryPassword']];
+  students.forEach(function(student) {
+    const studentId = clean_(student.studentId, 30);
+    const username = studentId.toLowerCase();
+    if (!studentId || existingUsernames.has(username) || existingStudentIds.has(studentId)) return;
+    const temporaryPassword = randomPassword_();
+    const password = newPassword_(temporaryPassword);
+    const member = {
+      memberId: 'MB-' + Utilities.getUuid(), username: username, studentId: studentId,
+      displayName: clean_(student.displayName, 160) || studentId,
+      cohort: clean_(student.cohort, 30), role: 'student',
+      passwordSalt: password.salt, passwordHash: password.hash,
+      mustChangePassword: true, active: true, lineUserId: '', createdAt: now, updatedAt: now
+    };
+    values.push(HEADERS[GD.SHEETS.MEMBERS].map(function(header) { return member[header] === undefined ? '' : member[header]; }));
+    credentials.push([studentId, member.displayName, member.cohort, temporaryPassword]);
+    existingUsernames.add(username); existingStudentIds.add(studentId);
+  });
+  if (values.length) table.sheet.getRange(table.sheet.getLastRow() + 1, 1, values.length, HEADERS[GD.SHEETS.MEMBERS].length).setValues(values);
+  let credentialsFileId = PropertiesService.getScriptProperties().getProperty('LEGACY_CREDENTIALS_FILE_ID') || '';
+  if (credentials.length > 1) {
+    const csv = '\ufeff' + credentials.map(function(row) { return row.map(csvEscape_).join(','); }).join('\r\n');
+    const folder = DriveApp.getFolderById(PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID'));
+    const file = folder.createFile(Utilities.newBlob(csv, 'text/csv', 'Legacy-Initial-Credentials-' + Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyyMMdd-HHmm') + '.csv'));
+    file.setDescription('รหัสผ่านชั่วคราวสำหรับย้ายระบบ — เก็บเป็นความลับและลบหลังแจกผู้ใช้ครบ');
+    credentialsFileId = file.getId();
+    PropertiesService.getScriptProperties().setProperty('LEGACY_CREDENTIALS_FILE_ID', credentialsFileId);
+  }
+  audit_('system', 'legacy.members.imported', 'system', 'migration-v2', { imported: values.length, credentialsFileId: credentialsFileId }, 'legacy-members-import');
+  console.log('LEGACY_MEMBERS imported=' + values.length + ' credentialsFileId=' + credentialsFileId);
+  return { imported: values.length, credentialsFileId: credentialsFileId };
+}
+
+function importLegacyDeedsBatch_() {
+  const props = PropertiesService.getScriptProperties();
+  const deeds = loadLegacyJson_('LEGACY_DEEDS_FILE_ID');
+  if (!Array.isArray(deeds)) throw new Error('ไฟล์รายการความดีเดิมไม่ใช่ JSON array');
+  const cursor = Math.max(Number(props.getProperty('LEGACY_DEEDS_CURSOR')) || 0, 0);
+  if (cursor >= deeds.length) return { done: true, cursor: cursor, total: deeds.length, imported: 0 };
+  const batch = deeds.slice(cursor, cursor + GD.MIGRATION_DEED_BATCH);
+  const members = table_(GD.SHEETS.MEMBERS).rows;
+  const memberByStudentId = {}; members.forEach(function(member) { if (member.studentId) memberByStudentId[String(member.studentId)] = member; });
+  const recordTable = table_(GD.SHEETS.RECORDS);
+  const existingIds = new Set(recordTable.rows.map(function(row) { return String(row.recordId); }));
+  const values = [];
+  let skippedMissingMember = 0, skippedSummary = 0, skippedDuplicate = 0;
+  batch.forEach(function(deed) {
+    const legacyId = clean_(deed.legacyId, 100);
+    const recordId = 'LEGACY-' + legacyId;
+    if (!legacyId || existingIds.has(recordId)) { skippedDuplicate++; return; }
+    if (Number(deed.hours) > 24 && /สรุป|สะสม|รวมชั่วโมง/.test(String(deed.description || ''))) { skippedSummary++; return; }
+    const member = memberByStudentId[String(deed.studentId)];
+    if (!member) { skippedMissingMember++; return; }
+    const sourceEvidence = (deed.imageUrls && deed.imageUrls[0]) || deed.pdfUrl || '';
+    const submittedAt = isoOrDate_(deed.submittedAt, deed.activityDate);
+    const reviewedAt = isoOrDate_(deed.approvedAt, '');
+    const record = {
+      recordId: recordId, requestId: 'legacy:' + legacyId, memberId: member.memberId,
+      studentId: member.studentId, ownerName: member.displayName, cohort: member.cohort,
+      category: clean_(deed.category, 120), activityDate: clean_(deed.activityDate, 20),
+      hours: Number(deed.hours) || 0, description: clean_(deed.description, 1200),
+      evidenceFileId: '', evidenceName: sourceEvidence ? 'รอย้ายหลักฐานเดิม' : '', evidenceUrl: String(sourceEvidence || ''),
+      status: normalizeLegacyStatus_(deed.status), submittedAt: submittedAt,
+      reviewerId: '', reviewerName: clean_(deed.approvedBy, 160), reviewedAt: reviewedAt,
+      reviewNote: clean_([deed.rejectReason, deed.note].filter(Boolean).join(' | '), 500),
+      updatedAt: reviewedAt || submittedAt
+    };
+    values.push(HEADERS[GD.SHEETS.RECORDS].map(function(header) { return record[header] === undefined ? '' : record[header]; }));
+    existingIds.add(recordId);
+  });
+  if (values.length) recordTable.sheet.getRange(recordTable.sheet.getLastRow() + 1, 1, values.length, HEADERS[GD.SHEETS.RECORDS].length).setValues(values);
+  const nextCursor = Math.min(cursor + batch.length, deeds.length);
+  props.setProperty('LEGACY_DEEDS_CURSOR', String(nextCursor));
+  const result = { done: nextCursor >= deeds.length, cursor: nextCursor, total: deeds.length, imported: values.length, skippedMissingMember: skippedMissingMember, skippedSummary: skippedSummary, skippedDuplicate: skippedDuplicate };
+  audit_('system', 'legacy.deeds.batch', 'system', 'migration-v2', result, 'legacy-deeds-' + cursor);
+  console.log('LEGACY_DEEDS ' + JSON.stringify(result));
+  return result;
+}
+
+function migrateLegacyEvidenceBatch_() {
+  const props = PropertiesService.getScriptProperties();
+  const table = table_(GD.SHEETS.RECORDS);
+  const startRow = Math.max(Number(props.getProperty('LEGACY_EVIDENCE_ROW_CURSOR')) || 2, 2);
+  const lastRow = table.sheet.getLastRow();
+  if (startRow > lastRow) return { done: true, cursor: startRow, lastRow: lastRow, migrated: 0, failed: 0 };
+  const endRow = Math.min(startRow + GD.MIGRATION_EVIDENCE_BATCH - 1, lastRow);
+  const range = table.sheet.getRange(startRow, 1, endRow - startRow + 1, table.headers.length);
+  const rows = range.getValues();
+  const folder = DriveApp.getFolderById(props.getProperty('EVIDENCE_FOLDER_ID'));
+  const fileIdIndex = table.headers.indexOf('evidenceFileId');
+  const fileNameIndex = table.headers.indexOf('evidenceName');
+  const fileUrlIndex = table.headers.indexOf('evidenceUrl');
+  const recordIdIndex = table.headers.indexOf('recordId');
+  const updatedAtIndex = table.headers.indexOf('updatedAt');
+  let migrated = 0, failed = 0, skipped = 0;
+  rows.forEach(function(row) {
+    const recordId = String(row[recordIdIndex] || '');
+    const source = String(row[fileUrlIndex] || '');
+    if (recordId.indexOf('LEGACY-') !== 0 || row[fileIdIndex] || !source) { skipped++; return; }
+    try {
+      const url = /^https:\/\//i.test(source) ? source : GD.LEGACY_ASSET_BASE + source.replace(/^\/+/, '');
+      const response = UrlFetchApp.fetch(encodeURI(url), { muteHttpExceptions: true, followRedirects: true });
+      if (response.getResponseCode() < 200 || response.getResponseCode() >= 300) throw new Error('HTTP ' + response.getResponseCode());
+      const blob = response.getBlob();
+      const extension = extensionForMime_(blob.getContentType());
+      const file = folder.createFile(blob.setName(cleanFileName_(recordId + extension)));
+      file.setDescription('หลักฐานย้ายจากระบบเดิม | record=' + recordId);
+      row[fileIdIndex] = file.getId(); row[fileNameIndex] = file.getName(); row[fileUrlIndex] = file.getUrl(); row[updatedAtIndex] = new Date().toISOString();
+      migrated++;
+    } catch (error) { failed++; console.error('LEGACY_EVIDENCE record=' + recordId + ' error=' + safeError_(error)); }
+  });
+  range.setValues(rows);
+  const nextRow = endRow + 1;
+  props.setProperty('LEGACY_EVIDENCE_ROW_CURSOR', String(nextRow));
+  const result = { done: nextRow > lastRow, cursor: nextRow, lastRow: lastRow, migrated: migrated, failed: failed, skipped: skipped };
+  audit_('system', 'legacy.evidence.batch', 'system', 'migration-v2', result, 'legacy-evidence-' + startRow);
+  console.log('LEGACY_EVIDENCE ' + JSON.stringify(result));
+  return result;
+}
+
+function stopLegacyMigrationTrigger_() {
+  ScriptApp.getProjectTriggers().forEach(function(trigger) { if (trigger.getHandlerFunction() === 'legacyMigrationWorker_') ScriptApp.deleteTrigger(trigger); });
+}
+
+function loadLegacyJson_(propertyName) {
+  const id = PropertiesService.getScriptProperties().getProperty(propertyName);
+  if (!id) throw new Error('กรุณาตั้ง Script Property ' + propertyName);
+  return JSON.parse(DriveApp.getFileById(id).getBlob().getDataAsString('UTF-8').replace(/^\ufeff/, ''));
+}
+
+function normalizeLegacyStatus_(value) {
+  const status = String(value || '').toLowerCase();
+  return status === 'rejected' ? 'rejected' : status === 'pending' ? 'pending' : 'approved';
+}
+
+function isoOrDate_(value, fallbackDate) {
+  if (value) { const date = new Date(value); if (!isNaN(date.getTime())) return date.toISOString(); }
+  return /^\d{4}-\d{2}-\d{2}$/.test(String(fallbackDate || '')) ? String(fallbackDate) + 'T00:00:00.000Z' : '';
+}
+
+function extensionForMime_(mime) {
+  return ({ 'image/jpeg': '.jpg', 'image/png': '.png', 'application/pdf': '.pdf' })[String(mime || '').toLowerCase()] || '';
+}
+
+function csvEscape_(value) {
+  const text = String(value === undefined || value === null ? '' : value);
+  return /[",\r\n]/.test(text) ? '"' + text.replace(/"/g, '""') + '"' : text;
 }
 
 function saveEvidence_(evidence, session, requestId) {

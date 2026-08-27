@@ -29,6 +29,29 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 หากไม่มีสิทธิ์แก้ deployment เดิม ให้สร้าง New deployment แบบ Web app แล้วแก้ `online-v2/config.js` เป็น URL ใหม่
 
+## ย้ายข้อมูลเดิมจาก GitHub
+
+ชุดข้อมูลย้ายระบบถูกตัด password, เบอร์โทร, email และ Telegram ID เดิมออกแล้ว และเก็บแบบ Private ใน Google Drive:
+
+- นักเรียน 380 คน: `legacy_students_v2.json`
+- บันทึกความดี 3,041 รายการ: `legacy_deeds_v2.json`
+- รายงานตรวจข้อมูล: `migration_manifest_v2.json`
+
+เพิ่ม Script Properties:
+
+- `LEGACY_STUDENTS_FILE_ID` = `1QsLz93kMGI-hwm-7JT0g8hbcEsNnU7ff`
+- `LEGACY_DEEDS_FILE_ID` = `1jafL_qesTykkfjRz4B1_TxQft8m_0Bi2`
+
+จากนั้นรัน `startLegacyMigration()` หนึ่งครั้ง ระบบจะ:
+
+1. สร้างบัญชีนักเรียนด้วยรหัสผ่านชั่วคราวใหม่ โดยไม่ใช้ password เดิมจาก GitHub
+2. สร้าง CSV รหัสผ่านชั่วคราวแบบ Private ในโฟลเดอร์หลักฐาน และเก็บ file ID ไว้ใน `LEGACY_CREDENTIALS_FILE_ID`
+3. ย้ายรายการความดีครั้งละ 250 รายการ
+4. ย้ายหลักฐานจาก GitHub เข้า Google Drive แบบ Private ครั้งละ 25 รายการ ทุก 5 นาที
+5. หยุด trigger อัตโนมัติเมื่อเสร็จ และบันทึก `LEGACY_MIGRATION_COMPLETED_AT`
+
+ระบบจะไม่ย้ายรายการสรุปสะสม 11 แถวที่มีชั่วโมงเกิน 24 ชั่วโมง เพื่อป้องกันยอดซ้ำ แต่ข้อมูลต้นฉบับยังอยู่ในไฟล์สำรองสำหรับตรวจทาน เมื่อแจกบัญชีครบแล้วให้ลบไฟล์ CSV รหัสผ่านชั่วคราว
+
 ## Script Properties
 
 ตั้งค่าเองก่อนรันครั้งแรก: `SPREADSHEET_ID`
