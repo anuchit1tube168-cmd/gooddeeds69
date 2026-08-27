@@ -10,7 +10,7 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.2.0',
+  VERSION: '2.3.0',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
@@ -57,6 +57,8 @@ function doPost(e) {
 
 function dispatch_(action, payload, token, requestId) {
   if (action === 'login') return login_(payload, requestId);
+  if (action === 'loginWithLine') return loginWithLine_(payload, requestId);
+  if (action === 'bindLineAndLogin') return bindLineAndLogin_(payload, requestId);
   const session = requireSession_(token);
   if (action === 'me') return { user: publicUser_(session) };
   if (action === 'logout') return logout_(token, session, requestId);
@@ -125,15 +127,67 @@ function login_(payload, requestId) {
   const username = clean_(payload.username, 120).toLowerCase();
   const password = String(payload.password || '');
   if (!username || !password) throw new Error('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน');
+  assertLoginAllowed_(username);
   const member = findMember_(function(row) {
     return String(row.username).toLowerCase() === username || String(row.studentId).toLowerCase() === username;
   });
   if (!member || !truthy_(member.active) || !verifyPassword_(password, member.passwordSalt, member.passwordHash)) {
+    registerLoginFailure_(username);
     audit_('anonymous', 'login.failed', 'member', username, { reason: 'invalid_credentials' }, requestId);
     throw new Error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
   }
+  clearLoginFailures_(username);
   const token = createSession_(member);
   audit_(member.memberId, 'login.succeeded', 'member', member.memberId, {}, requestId);
+  return { sessionToken: token, user: publicUser_(member) };
+}
+
+function loginWithLine_(payload, requestId) {
+  const line = verifyLineIdToken_(payload.idToken);
+  const member = findMember_(function(row) { return String(row.lineUserId) === line.userId; });
+  if (!member || !truthy_(member.active)) {
+    audit_('anonymous', 'line.login.unbound', 'lineUser', tokenHash_(line.userId).slice(0, 16), {}, requestId);
+    throw new Error('บัญชี LINE นี้ยังไม่ผูกกับนักเรียน');
+  }
+  const token = createSession_(member);
+  audit_(member.memberId, 'line.login.succeeded', 'member', member.memberId, {}, requestId);
+  return { sessionToken: token, user: publicUser_(member) };
+}
+
+function bindLineAndLogin_(payload, requestId) {
+  const username = clean_(payload.username, 120).toLowerCase();
+  const password = String(payload.password || '');
+  if (!username || !password) throw new Error('กรุณากรอกรหัสนักเรียนและรหัสผ่าน');
+  assertLoginAllowed_(username);
+  const line = verifyLineIdToken_(payload.idToken);
+  const member = findMember_(function(row) {
+    return String(row.username).toLowerCase() === username || String(row.studentId).toLowerCase() === username;
+  });
+  if (!member || member.role !== 'student' || !truthy_(member.active) || !verifyPassword_(password, member.passwordSalt, member.passwordHash)) {
+    registerLoginFailure_(username);
+    audit_('anonymous', 'line.bind.failed', 'member', username, { reason: 'invalid_credentials' }, requestId);
+    throw new Error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
+  }
+
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const table = table_(GD.SHEETS.MEMBERS);
+    const memberIndex = table.rows.findIndex(function(row) { return String(row.memberId) === String(member.memberId); });
+    if (memberIndex < 0) throw new Error('ไม่พบบัญชีนักเรียน');
+    const duplicate = table.rows.find(function(row) { return String(row.lineUserId) === line.userId && String(row.memberId) !== String(member.memberId); });
+    if (duplicate) throw new Error('บัญชี LINE นี้ผูกกับผู้ใช้อื่นแล้ว กรุณาติดต่อผู้ดูแล');
+    const currentLineId = String(table.rows[memberIndex].lineUserId || '');
+    if (currentLineId && currentLineId !== line.userId) throw new Error('บัญชีนักเรียนนี้ผูกกับ LINE อื่นแล้ว กรุณาติดต่อผู้ดูแล');
+    updateRow_(table.sheet, table.headers, memberIndex + 2, { lineUserId: line.userId, updatedAt: new Date().toISOString() });
+    member.lineUserId = line.userId;
+  } finally {
+    lock.releaseLock();
+  }
+
+  clearLoginFailures_(username);
+  const token = createSession_(member);
+  audit_(member.memberId, 'line.bound', 'member', member.memberId, { lineUserHash: tokenHash_(line.userId).slice(0, 16) }, requestId);
   return { sessionToken: token, user: publicUser_(member) };
 }
 
@@ -196,6 +250,7 @@ function reviewDeed_(session, payload, requestId) {
   if (decision === 'rejected' && !note) throw new Error('กรุณาระบุเหตุผลที่ไม่อนุมัติ');
 
   const lock = LockService.getScriptLock();
+  let reviewedRecord;
   lock.waitLock(20000);
   try {
     const table = table_(GD.SHEETS.RECORDS);
@@ -211,10 +266,14 @@ function reviewDeed_(session, payload, requestId) {
     });
     record.status = decision; record.reviewerId = session.memberId; record.reviewerName = session.displayName; record.reviewedAt = now; record.reviewNote = note; record.updatedAt = now;
     audit_(session.memberId, 'deed.' + decision, 'deed', recordId, { from: before, to: decision, note: note }, requestId);
-    return { deed: publicDeed_(record, session) };
+    reviewedRecord = record;
   } finally {
     lock.releaseLock();
   }
+  const owner = findMember_(function(row) { return String(row.memberId) === String(reviewedRecord.memberId); });
+  const lineNotified = owner && owner.lineUserId ? notifyLineReview_(String(owner.lineUserId), reviewedRecord, decision, note) : false;
+  audit_(session.memberId, lineNotified ? 'line.review.sent' : 'line.review.skipped', 'deed', recordId, {}, requestId);
+  return { deed: publicDeed_(reviewedRecord, session), lineNotified: lineNotified };
 }
 
 function changePassword_(session, payload, token, requestId) {
@@ -544,6 +603,55 @@ function notifyTelegram_(message) {
   } catch (error) { console.error('Telegram: ' + error); }
 }
 
+function verifyLineIdToken_(idToken) {
+  const token = String(idToken || '');
+  if (!token || token.length > 4096) throw new Error('ไม่พบ LINE ID token กรุณาเปิดระบบผ่าน LINE ใหม่');
+  const props = PropertiesService.getScriptProperties();
+  const channelId = props.getProperty('LINE_LOGIN_CHANNEL_ID');
+  if (!channelId) throw new Error('ผู้ดูแลยังไม่ได้ตั้งค่า LINE Login Channel ID');
+  const response = UrlFetchApp.fetch('https://api.line.me/oauth2/v2.1/verify', {
+    method: 'post',
+    payload: { id_token: token, client_id: channelId },
+    muteHttpExceptions: true
+  });
+  if (response.getResponseCode() !== 200) throw new Error('ยืนยันตัวตนกับ LINE ไม่สำเร็จ กรุณาเปิดระบบใหม่');
+  let data;
+  try { data = JSON.parse(response.getContentText()); } catch (_) { throw new Error('LINE ส่งข้อมูลยืนยันตัวตนไม่ถูกต้อง'); }
+  if (String(data.aud || '') !== String(channelId) || !/^U[0-9a-f]{32}$/i.test(String(data.sub || ''))) {
+    throw new Error('LINE ID token ไม่ตรงกับระบบนี้');
+  }
+  if (data.exp && Number(data.exp) * 1000 < Date.now()) throw new Error('LINE ID token หมดอายุ กรุณาเปิดระบบใหม่');
+  return { userId: String(data.sub), displayName: clean_(data.name, 120) };
+}
+
+function notifyLineReview_(lineUserId, record, decision, note) {
+  if (!/^U[0-9a-f]{32}$/i.test(String(lineUserId || ''))) return false;
+  const token = PropertiesService.getScriptProperties().getProperty('LINE_MESSAGING_CHANNEL_ACCESS_TOKEN');
+  if (!token) return false;
+  const approved = decision === 'approved';
+  const message = [
+    approved ? '✅ บันทึกความดีได้รับการอนุมัติแล้ว' : '❌ บันทึกความดียังไม่ผ่านการอนุมัติ',
+    'ประเภท: ' + String(record.category || '-'),
+    'วันที่: ' + String(record.activityDate || '-'),
+    'ชั่วโมง: ' + String(record.hours || 0),
+    'ผู้ตรวจ: ' + String(record.reviewerName || '-'),
+    note ? 'หมายเหตุ: ' + String(note) : '',
+    'เลขรายการ: ' + String(record.recordId || '')
+  ].filter(String).join('\n').slice(0, 4900);
+  try {
+    const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { Authorization: 'Bearer ' + token, 'X-Line-Retry-Key': Utilities.getUuid() },
+      payload: JSON.stringify({ to: lineUserId, messages: [{ type: 'text', text: message }] }),
+      muteHttpExceptions: true
+    });
+    if (response.getResponseCode() === 200) return true;
+    console.error('LINE push failed code=' + response.getResponseCode());
+  } catch (error) { console.error('LINE push failed'); }
+  return false;
+}
+
 function table_(name) {
   const sheet = spreadsheet_().getSheetByName(name);
   if (!sheet) throw new Error('ไม่พบตาราง ' + name + ' กรุณารัน setupSystem()');
@@ -583,6 +691,19 @@ function upsertConfig_(key, value) {
   const data = { key: key, value: value, updatedAt: new Date().toISOString() };
   if (index >= 0) updateRow_(table.sheet, table.headers, index + 2, data); else append_(GD.SHEETS.CONFIG, data);
 }
+
+function loginFailureKey_(identity) { return 'login-fail:' + tokenHash_(String(identity || '').toLowerCase()).slice(0, 32); }
+function assertLoginAllowed_(identity) {
+  const attempts = Number(CacheService.getScriptCache().get(loginFailureKey_(identity)) || 0);
+  if (attempts >= 6) throw new Error('ลองเข้าสู่ระบบหลายครั้งเกินไป กรุณารอ 10 นาที');
+}
+function registerLoginFailure_(identity) {
+  const cache = CacheService.getScriptCache();
+  const key = loginFailureKey_(identity);
+  const attempts = Number(cache.get(key) || 0) + 1;
+  cache.put(key, String(attempts), 600);
+}
+function clearLoginFailures_(identity) { CacheService.getScriptCache().remove(loginFailureKey_(identity)); }
 
 function spreadsheet_() { return SpreadsheetApp.openById(PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID')); }
 function ensureSetup_() { const p=PropertiesService.getScriptProperties(); if (!p.getProperty('SPREADSHEET_ID') || !p.getProperty('EVIDENCE_FOLDER_ID') || !p.getProperty('PASSWORD_PEPPER')) throw new Error('ระบบหลังบ้านยังไม่พร้อม กรุณารัน setupSystem()'); }

@@ -2,12 +2,14 @@
 
 สถาปัตยกรรมที่ใช้
 
-- GitHub Pages: `online-v2/` มีเฉพาะ HTML, CSS, JavaScript และ URL ของ Web App
+- GitHub Pages: `frontend/secure-pilot/` มีเฉพาะ HTML, CSS, JavaScript, LIFF ID (public identifier) และ URL ของ Web App
 - Google Apps Script: Authentication, RBAC, validation, workflow, notification และ Audit Log
 - Google Sheets: `MembersV2`, `GoodDeedRecordsV2`, `AuditTrailV2`, `ConfigurationV2`
 - Google Drive: เก็บหลักฐานแบบ Private ในโฟลเดอร์ที่สร้างโดย `setupSystem()`
 
-หน้าออนไลน์: `https://anuchit1tube168-cmd.github.io/gooddeeds69/online-v2/`
+หน้า Pilot: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/`
+
+เปิดผ่าน LIFF โดยต่อ path จาก LIFF URL เดิม: `https://liff.line.me/2010948179-Ympqt2bT/secure-pilot/`
 
 Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
@@ -15,11 +17,15 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 ## ติดตั้งหลังบ้านครั้งแรก
 
-1. เปิด Apps Script โปรเจกต์เดิมที่เป็นเจ้าของ Web App URL ใน `online-v2/config.js`
-2. สำรองโค้ดเดิม แล้วแทนที่ `Code.gs` ด้วย `backend/CodeV2.gs`
+1. เปิด Apps Script โปรเจกต์เดิมที่เป็นเจ้าของ Web App URL ใน `frontend/secure-pilot/config.js`
+2. สำรองโค้ดเดิม แล้วแทนที่ `Code.gs` ด้วยเนื้อหาใน `backend/CodeV2.gs`
 3. Project Settings > Script properties เพิ่ม
    - key: `SPREADSHEET_ID`
    - value: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
+   - key: `LINE_LOGIN_CHANNEL_ID`
+   - value: Channel ID จาก LINE Login channel ที่มี LIFF ID `2010948179-Ympqt2bT`
+   - key: `LINE_MESSAGING_CHANNEL_ACCESS_TOKEN`
+   - value: Channel access token ของ Messaging API สำหรับ OA ที่นักเรียนเพิ่มเพื่อน
 4. รัน `setupSystem()` และอนุญาตสิทธิ์ Sheets/Drive
 5. รัน `bootstrapOwnerAdmin()` แล้วจดรหัสผ่านชั่วคราวจาก Execution log
 6. Deploy > Manage deployments > Edit > New version > Deploy เพื่อคง Web App URL เดิม
@@ -27,7 +33,18 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
    - Who has access: Anyone
 7. เปิดหน้าออนไลน์และเข้าสู่ระบบด้วยบัญชีผู้ดูแล รหัสผ่านชั่วคราวจะบังคับให้เปลี่ยนทันที
 
-หากไม่มีสิทธิ์แก้ deployment เดิม ให้สร้าง New deployment แบบ Web app แล้วแก้ `online-v2/config.js` เป็น URL ใหม่
+หากไม่มีสิทธิ์แก้ deployment เดิม ให้สร้าง New deployment แบบ Web app แล้วแก้ `frontend/secure-pilot/config.js` เป็น URL ใหม่
+
+## การทำงานของ LINE LIFF
+
+1. นักเรียนเปิด LIFF URL ที่ลงท้าย `/secure-pilot/`
+2. หน้าเว็บส่ง `liff.getIDToken()` ไป Apps Script โดยไม่ส่งค่าจาก `getDecodedIDToken()` มาเป็นหลักฐานยืนยันตัวตน
+3. Apps Script ตรวจ ID token กับ LINE และตรวจว่า `aud` ตรง `LINE_LOGIN_CHANNEL_ID`
+4. การใช้งานครั้งแรก นักเรียนยืนยันรหัสนักเรียน/รหัสผ่านเพื่อผูก `sub` (LINE user ID) กับสมาชิกหนึ่งบัญชี
+5. ครั้งต่อไป LIFF เข้าระบบได้จาก LINE โดยไม่ต้องกรอกรหัสผ่านซ้ำ ตราบใดที่ session/ID token ยังใช้ได้
+6. เมื่ออาจารย์อนุมัติหรือไม่อนุมัติ Apps Script ส่งผลด้วย Messaging API ไปยัง `lineUserId` ที่ผูกไว้
+
+Channel access token และ Channel secret ห้ามอยู่ใน `config.js` หรือไฟล์ GitHub ส่วน LIFF ID ไม่ใช่ secret จึงอยู่ใน frontend ได้
 
 ## ย้ายข้อมูลเดิมจาก GitHub
 
@@ -54,7 +71,7 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 ## Script Properties
 
-ตั้งค่าเองก่อนรันครั้งแรก: `SPREADSHEET_ID`
+ตั้งค่าเองก่อนรันครั้งแรก: `SPREADSHEET_ID`, `LINE_LOGIN_CHANNEL_ID`, `LINE_MESSAGING_CHANNEL_ACCESS_TOKEN`
 
 ระบบสร้างให้อัตโนมัติ: `EVIDENCE_FOLDER_ID`, `PASSWORD_PEPPER`, `ALLOWED_ORIGIN`, `SESSION_TTL_SECONDS`
 
@@ -71,7 +88,9 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 ## เปิดหน้าเว็บทดสอบ
 
-`https://anuchit1tube168-cmd.github.io/gooddeeds69/online-v2/`
+เว็บตรง: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/`
+
+LIFF: `https://liff.line.me/2010948179-Ympqt2bT/secure-pilot/`
 
 หน้าเดิมยังไม่ถูกสลับออกจนกว่า Apps Script v2 จะผ่านการทดสอบ end-to-end
 
