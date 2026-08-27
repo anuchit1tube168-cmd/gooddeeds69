@@ -94,6 +94,13 @@ Channel access token และ Channel secret ห้ามอยู่ใน `co
 
 เข้าสู่ระบบด้วยบทบาทผู้ดูแล แล้วเปิดแท็บ “จัดการผู้ใช้” เพื่อสร้างบัญชีนักเรียน อาจารย์ผู้ตรวจ หรือผู้ดูแล ระบบจะแสดงรหัสผ่านชั่วคราวครั้งเดียว และบังคับให้เจ้าของบัญชีเปลี่ยนรหัสผ่านก่อนใช้งาน
 
+## ทดสอบ LINE จาก Apps Script Editor
+
+1. รัน `testLineConfiguration()` เพื่อตรวจว่า Channel ID และ Messaging API token พร้อมใช้งาน โดยยังไม่ส่งข้อความ
+2. ให้นักเรียนทดลองผูก LINE ผ่าน LIFF อย่างน้อยหนึ่งบัญชี
+3. ตั้ง Script Property `LINE_TEST_STUDENT_ID` เป็นรหัสนักเรียนทดสอบ แล้วรัน `testLinePushToStudent()` ระบบจะส่งข้อความทดสอบจริงหนึ่งข้อความ
+4. ตรวจ Execution log และแท็บ `AuditTrailV2` ถ้าส่งสำเร็จจะมี action `line.test.sent`
+
 ## เปิดหน้าเว็บทดสอบ
 
 เว็บตรง: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/`

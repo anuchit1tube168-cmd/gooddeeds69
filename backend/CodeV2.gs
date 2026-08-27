@@ -10,7 +10,7 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.3.0',
+  VERSION: '2.3.1',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
@@ -121,6 +121,44 @@ function provisionMember(username, studentId, displayName, cohort, role) {
   const temporaryPassword = randomPassword_();
   provisionMember_(username, studentId, displayName, cohort, role || 'student', temporaryPassword, true);
   console.log('USER_CREATED username=' + username + ' temporaryPassword=' + temporaryPassword);
+}
+
+/** Admin utility: validate the Messaging API token without sending a message. */
+function testLineConfiguration() {
+  ensureSetup_();
+  const props = PropertiesService.getScriptProperties();
+  const loginChannelId = props.getProperty('LINE_LOGIN_CHANNEL_ID');
+  const messagingToken = props.getProperty('LINE_MESSAGING_CHANNEL_ACCESS_TOKEN');
+  if (!loginChannelId) throw new Error('ไม่พบ Script Property: LINE_LOGIN_CHANNEL_ID');
+  if (!messagingToken) throw new Error('ไม่พบ Script Property: LINE_MESSAGING_CHANNEL_ACCESS_TOKEN');
+  const response = UrlFetchApp.fetch('https://api.line.me/v2/bot/info', {
+    method: 'get', headers: { Authorization: 'Bearer ' + messagingToken }, muteHttpExceptions: true
+  });
+  if (response.getResponseCode() !== 200) throw new Error('Messaging API token ใช้งานไม่ได้ HTTP ' + response.getResponseCode());
+  const bot = JSON.parse(response.getContentText());
+  const result = { ok: true, version: GD.VERSION, loginChannelConfigured: true, botDisplayName: clean_(bot.displayName, 120), botBasicId: clean_(bot.basicId, 80) };
+  console.log('LINE_CONFIGURATION_OK ' + JSON.stringify(result));
+  return result;
+}
+
+/** Admin utility: send one real test notification to a linked student account. */
+function testLinePushToStudent(studentId) {
+  ensureSetup_();
+  const normalized = clean_(studentId || PropertiesService.getScriptProperties().getProperty('LINE_TEST_STUDENT_ID'), 30);
+  if (!normalized) throw new Error('ตั้ง Script Property: LINE_TEST_STUDENT_ID เป็นรหัสนักเรียนที่จะรับข้อความทดสอบก่อน');
+  const member = findMember_(function(row) { return String(row.studentId) === normalized; });
+  if (!member) throw new Error('ไม่พบนักเรียนรหัส ' + normalized);
+  if (!member.lineUserId) throw new Error('นักเรียนคนนี้ยังไม่ได้ผูก LINE ผ่าน LIFF');
+  const testRecord = {
+    recordId: 'LINE-TEST-' + Utilities.getUuid(), category: 'ทดสอบระบบแจ้งเตือน',
+    activityDate: Utilities.formatDate(new Date(), Session.getScriptTimeZone(), 'yyyy-MM-dd'),
+    hours: 0, reviewerName: 'ผู้ดูแลระบบ'
+  };
+  const sent = notifyLineReview_(String(member.lineUserId), testRecord, 'approved', 'ข้อความทดสอบจากระบบบันทึกความดี วพอ.');
+  if (!sent) throw new Error('ส่งข้อความไม่สำเร็จ ตรวจว่า Messaging channel อยู่ Provider เดียวกับ LIFF และนักเรียนเพิ่ม OA เป็นเพื่อนแล้ว');
+  audit_('system', 'line.test.sent', 'member', member.memberId, {}, 'line-test-' + Utilities.getUuid());
+  console.log('LINE_TEST_SENT studentId=' + normalized);
+  return { ok: true, studentId: normalized };
 }
 
 function login_(payload, requestId) {
