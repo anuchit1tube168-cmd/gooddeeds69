@@ -48,6 +48,12 @@ Google Sheet หลัก: `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE`
 
 Channel access token และ Channel secret ห้ามอยู่ใน `config.js` หรือไฟล์ GitHub ส่วน LIFF ID ไม่ใช่ secret จึงอยู่ใน frontend ได้
 
+เงื่อนไขสำคัญสำหรับการส่งข้อความกลับ:
+
+- LINE Login channel ของ LIFF และ Messaging API channel ของ OA ต้องอยู่ใต้ LINE Developers Provider เดียวกัน เพื่อให้ user ID อ้างถึงผู้ใช้คนเดียวกัน
+- นักเรียนต้องเพิ่ม OA เป็นเพื่อนและไม่บล็อก OA จึงจะรับ push message ได้
+- การแจ้งผลอนุมัติใช้ Messaging API โดยตรงจาก Apps Script ไม่ต้องผ่าน MCP; ถ้าจะเพิ่ม AI สนทนาสองทางภายหลัง ให้ทำ webhook gateway ที่ตรวจ `x-line-signature` แยกต่างหาก
+
 ## ย้ายข้อมูลเดิมจาก GitHub
 
 ชุดข้อมูลย้ายระบบถูกตัด password, เบอร์โทร, email และ Telegram ID เดิมออกแล้ว และเก็บแบบ Private ใน Google Drive:
