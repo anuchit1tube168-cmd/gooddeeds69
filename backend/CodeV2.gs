@@ -10,7 +10,7 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.0.0',
+  VERSION: '2.1.0',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
@@ -57,10 +57,14 @@ function dispatch_(action, payload, token, requestId) {
   const session = requireSession_(token);
   if (action === 'me') return { user: publicUser_(session) };
   if (action === 'logout') return logout_(token, session, requestId);
+  if (action === 'changePassword') return changePassword_(session, payload, token, requestId);
+  if (truthy_(session.mustChangePassword)) throw new Error('กรุณาเปลี่ยนรหัสผ่านชั่วคราวก่อนใช้งาน');
   if (action === 'listDeeds') return listDeeds_(session, payload);
   if (action === 'submitDeed') return submitDeed_(session, payload, requestId);
   if (action === 'reviewDeed') return reviewDeed_(session, payload, requestId);
-  if (action === 'changePassword') return changePassword_(session, payload, requestId);
+  if (action === 'getEvidence') return getEvidence_(session, payload, requestId);
+  if (action === 'listMembers') return listMembers_(session);
+  if (action === 'createMember') return createMember_(session, payload, requestId);
   throw new Error('ไม่รู้จักคำสั่งที่ส่งมา');
 }
 
@@ -210,7 +214,7 @@ function reviewDeed_(session, payload, requestId) {
   }
 }
 
-function changePassword_(session, payload, requestId) {
+function changePassword_(session, payload, token, requestId) {
   const currentPassword = String(payload.currentPassword || '');
   const newPassword = String(payload.newPassword || '');
   if (newPassword.length < 8) throw new Error('รหัสผ่านใหม่ต้องมีอย่างน้อย 8 ตัวอักษร');
@@ -220,7 +224,46 @@ function changePassword_(session, payload, requestId) {
   const credentials = newPassword_(newPassword);
   updateRow_(table.sheet, table.headers, index + 2, { passwordSalt: credentials.salt, passwordHash: credentials.hash, mustChangePassword: false, updatedAt: new Date().toISOString() });
   audit_(session.memberId, 'password.changed', 'member', session.memberId, {}, requestId);
-  return { success: true };
+  CacheService.getScriptCache().remove('session:' + tokenHash_(token));
+  return { success: true, reloginRequired: true };
+}
+
+function getEvidence_(session, payload, requestId) {
+  const recordId = clean_(payload.recordId, 100);
+  const record = findRecord_(function(row) { return String(row.recordId) === recordId; });
+  if (!record || !record.evidenceFileId) throw new Error('ไม่พบไฟล์หลักฐาน');
+  if (session.role === 'student' && String(record.memberId) !== String(session.memberId)) throw new Error('ไม่มีสิทธิ์ดูหลักฐานนี้');
+  const file = DriveApp.getFileById(String(record.evidenceFileId));
+  const blob = file.getBlob();
+  const bytes = blob.getBytes();
+  if (bytes.length > GD.MAX_EVIDENCE_BYTES) throw new Error('ไฟล์หลักฐานมีขนาดใหญ่เกินกำหนด');
+  audit_(session.memberId, 'evidence.viewed', 'deed', recordId, { fileId: record.evidenceFileId }, requestId);
+  return { name: record.evidenceName || file.getName(), mimeType: blob.getContentType(), size: bytes.length, dataBase64: Utilities.base64Encode(bytes) };
+}
+
+function listMembers_(session) {
+  if (session.role !== 'admin') throw new Error('ไม่มีสิทธิ์จัดการผู้ใช้');
+  const members = table_(GD.SHEETS.MEMBERS).rows.map(function(row) {
+    return { memberId: row.memberId, username: row.username, studentId: row.studentId || '', displayName: row.displayName, cohort: row.cohort || '', role: row.role, active: truthy_(row.active), createdAt: iso_(row.createdAt) };
+  });
+  members.sort(function(a, b) { return String(a.displayName).localeCompare(String(b.displayName), 'th'); });
+  return { members: members };
+}
+
+function createMember_(session, payload, requestId) {
+  if (session.role !== 'admin') throw new Error('ไม่มีสิทธิ์จัดการผู้ใช้');
+  const username = clean_(payload.username, 120).toLowerCase();
+  const studentId = clean_(payload.studentId, 30);
+  const displayName = clean_(payload.displayName, 160);
+  const cohort = clean_(payload.cohort, 30);
+  const role = clean_(payload.role, 20) || 'student';
+  if (!username || !displayName) throw new Error('กรุณากรอกชื่อผู้ใช้และชื่อที่แสดง');
+  if (findMember_(function(row) { return String(row.username).toLowerCase() === username || (studentId && String(row.studentId) === studentId); })) throw new Error('ชื่อผู้ใช้หรือรหัสนักเรียนนี้มีอยู่แล้ว');
+  const temporaryPassword = randomPassword_();
+  provisionMember_(username, studentId, displayName, cohort, role, temporaryPassword, true);
+  const member = findMember_(function(row) { return String(row.username).toLowerCase() === username; });
+  audit_(session.memberId, 'member.created', 'member', member.memberId, { username: username, studentId: studentId, role: role }, requestId);
+  return { member: publicUser_(member), temporaryPassword: temporaryPassword };
 }
 
 function saveEvidence_(evidence, session, requestId) {
@@ -245,7 +288,8 @@ function createSession_(member) {
   const ttl = Number(PropertiesService.getScriptProperties().getProperty('SESSION_TTL_SECONDS')) || GD.SESSION_TTL;
   CacheService.getScriptCache().put('session:' + tokenHash_(token), JSON.stringify({
     memberId: member.memberId, username: member.username, studentId: member.studentId,
-    displayName: member.displayName, cohort: member.cohort, role: member.role
+    displayName: member.displayName, cohort: member.cohort, role: member.role,
+    mustChangePassword: truthy_(member.mustChangePassword)
   }), ttl);
   return token;
 }
@@ -266,7 +310,7 @@ function publicDeed_(row, session) {
   return {
     recordId: row.recordId, studentId: row.studentId, ownerName: row.ownerName, cohort: row.cohort,
     category: row.category, activityDate: row.activityDate, hours: Number(row.hours), description: row.description,
-    evidenceName: canSeeEvidence ? row.evidenceName : '', evidenceUrl: canSeeEvidence ? row.evidenceUrl : '',
+    evidenceName: canSeeEvidence ? row.evidenceName : '', hasEvidence: canSeeEvidence && Boolean(row.evidenceFileId),
     status: row.status, submittedAt: iso_(row.submittedAt), reviewerName: row.reviewerName || '',
     reviewedAt: iso_(row.reviewedAt), reviewNote: row.reviewNote || ''
   };
