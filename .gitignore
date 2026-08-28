@@ -11,3 +11,6 @@ thai-docx-skill.zip
 thai-docx/
 .agents/
 .vscode/
+migration-private/
+*.secrets.json
+Legacy-Initial-Credentials-*.csv
