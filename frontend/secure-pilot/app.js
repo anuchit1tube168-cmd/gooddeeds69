@@ -4,6 +4,8 @@
   const app = document.getElementById("app");
   const bridge = document.getElementById("api-bridge");
   const callbacks = new Map();
+  const backendUrl = new URL(CONFIG.GAS_WEB_APP_URL);
+  if (backendUrl.protocol !== "https:" || backendUrl.hostname !== "script.google.com") throw new Error("Backend URL ไม่ปลอดภัย");
   const state = { sessionToken: sessionStorage.getItem("gd_session") || "", user: null, deeds: [], members: [], membersLoaded: false, issuedCredential: null, tab: "records", busy: false, loginRole: "student", liffReady: false, liffLoggedIn: false, liffError: "", liffPilotOnly: false };
 
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>'"]/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"})[char]);
@@ -26,6 +28,7 @@
     if (!data || data.channel !== "RTAFNC_GOODDEED" || !data.requestId) return;
     const pending = callbacks.get(data.requestId);
     if (!pending) return;
+    if (event.source !== pending.frame.contentWindow) return;
     clearTimeout(pending.timeout); callbacks.delete(data.requestId); pending.cleanup();
     data.ok ? pending.resolve(data.data) : pending.reject(new Error(data.error || "ระบบไม่ตอบสนอง"));
   });
@@ -36,13 +39,13 @@
       const frame = document.createElement("iframe");
       const form = document.createElement("form");
       const frameName = `gas_${id.replace(/[^a-zA-Z0-9]/g, "")}`;
-      frame.name = frameName; frame.hidden = true;
-      form.method = "POST"; form.action = CONFIG.GAS_WEB_APP_URL; form.target = frameName; form.hidden = true;
+      frame.name = frameName; frame.hidden = true; frame.referrerPolicy = "no-referrer";
+      form.method = "POST"; form.action = backendUrl.href; form.target = frameName; form.hidden = true; form.acceptCharset = "UTF-8";
       const fields = { action, requestId:id, origin:location.origin, sessionToken:state.sessionToken, payload:JSON.stringify(payload) };
       Object.entries(fields).forEach(([name,value]) => { const input=document.createElement("input"); input.type="hidden"; input.name=name; input.value=value; form.appendChild(input); });
       const cleanup = () => { form.remove(); frame.remove(); };
       const timeout = setTimeout(() => { callbacks.delete(id); cleanup(); reject(new Error("หมดเวลารอ Apps Script กรุณาลองใหม่")); }, CONFIG.REQUEST_TIMEOUT_MS);
-      callbacks.set(id,{resolve,reject,timeout,cleanup}); bridge.append(frame,form); form.submit();
+      callbacks.set(id,{resolve,reject,timeout,cleanup,frame}); bridge.append(frame,form); form.submit();
     });
   }
 
