@@ -42,7 +42,7 @@
   const def=CAPS[ctx.base_role]||CAPS.SUPPORT; const advisor=(ctx.additive_roles||[]).includes('ADVISOR_ADDITIVE');
   const items=def.items.slice(); if(advisor&&!items.some(x=>x[1]==='Advisor Panel'))items.push(['💬','Advisor Panel','เฉพาะนักเรียนที่ปรึกษาของตนเอง']);
   root.innerHTML=`<section class="staff-head"><div><h1>${esc(ctx.display_name||'บุคลากร วพอ.')}</h1><div class="staff-meta">${esc(def.title)} · ${esc(def.scope)}${ctx.demo?' · DEMO PREVIEW':''}</div></div><div class="pill">${esc(ctx.base_role)}</div></section><section class="cap-grid">${items.map(x=>`<article class="cap"><div style="font-size:1.45rem">${x[0]}</div><b>${esc(x[1])}</b><small>${esc(x[2])}</small></article>`).join('')}</section><div class="privacy">🔒 สิทธิ์จาก Backend เป็นตัวตัดสินจริง หน้าเว็บไม่สามารถยกระดับสิทธิ์เองได้ · Advisor Private Notes และเวชระเบียนไม่ตกทอดให้ Admin/IT โดยอัตโนมัติ</div><div class="developer">${esc((window.RTAFNC_ONE_CONFIG||{}).DEVELOPER_DISPLAY||'')}</div>`;
-  function esc(v){return String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
+  function esc(v){return String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]||c))}
 })();
 </script>
 </body>
