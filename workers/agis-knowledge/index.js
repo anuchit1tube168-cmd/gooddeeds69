@@ -14,6 +14,7 @@ function rawSessionToken(request){
   return token;
 }
 function authOrigin(env){return String(env.AUTH_VERIFY_ORIGIN||String(env.ALLOWED_ORIGINS||'').split(',')[0]||'').trim()}
+function validStudentId(v){return /^\d{7}$/.test(String(v||'').trim())}
 
 function extractBridgeMessage(text){
   const marker='parent.postMessage(';
@@ -43,7 +44,7 @@ function extractBridgeMessage(text){
 }
 
 async function verifySession(request,env){
-  // Phase 4 reuses the existing Good Deed V2 server-side session instead of inventing a new login.
+  // Phase 5 reuses the existing Good Deed V2 server-side session instead of inventing a new login.
   if(!env.AUTH_VERIFY_URL) return {ok:false,error:'AUTH_VERIFIER_NOT_CONFIGURED'};
   const token=rawSessionToken(request);
   if(!token) return {ok:false,error:'NO_SESSION'};
@@ -78,20 +79,29 @@ async function verifySession(request,env){
 
   const tier=legacyRoleToTier(user.role);
   if(tier==='NONE') return {ok:false,error:'ROLE_NOT_SUPPORTED'};
-  const studentId=cleanText(user.studentId,40),memberId=cleanText(user.memberId,100);
+  const rawStudentId=cleanText(user.studentId,40),memberId=cleanText(user.memberId,100);
+  const studentId=validStudentId(rawStudentId)?rawStudentId:'';
   const scopes=['library:read'];
   if(tier==='STAFF'||tier==='ADMIN') scopes.push('library:internal:read');
   if(tier==='ADMIN') scopes.push('library:admin:read');
 
+  // User decision: for nursing students, the canonical RTAFNC_ID is the verified 7-digit student ID.
+  // Staff/advisor canonical IDs remain unset until an authoritative personnel source is supplied.
+  const isStudent=tier==='STUDENT';
+  const canonicalId=isStudent&&studentId?studentId:null;
+  let canonicalStatus='NOT_APPLICABLE_STAFF_PENDING_PERSONNEL_SOURCE';
+  if(isStudent) canonicalStatus=studentId?'VERIFIED_7_DIGIT_FORMAT':'PENDING_VALID_7_DIGIT_STUDENT_ID';
+
   return {
     ok:true,
     auth_source:'GOODDEED_V2_SESSION',
-    subject_id:studentId||memberId,
-    subject_id_type:studentId?'student_id':'member_id',
-    canonical_rtafnc_id:null,
-    canonical_id_status:'PENDING_IDENTITY_REGISTRY',
+    subject_id:canonicalId||memberId,
+    subject_id_type:canonicalId?'student_id_7_digit':'member_id',
+    canonical_rtafnc_id:canonicalId,
+    canonical_id_status:canonicalStatus,
     member_id:memberId,
     student_id:studentId,
+    raw_student_id_status:rawStudentId&&!studentId?'INVALID_OR_UNVERIFIED_FORMAT':'OK_OR_EMPTY',
     display_name:cleanText(user.displayName,160),
     cohort:cleanText(user.cohort,40),
     legacy_role:cleanText(user.role,40).toLowerCase(),
@@ -140,33 +150,18 @@ function extractText(data){
   return parts.join('\n');
 }
 
-async function handleAuthMe(request,env){
-  const auth=await verifySession(request,env);
-  if(!auth.ok) return json({ok:false,error:auth.error},401);
-  // Do not expose browser session token or any LINE userId.
-  return json({ok:true,identity:auth});
-}
-
 async function handleAsk(request,env){
   const auth=await verifySession(request,env);
-  if(!auth.ok) return json({ok:false,error:auth.error,mode:'retrieval_only'},401);
+  if(!auth.ok) return json({ok:false,error:auth.error},401);
   const body=await request.json().catch(()=>({}));
   const question=cleanText(body.question,2000);
-  if(!question) return json({ok:false,error:'QUESTION_REQUIRED'},400);
-
-  // Client supplies IDs only as ranking hints. All metadata and access are re-hydrated server-side.
   const hints=safeCandidateHints(body.candidates);
+  if(!question) return json({ok:false,error:'QUESTION_REQUIRED'},400);
   const candidates=hydrateAuthorizedCandidates(hints,auth);
-  if(!candidates.length) return json({ok:true,mode:'grounded',answer:'ไม่พบแหล่งข้อมูลที่บัญชีนี้มีสิทธิ์เข้าถึงและรองรับคำถามนี้ จึงยังไม่ตอบโดยการคาดเดา',sources:[],confidence:'no_authorized_source'});
-
+  if(!candidates.length) return json({ok:true,mode:'grounded',answer:'ไม่พบแหล่งข้อมูลที่ได้รับอนุญาตซึ่งรองรับคำถามนี้ จึงยังไม่ตอบโดยการคาดเดา',sources:[],confidence:'no_source'});
   const result=await callGemini(env,buildPrompt(question,candidates));
-  if(!result.ok) return json({ok:false,error:result.error,mode:'retrieval_only',sources:candidates},503);
-  return json({
-    ok:true,mode:'grounded',answer:result.text,
-    sources:candidates.map(c=>({id:c.id,source_id:c.source_id,title:c.source_title,version:c.version,pages:c.pages,status:c.status})),
-    confidence:'grounded_server_registry',interaction_id:result.raw_id,
-    identity:{subject_id:auth.subject_id,subject_id_type:auth.subject_id_type,access_tier:auth.access_tier,canonical_id_status:auth.canonical_id_status}
-  });
+  if(!result.ok) return json({ok:false,error:result.error,mode:'retrieval_only'},503);
+  return json({ok:true,mode:'grounded',answer:result.text,sources:candidates.map(c=>({id:c.id,source_id:c.source_id,title:c.source_title,version:c.version,pages:c.pages,status:c.status})),confidence:'grounded_registry',interaction_id:result.raw_id});
 }
 
 async function handleSourceOpen(request,env){
@@ -175,15 +170,31 @@ async function handleSourceOpen(request,env){
   const body=await request.json().catch(()=>({}));
   const key=cleanText(body.source_key,140);
   if(!key) return json({ok:false,error:'SOURCE_KEY_REQUIRED'},400);
-  // No direct Drive URL issuance until the secure resolver has its own source-key ACL and audit trail.
   return json({ok:false,error:'SECURE_SOURCE_RESOLVER_NOT_CONNECTED',source_key:key},501);
+}
+
+async function handleAuthMe(request,env){
+  const auth=await verifySession(request,env);
+  if(!auth.ok) return json({ok:false,error:auth.error},401);
+  return json({ok:true,identity:{
+    rtafnc_id:auth.canonical_rtafnc_id,
+    canonical_id_status:auth.canonical_id_status,
+    subject_id:auth.subject_id,
+    subject_id_type:auth.subject_id_type,
+    student_id:auth.student_id,
+    display_name:auth.display_name,
+    cohort:auth.cohort,
+    access_tier:auth.access_tier,
+    scopes:auth.scopes,
+    auth_source:auth.auth_source
+  }});
 }
 
 export default {
   async fetch(request,env){
     const url=new URL(request.url),origin=request.headers.get('origin')||''; const ch=cors(origin,env);
     if(request.method==='OPTIONS') return new Response(null,{status:204,headers:ch});
-    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:4,gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL),identity_mode:'legacy_session_bridge'},200,ch);
+    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:5,gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL)},200,ch);
     if(request.method==='POST'&&url.pathname==='/api/auth/me'){const r=await handleAuthMe(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/knowledge/ask'){const r=await handleAsk(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/source/open'){const r=await handleSourceOpen(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
