@@ -1,3 +1,5 @@
+import {hydrateAuthorizedCandidates,legacyRoleToTier} from './registry.v1.js';
+
 const JSON_HEADERS={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
 
 function json(data,status=200,extra={}){return new Response(JSON.stringify(data),{status,headers:{...JSON_HEADERS,...extra}})}
@@ -6,25 +8,101 @@ function cors(origin,env){
   return allowed.includes(origin)?{'access-control-allow-origin':origin,'access-control-allow-methods':'POST,GET,OPTIONS','access-control-allow-headers':'content-type,authorization,x-rtafnc-session','vary':'Origin'}:{};
 }
 function cleanText(v,max=4000){return String(v||'').trim().slice(0,max)}
-function safeCandidates(v){
-  if(!Array.isArray(v)) return [];
-  return v.slice(0,8).map(x=>({
-    id:cleanText(x.id,80),title:cleanText(x.title,240),summary:cleanText(x.summary,800),
-    source_id:cleanText(x.source_id,100),source_title:cleanText(x.source_title,240),version:cleanText(x.version,80),pages:cleanText(x.pages,80),status:cleanText(x.status,80)
-  })).filter(x=>x.id&&x.source_id);
+function rawSessionToken(request){
+  let token=String(request.headers.get('x-rtafnc-session')||request.headers.get('authorization')||'').trim();
+  if(/^Bearer\s+/i.test(token)) token=token.replace(/^Bearer\s+/i,'').trim();
+  return token;
+}
+function authOrigin(env){return String(env.AUTH_VERIFY_ORIGIN||String(env.ALLOWED_ORIGINS||'').split(',')[0]||'').trim()}
+
+function extractBridgeMessage(text){
+  const marker='parent.postMessage(';
+  const startMarker=text.indexOf(marker);
+  if(startMarker<0) return null;
+  let i=text.indexOf('{',startMarker+marker.length);
+  if(i<0) return null;
+  const start=i; let depth=0,inString=false,escape=false;
+  for(;i<text.length;i++){
+    const c=text[i];
+    if(inString){
+      if(escape){escape=false;continue}
+      if(c==='\\'){escape=true;continue}
+      if(c==='"'){inString=false}
+      continue;
+    }
+    if(c==='"'){inString=true;continue}
+    if(c==='{') depth++;
+    else if(c==='}'){
+      depth--;
+      if(depth===0){
+        try{return JSON.parse(text.slice(start,i+1))}catch(_){return null}
+      }
+    }
+  }
+  return null;
 }
 
 async function verifySession(request,env){
-  // PHASE 3 PILOT: fail closed for protected backend unless a verifier URL is configured.
-  // Production verifier returns {ok:true, rtafnc_id, roles:[...], scopes:[...]}
+  // Phase 4 reuses the existing Good Deed V2 server-side session instead of inventing a new login.
   if(!env.AUTH_VERIFY_URL) return {ok:false,error:'AUTH_VERIFIER_NOT_CONFIGURED'};
-  const token=request.headers.get('x-rtafnc-session')||request.headers.get('authorization')||'';
+  const token=rawSessionToken(request);
   if(!token) return {ok:false,error:'NO_SESSION'};
-  const res=await fetch(env.AUTH_VERIFY_URL,{method:'POST',headers:{'content-type':'application/json','authorization':token},body:'{}'});
+
+  const form=new URLSearchParams();
+  form.set('action','me');
+  form.set('requestId',crypto.randomUUID());
+  form.set('origin',authOrigin(env));
+  form.set('sessionToken',token);
+  form.set('payload','{}');
+
+  let res;
+  try{
+    res=await fetch(env.AUTH_VERIFY_URL,{
+      method:'POST',
+      headers:{'content-type':'application/x-www-form-urlencoded;charset=UTF-8'},
+      body:form.toString(),
+      redirect:'follow'
+    });
+  }catch(_){return {ok:false,error:'AUTH_VERIFIER_UNREACHABLE'}}
   if(!res.ok) return {ok:false,error:'SESSION_REJECTED'};
-  const data=await res.json().catch(()=>({}));
-  if(!data.ok||!data.rtafnc_id) return {ok:false,error:'SESSION_REJECTED'};
-  return data;
+
+  const contentType=String(res.headers.get('content-type')||'');
+  const text=await res.text();
+  let envelope=null;
+  if(contentType.includes('application/json')){
+    try{envelope=JSON.parse(text)}catch(_){envelope=null}
+  }else envelope=extractBridgeMessage(text);
+
+  const user=envelope&&envelope.ok&&envelope.data&&envelope.data.user;
+  if(!user||!user.memberId||!user.role) return {ok:false,error:'SESSION_REJECTED'};
+
+  const tier=legacyRoleToTier(user.role);
+  if(tier==='NONE') return {ok:false,error:'ROLE_NOT_SUPPORTED'};
+  const studentId=cleanText(user.studentId,40),memberId=cleanText(user.memberId,100);
+  const scopes=['library:read'];
+  if(tier==='STAFF'||tier==='ADMIN') scopes.push('library:internal:read');
+  if(tier==='ADMIN') scopes.push('library:admin:read');
+
+  return {
+    ok:true,
+    auth_source:'GOODDEED_V2_SESSION',
+    subject_id:studentId||memberId,
+    subject_id_type:studentId?'student_id':'member_id',
+    canonical_rtafnc_id:null,
+    canonical_id_status:'PENDING_IDENTITY_REGISTRY',
+    member_id:memberId,
+    student_id:studentId,
+    display_name:cleanText(user.displayName,160),
+    cohort:cleanText(user.cohort,40),
+    legacy_role:cleanText(user.role,40).toLowerCase(),
+    access_tier:tier,
+    scopes
+  };
+}
+
+function safeCandidateHints(v){
+  if(!Array.isArray(v)) return [];
+  return v.slice(0,12).map(x=>({id:cleanText(x&&x.id,80)})).filter(x=>x.id);
 }
 
 function buildPrompt(question,candidates){
@@ -62,19 +140,33 @@ function extractText(data){
   return parts.join('\n');
 }
 
-async function handleAsk(request,env){
+async function handleAuthMe(request,env){
   const auth=await verifySession(request,env);
   if(!auth.ok) return json({ok:false,error:auth.error},401);
+  // Do not expose browser session token or any LINE userId.
+  return json({ok:true,identity:auth});
+}
+
+async function handleAsk(request,env){
+  const auth=await verifySession(request,env);
+  if(!auth.ok) return json({ok:false,error:auth.error,mode:'retrieval_only'},401);
   const body=await request.json().catch(()=>({}));
   const question=cleanText(body.question,2000);
-  const candidates=safeCandidates(body.candidates);
   if(!question) return json({ok:false,error:'QUESTION_REQUIRED'},400);
-  if(!candidates.length) return json({ok:true,mode:'grounded',answer:'ไม่พบแหล่งข้อมูลที่ได้รับอนุญาตซึ่งรองรับคำถามนี้ จึงยังไม่ตอบโดยการคาดเดา',sources:[],confidence:'no_source'});
 
-  // Important: candidates supplied by client are only hints. Production MCP/library service must re-check role/source access server-side.
+  // Client supplies IDs only as ranking hints. All metadata and access are re-hydrated server-side.
+  const hints=safeCandidateHints(body.candidates);
+  const candidates=hydrateAuthorizedCandidates(hints,auth);
+  if(!candidates.length) return json({ok:true,mode:'grounded',answer:'ไม่พบแหล่งข้อมูลที่บัญชีนี้มีสิทธิ์เข้าถึงและรองรับคำถามนี้ จึงยังไม่ตอบโดยการคาดเดา',sources:[],confidence:'no_authorized_source'});
+
   const result=await callGemini(env,buildPrompt(question,candidates));
-  if(!result.ok) return json({ok:false,error:result.error,mode:'retrieval_only'},503);
-  return json({ok:true,mode:'grounded',answer:result.text,sources:candidates.map(c=>({id:c.id,source_id:c.source_id,title:c.source_title,version:c.version,pages:c.pages,status:c.status})),confidence:'grounded_registry',interaction_id:result.raw_id});
+  if(!result.ok) return json({ok:false,error:result.error,mode:'retrieval_only',sources:candidates},503);
+  return json({
+    ok:true,mode:'grounded',answer:result.text,
+    sources:candidates.map(c=>({id:c.id,source_id:c.source_id,title:c.source_title,version:c.version,pages:c.pages,status:c.status})),
+    confidence:'grounded_server_registry',interaction_id:result.raw_id,
+    identity:{subject_id:auth.subject_id,subject_id_type:auth.subject_id_type,access_tier:auth.access_tier,canonical_id_status:auth.canonical_id_status}
+  });
 }
 
 async function handleSourceOpen(request,env){
@@ -83,7 +175,7 @@ async function handleSourceOpen(request,env){
   const body=await request.json().catch(()=>({}));
   const key=cleanText(body.source_key,140);
   if(!key) return json({ok:false,error:'SOURCE_KEY_REQUIRED'},400);
-  // PHASE 3: no direct Drive URL issuance here. Secure source resolver is a separate backend/MCP responsibility.
+  // No direct Drive URL issuance until the secure resolver has its own source-key ACL and audit trail.
   return json({ok:false,error:'SECURE_SOURCE_RESOLVER_NOT_CONNECTED',source_key:key},501);
 }
 
@@ -91,7 +183,8 @@ export default {
   async fetch(request,env){
     const url=new URL(request.url),origin=request.headers.get('origin')||''; const ch=cors(origin,env);
     if(request.method==='OPTIONS') return new Response(null,{status:204,headers:ch});
-    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:3,gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL)},200,ch);
+    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:4,gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL),identity_mode:'legacy_session_bridge'},200,ch);
+    if(request.method==='POST'&&url.pathname==='/api/auth/me'){const r=await handleAuthMe(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/knowledge/ask'){const r=await handleAsk(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/source/open'){const r=await handleSourceOpen(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     return json({ok:false,error:'NOT_FOUND'},404,ch);
