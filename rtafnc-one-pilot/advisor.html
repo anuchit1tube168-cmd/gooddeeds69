@@ -37,7 +37,6 @@ input,select,textarea{width:100%;background:#061d40;border:1px solid #385c86;col
     <button data-role="admin">แม่แอด / ปกครอง</button>
   </div>
 
-  <!-- STUDENT -->
   <main id="studentView">
     <section class="hero">
       <div class="eyebrow">MY ADVISOR</div>
@@ -67,7 +66,6 @@ input,select,textarea{width:100%;background:#061d40;border:1px solid #385c86;col
     </section>
   </main>
 
-  <!-- ADVISOR -->
   <main id="advisorView" class="hidden">
     <section class="hero"><div class="eyebrow">ADVISOR GROUP · AY 2569</div><h2>กลุ่มอาจารย์ที่ปรึกษา</h2><div class="muted">ข้อมูลตัวอย่าง · รายงานตามปีการศึกษา</div>
       <div class="grid4"><div class="metric"><b>8</b><span>นักเรียนในความดูแล</span></div><div class="metric"><b>42</b><span>ครั้งที่ให้คำปรึกษา</span></div><div class="metric"><b>8</b><span>นักเรียนที่เข้าพบ</span></div><div class="metric"><b>3</b><span>รอติดตาม</span></div></div>
@@ -98,7 +96,6 @@ input,select,textarea{width:100%;background:#061d40;border:1px solid #385c86;col
     <section class="panel"><h3>รายงานกลุ่มอาจารย์ที่ปรึกษา</h3><div class="reportbar"><span class="chip">รายเดือน</span><span class="chip">รายปีการศึกษา</span><span class="chip">แยกหัวข้อ</span><span class="chip">ติดตาม/ส่งต่อ</span><span class="chip">อษ.4</span></div><div class="grid4"><div class="metric"><b>18</b><span>การศึกษา</span></div><div class="metric"><b>9</b><span>ส่วนตัว</span></div><div class="metric"><b>11</b><span>สังคม</span></div><div class="metric"><b>4</b><span>อาชีพ</span></div></div><button class="btn secondary wide" onclick="window.print()">พิมพ์ / Export รายงาน</button></section>
   </main>
 
-  <!-- ADMIN -->
   <main id="adminView" class="hidden">
     <section class="hero"><div class="eyebrow">GOVERNANCE CONTROL</div><h2>จัดการระบบอาจารย์ที่ปรึกษา</h2><div class="muted">แม่แอดฝ่ายปกครอง · Academic Year Control</div><div class="grid4"><div class="metric"><b>32</b><span>อาจารย์ที่ปรึกษา</span></div><div class="metric"><b>256</b><span>นักเรียนที่จัดกลุ่ม</span></div><div class="metric"><b>1:8</b><span>อัตราส่วนเป้าหมาย</span></div><div class="metric"><b>94%</b><span>มีบันทึกเดือนนี้</span></div></div></section>
     <section class="panel"><h3>ตั้งค่าปีการศึกษา</h3><div class="formgrid"><div class="field"><label>ปีการศึกษา</label><select><option>2569</option><option>2568</option><option>2567</option></select></div><div class="field"><label>ภาคเรียน</label><select><option>ภาค 1</option><option>ภาค 2</option></select></div></div><button class="btn primary">อัปเดตบริบทปีการศึกษา</button></section>
@@ -113,5 +110,6 @@ const views={student:document.getElementById('studentView'),advisor:document.get
 document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-role]').forEach(x=>x.classList.remove('active'));b.classList.add('active');Object.values(views).forEach(v=>v.classList.add('hidden'));views[b.dataset.role].classList.remove('hidden')});
 function showRequest(){requestForm.classList.remove('hidden');requestForm.scrollIntoView({behavior:'smooth'})}function hideRequest(){requestForm.classList.add('hidden')}function demoSubmit(){alert('Pilot: สร้างคำขอ ADV-DEMO และเตรียมแจ้งอาจารย์ผ่าน Telegram secure link (ยังไม่ส่งข้อมูลจริง)');hideRequest()}function openRecord(){recordForm.classList.remove('hidden');recordForm.scrollIntoView({behavior:'smooth'})}function closeRecord(){recordForm.classList.add('hidden')}function copyLink(){navigator.clipboard?.writeText(shareLink.value);alert('คัดลอกลิงก์ตัวอย่างแล้ว')}
 </script>
+<script src="brand-runtime.js?v=1"></script>
 </body>
 </html>
