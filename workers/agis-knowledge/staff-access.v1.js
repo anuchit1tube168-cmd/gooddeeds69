@@ -16,11 +16,12 @@ const ALLOWED_BASE=new Set(Object.keys(BASE_CAPABILITIES));
 const ALLOWED_ADDITIVE=new Set(Object.keys(ADDITIVE_CAPABILITIES));
 function clean(v,max=200){return String(v??'').trim().slice(0,max)}
 function arr(v){return Array.isArray(v)?v:[]}
-function safeBinding(raw){
+function safeBinding(raw,mode){
   if(!raw||raw.binding_status!=='VERIFIED') return null;
   const base_role=clean(raw.base_role,60);
   if(!ALLOWED_BASE.has(base_role)) return null;
   const additive_roles=arr(raw.additive_roles).map(x=>clean(x,60)).filter(x=>ALLOWED_ADDITIVE.has(x));
+  if(mode==='ADVISOR_ONLY'&&!additive_roles.includes('ADVISOR_ADDITIVE')) return null;
   const module_assignments=arr(raw.module_assignments).map(x=>clean(x,60)).filter(x=>/^[A-Z0-9_]{2,60}$/.test(x));
   return {
     staff_directory_key:clean(raw.staff_directory_key,120),
@@ -39,7 +40,8 @@ export function parseVerifiedBindings(env){
   if(!env.STAFF_BINDINGS_JSON) return [];
   let parsed; try{parsed=JSON.parse(env.STAFF_BINDINGS_JSON)}catch(_){return []}
   if(!Array.isArray(parsed)) return [];
-  return parsed.map(safeBinding).filter(Boolean);
+  const mode=String(env.STAFF_BINDING_MODE||'ADVISOR_ONLY').trim().toUpperCase();
+  return parsed.map(x=>safeBinding(x,mode)).filter(Boolean);
 }
 export function resolveStaffBinding(auth,env){
   const memberId=clean(auth&&auth.member_id,120);
