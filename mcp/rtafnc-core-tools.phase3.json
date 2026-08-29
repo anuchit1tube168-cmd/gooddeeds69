@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0.0",
+  "phase": 3,
+  "server_name": "rtafnc_core",
+  "transport": "streamable_http",
+  "principles": [
+    "server_side_authorization",
+    "purpose_bound_access",
+    "audit_every_restricted_read",
+    "no_source_no_answer",
+    "candidate_is_not_master"
+  ],
+  "tools": [
+    {
+      "name": "library_search",
+      "risk": "read",
+      "description": "Search approved Knowledge Registry entries visible to the authenticated RTAFNC identity.",
+      "input": {
+        "query": "string",
+        "categories": "string[] optional",
+        "limit": "integer 1..10"
+      },
+      "output": {
+        "results": "[{knowledge_id, source_id, title, summary, version, pages, status}]"
+      },
+      "auth": "RTAFNC session required; derive role/scopes server-side"
+    },
+    {
+      "name": "library_get_excerpt",
+      "risk": "read_restricted_possible",
+      "description": "Return only the minimum authorized excerpt required to answer a question.",
+      "input": {
+        "knowledge_id": "string",
+        "purpose": "string",
+        "question": "string"
+      },
+      "output": {
+        "source_id": "string",
+        "version": "string",
+        "pages": "string",
+        "excerpt": "string",
+        "classification": "string",
+        "status": "string"
+      },
+      "auth": "RTAFNC session + role/scope + purpose; audit restricted reads"
+    }
+  ],
+  "not_allowed_in_phase3": [
+    "student_profile_write",
+    "advisor_note_write",
+    "health_record_read_or_write",
+    "mental_health_decision",
+    "scholarship_approval",
+    "disciplinary_action",
+    "line_urgent_routing",
+    "telegram_urgent_routing"
+  ]
+}
