@@ -1,4 +1,5 @@
 import {hydrateAuthorizedCandidates,legacyRoleToTier} from './registry.v1.js';
+import {resolveStaffBinding} from './staff-access.v1.js';
 
 const JSON_HEADERS={'content-type':'application/json; charset=utf-8','cache-control':'no-store'};
 
@@ -44,7 +45,6 @@ function extractBridgeMessage(text){
 }
 
 async function verifySession(request,env){
-  // Phase 5 reuses the existing Good Deed V2 server-side session instead of inventing a new login.
   if(!env.AUTH_VERIFY_URL) return {ok:false,error:'AUTH_VERIFIER_NOT_CONFIGURED'};
   const token=rawSessionToken(request);
   if(!token) return {ok:false,error:'NO_SESSION'};
@@ -81,15 +81,14 @@ async function verifySession(request,env){
   if(tier==='NONE') return {ok:false,error:'ROLE_NOT_SUPPORTED'};
   const rawStudentId=cleanText(user.studentId,40),memberId=cleanText(user.memberId,100);
   const studentId=validStudentId(rawStudentId)?rawStudentId:'';
+  const lineUserId=cleanText(user.lineUserId||user.line_user_id,160);
   const scopes=['library:read'];
   if(tier==='STAFF'||tier==='ADMIN') scopes.push('library:internal:read');
   if(tier==='ADMIN') scopes.push('library:admin:read');
 
-  // User decision: for nursing students, the canonical RTAFNC_ID is the verified 7-digit student ID.
-  // Staff/advisor canonical IDs remain unset until an authoritative personnel source is supplied.
   const isStudent=tier==='STUDENT';
   const canonicalId=isStudent&&studentId?studentId:null;
-  let canonicalStatus='NOT_APPLICABLE_STAFF_PENDING_PERSONNEL_SOURCE';
+  let canonicalStatus='NOT_APPLICABLE_STAFF_PENDING_VERIFIED_BINDING';
   if(isStudent) canonicalStatus=studentId?'VERIFIED_7_DIGIT_FORMAT':'PENDING_VALID_7_DIGIT_STUDENT_ID';
 
   return {
@@ -100,6 +99,7 @@ async function verifySession(request,env){
     canonical_rtafnc_id:canonicalId,
     canonical_id_status:canonicalStatus,
     member_id:memberId,
+    line_user_id:lineUserId,
     student_id:studentId,
     raw_student_id_status:rawStudentId&&!studentId?'INVALID_OR_UNVERIFIED_FORMAT':'OK_OR_EMPTY',
     display_name:cleanText(user.displayName,160),
@@ -190,12 +190,33 @@ async function handleAuthMe(request,env){
   }});
 }
 
+async function handleStaffMe(request,env){
+  const auth=await verifySession(request,env);
+  if(!auth.ok) return json({ok:false,error:auth.error},401);
+  if(auth.access_tier==='STUDENT') return json({ok:false,error:'STAFF_ONLY'},403);
+  const binding=resolveStaffBinding(auth,env);
+  if(!binding.ok){
+    const status=binding.status==='BINDING_CONFLICT'?409:403;
+    return json({ok:false,error:binding.status,reason:binding.reason,binding_status:binding.status},status);
+  }
+  return json({ok:true,binding_status:'VERIFIED',staff:{
+    staff_directory_key:binding.staff.staff_directory_key,
+    display_name:binding.staff.display_name,
+    base_role:binding.staff.base_role,
+    additive_roles:binding.staff.additive_roles,
+    module_assignments:binding.staff.module_assignments,
+    academic_year:binding.staff.academic_year,
+    capabilities:binding.staff.capabilities
+  }});
+}
+
 export default {
   async fetch(request,env){
     const url=new URL(request.url),origin=request.headers.get('origin')||''; const ch=cors(origin,env);
     if(request.method==='OPTIONS') return new Response(null,{status:204,headers:ch});
-    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:5,gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL)},200,ch);
+    if(url.pathname==='/health') return json({ok:true,service:'rtafnc-agis-knowledge',phase:'6C',gemini:Boolean(env.GEMINI_API_KEY),mcp:Boolean(env.RTAFNC_MCP_URL),auth:Boolean(env.AUTH_VERIFY_URL),staff_bindings:Boolean(env.STAFF_BINDINGS_JSON)},200,ch);
     if(request.method==='POST'&&url.pathname==='/api/auth/me'){const r=await handleAuthMe(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
+    if(request.method==='POST'&&url.pathname==='/api/staff/me'){const r=await handleStaffMe(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/knowledge/ask'){const r=await handleAsk(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     if(request.method==='POST'&&url.pathname==='/api/source/open'){const r=await handleSourceOpen(request,env);Object.entries(ch).forEach(([k,v])=>r.headers.set(k,v));return r}
     return json({ok:false,error:'NOT_FOUND'},404,ch);
