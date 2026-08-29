@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.local/schemas/advisor-assignment.phase5.schema.json",
+  "title": "RTAFNC ONE Advisor Assignment Phase 5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["academic_year", "student_id", "advisor_display_name", "status", "source_ref"],
+  "properties": {
+    "academic_year": {"type": "string", "pattern": "^[0-9]{4}$"},
+    "student_id": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "advisor_ref": {"type": ["string", "null"], "maxLength": 160},
+    "advisor_display_name": {"type": "string", "minLength": 1, "maxLength": 200},
+    "effective_from": {"type": ["string", "null"], "format": "date"},
+    "effective_to": {"type": ["string", "null"], "format": "date"},
+    "status": {"type": "string", "enum": ["CANDIDATE", "ACTIVE", "ENDED", "REVIEW", "REVOKED"]},
+    "source_ref": {"type": "string", "minLength": 1, "maxLength": 240},
+    "source_version": {"type": ["string", "null"], "maxLength": 80},
+    "verified_at": {"type": ["string", "null"], "format": "date-time"}
+  }
+}
