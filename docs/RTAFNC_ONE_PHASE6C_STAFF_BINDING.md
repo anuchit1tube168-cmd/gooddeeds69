@@ -5,23 +5,32 @@ Academic year: **2569** (runtime rollover every 1 August, Asia/Bangkok)
 
 ## Decision lock
 
-1. Runtime staff profile uses only necessary fields: display name, role/capabilities, academic year, photo status/account status.
-2. Staff photos are not populated until the official photo set is supplied.
-3. Display name is **never** an authentication or authorization key.
-4. Staff access is activated only by an exact verified account binding (`member_id` and/or `line_user_id`).
-5. Advisor is an additive role and requires an active advisor assignment for the current academic year.
-6. Technical/Admin roles do not automatically inherit clinical records or advisor private notes.
-7. All project source files remain read-only; runtime reads through Registry/Staging/Adapters.
+1. **Activate advisor relationships first.** The current live relationship source is the official academic-year-2569 advisor order in private Google Drive.
+2. Other faculty/support personnel stay in `STAFF_REFERENCE_DIRECTORY` for later lookup only. They are not an active runtime identity/permission database yet.
+3. Staff photos are not populated until the official photo set is supplied.
+4. Display name is **never** an authentication or authorization key.
+5. A real staff account can be activated only by an exact verified account binding (`member_id` and/or `line_user_id`) after review.
+6. Advisor access requires both a verified staff account and an active advisor assignment for the current academic year.
+7. Technical/Admin roles do not automatically inherit clinical records or advisor private notes.
+8. All project source files remain read-only; runtime reads through Registry/Staging/Adapters.
+9. **GitHub is code-only.** No real student names, 7-digit student IDs, LINE user IDs, Telegram chat IDs, personal email addresses, health/counselling records, or real staff-to-student binding tables may be committed.
 
-## Google Drive core tabs
+## Private Google Drive core tabs
 
-- `STAFF_DIRECTORY` — minimal runtime directory; role classification is candidate data until reviewed.
-- `STAFF_ACCOUNT_BINDING` — authoritative activation queue for staff accounts; empty until verified.
-- `ROLE_ACCESS_MATRIX` — role-to-dashboard scope policy.
-- `ADVISOR_NAME_REVIEW` — canonical-name review where order/roster spellings differ.
-- `PROVENANCE` — internal source/origin history; never used as end-user credit text.
+- `ADVISOR_ACTIVE_2569` — minimum active relationship mapping: academic year + student ID + advisor group/name as written in the official order. `PRIVATE_DRIVE_ONLY`.
+- `STAFF_REFERENCE_DIRECTORY` — personnel-name reference for future modules; not an active authorization database.
+- `STAFF_ACCOUNT_BINDING` — activation queue; remains empty until an account identifier is explicitly verified.
+- `ROLE_ACCESS_MATRIX` — generic role-to-dashboard policy, contains no real identity mappings.
+- `ADVISOR_NAME_REVIEW` — review area where order/roster spellings differ.
+- `PROVENANCE` — internal source/origin history.
 
-## Binding states
+## Advisor relationship state
+
+`ADVISOR_ACTIVE_2569` may be `ACTIVE_BY_OFFICIAL_ORDER` even while the account is `PENDING_STAFF_ACCOUNT`.
+
+This means the organizational relationship is known, but the teacher cannot yet sign in as that advisor until their real account is verified.
+
+## Staff account binding states
 
 - `PENDING_ACCOUNT`
 - `PENDING_REVIEW`
@@ -35,9 +44,10 @@ Only `VERIFIED` can receive runtime capabilities.
 
 ```text
 LINE / RTAFNC session
-  -> Good Deed V2 server-side session verifier
+  -> server-side session verifier
   -> /api/staff/me
   -> exact STAFF_ACCOUNT_BINDING resolver
+  -> current academic-year assignment resolver
   -> capability resolver
   -> Staff Portal
 ```
@@ -45,21 +55,21 @@ LINE / RTAFNC session
 No exact binding = no staff dashboard access.
 Multiple exact bindings = conflict and hard stop.
 
-## Base dashboards
+## GitHub privacy gate
 
-- `EXECUTIVE` -> Executive Dashboard
-- `GOVERNANCE` -> Governance Dashboard
-- `FACULTY` -> Faculty Dashboard
-- `SUPPLY_SUPPORT` -> Supply Dashboard
-- `EDU_IT_SUPPORT` -> Support Dashboard
-- `SUPPORT` -> assigned modules only
-- `HEALTH_AUTHORIZED` -> Health Dashboard
+The repository contains `scripts/pii-guard.mjs` and `.github/workflows/pii-guard.yml`.
 
-## Additive access
+The guard blocks common real-identity literals such as:
+- RTAFNC student IDs in the 7-digit academic-series pattern
+- LINE user ID literals
+- personal email literals
+- literal Telegram chat IDs assigned to Telegram fields
 
-- `ADVISOR_ADDITIVE` -> assigned students only
-- `APPROVER_ADDITIVE` -> assigned approval queues only
-- `MODULE_OPERATOR_ADDITIVE` -> assigned modules only
+Use placeholders such as `<STUDENT_ID_7_DIGIT>` or server-side environment/database references in GitHub.
+
+## Future base dashboards
+
+The code can support Executive, Governance, Faculty, Supply, Support and Health dashboards, but **no non-advisor personnel record is activated merely because it exists in the reference directory**.
 
 ## Credit / provenance
 
@@ -67,14 +77,13 @@ Runtime/system footer:
 
 > ผปค.วพอ.พอ. ร.อ.อนุชิต ทำจะดี ผู้พัฒนา
 
-Source attribution, licence requirements, third-party template origin and historical project provenance must remain in internal `PROVENANCE` records and must not be falsified or deleted when legally/contractually required.
+Source attribution, licence requirements, third-party template origin and historical project provenance remain in private/internal provenance records when required and are not rewritten as ownership claims.
 
 ## Remaining production gates
 
-- verify staff account identifiers
-- review canonical advisor names
-- approve role classifications/module assignments
-- configure `STAFF_BINDINGS_JSON` (or future database adapter) as a server secret/config, never public frontend
-- deploy AGIS Worker
-- test Student/Faculty/Advisor/Governance/Supply/IT/Health separation
-- perform negative authorization tests before production cutover
+- verify each advisor account identifier
+- resolve advisor-name variants before account binding
+- derive Advisor Panel from `ADVISOR_ACTIVE_2569` only
+- deploy backend/AGIS Worker
+- run PII guard and negative authorization tests
+- later review/activate non-advisor staff roles one group at a time
