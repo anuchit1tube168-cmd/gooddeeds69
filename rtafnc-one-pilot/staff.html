@@ -11,38 +11,78 @@
   <link rel="stylesheet" href="styles.css?v=2">
   <link rel="stylesheet" href="responsive-runtime.css?v=1">
   <style>
-    .staff-shell{padding:22px 0 110px}.staff-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}.staff-head h1{margin:0;font:700 clamp(1.5rem,4vw,2.2rem) Kanit}.staff-meta{color:var(--muted);font-size:.78rem}.cap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cap{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.035);min-height:122px}.cap b{display:block;margin:7px 0 4px}.cap small{color:var(--muted)}.locked{opacity:.5}.privacy{margin-top:16px;padding:14px;border:1px solid rgba(215,184,90,.25);border-radius:16px;background:rgba(215,184,90,.06);font-size:.76rem;color:var(--muted)}.empty{padding:24px;text-align:center}.demo-select{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}.demo-select a{font-size:.72rem;padding:7px 10px;border:1px solid var(--line);border-radius:999px;text-decoration:none}.developer{margin-top:20px;text-align:center;color:var(--muted);font-size:.7rem}@media(max-width:900px){.cap-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.cap-grid{grid-template-columns:1fr}.staff-head{flex-direction:column}}
+    .staff-shell{padding:22px 0 110px}.staff-head{display:flex;justify-content:space-between;gap:14px;align-items:flex-start;margin-bottom:16px}.staff-head h1{margin:0;font:700 clamp(1.5rem,4vw,2.2rem) Kanit}.staff-meta{color:var(--muted);font-size:.78rem}.cap-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.cap{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.035);min-height:122px}.cap b{display:block;margin:7px 0 4px}.cap small{color:var(--muted)}.privacy{margin-top:16px;padding:14px;border:1px solid rgba(215,184,90,.25);border-radius:16px;background:rgba(215,184,90,.06);font-size:.76rem;color:var(--muted)}.empty{padding:24px;text-align:center}.demo-select{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.demo-select a{font-size:.72rem;padding:7px 10px;border:1px solid var(--line);border-radius:999px;text-decoration:none}.developer{margin-top:20px;text-align:center;color:var(--muted);font-size:.7rem}.binding{display:inline-flex;align-items:center;gap:7px;margin-top:8px;font-size:.72rem;color:var(--muted)}.binding i{width:8px;height:8px;border-radius:50%;background:var(--gold);display:inline-block}.binding.ok i{background:var(--green)}@media(max-width:900px){.cap-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.cap-grid{grid-template-columns:1fr}.staff-head{flex-direction:column}}
   </style>
 </head>
 <body>
 <div class="shell">
   <header class="topbar"><div class="wrap topbar-in"><div class="brand"><img data-rtafnc-logo src="../frontend/510903.jpg" alt="ตรา วพอ."><div><strong>RTAFNC ONE · STAFF</strong><small>Role-scoped Operations Portal</small></div></div><div class="pill" id="ay">AY</div></div></header>
-  <main class="wrap staff-shell" id="staff-app"></main>
+  <main class="wrap staff-shell" id="staff-app"><section class="panel empty"><h2>กำลังตรวจสอบสิทธิ์...</h2><p class="staff-meta">ตรวจ Session และ Staff Account Binding</p></section></main>
 </div>
-<script src="config.js?v=4"></script>
+<script src="config.js?v=5"></script>
 <script src="academic-year.js?v=1"></script>
 <script src="brand-runtime.js?v=1"></script>
+<script src="staff-client.js?v=1"></script>
 <script>
 (function(){
   'use strict';
-  const CAPS={
-    EXECUTIVE:{title:'Executive Dashboard',scope:'ภาพรวมระดับวิทยาลัย',items:[['📊','ภาพรวมองค์กร','รายงานรวม/แนวโน้มแบบ Aggregate'],['🎖️','Good Deed Summary','ภาพรวม ไม่เปิดบันทึกรายละเอียดโดยไม่จำเป็น'],['💬','Advisor Summary','จำนวนการพบ/ติดตามแบบไม่เปิด Private Note'],['🩺','Health Aggregate','ข้อมูลรวม/ไม่ระบุตัวบุคคลเป็นค่าเริ่มต้น'],['📚','Teaching Summary','ภาพรวมการสอนและนิเทศ'],['🛡️','Operations Summary','สถานะ Workflow สำคัญ']]},
-    GOVERNANCE:{title:'Governance Dashboard',scope:'งานปกครองและ Workflow ที่ได้รับมอบหมาย',items:[['✅','อนุมัติความดี','Review / Approve / Return'],['💬','จัดการอาจารย์ที่ปรึกษา','Assignment เท่านั้น ไม่อ่าน Private Note'],['👔','อาภรณ์ภัณฑ์','สิทธิ์/การรับ/การจ่าย'],['📦','ยืมของและพัสดุ','Borrow / Requisition / Stock workflow'],['🎓','ทุนการศึกษา','คิวตรวจและ Workflow'],['📈','รายงานปกครอง','เฉพาะขอบเขตงานปกครอง']]},
-    FACULTY:{title:'Faculty Dashboard',scope:'งานสอนและงานที่ได้รับมอบหมายของตนเอง',items:[['📚','งานสอนของฉัน','รายวิชา/นิเทศ/ประเมิน'],['🧾','แบบประเมินของฉัน','เฉพาะรายการที่ได้รับมอบหมาย'],['🎖️','ข้อมูลความดีที่จำเป็น','Read relevant only'],['💬','Advisor Panel','ปรากฏเพิ่มเมื่อมี Assignment ปีปัจจุบัน'],['🎓','ทุน — ความเห็นอาจารย์','เฉพาะนักเรียนที่ได้รับมอบหมาย']]},
-    SUPPLY_SUPPORT:{title:'Supply Dashboard',scope:'อาภรณ์ ยืมของ พัสดุ/สินทรัพย์ที่ได้รับมอบหมาย',items:[['👔','อาภรณ์ภัณฑ์','Catalog / จ่าย / รับ / คงเหลือ'],['🔄','ยืม-คืน','อุปกรณ์และรายการค้างคืน'],['📦','พัสดุปกครอง','เบิก/จ่าย/Stock move'],['🏷️','สินทรัพย์','ทะเบียน/ตรวจสอบตามสิทธิ์'],['📈','รายงานคลัง','เฉพาะโมดูลที่รับผิดชอบ']]},
-    EDU_IT_SUPPORT:{title:'Education / IT Support',scope:'งานสนับสนุนระบบตามหน้าที่ ไม่เห็นข้อมูลอ่อนไหว',items:[['🪪','บัญชีและการเชื่อมตัวตน','Account support ไม่มี Clinical/Private Note'],['📄','เอกสารและ Workflow','Process support'],['📚','งานสนับสนุนการศึกษา','เฉพาะรายการที่รับผิดชอบ'],['🛠️','สถานะระบบ','Health check / integration status']]},
-    SUPPORT:{title:'Support Dashboard',scope:'เห็นเฉพาะโมดูลที่ได้รับมอบหมาย',items:[['🧩','งานที่ได้รับมอบหมาย','Module assigned only'],['📈','รายงานงานของฉัน','Own module only']]},
-    HEALTH_AUTHORIZED:{title:'Health Dashboard',scope:'เฉพาะบุคลากรสุขภาพที่ได้รับอนุญาต',items:[['🩺','เวชระเบียน','Authorized patient scope'],['💊','คลังยา','ยา/เวชภัณฑ์ตามสิทธิ์'],['📆','นัดและติดตาม','Referral / Follow-up'],['📈','Health Report','Authorized/Aggregate']]}
-  };
-  const qs=new URLSearchParams(location.search); const demo=qs.get('demo')==='1';
-  let ctx=null; try{ctx=JSON.parse(sessionStorage.getItem('rtafnc_staff_context')||'null')}catch(_){ctx=null}
-  if(!ctx&&demo){const role=qs.get('role')||'FACULTY';ctx={display_name:'ตัวอย่างบุคลากร วพอ.',base_role:CAPS[role]?role:'FACULTY',additive_roles:role==='FACULTY'?['ADVISOR_ADDITIVE']:[],demo:true}}
+  const C=window.RTAFNC_ONE_CONFIG||{};
   const root=document.getElementById('staff-app');
-  if(!ctx){root.innerHTML='<section class="panel empty"><h2>Staff Portal พร้อมแล้ว</h2><p class="staff-meta">รอการผูก Staff Account กับ LINE/RTAFNC Identity ที่ Backend ยืนยันก่อนเปิดสิทธิ์จริง</p><div class="demo-select"><a href="?demo=1&role=FACULTY">Preview Faculty</a><a href="?demo=1&role=GOVERNANCE">Preview Governance</a><a href="?demo=1&role=SUPPLY_SUPPORT">Preview Supply</a><a href="?demo=1&role=EXECUTIVE">Preview Executive</a></div></section>';return}
-  const def=CAPS[ctx.base_role]||CAPS.SUPPORT; const advisor=(ctx.additive_roles||[]).includes('ADVISOR_ADDITIVE');
-  const items=def.items.slice(); if(advisor&&!items.some(x=>x[1]==='Advisor Panel'))items.push(['💬','Advisor Panel','เฉพาะนักเรียนที่ปรึกษาของตนเอง']);
-  root.innerHTML=`<section class="staff-head"><div><h1>${esc(ctx.display_name||'บุคลากร วพอ.')}</h1><div class="staff-meta">${esc(def.title)} · ${esc(def.scope)}${ctx.demo?' · DEMO PREVIEW':''}</div></div><div class="pill">${esc(ctx.base_role)}</div></section><section class="cap-grid">${items.map(x=>`<article class="cap"><div style="font-size:1.45rem">${x[0]}</div><b>${esc(x[1])}</b><small>${esc(x[2])}</small></article>`).join('')}</section><div class="privacy">🔒 สิทธิ์จาก Backend เป็นตัวตัดสินจริง หน้าเว็บไม่สามารถยกระดับสิทธิ์เองได้ · Advisor Private Notes และเวชระเบียนไม่ตกทอดให้ Admin/IT โดยอัตโนมัติ</div><div class="developer">${esc((window.RTAFNC_ONE_CONFIG||{}).DEVELOPER_DISPLAY||'')}</div>`;
-  function esc(v){return String(v||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]||c))}
+  const qs=new URLSearchParams(location.search);
+  const CARD_MAP=[
+    {cap:'dashboard.executive',ico:'📊',title:'Executive Dashboard',desc:'ภาพรวมองค์กรและรายงาน Aggregate'},
+    {cap:'dashboard.governance',ico:'🛡️',title:'Governance Dashboard',desc:'งานปกครองและ Workflow ที่ได้รับมอบหมาย'},
+    {cap:'dashboard.faculty',ico:'📚',title:'Faculty Dashboard',desc:'งานสอน นิเทศ และประเมินของตนเอง'},
+    {cap:'dashboard.supply',ico:'📦',title:'Supply Dashboard',desc:'อาภรณ์ ยืมของ พัสดุ และสินทรัพย์'},
+    {cap:'dashboard.support',ico:'🧩',title:'Support Dashboard',desc:'งานสนับสนุนตามโมดูลที่ได้รับมอบหมาย'},
+    {cap:'dashboard.health',ico:'🩺',title:'Health Dashboard',desc:'เวชระเบียนและคลังยาเฉพาะผู้ได้รับอนุญาต'},
+    {cap:'gooddeed.review',ico:'🎖️',title:'ตรวจบันทึกความดี',desc:'Review / Return / Approve ตามสิทธิ์'},
+    {cap:'advisor.assigned_students',ico:'💬',title:'Advisor Panel',desc:'เฉพาะนักเรียนที่ปรึกษาของตนเอง'},
+    {cap:'teaching.own',ico:'🧾',title:'งานสอนของฉัน',desc:'รายวิชาและงานประเมินที่รับผิดชอบ'},
+    {cap:'apparel.manage',ico:'👔',title:'อาภรณ์ภัณฑ์',desc:'สิทธิ์ การรับ การจ่าย และคงเหลือ'},
+    {cap:'apparel.operate_assigned',ico:'👔',title:'อาภรณ์ภัณฑ์',desc:'ดำเนินงานเฉพาะส่วนที่ได้รับมอบหมาย'},
+    {cap:'borrowing.manage',ico:'🔄',title:'ยืม-คืนอุปกรณ์',desc:'รายการยืม คืน ค้างคืน และตรวจรับ'},
+    {cap:'borrowing.operate_assigned',ico:'🔄',title:'ยืม-คืนอุปกรณ์',desc:'ดำเนินงานเฉพาะส่วนที่ได้รับมอบหมาย'},
+    {cap:'supplies.manage',ico:'📦',title:'พัสดุปกครอง',desc:'เบิก จ่าย Stock Move และ Audit'},
+    {cap:'supplies.operate',ico:'📦',title:'พัสดุปกครอง',desc:'เบิก จ่าย Stock Move และ Audit'},
+    {cap:'scholarship.workflow',ico:'🎓',title:'ทุนการศึกษา',desc:'Workflow การตรวจและอนุมัติ'},
+    {cap:'identity.account_support_no_sensitive',ico:'🪪',title:'บัญชีผู้ใช้',desc:'ช่วยผูกบัญชีโดยไม่เปิดข้อมูลอ่อนไหว'},
+    {cap:'health.medication_stock_assigned',ico:'💊',title:'คลังยา',desc:'ยาและเวชภัณฑ์ตามสิทธิ์'}
+  ];
+  const PREVIEW={
+    EXECUTIVE:['dashboard.executive'],GOVERNANCE:['dashboard.governance','gooddeed.review','apparel.manage','borrowing.manage','supplies.manage','scholarship.workflow'],FACULTY:['dashboard.faculty','teaching.own'],SUPPLY_SUPPORT:['dashboard.supply','apparel.operate_assigned','borrowing.operate_assigned','supplies.operate'],EDU_IT_SUPPORT:['dashboard.support','identity.account_support_no_sensitive'],SUPPORT:['dashboard.support'],HEALTH_AUTHORIZED:['dashboard.health','health.medication_stock_assigned']
+  };
+  function esc(v){return String(v||'').replace(/[&<>\"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;'}[c]||c))}
+  function cards(caps){
+    const seen=new Set();
+    return CARD_MAP.filter(x=>caps.includes(x.cap)).filter(x=>{const k=x.title;if(seen.has(k))return false;seen.add(k);return true}).map(x=>`<article class="cap"><div style="font-size:1.45rem">${x.ico}</div><b>${esc(x.title)}</b><small>${esc(x.desc)}</small></article>`).join('');
+  }
+  function renderStaff(staff,{demo=false}={}){
+    const caps=Array.isArray(staff.capabilities)?staff.capabilities:[];
+    root.innerHTML=`<section class="staff-head"><div><h1>${esc(staff.display_name||'บุคลากร วพอ.')}</h1><div class="staff-meta">${esc(staff.base_role||'STAFF')} · ปีการศึกษา ${esc(staff.academic_year||window.RTAFNCAcademicYear?.resolve?.()||'2569')}</div><div class="binding ${demo?'':'ok'}"><i></i>${demo?'DEMO PREVIEW — ไม่มีสิทธิ์จริง':'VERIFIED STAFF BINDING'}</div></div><div class="pill">${esc(staff.base_role||'STAFF')}</div></section><section class="cap-grid">${cards(caps)||'<article class="cap"><b>ยังไม่มีโมดูลที่ได้รับมอบหมาย</b><small>ติดต่อผู้ดูแลระบบเพื่อกำหนดสิทธิ์</small></article>'}</section><div class="privacy">🔒 สิทธิ์จริงมาจาก Backend Capability เท่านั้น · อาจารย์ที่ปรึกษาเห็นเฉพาะนักเรียนที่ได้รับมอบหมาย · IT/Admin ไม่ได้รับสิทธิ์อ่าน Advisor Private Notes หรือเวชระเบียนโดยอัตโนมัติ</div><div class="developer">${esc(C.DEVELOPER_DISPLAY||'')}</div>`;
+  }
+  function renderPending(error,reason){
+    root.innerHTML=`<section class="panel empty"><h2>บัญชีบุคลากรยังไม่พร้อมใช้งาน</h2><p class="staff-meta">${esc(error||'PENDING_STAFF_BINDING')}${reason?` · ${esc(reason)}`:''}</p><div class="privacy">ระบบจะไม่จับคู่จากชื่ออัตโนมัติ ต้องมี Staff Account Binding ที่ยืนยันแล้วก่อนจึงเปิดสิทธิ์</div></section>`;
+  }
+  function renderPreview(){
+    const role=qs.get('role')||'FACULTY';
+    const base=PREVIEW[role]?role:'FACULTY';
+    const caps=[...PREVIEW[base]];
+    if(base==='FACULTY'&&qs.get('advisor')==='1')caps.push('advisor.assigned_students');
+    renderStaff({display_name:'ตัวอย่างบุคลากร วพอ.',base_role:base,academic_year:2569,capabilities:caps},{demo:true});
+  }
+  async function boot(){
+    const client=window.RTAFNCStaffClient;
+    const hasSession=Boolean(sessionStorage.getItem('one_session'));
+    if(client&&client.hasBackend()&&hasSession){
+      const r=await client.staffMe();
+      if(r&&r.ok&&r.staff)return renderStaff(r.staff);
+      return renderPending(r&&r.error,r&&r.reason);
+    }
+    if(qs.get('demo')==='1')return renderPreview();
+    root.innerHTML=`<section class="panel empty"><h2>Staff Portal พร้อมสำหรับการผูกบัญชี</h2><p class="staff-meta">Backend Staff Binding ยังไม่เปิด หรือยังไม่มี Session ที่ยืนยันแล้ว</p><div class="demo-select"><a href="?demo=1&role=FACULTY&advisor=1">Preview Faculty + Advisor</a><a href="?demo=1&role=GOVERNANCE">Preview Governance</a><a href="?demo=1&role=SUPPLY_SUPPORT">Preview Supply</a><a href="?demo=1&role=EXECUTIVE">Preview Executive</a><a href="?demo=1&role=HEALTH_AUTHORIZED">Preview Health</a></div><div class="privacy">Preview เป็น UI เท่านั้น ไม่มีสิทธิ์อ่านหรือแก้ข้อมูลจริง</div></section>`;
+  }
+  boot();
 })();
 </script>
 </body>
