@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.one/schemas/academic-year.v1.schema.json",
+  "title": "RTAFNC ONE Academic Year Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["academic_year", "starts_at", "ends_at", "status", "timezone", "cutover_month", "cutover_day"],
+  "properties": {
+    "academic_year": {"type": "integer", "minimum": 2500, "maximum": 3000},
+    "starts_at": {"type": "string", "format": "date"},
+    "ends_at": {"type": "string", "format": "date"},
+    "status": {"enum": ["CURRENT", "NEXT", "CLOSED", "STAGING"]},
+    "timezone": {"const": "Asia/Bangkok"},
+    "cutover_month": {"const": 8},
+    "cutover_day": {"const": 1},
+    "activated_at": {"type": ["string", "null"], "format": "date-time"},
+    "activated_by": {"type": ["string", "null"], "maxLength": 120},
+    "snapshot_ref": {"type": ["string", "null"], "maxLength": 240}
+  }
+}
