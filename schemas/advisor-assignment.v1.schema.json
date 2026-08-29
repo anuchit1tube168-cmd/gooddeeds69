@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.one/schemas/advisor-assignment.v1.schema.json",
+  "title": "RTAFNC ONE Advisor Assignment Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["assignment_id", "academic_year", "student_id", "advisor_staff_key", "advisor_display_name", "assignment_type", "status", "source_ref"],
+  "properties": {
+    "assignment_id": {"type": "string", "minLength": 1, "maxLength": 120},
+    "academic_year": {"type": "string", "minLength": 4, "maxLength": 10},
+    "student_id": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "advisor_staff_key": {"type": "string", "minLength": 1, "maxLength": 120},
+    "advisor_display_name": {"type": "string", "minLength": 1, "maxLength": 200},
+    "assignment_type": {"enum": ["PRIMARY", "CO_ADVISOR", "TEMPORARY"]},
+    "effective_from": {"type": ["string", "null"], "format": "date"},
+    "effective_to": {"type": ["string", "null"], "format": "date"},
+    "status": {"enum": ["ACTIVE", "ENDED", "PENDING_REVIEW"]},
+    "source_ref": {"type": "string", "minLength": 1, "maxLength": 240},
+    "source_version": {"type": ["string", "null"], "maxLength": 80},
+    "approved_by": {"type": ["string", "null"], "maxLength": 120},
+    "approved_at": {"type": ["string", "null"], "format": "date-time"},
+    "created_at": {"type": ["string", "null"], "format": "date-time"},
+    "updated_at": {"type": ["string", "null"], "format": "date-time"}
+  }
+}
