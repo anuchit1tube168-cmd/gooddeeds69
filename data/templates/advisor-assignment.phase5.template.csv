@@ -1,0 +1,2 @@
+academic_year,student_id,advisor_ref,advisor_display_name,effective_from,effective_to,status,source_ref,source_version,verified_at
+,,,,,,,OFFICIAL_SOURCE_REQUIRED,,
