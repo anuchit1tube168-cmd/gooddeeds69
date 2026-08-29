@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>RTAFNC ONE · Advisor Pilot</title>
+<style>
+:root{--navy:#061b3b;--navy2:#0a2b59;--gold:#e8bb52;--gold2:#ffdc7a;--ink:#edf4ff;--muted:#9fb3cf;--line:#294c78;--card:#0d315f;--green:#42c985;--orange:#ffb84d;--red:#ff6b6b;--white:#fff}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,"Noto Sans Thai",sans-serif;background:linear-gradient(180deg,#04152f,#071f44 60%,#04142d);color:var(--ink)}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:18px 16px 94px}.brand{display:flex;align-items:center;gap:12px;padding:8px 2px 16px}.seal{width:54px;height:54px;border:2px solid var(--gold);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle,#31a6ba,#11477d 62%,#092650);font-weight:900;color:#ffe27a;box-shadow:0 0 0 4px rgba(232,187,82,.08)}
+.brand h1{margin:0;font-size:26px;letter-spacing:.4px}.brand small{color:var(--muted)} .gold{color:var(--gold2)}
+.rolebar{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.rolebar button,.chip{border:1px solid var(--line);background:#08254c;color:var(--ink);border-radius:999px;padding:9px 13px;white-space:nowrap}.rolebar button.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#10213f;border-color:transparent;font-weight:800}
+.hero,.panel,.metric,.student,.session,.request{background:linear-gradient(145deg,rgba(17,57,104,.96),rgba(6,30,65,.96));border:1px solid #325984;border-radius:20px;box-shadow:0 14px 40px rgba(0,0,0,.18)}
+.hero{padding:18px;position:relative;overflow:hidden}.hero:after{content:"";position:absolute;width:180px;height:180px;border:1px solid rgba(232,187,82,.14);border-radius:50%;right:-70px;top:-70px}.eyebrow{font-size:12px;color:var(--gold2);letter-spacing:1.2px;text-transform:uppercase}.hero h2{margin:5px 0 4px;font-size:24px}.muted{color:var(--muted)} .avatar{width:62px;height:62px;border-radius:50%;background:#dce7f7;color:#14345c;display:grid;place-items:center;font-weight:900;border:2px solid var(--gold)}
+.row{display:flex;align-items:center;gap:12px}.between{display:flex;justify-content:space-between;align-items:center;gap:10px}.btn{appearance:none;border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer}.btn.primary{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#0d2348}.btn.secondary{background:#103866;color:var(--ink);border:1px solid #3c6491}.btn.danger{background:#692d42;color:white}.wide{width:100%}
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 0}.metric{padding:14px}.metric b{font-size:25px;display:block;color:var(--gold2)}.metric span{font-size:12px;color:var(--muted)}
+.panel{padding:15px;margin-top:12px}.panel h3{margin:0 0 12px;font-size:17px}.topicgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}.topic{padding:12px;border-radius:16px;background:#f7f9fd;color:#10264b;min-height:78px;display:flex;flex-direction:column;justify-content:center}.topic b{font-size:14px}.topic small{color:#58708d;margin-top:4px}
+.request,.session,.student{padding:12px;margin:9px 0}.tag{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:11px;font-weight:800;background:#244b77}.tag.ok{background:#16583f;color:#9ff0c8}.tag.wait{background:#674817;color:#ffd684}.tag.urgent{background:#702b38;color:#ffc1c9}.timeline{border-left:2px solid #3b5e88;margin-left:9px;padding-left:17px}.timeline .session{position:relative}.timeline .session:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--gold);position:absolute;left:-23px;top:20px;box-shadow:0 0 0 4px #0a2a55}
+input,select,textarea{width:100%;background:#061d40;border:1px solid #385c86;color:white;border-radius:12px;padding:12px;font:inherit}textarea{min-height:90px;resize:vertical}.field{margin:10px 0}.field label{display:block;color:#c8d6e9;font-size:12px;margin-bottom:6px}.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.notice{padding:11px 12px;border-radius:13px;background:#0b284e;border:1px dashed #4b6c93;color:#cad7e8;font-size:12px}
+.progress{height:8px;border-radius:999px;background:#153963;overflow:hidden}.progress i{display:block;height:100%;width:75%;background:linear-gradient(90deg,var(--gold),#ffe493)}
+.hidden{display:none!important}.sectionTitle{display:flex;justify-content:space-between;align-items:end;margin:20px 2px 8px}.sectionTitle h2{font-size:19px;margin:0}.sectionTitle small{color:var(--muted)}
+.reportbar{display:flex;gap:8px;overflow:auto}.reportbar .chip{font-size:12px}.bottom{position:fixed;bottom:0;left:0;right:0;background:rgba(4,19,43,.94);backdrop-filter:blur(14px);border-top:1px solid #24486f}.bottomInner{max-width:520px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);padding:8px 12px calc(8px + env(safe-area-inset-bottom))}.navitem{text-align:center;color:#9eb2cd;font-size:11px;padding:7px}.navitem.active{color:var(--gold2);font-weight:800}
+@media(min-width:480px){.grid4{grid-template-columns:repeat(4,1fr)}.topicgrid{grid-template-columns:repeat(4,1fr)}}
+@media print{body{background:#fff;color:#000}.bottom,.rolebar,.btn{display:none!important}.app{max-width:none;padding:0}.hero,.panel,.metric,.student,.session,.request{color:#000;background:#fff;border:1px solid #888;box-shadow:none}.muted,.metric span{color:#555}}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="brand">
+    <div class="seal">วพอ.</div>
+    <div><h1>RTAFNC <span class="gold">ONE</span></h1><small>อาจารย์ที่ปรึกษา · Advisor & Counseling</small></div>
+  </div>
+
+  <div class="rolebar">
+    <button class="active" data-role="student">นักเรียน</button>
+    <button data-role="advisor">อาจารย์ที่ปรึกษา</button>
+    <button data-role="admin">แม่แอด / ปกครอง</button>
+  </div>
+
+  <!-- STUDENT -->
+  <main id="studentView">
+    <section class="hero">
+      <div class="eyebrow">MY ADVISOR</div>
+      <div class="row" style="margin-top:9px"><div class="avatar">AT</div><div><h2 style="font-size:20px">อาจารย์ที่ปรึกษา ตัวอย่าง</h2><div class="muted">กลุ่มที่ปรึกษา · ปีการศึกษา 2569</div><div style="margin-top:6px"><span class="tag ok">พร้อมรับนัด</span></div></div></div>
+      <div class="notice" style="margin-top:13px">ข้อมูลตัวอย่างเท่านั้น · ระบบจริงจะแสดงอาจารย์ตาม Advisor Assignment ของรหัสนักเรียน</div>
+      <button class="btn primary wide" style="margin-top:12px" onclick="showRequest()">＋ ขอเข้าพบ / ขอคำปรึกษา</button>
+    </section>
+
+    <section id="requestForm" class="panel hidden">
+      <div class="between"><h3>ขอเข้าพบอาจารย์ที่ปรึกษา</h3><button class="btn secondary" onclick="hideRequest()">ปิด</button></div>
+      <div class="field"><label>หัวข้อหลักตามคู่มือ</label><select><option>การศึกษา / การเรียน</option><option>เรื่องส่วนตัว</option><option>เรื่องสังคม / การปรับตัว</option><option>อาชีพ / เป้าหมายวิชาชีพ</option></select></div>
+      <div class="formgrid"><div class="field"><label>ความเร่งด่วน</label><select><option>ปกติ</option><option>เร่งด่วน</option></select></div><div class="field"><label>ช่องทาง</label><select><option>พบที่วิทยาลัย</option><option>โทรศัพท์</option><option>ออนไลน์</option></select></div></div>
+      <div class="formgrid"><div class="field"><label>วันที่สะดวก</label><input type="date"></div><div class="field"><label>เวลาที่สะดวก</label><input type="time"></div></div>
+      <div class="field"><label>ข้อความสั้น ๆ (ไม่จำเป็นต้องใส่รายละเอียดอ่อนไหว)</label><textarea placeholder="เช่น ต้องการปรึกษาเรื่องการวางแผนการเรียน..."></textarea></div>
+      <button class="btn primary wide" onclick="demoSubmit()">ส่งคำขอและแจ้งอาจารย์</button>
+    </section>
+
+    <div class="sectionTitle"><h2>เรื่องที่ปรึกษาได้</h2><small>4 หมวดหลัก</small></div>
+    <section class="topicgrid">
+      <div class="topic"><b>📘 การศึกษา</b><small>ผลการเรียน วิธีเรียน การฝึก</small></div><div class="topic"><b>💙 เรื่องส่วนตัว</b><small>ครอบครัว การเงิน สุขภาพ</small></div><div class="topic"><b>🤝 สังคม</b><small>เพื่อน การปรับตัว ระเบียบ</small></div><div class="topic"><b>🎯 อาชีพ</b><small>วิชาชีพ เป้าหมายอนาคต</small></div>
+    </section>
+
+    <div class="sectionTitle"><h2>ประวัติการเข้าพบ</h2><small>เฉพาะสรุปที่นักเรียนดูได้</small></div>
+    <section class="timeline">
+      <div class="session"><div class="between"><b>ครั้งที่ 4 · การศึกษา</b><span class="tag ok">ติดตามแล้ว</span></div><small class="muted">12 ส.ค. 2569 · 16:00 น.</small><p>สิ่งที่ได้: วางแผนการอ่านหนังสือและกำหนดเป้าหมายรายสัปดาห์</p><small class="gold">นัดติดตาม 10 ก.ย. 2569</small></div>
+      <div class="session"><div class="between"><b>ครั้งที่ 3 · การปรับตัว</b><span class="tag">ปิดเรื่อง</span></div><small class="muted">15 ก.ค. 2569 · 15:30 น.</small><p>สิ่งที่ได้: แนวทางจัดการเวลาและการสื่อสารกับเพื่อนในกลุ่ม</p></div>
+    </section>
+  </main>
+
+  <!-- ADVISOR -->
+  <main id="advisorView" class="hidden">
+    <section class="hero"><div class="eyebrow">ADVISOR GROUP · AY 2569</div><h2>กลุ่มอาจารย์ที่ปรึกษา</h2><div class="muted">ข้อมูลตัวอย่าง · รายงานตามปีการศึกษา</div>
+      <div class="grid4"><div class="metric"><b>8</b><span>นักเรียนในความดูแล</span></div><div class="metric"><b>42</b><span>ครั้งที่ให้คำปรึกษา</span></div><div class="metric"><b>8</b><span>นักเรียนที่เข้าพบ</span></div><div class="metric"><b>3</b><span>รอติดตาม</span></div></div>
+      <div class="between"><small>อษ.4 ประจำปี</small><b>6/8</b></div><div class="progress" style="margin-top:7px"><i></i></div>
+    </section>
+
+    <section class="panel"><div class="between"><h3>คำขอใหม่</h3><span class="tag wait">2 รายการ</span></div>
+      <div class="request"><div class="between"><b>นพอ. ตัวอย่าง · 6900001</b><span class="tag">การศึกษา</span></div><div class="muted">ต้องการขอเวลาปรึกษา · ระดับปกติ</div><div class="row" style="margin-top:10px"><button class="btn primary" onclick="openRecord()">รับนัด / เปิดรายการ</button><button class="btn secondary">เปลี่ยนเวลา</button></div></div>
+    </section>
+
+    <section id="recordForm" class="panel hidden"><div class="between"><h3>Digital อษ.3 · บันทึกการพบ</h3><button class="btn secondary" onclick="closeRecord()">ปิด</button></div>
+      <div class="formgrid"><div class="field"><label>ครั้งที่</label><input value="5"></div><div class="field"><label>รูปแบบการพบ</label><select><option>เป็นทางการ</option><option>ไม่เป็นทางการ</option><option>เหตุการณ์ที่ควรบันทึก</option></select></div></div>
+      <div class="field"><label>หัวข้อ</label><select><option>การศึกษา</option><option>ส่วนตัว</option><option>สังคม</option><option>อาชีพ</option></select></div>
+      <div class="field"><label>สรุปสาระสำคัญ / สภาพปัญหา (ข้อมูลภายใน)</label><textarea></textarea></div>
+      <div class="field"><label>การให้คำปรึกษา/แนวทางที่ดำเนินการ</label><textarea></textarea></div>
+      <div class="field"><label>สิ่งที่นักเรียนได้รับ/เข้าใจ (Student-safe summary)</label><textarea></textarea></div>
+      <div class="formgrid"><div class="field"><label>ติดตามต่อ</label><select><option>ต้องติดตาม</option><option>ปิดเรื่อง</option><option>ส่งต่อ</option></select></div><div class="field"><label>วันติดตาม</label><input type="date"></div></div>
+      <div class="notice">บันทึกภายในและสรุปที่นักเรียนเห็นถูกแยกกัน เพื่อรักษาความลับ</div><button class="btn primary wide" style="margin-top:10px">บันทึก อษ.3</button>
+    </section>
+
+    <div class="sectionTitle"><h2>นักเรียนในความดูแล</h2><small>ปีการศึกษา 2569</small></div>
+    <section class="panel">
+      <div class="student"><div class="between"><b>6900001 · นพอ. ตัวอย่าง A</b><span class="tag ok">พบ 6 ครั้ง</span></div><div class="muted">ล่าสุด 12 ส.ค. · นัดถัดไป 10 ก.ย.</div></div>
+      <div class="student"><div class="between"><b>6900002 · นพอ. ตัวอย่าง B</b><span class="tag wait">พบ 4 ครั้ง</span></div><div class="muted">มี Follow-up 1 รายการ</div></div>
+      <div class="student"><div class="between"><b>6900003 · นพอ. ตัวอย่าง C</b><span class="tag">พบ 5 ครั้ง</span></div><div class="muted">อษ.4 ประจำปีเสร็จแล้ว</div></div>
+    </section>
+
+    <section class="panel"><h3>รายงานกลุ่มอาจารย์ที่ปรึกษา</h3><div class="reportbar"><span class="chip">รายเดือน</span><span class="chip">รายปีการศึกษา</span><span class="chip">แยกหัวข้อ</span><span class="chip">ติดตาม/ส่งต่อ</span><span class="chip">อษ.4</span></div><div class="grid4"><div class="metric"><b>18</b><span>การศึกษา</span></div><div class="metric"><b>9</b><span>ส่วนตัว</span></div><div class="metric"><b>11</b><span>สังคม</span></div><div class="metric"><b>4</b><span>อาชีพ</span></div></div><button class="btn secondary wide" onclick="window.print()">พิมพ์ / Export รายงาน</button></section>
+  </main>
+
+  <!-- ADMIN -->
+  <main id="adminView" class="hidden">
+    <section class="hero"><div class="eyebrow">GOVERNANCE CONTROL</div><h2>จัดการระบบอาจารย์ที่ปรึกษา</h2><div class="muted">แม่แอดฝ่ายปกครอง · Academic Year Control</div><div class="grid4"><div class="metric"><b>32</b><span>อาจารย์ที่ปรึกษา</span></div><div class="metric"><b>256</b><span>นักเรียนที่จัดกลุ่ม</span></div><div class="metric"><b>1:8</b><span>อัตราส่วนเป้าหมาย</span></div><div class="metric"><b>94%</b><span>มีบันทึกเดือนนี้</span></div></div></section>
+    <section class="panel"><h3>ตั้งค่าปีการศึกษา</h3><div class="formgrid"><div class="field"><label>ปีการศึกษา</label><select><option>2569</option><option>2568</option><option>2567</option></select></div><div class="field"><label>ภาคเรียน</label><select><option>ภาค 1</option><option>ภาค 2</option></select></div></div><button class="btn primary">อัปเดตบริบทปีการศึกษา</button></section>
+    <section class="panel"><div class="between"><h3>Advisor Assignment</h3><button class="btn primary">＋ แต่งตั้ง/เพิ่ม</button></div><div class="student"><b>อาจารย์ A · 8 คน</b><div class="muted">รุ่น 69 · Active</div></div><div class="student"><b>อาจารย์ B · 7 คน</b><div class="muted">รุ่น 69 · Active</div></div><div class="notice">การเปลี่ยนอาจารย์ที่ปรึกษาจะสร้าง Assignment ใหม่และปิดรายการเดิม ไม่เขียนทับประวัติ</div></section>
+    <section class="panel"><h3>ส่งลิงก์ให้อาจารย์</h3><div class="field"><label>Secure Task Link (ตัวอย่าง)</label><input id="shareLink" value="https://anuchit1tube168-cmd.github.io/gooddeeds69/rtafnc-one-pilot/advisor.html?task=ADV-DEMO-2569"></div><button class="btn primary wide" onclick="copyLink()">คัดลอกลิงก์สำหรับ Telegram</button></section>
+    <section class="panel"><h3>รายงานตามปีการศึกษา</h3><div class="reportbar"><span class="chip">ตามอาจารย์</span><span class="chip">ตามกลุ่ม</span><span class="chip">ตามนักเรียน</span><span class="chip">ตามหัวข้อ</span><span class="chip">รายเดือน</span></div><p class="muted">ดูจำนวนครั้งที่ให้คำปรึกษา จำนวนผู้เรียนที่เข้าพบ หัวข้อการเข้าพบ Follow-up/Referral และสถานะ อษ.4</p><button class="btn secondary wide">เปิด Report Center</button></section>
+  </main>
+</div>
+<div class="bottom"><div class="bottomInner"><div class="navitem active">⌂<br>หน้าหลัก</div><div class="navitem">▣<br>นัดหมาย</div><div class="navitem">☷<br>ประวัติ</div><div class="navitem">◎<br>โปรไฟล์</div></div></div>
+<script>
+const views={student:document.getElementById('studentView'),advisor:document.getElementById('advisorView'),admin:document.getElementById('adminView')};
+document.querySelectorAll('[data-role]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-role]').forEach(x=>x.classList.remove('active'));b.classList.add('active');Object.values(views).forEach(v=>v.classList.add('hidden'));views[b.dataset.role].classList.remove('hidden')});
+function showRequest(){requestForm.classList.remove('hidden');requestForm.scrollIntoView({behavior:'smooth'})}function hideRequest(){requestForm.classList.add('hidden')}function demoSubmit(){alert('Pilot: สร้างคำขอ ADV-DEMO และเตรียมแจ้งอาจารย์ผ่าน Telegram secure link (ยังไม่ส่งข้อมูลจริง)');hideRequest()}function openRecord(){recordForm.classList.remove('hidden');recordForm.scrollIntoView({behavior:'smooth'})}function closeRecord(){recordForm.classList.add('hidden')}function copyLink(){navigator.clipboard?.writeText(shareLink.value);alert('คัดลอกลิงก์ตัวอย่างแล้ว')}
+</script>
+</body>
+</html>
