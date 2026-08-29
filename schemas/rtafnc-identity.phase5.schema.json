@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.local/schemas/rtafnc-identity.phase5.schema.json",
+  "title": "RTAFNC ONE Student Identity Phase 5",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["rtafnc_id", "student_id", "verification_status"],
+  "properties": {
+    "rtafnc_id": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "student_id": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "member_id": {"type": ["string", "null"], "maxLength": 100},
+    "display_name": {"type": ["string", "null"], "maxLength": 160},
+    "cohort": {"type": ["string", "null"], "maxLength": 40},
+    "telegram_binding_ref": {"type": ["string", "null"], "maxLength": 160},
+    "active": {"type": "boolean"},
+    "source_ref": {"type": ["string", "null"], "maxLength": 240},
+    "source_version": {"type": ["string", "null"], "maxLength": 80},
+    "verified_at": {"type": ["string", "null"], "format": "date-time"},
+    "verification_status": {
+      "type": "string",
+      "enum": ["MATCHED", "NEW_STUDENT", "MISSING_LEGACY_ACCOUNT", "INVALID_ID", "DUPLICATE_ID", "NAME_MISMATCH_REVIEW", "COHORT_MISMATCH_REVIEW", "INACTIVE_REVIEW"]
+    }
+  }
+}
