@@ -1,7 +1,8 @@
-# RTAFNC ONE — Phase 2 Knowledge Registry Adapter
+# RTAFNC ONE — Phase 2 Knowledge Registry & Secure Source Adapter
 
-Status: INTEGRATION BRANCH ONLY
+Status: IMPLEMENTED ON INTEGRATION BRANCH ONLY
 Branch: `rtafnc-one-integration`
+Date: 2026-08-29
 
 ## Objective
 Convert Library from static demo cards to a source-aware, version-aware and role-aware registry before connecting AGIS/Gemini/MCP.
@@ -13,68 +14,102 @@ Pipeline:
 
 `Source → Registry → Duplicate/Version Review → Audience Gate → Knowledge Chapter → AGIS Retrieval`
 
+## Sources reviewed
+1. คู่มือนักเรียนพยาบาลทหารอากาศ ปีการศึกษา 2566 — 138 pages
+2. คู่มืออาจารย์ที่ปรึกษา ปีการศึกษา 2566 — 31 pages
+3. Private Drive candidate: คู่มืออาจารย์ที่ปรึกษา ฉบับปรับปรุง 2567
+4. Private Drive candidate: ระเบียบสวัสดิการ วพอ.พอ. พ.ศ.2568
+5. Private Drive duplicate-review set: แบบประเมินคุณลักษณะทางทหารและอัตลักษณ์ นพอ.
+
+## Source-backed chapter map
+### Student Handbook 2566
+One approved source can create multiple searchable knowledge chapters without duplicating the PDF:
+- STUDENT — คู่มือนักเรียน
+- GOVERNANCE — การปกครอง/ลงทัณฑ์/คะแนนความประพฤติ
+- GOVERNANCE — ระเบียบประจำวัน/การใช้อาคารที่พัก
+- WELFARE — สิทธิประโยชน์และสวัสดิการ
+- WELFARE — หอพัก
+- WELFARE — การซัก/ตากผ้า + บริการซักรีด
+- WELFARE — อาหาร/น้ำดื่ม/ไปรษณีย์
+- ACTIVITY — กิจกรรมนักศึกษา
+- ACTIVITY — กีฬาและชมรม
+- MILITARY — แบบธรรมเนียม/วินัย/คุณลักษณะทางทหาร
+- LEARNING — หลักสูตรและ Learning index
+
+### Advisor Handbook 2566
+- ADVISOR — ระบบและกระบวนการให้คำปรึกษา
+- RESTRICTED — การรักษาความลับ
+- RESTRICTED — อษ.1–อษ.4
+- RESTRICTED — Digital อษ.3 guide
+- RESTRICTED — อษ.4 annual summary guide
+
+## Secure source policy
+The public/static pilot MUST NOT contain:
+- private Google Drive IDs for restricted/internal sources
+- health/counseling/personnel records
+- signed URLs
+- tokens or secrets
+
+Public registry stores only a `secureSourceKey`.
+Production flow:
+
+`Library → secureSourceKey → Backend verifies RTAFNC_ID + Role + purpose → Audit → authorized/short-lived source access`
+
+Examples of internal keys:
+- `student-handbook-2566`
+- `advisor-handbook-2566`
+- `advisor-handbook-2567`
+- `welfare-regulation-2568`
+- `military-traits-assessment`
+
+Actual provider IDs remain server-side only.
+
+## Duplicate policy
+- Duplicate discovery does not mean deletion.
+- Set `duplicateGroup` and `status=DUPLICATE_REVIEW`.
+- A newer modified date does not automatically make a file Master.
+- Master promotion requires owner/effective-date confirmation.
+
+## Candidate vs Master
+`CANDIDATE_MASTER` can be visible to authorized staff but must be visibly labelled.
+AGIS must never silently use a Candidate as if it were the approved Master.
+
+## Access classes
+- `PUBLIC` — safe public knowledge only
+- `STUDENT` — authenticated nursing students
+- `ADVISOR` — authorized advisor context
+- `STAFF` — authorized college/governance staff
+- `ADMIN` — registry administration; not automatic access to every sensitive case
+- `RESTRICTED` — role + assignment + purpose check required
+
+## NotebookLM boundary
+NotebookLM may receive curated, non-sensitive approved sources for study/reasoning.
+Do not publish:
+- individual personnel-sensitive documents
+- individual health records
+- mental-health records
+- counseling records / อษ.1–4 individual data
+- individual welfare/financial records
+
 ## Phase 2 files
 - `rtafnc-one-pilot/knowledge-registry.js`
 - `rtafnc-one-pilot/library-search.js`
 - `rtafnc-one-pilot/library.html`
 
-## Verified uploaded sources
-### Student Handbook AY 2566
-Use as verified source for the 2566 handbook context. It contains education/governance, personnel rights, welfare and student activities.
-
-Knowledge chapters created:
-- Student handbook
-- Welfare rights/services
-- Dormitory
-- Laundry
-- Food/water/postal
-- Student activities
-
-### Advisor Handbook AY 2566
-Use as verified source for 2566 advisor workflows and forms.
-
-Knowledge chapters created:
-- Advisor workflow
-- Confidentiality/access rules
-- Forms O.S.1–O.S.4
-- O.S.3 recording guide
-- O.S.4 annual development summary
-
-## Drive candidates
-### Advisor Handbook 2567
-Drive file id: `1gHHJKGiFwhjt4XXbvavX8LLK4FmnLF_M`
-Status: `CANDIDATE_MASTER`
-Reason: newer than 2566 but effective/approved status must be confirmed before superseding the 2566 source.
-
-### Welfare Regulation 2568
-Candidate Drive file id: `1We-pkbvwZzgun6LzO2Wc_gvY7PzUlMBU`
-Status: `CANDIDATE_MASTER`
-Duplicate group: `WELFARE_REGULATION`
-Rule: duplicate copies are classified, not deleted.
-
-### Military traits assessment
-Candidate Drive file id: `1MgU_BOg9c75n_cZD-rrMd6SZv0NUMqk8`
-Status: `DUPLICATE_REVIEW`
-Rule: compare modified/version/content before selecting Master.
-
-## Access classes
-- `PUBLIC` — safe public knowledge only
-- `STUDENT` — all authenticated nursing students
-- `ADVISOR` — assigned/authorized advisor context
-- `STAFF` — authorized college/governance staff
-- `ADMIN` — registry management, not automatic access to every sensitive case
-- `RESTRICTED` — purpose/role/assignment check required
-
-## Mandatory security rules
-- O.S.1–O.S.4 contents and counseling notes are not public knowledge.
-- Health, mental-health, personnel and individual welfare data do not enter a public notebook.
-- Knowledge source metadata can be visible without exposing case data.
-- A candidate newer file is not automatically authoritative.
-- Never delete Drive duplicates during discovery.
+## Exit criteria
+- [x] Source-aware registry
+- [x] Multi-category chapters from a single source
+- [x] Role-aware visibility in pilot
+- [x] Candidate/Master status shown
+- [x] Private Drive identifiers removed from public registry/doc
+- [x] Secure-source contract represented
+- [x] Source-backed Welfare/Dorm/Laundry/Activity/Military chapters
+- [ ] Production secure-source backend endpoint
+- [ ] RTAFNC_ID authentication wired to Library role
+- [ ] AGIS/MCP retrieval with citations — Phase 3
 
 ## Phase 3 target
-Connect `library.search` / Knowledge Agent to AGIS/Gemini and later MCP.
-Expected response contract:
+Expected grounded response contract:
 
 ```json
 {
@@ -87,4 +122,4 @@ Expected response contract:
 }
 ```
 
-Phase 3 may summarize only retrieved content the caller is allowed to access. If no source supports the answer, AGIS must say so instead of guessing.
+Phase 3 may summarize only retrieved content the caller is allowed to access. If no approved source supports the answer, AGIS must say so instead of guessing.
