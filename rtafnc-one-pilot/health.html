@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#061425">
+<title>RTAFNC ONE Health — Pilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700;800&family=Kanit:wght@500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css?v=1">
+<style>
+:root{--health:#60a5fa;--mint:#34d399;--amber:#fbbf24;--danger:#fb7185;--ink:#07172b}
+body{padding-bottom:86px}.health-shell{max-width:1120px;margin:auto;padding:20px}.health-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.health-top a{color:#d7b85a;text-decoration:none;font-weight:700}.health-title small{display:block;color:#8da2bf;font-size:.78rem}.health-title h1{margin:2px 0 0;font-family:Kanit,sans-serif;font-size:1.35rem}.health-card{background:linear-gradient(145deg,rgba(20,47,78,.92),rgba(7,20,38,.97));border:1px solid rgba(96,165,250,.24);border-radius:24px;padding:20px;box-shadow:0 18px 45px rgba(0,0,0,.28);margin-bottom:16px}.health-id{display:grid;grid-template-columns:auto 1fr auto;gap:16px;align-items:center}.health-avatar{width:68px;height:68px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#2d5f96,#0b2948);border:2px solid rgba(255,255,255,.18);font:700 1.2rem Kanit}.health-name{font:700 1.08rem Kanit}.health-meta{font-size:.8rem;color:#9fb1c8;line-height:1.55}.health-badge{padding:6px 10px;border-radius:999px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.35);color:#86efac;font-size:.72rem;font-weight:800}.alert-strip{margin-top:14px;padding:10px 12px;border-radius:12px;background:rgba(251,113,133,.09);border:1px solid rgba(251,113,133,.24);font-size:.78rem;color:#fecdd3}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:15px}.stat{background:rgba(255,255,255,.035);border:1px solid rgba(255,255,255,.07);padding:12px;border-radius:14px}.stat strong{display:block;font:700 1.18rem Kanit}.stat span{font-size:.7rem;color:#8da2bf}.section-title{display:flex;justify-content:space-between;align-items:center;margin:22px 0 10px}.section-title h2{font:700 1rem Kanit;margin:0}.section-title small{font-size:.72rem;color:#8da2bf}.action-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.health-action{background:rgba(12,32,57,.88);border:1px solid rgba(255,255,255,.07);border-radius:17px;padding:15px;cursor:pointer;transition:.2s;min-height:112px}.health-action:hover{transform:translateY(-2px);border-color:rgba(96,165,250,.45)}.health-action .ico{font-size:1.55rem}.health-action b{display:block;margin:7px 0 3px;font-size:.84rem}.health-action small{font-size:.7rem;color:#8da2bf;line-height:1.4}.timeline{display:flex;flex-direction:column;gap:10px}.event{display:grid;grid-template-columns:38px 1fr auto;gap:10px;align-items:start;background:rgba(255,255,255,.03);padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.06)}.event-ico{width:38px;height:38px;display:grid;place-items:center;border-radius:12px;background:rgba(96,165,250,.1)}.event b{font-size:.82rem}.event p{margin:3px 0 0;color:#8da2bf;font-size:.72rem}.event time{font-size:.66rem;color:#7186a2}.approval{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:13px;border-radius:14px;background:rgba(251,191,36,.06);border:1px solid rgba(251,191,36,.17)}.approval .buttons{display:flex;gap:6px}.mini-btn{border:0;border-radius:10px;padding:8px 10px;font:700 .72rem Sarabun;cursor:pointer}.approve{background:#166534;color:white}.open{background:#173a5f;color:#dbeafe}.report-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.report-card{padding:14px;border-radius:14px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06)}.report-card b{font-size:.82rem}.report-card p{font-size:.7rem;color:#8da2bf}.report-card button{width:100%;margin-top:8px}.privacy{font-size:.7rem;line-height:1.55;color:#8da2bf;padding:12px;border-radius:12px;border:1px dashed rgba(96,165,250,.25)}dialog{width:min(92vw,560px);border:1px solid rgba(96,165,250,.28);border-radius:20px;background:#091a30;color:white;padding:0;box-shadow:0 30px 80px rgba(0,0,0,.55)}dialog::backdrop{background:rgba(0,0,0,.72)}.modal-head{padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.07);display:flex;justify-content:space-between}.modal-body{padding:18px}.modal-body label{font-size:.75rem;color:#9fb1c8;display:block;margin:10px 0 5px}.modal-body input,.modal-body select,.modal-body textarea{width:100%;box-sizing:border-box;background:#0d2441;color:white;border:1px solid #29496e;border-radius:11px;padding:11px;font-family:Sarabun}.modal-actions{display:flex;gap:8px;margin-top:16px}.modal-actions button{flex:1}.close-x{background:none;border:0;color:white;font-size:1.2rem;cursor:pointer}.pilot-ribbon{position:fixed;right:12px;bottom:76px;background:#d7b85a;color:#07172b;padding:7px 10px;border-radius:999px;font-size:.68rem;font-weight:800;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+@media(max-width:760px){.action-grid{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.health-id{grid-template-columns:auto 1fr}.health-badge{grid-column:1/-1;width:max-content}.approval{grid-template-columns:1fr}.report-grid{grid-template-columns:1fr}}
+@media print{body{background:white!important;color:#111!important;padding:0}.health-top a,.action-grid,.approval,.bottom-nav,.pilot-ribbon,.report-card button{display:none!important}.health-card,.event,.report-card{box-shadow:none;border:1px solid #bbb;background:white!important;color:#111!important}.health-meta,.event p,.event time,.report-card p,.privacy{color:#444!important}.health-shell{max-width:none;padding:0}}
+</style>
+</head>
+<body>
+<div class="health-shell" id="reportArea">
+  <div class="health-top"><div class="health-title"><small>RTAFNC ONE · DIGITAL HEALTH RECORD</small><h1>สุขภาพและเวชระเบียน นพอ.</h1></div><a href="./">← RTAFNC ONE</a></div>
+
+  <section class="health-card">
+    <div class="health-id"><div class="health-avatar">นพอ.</div><div><div class="health-name">นพอ. ตัวอย่างระบบ</div><div class="health-meta">รหัส 6900000 · รุ่น 69<br>ข้อมูลในหน้านี้เป็น DEMO — ไม่ใช้ข้อมูลสุขภาพจริงบน GitHub</div></div><div class="health-badge">● HEALTH PROFILE</div></div>
+    <div class="alert-strip">⚠️ Allergy Safety: ก่อนจ่ายยา/ทำหัตถการ ระบบจริงต้องอ่าน DrugAllergies + OtherAllergies จากฐานเวชระเบียนและยืนยันผู้รับบริการทุกครั้ง</div>
+    <div class="stats"><div class="stat"><strong>2</strong><span>การรับบริการปีนี้</span></div><div class="stat"><strong>1</strong><span>นัดติดตาม</span></div><div class="stat"><strong>3</strong><span>วัคซีนที่บันทึก</span></div><div class="stat"><strong>0</strong><span>คำขอรออนุมัติ</span></div></div>
+  </section>
+
+  <div class="section-title"><h2>บริการสุขภาพ</h2><small>Card + Action แบบเดียวกับ Good Deed</small></div>
+  <section class="action-grid">
+    <div class="health-action" data-open="hospital"><div class="ico">🏥</div><b>ขออนุญาตไปโรงพยาบาล</b><small>ส่งคำขอ → ผปค./ผู้อนุมัติ → แจ้ง Telegram/LINE → ติดตามผล</small></div>
+    <div class="health-action" data-open="symptom"><div class="ico">🩺</div><b>แจ้งอาการเจ็บป่วย</b><small>Chief complaint, ระดับเร่งด่วน, อุบัติเหตุ/เจ็บป่วย</small></div>
+    <div class="health-action" data-open="infirmary"><div class="ico">🛏️</div><b>ห้องพยาบาล</b><small>พัก/นอน สังเกตอาการ เวลาเข้า-ออก และผลลัพธ์</small></div>
+    <div class="health-action" data-open="treatment"><div class="ico">💊</div><b>ยาและหัตถการ</b><small>Dispensing, Treatment, Procedure และประวัติการรับยา</small></div>
+    <div class="health-action" data-open="vaccine"><div class="ico">💉</div><b>วัคซีนและภูมิคุ้มกัน</b><small>ทะเบียนวัคซีน เข็ม วันที่ Lot/สถานที่ และหลักฐาน</small></div>
+    <div class="health-action" data-open="followup"><div class="ico">📅</div><b>นัดและติดตามอาการ</b><small>แจ้งเตือนนัด ผล รพ. กลับเข้ากิจกรรม และข้อจำกัด</small></div>
+  </section>
+
+  <div class="section-title"><h2>Health Timeline รายบุคคล</h2><small>Visit → Treatment → Referral → Follow-up</small></div>
+  <section class="health-card timeline">
+    <div class="event"><div class="event-ico">🩺</div><div><b>รับบริการห้องพยาบาล</b><p>บันทึกอาการ สัญญาณชีพ การประเมิน และผลการดูแล</p></div><time>DEMO</time></div>
+    <div class="event"><div class="event-ico">💊</div><div><b>จ่ายยา / หัตถการ</b><p>ผูกกับ Visit เดียวกันและบันทึกผู้ดำเนินการใน Audit Log</p></div><time>DEMO</time></div>
+    <div class="event"><div class="event-ico">🏥</div><div><b>ส่งต่อโรงพยาบาล</b><p>Referral + ผู้ติดตาม + การเดินทาง + แจ้งผู้เกี่ยวข้อง</p></div><time>DEMO</time></div>
+    <div class="event"><div class="event-ico">📅</div><div><b>ติดตามอาการ</b><p>ผลโรงพยาบาล วันที่กลับกิจกรรม ข้อจำกัด และคำแนะนำ</p></div><time>DEMO</time></div>
+  </section>
+
+  <div class="section-title"><h2>คิวอนุมัติและติดตาม</h2><small>ตัวอย่าง Staff/ผปค.</small></div>
+  <section class="health-card"><div class="approval"><div><b>คำขอไป รพ. · DEMO-REQ-001</b><div class="health-meta">ข้อมูลรายละเอียดอ่อนไหวจะไม่ถูกส่งใน Telegram/LINE — ผู้อนุมัติต้องเปิด RTAFNC ONE หลังยืนยันตัวตน</div></div><div class="buttons"><button class="mini-btn open" onclick="toast('เปิดรายละเอียดแบบ Secure View')">เปิด</button><button class="mini-btn approve" onclick="toast('Demo: อนุมัติและสร้าง Audit Event แล้ว')">อนุมัติ</button></div></div></section>
+
+  <div class="section-title"><h2>รายงานสุขภาพ</h2><small>สร้างได้ตลอดตามสิทธิ์</small></div>
+  <section class="health-card report-grid">
+    <div class="report-card"><b>📄 Health Summary PDF</b><p>สรุปประวัติการเจ็บป่วย การรับบริการ ส่งต่อ ติดตาม และวัคซีนตามช่วงเวลาที่เลือก</p><button class="btn btn-secondary" onclick="window.print()">สร้าง / พิมพ์ PDF</button></div>
+    <div class="report-card"><b>🖼️ Executive Snapshot PNG</b><p>สรุปตัวเลขภาพรวมแบบไม่แสดงรายละเอียดอ่อนไหวรายบุคคล</p><button class="btn btn-secondary" onclick="makePng()">สร้าง PNG ตัวอย่าง</button></div>
+  </section>
+
+  <div class="privacy">🔐 Production Rule: รูป/PDF/ผลตรวจเก็บ Private ใน Google Drive; หน้าเว็บเก็บเฉพาะ metadata/ตัวชี้ไฟล์และตรวจ RBAC ก่อนเปิดทุกครั้ง. Telegram เป็นช่องปฏิบัติการหลัก ส่วน LINE ใช้เฉพาะ Alert สุขภาพ/สุขภาพจิตที่จำเป็น โดยข้อความภายนอกระบบไม่ใส่ diagnosis, คะแนนประเมิน หรือรายละเอียดอ่อนไหว.</div>
+</div>
+
+<dialog id="entryModal"><div class="modal-head"><b id="modalTitle">บันทึกข้อมูล</b><button class="close-x" onclick="entryModal.close()">×</button></div><form class="modal-body" id="healthForm"><input type="hidden" id="formType"><label>รหัส นพอ.</label><input value="6900000" disabled><label>หัวข้อ / อาการ / เหตุผล</label><textarea id="detail" rows="3" required placeholder="กรอกข้อมูลสำหรับต้นแบบ"></textarea><label>ระดับความเร่งด่วน</label><select id="urgency"><option>ทั่วไป</option><option>เร่งด่วน</option><option>ฉุกเฉิน</option></select><label>วันที่/เวลานัด หรือวันที่ดำเนินการ</label><input type="datetime-local" id="when"><div class="modal-actions"><button type="button" class="btn btn-secondary" onclick="entryModal.close()">ยกเลิก</button><button class="btn btn-primary">บันทึก Demo Event</button></div></form></dialog>
+<div id="toast" role="status"></div><div class="pilot-ribbon">HEALTH PILOT · NO REAL DATA</div>
+<nav class="bottom-nav"><a href="./" style="text-decoration:none"><span>⌂</span>ONE</a><button class="active"><span>♡</span>Health</button><button onclick="toast('Timeline เปิดอยู่ในหน้านี้')"><span>◷</span>Timeline</button><button onclick="window.print()"><span>▤</span>Report</button></nav>
+<script>
+const titles={hospital:'ขออนุญาตไปโรงพยาบาล',symptom:'แจ้งอาการเจ็บป่วย',infirmary:'บันทึกการใช้ห้องพยาบาล',treatment:'ยาและหัตถการ',vaccine:'บันทึกวัคซีน',followup:'นัดและติดตามอาการ'};
+const modal=document.getElementById('entryModal'); window.entryModal=modal;
+document.querySelectorAll('[data-open]').forEach(el=>el.onclick=()=>{const t=el.dataset.open;document.getElementById('modalTitle').textContent=titles[t];document.getElementById('formType').value=t;modal.showModal()});
+document.getElementById('healthForm').onsubmit=e=>{e.preventDefault();modal.close();toast('บันทึก Demo Event แล้ว — Production จะส่งเข้า Health Workflow/Audit')};
+function toast(msg){const n=document.getElementById('toast');n.textContent=msg;n.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>n.classList.remove('show'),3000)}
+function makePng(){const c=document.createElement('canvas');c.width=1200;c.height=675;const x=c.getContext('2d');x.fillStyle='#07172b';x.fillRect(0,0,c.width,c.height);x.fillStyle='#d7b85a';x.font='bold 48px sans-serif';x.fillText('RTAFNC ONE · Health Snapshot',70,100);x.fillStyle='#fff';x.font='32px sans-serif';x.fillText('รายงานภาพรวมตัวอย่าง (ไม่มีข้อมูลสุขภาพจริง)',70,165);x.font='bold 62px sans-serif';x.fillStyle='#60a5fa';x.fillText('2',90,300);x.fillStyle='#fff';x.font='25px sans-serif';x.fillText('การรับบริการ',90,345);x.font='bold 62px sans-serif';x.fillStyle='#34d399';x.fillText('1',400,300);x.fillStyle='#fff';x.font='25px sans-serif';x.fillText('นัดติดตาม',400,345);x.font='bold 62px sans-serif';x.fillStyle='#fbbf24';x.fillText('3',700,300);x.fillStyle='#fff';x.font='25px sans-serif';x.fillText('วัคซีนที่บันทึก',700,345);x.fillStyle='#8da2bf';x.font='22px sans-serif';x.fillText('Pilot UI — Production report ต้องตรวจสิทธิ์และ Audit ก่อน Export',70,590);const a=document.createElement('a');a.download='rtafnc-health-demo.png';a.href=c.toDataURL('image/png');a.click();toast('สร้าง PNG ตัวอย่างแล้ว')}
+</script>
+</body>
+</html>
