@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.one/schemas/rtafnc-identity.v1.schema.json",
+  "title": "RTAFNC ONE Student Identity Registry v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["student_id", "display_name", "status", "identity_version"],
+  "properties": {
+    "student_id": {"type": "string", "pattern": "^[0-9]{7}$"},
+    "legacy_member_id": {"type": ["string", "null"], "maxLength": 120},
+    "display_name": {"type": "string", "minLength": 1, "maxLength": 200},
+    "cohort": {"type": ["string", "null"], "maxLength": 30},
+    "status": {"enum": ["ACTIVE", "INACTIVE", "GRADUATED", "HOLD"]},
+    "line_user_id": {"type": ["string", "null"], "pattern": "^(U[0-9a-fA-F]{32})?$"},
+    "telegram_chat_id": {"type": ["string", "null"], "maxLength": 80},
+    "identity_version": {"type": "integer", "minimum": 1},
+    "verified_at": {"type": ["string", "null"], "format": "date-time"},
+    "verified_by": {"type": ["string", "null"], "maxLength": 120},
+    "created_at": {"type": ["string", "null"], "format": "date-time"},
+    "updated_at": {"type": ["string", "null"], "format": "date-time"}
+  }
+}
