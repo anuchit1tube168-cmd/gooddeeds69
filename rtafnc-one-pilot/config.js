@@ -1,6 +1,6 @@
 window.RTAFNC_ONE_CONFIG = Object.freeze({
   APP_NAME: "RTAFNC ONE",
-  PILOT_VERSION: "0.4.1",
+  PILOT_VERSION: "0.5.0",
   DEVELOPER_DISPLAY: "ผปค.วพอ.พอ. ร.อ.อนุชิต ทำจะดี ผู้พัฒนา",
   GOOD_DEED_API_URL: "https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec",
   CURRENT_LIFF_ID: "2010948179-Ympqt2bT",
@@ -22,6 +22,7 @@ window.RTAFNC_ONE_CONFIG = Object.freeze({
     AUTO_ACADEMIC_YEAR: true,
     RESPONSIVE_RUNTIME: true,
     STAFF_RBAC: true,
+    STAFF_ACCOUNT_BINDING: true,
     STAFF_PHOTOS: false
   }),
 
@@ -32,6 +33,7 @@ window.RTAFNC_ONE_CONFIG = Object.freeze({
     PROFILE: "../frontend/profile.html",
     SIGN: "../frontend/approve_sign.html",
     SUBMIT_DEED: "../frontend/submit-deed.html",
-    LIBRARY: "library.html"
+    LIBRARY: "library.html",
+    STAFF: "staff.html"
   }
 });
