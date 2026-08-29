@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rtafnc.local/schemas/staff-account-binding.v1.schema.json",
+  "title": "RTAFNC ONE Staff Account Binding v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["staff_directory_key","display_name","base_role","academic_year","binding_status"],
+  "properties": {
+    "staff_directory_key": {"type":"string","minLength":1,"maxLength":120},
+    "display_name": {"type":"string","minLength":1,"maxLength":160},
+    "member_id": {"type":["string","null"],"maxLength":120},
+    "line_user_id": {"type":["string","null"],"maxLength":160},
+    "telegram_chat_id": {"type":["string","null"],"maxLength":80},
+    "base_role": {"enum":["EXECUTIVE","GOVERNANCE","FACULTY","SUPPLY_SUPPORT","EDU_IT_SUPPORT","SUPPORT","HEALTH_AUTHORIZED"]},
+    "additive_roles": {"type":"array","uniqueItems":true,"items":{"enum":["ADVISOR_ADDITIVE","APPROVER_ADDITIVE","MODULE_OPERATOR_ADDITIVE"]}},
+    "module_assignments": {"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^[A-Z0-9_]{2,60}$"}},
+    "academic_year": {"type":"integer","minimum":2500,"maximum":2999},
+    "binding_status": {"enum":["PENDING_ACCOUNT","PENDING_REVIEW","VERIFIED","SUSPENDED","ENDED"]},
+    "verified_by": {"type":["string","null"],"maxLength":160},
+    "verified_at": {"type":["string","null"],"format":"date-time"},
+    "source": {"type":["string","null"],"maxLength":200},
+    "note": {"type":["string","null"],"maxLength":1000}
+  },
+  "allOf": [
+    {
+      "if": {"properties":{"binding_status":{"const":"VERIFIED"}}},
+      "then": {"anyOf":[{"required":["member_id"]},{"required":["line_user_id"]}]}
+    }
+  ]
+}
