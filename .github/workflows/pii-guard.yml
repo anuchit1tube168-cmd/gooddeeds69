@@ -1,4 +1,4 @@
-name: PII Guard
+name: RTAFNC ONE PII Guard
 
 on:
   push:
@@ -9,12 +9,23 @@ on:
 jobs:
   pii-guard:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - name: Checkout
+      - name: Checkout full history for merge-base audit
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Block real identity literals from GitHub
+      - name: Block new PDPA data, account IDs, secrets and data files
+        env:
+          PII_GUARD_MODE: changed
+          PII_GUARD_BASE_REF: main
         run: node scripts/pii-guard.mjs
+      - name: Explain strict production policy
+        run: |
+          echo "Legacy repo runs in changed-file guard mode during cutover."
+          echo "The clean RTAFNC ONE production repository must run PII_GUARD_MODE=full."
