@@ -1,0 +1,27 @@
+name = "rtafnc-agis-knowledge"
+main = "index.js"
+compatibility_date = "2026-08-01"
+
+# EXAMPLE ONLY — copy to deployment environment after verification.
+# Never commit GEMINI_API_KEY, MCP token, LINE tokens, or private Drive credentials.
+
+[vars]
+# Exact public frontend origins, comma-separated.
+ALLOWED_ORIGINS = "https://anuchit1tube168-cmd.github.io"
+
+# Existing Good Deed V2 Apps Script Web App endpoint.
+# Set the real value in the deployment environment after confirming the active deployment.
+AUTH_VERIFY_URL = ""
+
+# Must match the origin expected by the existing Apps Script bridge when explicitly set.
+AUTH_VERIFY_ORIGIN = "https://anuchit1tube168-cmd.github.io"
+
+# Pin only after the intended Gemini model is verified for the production account.
+GEMINI_MODEL = ""
+
+# Optional later. Keep empty until RTAFNC MCP server is deployed and protected.
+RTAFNC_MCP_URL = ""
+
+# Secrets to configure with the platform secret mechanism, NOT here:
+# GEMINI_API_KEY
+# RTAFNC_MCP_TOKEN
