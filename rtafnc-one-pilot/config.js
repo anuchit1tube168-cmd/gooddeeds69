@@ -1,19 +1,25 @@
 window.RTAFNC_ONE_CONFIG = Object.freeze({
   APP_NAME: "RTAFNC ONE",
-  PILOT_VERSION: "0.3.0",
+  PILOT_VERSION: "0.4.0",
   GOOD_DEED_API_URL: "https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec",
   CURRENT_LIFF_ID: "2010948179-Ympqt2bT",
   CURRENT_LIFF_URL: "https://liff.line.me/2010948179-Ympqt2bT",
   REQUEST_TIMEOUT_MS: 30000,
   RESPONSE_ORIGINS: ["https://script.google.com", "https://script.googleusercontent.com"],
 
-  // Phase 3: leave blank until the authenticated AGIS Worker is deployed and verified.
+  // Academic year is resolved at runtime in Asia/Bangkok. Cutover = 1 August.
+  // Do not hard-code a different year per module and never rewrite historical record years.
+  ACADEMIC_YEAR_MODE: "AUTO_BANGKOK_AUG1",
+
+  // Leave blank until the authenticated AGIS Worker is deployed and verified.
   // Never place Gemini keys, MCP tokens, Drive credentials or other secrets in this client config.
   AGIS_API_BASE: "",
   FEATURES: Object.freeze({
     AGIS_KNOWLEDGE: true,
     SECURE_SOURCE_OPEN: true,
-    MCP_ACTIONS: false
+    MCP_ACTIONS: false,
+    AUTO_ACADEMIC_YEAR: true,
+    RESPONSIVE_RUNTIME: true
   }),
 
   LINKS: {
