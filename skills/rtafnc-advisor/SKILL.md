@@ -1,189 +1,117 @@
 # RTAFNC Advisor System Skill
 
 ## Purpose
-ใช้สกิลนี้เมื่อออกแบบ/พัฒนา/ตรวจระบบอาจารย์ที่ปรึกษา วิทยาลัยพยาบาลทหารอากาศ (RTAFNC ONE) โดยยึดคู่มืออาจารย์ที่ปรึกษา ปีการศึกษา 2566 เป็น baseline และไม่ทำลายระบบ Production เดิม
+Use this skill to design, build, operate or audit the RTAFNC ONE advisor module. It covers official advisor assignment, appointment/contact, digital advisor records, follow-up/referral, annual summary, reports and advisor-scoped authorization.
 
-## Core principle
-One student identity → one advisor assignment history → one consultation timeline → one annual development summary.
+The public skill contains workflow/schema only. Real student IDs, advisor names, assignment rows and confidential notes stay in private Drive/backend.
 
-## Source-backed backbone
-- อษ.1 ทะเบียนประวัตินักเรียนพยาบาล: ข้อมูลพื้นฐานและครอบครัว ใช้เพื่อรู้จักผู้เรียนและอัปเดตตามระยะ
-- อษ.2 ระเบียนสะสม: ผลการศึกษา ทุน/รางวัล กิจกรรม บทบาท และพัฒนาการตามปีการศึกษา
-- อษ.3 บันทึกการพบ: บันทึกรายบุคคล ทั้งการพบเป็นทางการ/ไม่เป็นทางการหรือเหตุที่ควรบันทึก และควรมีอย่างน้อยเดือนละ 1 ครั้ง
-- อษ.4 สรุปผลพัฒนาการ: สรุปภาพรวมอย่างน้อยปีละ 1 ครั้ง
+## Hard authorization rules
+- Never infer advisor relationship.
+- `teacher` is not automatically `advisor`.
+- A name in the staff directory does not grant student scope.
+- Runtime access requires a verified staff account bound to an ACTIVE official assignment for the target student and effective period.
+- Generic admin/governance/IT role does not automatically grant confidential counselling access.
+- Name-only staff matching is review-only; ambiguous binding grants zero scope.
 
-## Primary consultation domains
-คู่มือกำหนดหัวข้อหลัก 4 กลุ่ม:
-1. การศึกษา/การเรียนการสอน
-2. เรื่องส่วนตัว
-3. เรื่องสังคม
-4. งานอาชีพ/อนาคต
+## Assignment authority
+Priority:
+1. Official order/verified assignment source for the academic year.
+2. Private assignment staging derived from that source.
+3. Historical assignments for read-only history.
 
-Operational subcategories ที่ระบบใช้เพื่อค้นหา/รายงานได้ละเอียดขึ้น โดย map กลับเข้าหมวดหลักเสมอ:
-- Academic / Learning
-- Personal / Family
-- Social / Peer / Adjustment
-- Career / Professional goal
-- Health / Physical
-- Emotional / Mental well-being
-- Financial / Scholarship
-- Discipline / Conduct
-- Military/social adjustment
-- Activities / Leadership
-- Other
+Do not create an assignment from class, surname, past consultation, file position, advisor preference or last-year relationship.
+
+## Assignment contract
+```text
+assignment_id
+academic_year
+student_id: <student_id_7_digits>
+advisor_staff_key: <verified_private_staff_subject>
+advisor_display_label: <private>
+assignment_type: PRIMARY|CO_ADVISOR|TEMPORARY
+assignment_group: <optional>
+effective_from
+effective_to
+status: ACTIVE|ENDED|PENDING_REVIEW
+source_version
+approved_at
+created_at
+updated_at
+```
+
+Staff display labels may be stored privately before account binding, but must not authorize access until `advisor_staff_key` is verified.
+
+## Source-backed advisor record backbone
+When the verified advisor handbook/manual for the applicable version requires them, support digital equivalents of:
+- อษ.1 student background/profile for advisor purpose;
+- อษ.2 cumulative/advisor development record;
+- อษ.3 individual meeting/contact record, including periodic recording expectations defined by the source handbook;
+- อษ.4 annual development summary.
+
+Do not silently invent mandatory fields beyond the verified source version.
+
+## Consultation domains
+Primary domains may include academic/learning, personal, social and career/professional development according to the verified advisor source. Operational subcategories may be used for search/reporting only when mapped back to an approved primary domain.
 
 ## Standard workflow
-1. Student opens Advisor LIFF.
-2. Resolve RTAFNC_ID and active advisor assignment.
-3. Student requests meeting or advisor creates meeting record.
-4. Select purpose/topic, urgency and preferred channel/time.
-5. Advisor receives Telegram primary alert with secure link.
+1. Authenticate RTAFNC ONE subject.
+2. Resolve current student/advisor relationship from private assignment registry.
+3. Student requests meeting or advisor records an authorized contact.
+4. Record purpose, urgency and preferred channel/time at minimum necessary detail.
+5. Send minimal operational notification with secure link.
 6. Advisor accepts/reschedules/refers.
-7. Meeting occurs: onsite / phone / secure chat / video / other approved channel.
-8. Advisor completes digital อษ.3:
-   - date/time
-   - formal/informal
-   - topic/domain
-   - concise facts / student concern
-   - advisor observation
-   - guidance/counseling provided
-   - what student gained/understood
-   - agreed action plan
-   - follow-up date
-   - referral if needed
-9. Student may receive a non-sensitive meeting summary and next action.
-10. Follow-up task closes or escalates.
-11. At academic-year summary, generate digital อษ.4 from verified data + advisor narrative.
-12. Export authorized reports to PDF/Word and archive privately in Drive.
+7. Meeting occurs through approved channel.
+8. Advisor records facts/guidance/action/follow-up in confidential advisor scope.
+9. Student receives only student-safe summary where policy allows.
+10. Follow-up closes or referral opens destination workflow.
+11. Generate annual summary from verified records + authorized advisor narrative.
+12. Export authorized Word/PDF privately where required.
 
-## Counseling method checklist
-During a consultation, guide the advisor through:
-- Build rapport / safe atmosphere
-- Listening and observation
-- Leading / clarification
-- Reflection
-- Summarization
-- Informing
-- Encouragement
-- Suggestion while preserving student decision-making
-- Referral when beyond advisor scope
+## Counselling method assistance
+The UI/AI may prompt the advisor for rapport, listening/observation, clarification, reflection, summarization, information, encouragement, suggestion that preserves student decision-making, and referral when beyond advisor scope. This is decision support, not autonomous clinical/disciplinary judgment.
 
-## Minimum record rules
-- Do not force advisor to write detailed sensitive notes while the student is watching.
-- อษ.3 target: at least 1 individual record/student/month when applicable per handbook baseline.
-- อษ.4 target: at least 1 annual summary/student/academic year.
-- Every record has academic_year, student_id, advisor_id, timestamp, source, version, status and audit metadata.
+## Confidentiality
+- Advisor private notes are confidential by default.
+- Student-safe summary is a separate projection, not the same field as private notes.
+- Health/mental-health/discipline detail must not be copied into advisor notifications or general student profile.
+- Cross-domain referral passes minimum necessary context; referral does not automatically grant destination-record access.
+- Audit access/download/export of confidential records.
 
-## Confidentiality & access
-- Consultation notes are confidential by default.
-- Student sees only student-safe summary, not internal advisor notes unless policy explicitly permits.
-- Advisor sees assigned students within assignment dates.
-- Head/governance roles see only authorized scope.
-- General admin/IT role does NOT automatically grant access to sensitive counseling notes.
-- Reports containing confidential information should prefer student code over full name unless the recipient is authorized and a name is required.
-- Never put detailed health/mental-health/disciplinary content in Telegram or LINE lock-screen notifications; send case ID + urgency + secure link.
-- All access/download/export actions must be audit logged.
+## Link/deep-link rule
+Never put student ID, diagnosis, counselling detail or sensitive case content in URL query strings. Use opaque, short-lived task/case tokens. Backend resolves token → verifies session → verifies role + active assignment + purpose/scope → returns authorized data.
 
-## Assignment model
-AdvisorAssignment:
-- assignment_id
-- student_id
-- advisor_id
-- academic_year
-- start_at
-- end_at
-- status
-- assigned_by
-- note
+## Reports
+Authorized reports may include assigned student count, students contacted, consultation count, follow-up due/completed, referral status, topic distribution, monthly trend and annual-form completion. Do not use raw consultation count alone as advisor quality ranking.
 
-Support reassignment without overwriting history.
-Baseline planning ratio from handbook: advisor should normally have no more than 1:8 students where applicable.
+## Academic-year rollover
+At 1 August:
+1. Snapshot current assignments and records.
+2. Load the new verified roster; never blindly increment student year level.
+3. Load/verify new official advisor source.
+4. Compare continued/changed/ended assignments.
+5. End or retain historical assignment records without overwrite.
+6. Activate only verified new-year relationships.
+7. Create annual tasks only after the new assignment set is accepted.
 
-## Data model
-StudentProfile (prefill from RTAFNC Master)
-AdvisorAssignment
-ConsultationRequest
-ConsultationSession
-ConsultationTopic
-ConsultationOutcome
-FollowUpTask
-Referral
-AdvisorNotePrivate
-StudentSummarySafe
-AnnualDevelopmentSummary (อษ.4)
-AdvisorAvailability
-NotificationEvent
-ConsentPrivacyReceipt
-AuditLog
+Never carry an advisor relationship into the new year solely because it existed last year.
 
-## Prefill sources
-Reuse verified existing data instead of retyping:
-- student name / code / cohort / year / photo
-- advisor assignment
-- GPAX / academic progress
-- scholarship history
-- good-deed / volunteer-hour summaries
-- health case status only where purpose/role permits; do not expose clinical detail by default
-- activities / awards / leadership roles
-- conduct data only for authorized workflow
+## Audit and rollback
+Audit assignment import/change/end, staff binding, appointment changes, confidential record writes, referral and exports. Assignment corrections are versioned. Rollback restores the prior active assignment set/pointer; it never deletes historical counselling records.
 
-## Reporting requirements
-Filters:
-- academic year
-- semester
-- advisor
-- cohort/year
-- student
-- topic/domain
-- session status
-- referral/follow-up status
-
-Core metrics:
-- number of assigned students per advisor
-- number of students who met advisor
-- total consultations
-- consultations per student
-- consultations per advisor
-- monthly trend
-- topic distribution
-- formal vs informal encounters
-- follow-ups due/completed/overdue
-- referrals by destination category
-- annual อษ.4 completion rate
-
-Do not rank advisors by raw consultation counts alone. Counts are operational evidence, not a quality score.
-
-## Outputs
-1. Student LIFF: advisor card, request appointment, history-safe summary, next actions.
-2. Advisor LIFF: group dashboard, student list, pending requests, meeting form, follow-up queue, annual summary.
-3. Admin: assignment management, academic year rollover, report center, template/version control.
-4. Telegram: primary operational notification + secure deep link.
-5. LINE: urgent/special notification only according to RTAFNC notification policy.
-6. Word/PDF: digital อษ.1–อษ.4 and management reports.
-
-## Link pattern
-Never place sensitive data in query strings.
-Use opaque short-lived tokens, e.g.
-`/advisor.html?task=ADV-<opaque-token>`
-Backend resolves task → verifies identity/role/purpose → returns authorized data.
-
-## Year rollover
-At start of academic year:
-- create AcademicYear config
-- roll student year level
-- keep prior advisor assignment history
-- allow admin to continue/change assignments
-- reset annual report counters while preserving historical sessions
-- create annual อษ.4 task per active student
+## Failure behavior
+Fail closed with explicit states such as `ASSIGNMENT_NOT_VERIFIED`, `STAFF_BINDING_REQUIRED`, `NOT_ASSIGNED`, `SCOPE_DENIED`, `CONFIDENTIAL_SCOPE_REQUIRED`, `SOURCE_VERSION_REQUIRED`. Never show another student as fallback.
 
 ## Definition of done
-A module is not complete until:
-- student can request/see safe status
-- advisor can receive link and record session
-- follow-up/referral works
-- admin can assign/reassign advisor
-- yearly/monthly report works
-- Word/PDF export works
-- access controls and audit are tested
-- sensitive notification redaction is tested
-- no real student data is committed to public GitHub
+- Official assignment source is verified for the academic year.
+- Every runtime advisor has a verified staff account binding.
+- Assigned-student access passes and unassigned access fails.
+- Student sees only own safe projection.
+- Follow-up/referral works without permission leakage.
+- Official form/report workflow uses verified source version.
+- Academic-year rollover preserves history and does not auto-copy relationships.
+- Audit/rollback tested.
+- Notifications are redacted/minimal.
+- No real student/advisor data is committed to public GitHub.
+
+## Activation gate
+Assignment records can be verified before runtime access, but advisor Dashboard read/write stays disabled until staff binding and scope tests pass. Activate advisors in controlled batches; never grant Advisor role to all teachers automatically.
