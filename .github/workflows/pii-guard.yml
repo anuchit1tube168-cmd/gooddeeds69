@@ -1,0 +1,27 @@
+name: RTAFNC ONE PDPA Guard
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  pii-guard:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Block new PDPA data and secrets
+        env:
+          PII_GUARD_MODE: changed
+          PII_GUARD_BASE_REF: ${{ github.event_name == 'pull_request' && github.event.pull_request.base.sha || github.event.before }}
+        run: node scripts/pii-guard.mjs
