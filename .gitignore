@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .env
+.env.*
 scratch/
 good-deeds-system/
 graphify-8/
@@ -11,3 +12,23 @@ thai-docx-skill.zip
 thai-docx/
 .agents/
 .vscode/
+
+# RTAFNC ONE private-data boundary
+# Real identities, student rosters, advisor mappings, health/counselling records,
+# operational exports and backups belong in private Google Drive/backend only.
+private/
+data/private/
+exports/
+backups/
+*.xlsx
+*.xls
+*.xlsm
+*.ods
+*.csv
+!data/templates/*.csv
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.parquet
+*.avro
