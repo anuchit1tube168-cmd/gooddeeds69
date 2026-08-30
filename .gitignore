@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 .env
+.env.*
 scratch/
 good-deeds-system/
 graphify-8/
@@ -14,3 +15,21 @@ thai-docx/
 migration-private/
 *.secrets.json
 Legacy-Initial-Credentials-*.csv
+
+# RTAFNC ONE private-data boundary
+private/
+data/private/
+exports/
+backups/
+*.xlsx
+*.xls
+*.xlsm
+*.ods
+*.csv
+!data/templates/*.csv
+*.db
+*.sqlite
+*.sqlite3
+*.sql
+*.parquet
+*.avro
