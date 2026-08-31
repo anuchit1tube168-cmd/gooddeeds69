@@ -888,7 +888,206 @@ const App = {
     },
     saveSettings(s) { Storage.set('settings', s); },
 
-    // ---------- TELEGRAM NOTIFY ----------
+    // ---------- FORM SLIP CANVAS GENERATOR FOR TELEGRAM ----------
+    async generateDeedFormSlipBlob(deed, student) {
+        if (typeof document === 'undefined') return null;
+        try {
+            const canvas = document.createElement('canvas');
+            canvas.width = 1000;
+            canvas.height = 720;
+            const ctx = canvas.getContext('2d');
+
+            // 1. Background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 2. Outer Border (Official Navy & Gold)
+            ctx.strokeStyle = '#1e3a8a';
+            ctx.lineWidth = 4;
+            ctx.strokeRect(20, 20, 960, 680);
+            ctx.strokeStyle = '#c9a227';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(26, 26, 948, 668);
+
+            // 3. Dates & Header elements
+            const now = new Date();
+            const thaiMonths = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม'];
+            const curDay = now.getDate();
+            const curMonth = thaiMonths[now.getMonth()];
+            const curYear = now.getFullYear() + 543;
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'bold 20px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText(`วันที่  ${curDay}  เดือน  ${curMonth}  พ.ศ.  ${curYear}`, 50, 68);
+
+            ctx.textAlign = 'right';
+            ctx.fillText(`รหัส นพอ. :  ${student.student_id || '-'}`, 940, 68);
+            ctx.textAlign = 'left';
+
+            // 4. Draw Official Emblem in Center
+            await new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(500, 75, 42, 0, Math.PI * 2);
+                    ctx.closePath();
+                    ctx.clip();
+                    ctx.drawImage(img, 458, 33, 84, 84);
+                    ctx.restore();
+                    ctx.strokeStyle = '#c9a227';
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.arc(500, 75, 42, 0, Math.PI * 2);
+                    ctx.stroke();
+                    resolve();
+                };
+                img.onerror = () => resolve();
+                img.src = '510903.jpg';
+            });
+
+            // 5. Form Main Title
+            ctx.fillStyle = '#0c1b33';
+            ctx.font = 'bold 26px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('บันทึกกิจกรรมความดีและจิตอาสา นพอ.', 500, 150);
+            ctx.font = '16px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#475569';
+            ctx.fillText('วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ · ปีการศึกษา ๒๕๖๙', 500, 178);
+            ctx.textAlign = 'left';
+
+            // Helper to draw dotted underline
+            const drawDottedLine = (x1, y, x2) => {
+                ctx.save();
+                ctx.setLineDash([2, 4]);
+                ctx.strokeStyle = '#64748b';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(x1, y);
+                ctx.lineTo(x2, y);
+                ctx.stroke();
+                ctx.restore();
+            };
+
+            const cat = this.getCategoryById(deed.categoryId);
+            const stuName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
+            const yearLvl = student.year_level || (String(student.class_year) === '69' ? '1' : String(student.class_year) === '68' ? '2' : String(student.class_year) === '67' ? '3' : '4');
+
+            // 6. Section 1 Box (ข้อมูลผู้ขออนุมัติ)
+            ctx.strokeStyle = '#0c1b33';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 205, 900, 150);
+
+            // Section 1 Header Tag
+            ctx.fillStyle = '#0c1b33';
+            ctx.fillRect(50, 205, 260, 32);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 18px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('ส่วนที่ ๑ : ข้อมูลผู้ขออนุมัติ', 65, 227);
+
+            // Row 1: Name + Class
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('ชื่อ – สกุล :', 70, 275);
+            ctx.font = 'bold 20px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#1e3a8a';
+            ctx.fillText(stuName, 175, 275);
+            drawDottedLine(170, 282, 600);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('ชั้นปีที่ :', 630, 275);
+            ctx.font = 'bold 20px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#1e3a8a';
+            ctx.fillText(`${yearLvl} (รุ่น ${student.class_year || '69'})`, 705, 275);
+            drawDottedLine(700, 282, 925);
+
+            // Row 2: Category
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('หมวดหมู่ความดี :', 70, 325);
+            ctx.font = 'bold 19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#92400e';
+            ctx.fillText(`หมวดที่ ${deed.categoryId} : ${cat.name}`, 215, 325);
+            drawDottedLine(210, 332, 925);
+
+            // 7. Section 2 Box (รายละเอียดกิจกรรม)
+            ctx.strokeStyle = '#0c1b33';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(50, 375, 900, 240);
+
+            // Section 2 Header Tag
+            ctx.fillStyle = '#0c1b33';
+            ctx.fillRect(50, 375, 310, 32);
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 18px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('ส่วนที่ ๒ : รายละเอียดการปฏิบัติงาน', 65, 397);
+
+            // Row 1: Activity Date & Hours
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('วันที่ปฏิบัติกิจกรรม :', 70, 445);
+            ctx.font = 'bold 19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#1e3a8a';
+            ctx.fillText(deed.activityDate || '-', 235, 445);
+            drawDottedLine(230, 452, 530);
+
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('จำนวนชั่วโมง :', 560, 445);
+            ctx.font = 'bold 22px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#b45309';
+            ctx.fillText(`${deed.hours} ชั่วโมง`, 690, 445);
+            drawDottedLine(685, 452, 925);
+
+            // Row 2: Location / Place
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('สถานที่ / สังกัด :', 70, 495);
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#334155';
+            ctx.fillText(deed.note || 'วิทยาลัยพยาบาลทหารอากาศ', 215, 495);
+            drawDottedLine(210, 502, 925);
+
+            // Row 3: Description Details
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('รายละเอียดกิจกรรม :', 70, 545);
+            ctx.font = 'bold 19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#0f172a';
+            const desc = deed.description || '-';
+            const shortDesc = desc.length > 55 ? desc.substring(0, 52) + '...' : desc;
+            ctx.fillText(shortDesc, 245, 545);
+            drawDottedLine(240, 552, 925);
+
+            // Row 4: Approver assigned
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText('อาจารย์ผู้รับผิดชอบ :', 70, 595);
+            ctx.font = 'bold 19px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillStyle = '#0369a1';
+            ctx.fillText(deed.approver || 'อาจารย์ผู้ควบคุมกิจกรรมจิตอาสา', 245, 595);
+            drawDottedLine(240, 602, 925);
+
+            // 8. Footer Timestamp
+            const submitTimeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+            ctx.textAlign = 'right';
+            ctx.fillStyle = '#64748b';
+            ctx.font = '16px "Sarabun", "TH Sarabun New", sans-serif';
+            ctx.fillText(`บันทึกเมื่อ ${curDay} ${curMonth} ${curYear} เวลา ${submitTimeStr} น.`, 940, 655);
+            ctx.textAlign = 'left';
+
+            return await new Promise((resolve) => {
+                canvas.toBlob((blob) => resolve(blob), 'image/png');
+            });
+        } catch (err) {
+            console.error('Canvas generate error:', err);
+            return null;
+        }
+    },
+
+    // ---------- TELEGRAM NOTIFY (TEXT & PHOTO) ----------
     async sendTelegram(chatId, message, replyMarkup = null) {
         const settings = this.getSettings();
         const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
@@ -904,6 +1103,33 @@ const App = {
             });
             return res.ok;
         } catch { return false; }
+    },
+
+    async sendTelegramPhoto(chatId, photoBlob, caption, replyMarkup = null) {
+        const settings = this.getSettings();
+        const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
+        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
+        if (!token || !targetChatId || !photoBlob) return false;
+        try {
+            const formData = new FormData();
+            formData.append('chat_id', targetChatId);
+            formData.append('photo', photoBlob, 'deed_form.png');
+            if (caption) {
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'HTML');
+            }
+            if (replyMarkup) {
+                formData.append('reply_markup', JSON.stringify(replyMarkup));
+            }
+            const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+            return res.ok;
+        } catch (err) {
+            console.warn('Telegram photo send error:', err);
+            return false;
+        }
     },
 
     // ---------- LINE NOTIFY ----------
@@ -932,12 +1158,11 @@ const App = {
 
         // Build message
         const msgLines = [
-            `🔔 แจ้งเตือนกิจกรรมใหม่`,
+            `🔔 แจ้งเตือนขออนุมัติความดี`,
             `━━━━━━━━━━━━━━━`,
-            `ชื่อ-สกุล : ${student.rank} ${student.first_name} ${student.last_name}`,
-            `รหัส นพอ. : ${student.student_id}`,
-            `กิจกรรม : ${cat.emoji} ${cat.name}`,
-            `ปีการศึกษา ${settings.academicYear || 2569}`,
+            `👤 ผู้ขอ : ${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}`,
+            `🆔 รหัส นพอ. : ${student.student_id}`,
+            `📂 กิจกรรม : ${cat.emoji} ${cat.name}`,
             `⏱ ชั่วโมง : ${deed.hours} ชม.`,
             `📅 วันที่ : ${deed.activityDate}`,
             `📝 ${deed.description}`,
@@ -947,20 +1172,16 @@ const App = {
         const plainMsg = msgLines.join('\n');
 
         const htmlMsg = [
-            `🎖️ <b>ใบบันทึกความดีจิตอาสา — วิทยาลัยพยาบาลทหารอากาศ</b>`,
+            `🔔 <b>แจ้งเตือนการขออนุมัติความดี</b>`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
-            `👤 <b>ยศ-ชื่อ-สกุล:</b> ${student.rank} ${student.first_name} ${student.last_name}`,
-            `🎫 <b>รหัสประจำตัว:</b> <code>${student.student_id}</code>`,
-            `📚 <b>สังกัด:</b> ${yearName}`,
-            ``,
-            `📂 <b>หมวดหมู่ความดี:</b> ${cat.emoji} ${cat.name}`,
-            `⏱ <b>จำนวนชั่วโมงสะสม:</b> <b>${deed.hours} ชั่วโมง</b>`,
-            `📅 <b>วันที่ปฏิบัติกิจกรรม:</b> ${deed.activityDate}`,
-            ``,
-            `📝 <b>รายละเอียดกิจกรรม:</b>`,
-            `${deed.description}`,
+            `👤 <b>ผู้ขอ:</b> ${student.rank || 'นพอ.'}${student.first_name} ${student.last_name}`,
+            `🆔 <b>รหัส:</b> <code>${student.student_id}</code> (${yearName})`,
+            `📂 <b>หมวดหมู่:</b> ${cat.emoji} ${cat.name}`,
+            `⏱ <b>จำนวน:</b> <b>${deed.hours} ชั่วโมง</b>`,
+            `📅 <b>วันที่:</b> ${deed.activityDate}`,
+            `📝 <b>รายละเอียด:</b> ${deed.description}`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
-            `⏳ <b>สถานะเอกสาร:</b> <i>รอการตรวจประเมินและอนุมัติจากอาจารย์</i>`,
+            `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
         const replyMarkup = {
@@ -982,7 +1203,15 @@ const App = {
         const rawChatId = settings.adminChatId && String(settings.adminChatId).trim() ? String(settings.adminChatId).trim() : '';
         const chatId = rawChatId || CONFIG.TELEGRAM_CHAT_ID;
         if (chatId) {
-            sentTg = await this.sendTelegram(chatId, htmlMsg, replyMarkup);
+            // 1. Try generating Form Slip Image first
+            const formSlipBlob = await this.generateDeedFormSlipBlob(deed, student);
+            if (formSlipBlob) {
+                sentTg = await this.sendTelegramPhoto(chatId, formSlipBlob, htmlMsg, replyMarkup);
+            }
+            // 2. Fallback to Text message if photo sending failed
+            if (!sentTg) {
+                sentTg = await this.sendTelegram(chatId, htmlMsg, replyMarkup);
+            }
         }
 
         let sentLine = false;
