@@ -47,10 +47,23 @@ def calculate_student_total_hours(student_id):
     if not os.path.exists(p):
         return 0.0
     with open(p, 'r', encoding='utf-8') as f:
-        deeds = json.load(f)
+        data = json.load(f)
+    
+    deeds_list = []
+    if isinstance(data, list):
+        deeds_list = data
+    elif isinstance(data, dict):
+        deeds_list = data.get(str(student_id), [])
+        if not deeds_list:
+            for dlist in data.values():
+                if isinstance(dlist, list):
+                    for d in dlist:
+                        if str(d.get('student_id') or d.get('studentId')) == str(student_id):
+                            deeds_list.append(d)
+                            
     total = 0.0
-    for d in deeds:
-        if str(d.get('student_id')) == str(student_id) and d.get('status') == 'approved':
+    for d in deeds_list:
+        if d.get('status') == 'approved':
             total += float(d.get('hours', 0))
     return total
 
@@ -71,14 +84,22 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
         return None
     
     with open(deeds_file, 'r', encoding='utf-8') as f:
-        deeds = json.load(f)
+        data = json.load(f)
     
     updated = False
     target_deed = None
     
+    all_deeds = []
+    if isinstance(data, list):
+        all_deeds = data
+    elif isinstance(data, dict):
+        for sid, dlist in data.items():
+            if isinstance(dlist, list):
+                all_deeds.extend(dlist)
+                
     # 1. Match by exact deed_id
     if deed_id:
-        for d in deeds:
+        for d in all_deeds:
             if str(d.get('id')) == str(deed_id):
                 d['status'] = new_status
                 d['approved_by'] = approver_name
@@ -91,8 +112,8 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
                 
     # 2. Fallback: Match by student_id and pending status
     if not updated and student_id:
-        for d in deeds:
-            if str(d.get('student_id')) == str(student_id) and d.get('status') == 'pending':
+        for d in all_deeds:
+            if str(d.get('student_id') or d.get('studentId')) == str(student_id) and d.get('status') == 'pending':
                 d['status'] = new_status
                 d['approved_by'] = approver_name
                 d['approvedBy'] = approver_name
@@ -106,10 +127,10 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
         # Save deeds.json in both locations
         for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
             with open(json_p, 'w', encoding='utf-8') as f:
-                json.dump(deeds, f, ensure_ascii=False, indent=2)
+                json.dump(data, f, ensure_ascii=False, indent=2)
             
         # Update JS files
-        js_content = f"// Auto-updated by telegram_bot_listener.py\nconst DEEDS_DATA = {json.dumps(deeds, ensure_ascii=False, indent=2)};\n\nif (typeof window !== 'undefined') {{ window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
+        js_content = f"// Auto-updated by telegram_bot_listener.py\nconst IMPORTED_DEEDS = {json.dumps(data, ensure_ascii=False, indent=2)};\nconst DEEDS_DATA = IMPORTED_DEEDS;\n\nif (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
         for js_p in [os.path.join(DATA_DIR, 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
             with open(js_p, 'w', encoding='utf-8') as f:
                 f.write(js_content)

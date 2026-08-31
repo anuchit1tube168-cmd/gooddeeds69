@@ -615,6 +615,8 @@ const App = {
                     const allDeeds = await res.json();
                     if (Array.isArray(allDeeds)) {
                         updatedDeeds = allDeeds.filter(d => String(d.student_id || d.studentId) === String(studentId));
+                    } else if (allDeeds && typeof allDeeds === 'object') {
+                        updatedDeeds = allDeeds[String(studentId)] || allDeeds[studentId] || [];
                     }
                 }
             } catch (e) {}
@@ -626,6 +628,7 @@ const App = {
                     if (res.ok) {
                         const data = await res.json();
                         if (Array.isArray(data)) updatedDeeds = data;
+                        else if (data && typeof data === 'object') updatedDeeds = data[String(studentId)] || data[studentId] || [];
                     }
                 } catch (e) {}
             }
