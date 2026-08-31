@@ -390,7 +390,14 @@ const App = {
     },
 
     getCurrentUser() {
-        const user = Storage.get('session');
+        let user = Storage.get('session');
+        if (user && user.role === 'student' && user.student_id) {
+            const fresh = this.getStudentById(user.student_id);
+            if (fresh && fresh.first_name && fresh.first_name !== 'นักเรียน') {
+                user = { ...user, ...fresh };
+                Storage.set('session', user);
+            }
+        }
         if (user) this.syncAuthContext(user);
         return user;
     },
