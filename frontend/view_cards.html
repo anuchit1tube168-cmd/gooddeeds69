@@ -267,15 +267,20 @@
         .starbucks-card .card-student-info {
             flex-grow: 1;
             text-align: left;
+            padding-right: 78px;
+            max-width: calc(100% - 65px);
+            z-index: 2;
         }
 
         .starbucks-card .card-student-name {
             font-family: 'Kanit', sans-serif;
-            font-size: 1.1rem;
+            font-size: 1.02rem;
             font-weight: 700;
             margin-bottom: 4px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
             color: #fff;
+            line-height: 1.25;
+            word-break: break-word;
         }
 
         .starbucks-card .card-student-detail {
@@ -283,7 +288,7 @@
             flex-direction: column;
             gap: 2px;
             font-size: 0.7rem;
-            opacity: 0.8;
+            opacity: 0.85;
             color: #fff;
         }
 
@@ -311,16 +316,16 @@
             color: #fff;
         }
 
-        /* Floating Chibi on Card */
+        /* Floating Chibi on Card - Non-overlapping layout */
         .starbucks-card .card-chibi-wrap {
             position: absolute;
-            right: 15px;
-            top: 50px;
-            width: 80px;
-            height: 80px;
+            right: 8px;
+            top: 48px;
+            width: 72px;
+            height: 72px;
             pointer-events: none;
-            z-index: 3;
-            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+            z-index: 1;
+            filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
             animation: cardChibiFloat 3s ease-in-out infinite;
         }
 
