@@ -191,7 +191,8 @@ const LiffHelper = {
                     App.setSession('student', student);
                 }
                 if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-                    window.location.href = 'student-dashboard.html';
+                    const target = (window.location.pathname.indexOf('/frontend/') !== -1) ? 'student-dashboard.html' : 'frontend/student-dashboard.html';
+                    window.location.href = target;
                     return;
                 }
             } else {
