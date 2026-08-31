@@ -23,7 +23,9 @@ jobs:
       - name: Block new PDPA data, account IDs, secrets and data files
         env:
           PII_GUARD_MODE: changed
-          PII_GUARD_BASE_REF: main
+          # actions/checkout fetches remote branches but does not create a local main branch
+          # when this workflow runs on rtafnc-one-integration. Compare against origin/main.
+          PII_GUARD_BASE_REF: origin/main
         run: node scripts/pii-guard.mjs
       - name: Explain strict production policy
         run: |
