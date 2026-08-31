@@ -861,7 +861,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="card-photo-wrap">
-                                    <img src="${photoPath}" alt="photo" onerror="this.outerHTML='?'">
+                                    <img src="${photoPath}" alt="${s.first_name}" onerror="this.onerror=null; this.src='510903.jpg';">
                                 </div>
                                 <div class="card-student-info">
                                     <div class="card-student-name">${s.rank} ${s.first_name} ${s.last_name}</div>
@@ -1038,7 +1038,7 @@
                 // 4. Student Real Photo
                 const photoWrap = cardEl.querySelector('.card-photo-wrap');
                 const photoPath = STUDENT_PHOTOS[stu.student_id] || `photos/${stu.student_id}.jpg`;
-                photoWrap.innerHTML = `<img src="${photoPath}" alt="profile" onerror="this.outerHTML='?'">`;
+                photoWrap.innerHTML = `<img src="${photoPath}" alt="${stu.first_name}" onerror="this.onerror=null; this.src='510903.jpg';">`;
 
                 // 5. Accumulated Hours
                 const hoursCountEl = cardEl.querySelector('.stars-count');
