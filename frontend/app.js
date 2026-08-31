@@ -829,10 +829,10 @@ const App = {
         const pending = deeds.filter(d => d.status === 'pending');
         const rejected = deeds.filter(d => d.status === 'rejected');
 
-        const totalHours = approved.reduce((s, d) => s + d.hours, 0);
+        const totalHours = Math.round(approved.reduce((s, d) => s + (parseFloat(d.hours) || 0), 0));
         const byCategory = CATEGORIES.map(cat => ({
             ...cat,
-            hours: approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + d.hours, 0),
+            hours: Math.round(approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + (parseFloat(d.hours) || 0), 0)),
             count: approved.filter(d => d.categoryId === cat.id).length,
         }));
 

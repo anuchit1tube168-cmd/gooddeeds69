@@ -1435,7 +1435,7 @@
       ${catRows}
       <tr class="summary-row">
         <td style="border:1px solid #0f172a;">รวมชั่วโมงสะสมทั้งสิ้น</td>
-        <td style="text-align:right; color:#0f172a; border:1px solid #0f172a;">${Number(stu.totalHours).toFixed(1)} ชั่วโมง</td>
+        <td style="text-align:right; color:#0f172a; border:1px solid #0f172a;">${Math.round(stu.totalHours)} ชั่วโมง</td>
       </tr>
     </tbody>
   </table>
@@ -1476,14 +1476,14 @@
       const classRows = Object.keys(byClass).sort((a, b) => b - a).map(cy => {
         const item = byClass[cy];
         const isAlumni = ![69, 68, 67, 66].includes(Number(cy));
-        const avg = item.count ? (item.totalHours / item.count).toFixed(1) : '0.0';
+        const avg = item.count ? Math.round(item.totalHours / item.count) : 0;
         const pct = item.count ? Math.round((item.passed / item.count) * 100) : 0;
         return `
           <tr>
             <td style="padding:10px; border:1px solid #cbd5e1;">${isAlumni ? `🎓 ศิษย์เก่า (รุ่น ${cy})` : `🎓 ชั้นปีที่ ${App.getYearName(cy)}`}</td>
             <td style="padding:10px; border:1px solid #cbd5e1; text-align:center;">${item.count} คน</td>
             <td style="padding:10px; border:1px solid #cbd5e1; text-align:center; color:#16a34a; font-weight:bold;">${item.passed} คน (${pct}%)</td>
-            <td style="padding:10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#0f172a;">${Number(item.totalHours).toLocaleString('th-TH', {minimumFractionDigits:1, maximumFractionDigits:1})} ชม.</td>
+            <td style="padding:10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#0f172a;">${Math.round(item.totalHours).toLocaleString('th-TH')} ชม.</td>
             <td style="padding:10px; border:1px solid #cbd5e1; text-align:right;">${avg} ชม.</td>
           </tr>
         `;
@@ -1535,7 +1535,7 @@
       <div class="label">ผ่านเกณฑ์แล้ว (≥50 ชม.)</div>
     </div>
     <div class="kpi-box">
-      <div class="num" style="color:#d97706;">${Number(allSummary.reduce((a,s)=>a+s.totalHours, 0)).toLocaleString('th-TH', {minimumFractionDigits:1, maximumFractionDigits:1})} ชม.</div>
+      <div class="num" style="color:#d97706;">${Math.round(allSummary.reduce((a,s)=>a+s.totalHours, 0)).toLocaleString('th-TH')} ชม.</div>
       <div class="label">ชั่วโมงสะสมรวมทั้งสถาบัน</div>
     </div>
   </div>
@@ -1585,7 +1585,7 @@
           <td style="padding:8px 10px; border:1px solid #cbd5e1; font-weight:bold;">${s.student_id}</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1;">${s.rank} ${s.first_name} ${s.last_name}${pos}</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1;">ปี ${s.year_level || s.student?.year_level || ''} (รุ่น ${s.class_year})</td>
-          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#0f172a;">${Number(s.totalHours).toFixed(1)} ชม.</td>
+          <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold; color:#0f172a;">${Math.round(s.totalHours)} ชม.</td>
           <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:${s.passed ? '#16a34a' : '#dc2626'}; font-weight:bold;">${s.passed ? '✓ ผ่านเกณฑ์' : '⏳ สะสมความดี'}</td>
         </tr>`;
       }).join('');
@@ -1594,7 +1594,7 @@
         <td style="padding:8px 10px; border:1px solid #cbd5e1; font-weight:bold;">${s.student_id}</td>
         <td style="padding:8px 10px; border:1px solid #cbd5e1;">${s.rank} ${s.first_name} ${s.last_name}</td>
         <td style="padding:8px 10px; border:1px solid #cbd5e1;">🎓 ศิษย์เก่า (รุ่น ${s.class_year})</td>
-        <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold;">${Number(s.totalHours).toFixed(1)} ชม.</td>
+        <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:right; font-weight:bold;">${Math.round(s.totalHours)} ชม.</td>
         <td style="padding:8px 10px; border:1px solid #cbd5e1; text-align:center; color:#64748b;">🎓 ศิษย์เก่า</td>
       </tr>`).join('');
 

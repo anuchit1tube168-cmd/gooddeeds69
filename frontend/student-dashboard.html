@@ -1471,7 +1471,7 @@
             // Apply card styling
             cardEl.className = `starbucks-card ${cardClass}`;
             badgeEl.textContent = badgeText;
-            countEl.textContent = `${hours.toFixed(1)} / 400 ชั่วโมง`;
+            countEl.textContent = `${Math.round(hours)} / 400 ชั่วโมง`;
 
             // Draw Stars
             let starsHtml = '';

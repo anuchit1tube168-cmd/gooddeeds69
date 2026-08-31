@@ -1,4 +1,6 @@
-// Auto-updated by telegram_bot_listener.py
+// Auto-generated from Data & Main 2568.xlsx — DO NOT EDIT MANUALLY
+// All hours rounded to clean whole numbers (ไม่มีเศษ)
+
 const IMPORTED_DEEDS = {
   "6503721": [
     {
@@ -6,7 +8,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503721",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 11.0,
+      "hours": 11,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 5)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -25,7 +27,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503721",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -44,7 +46,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -63,7 +65,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -82,7 +84,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "t the Youth cyber Guardian Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -101,7 +103,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -120,7 +122,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมเดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -139,7 +141,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -158,7 +160,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วงดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -177,7 +179,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกรีนมาร์เก็ต",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -196,7 +198,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -215,7 +217,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803943",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -236,7 +238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -255,7 +257,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be green market",
       "activityDate": "2026-04-04",
       "imageUrls": [
@@ -274,7 +276,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be green market",
       "activityDate": "2026-04-04",
       "imageUrls": [],
@@ -291,7 +293,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -310,7 +312,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -329,7 +331,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -348,7 +350,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -367,7 +369,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -386,7 +388,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดยา จัดอุปกรณ์",
       "activityDate": "2025-10-04",
       "imageUrls": [
@@ -405,7 +407,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เก็บขยะที่สถานปฏิบัติธรรม",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -424,7 +426,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -443,7 +445,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -462,7 +464,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยแม่ล้างจาน",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -481,7 +483,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดพื้น",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -500,7 +502,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยแม่ล้างจาน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -519,7 +521,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยแม่ให้อาหารแมว",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -538,7 +540,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยให้อาหารหมาข้างบ้าน",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -557,7 +559,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803929",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยพ่อขัดระเบียง",
       "activityDate": "2026-05-03",
       "imageUrls": [
@@ -578,7 +580,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -597,7 +599,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -616,7 +618,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -635,7 +637,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -654,7 +656,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -673,7 +675,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กิจกรรมรับน้องนพอ.รุ่นที่ 68",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -692,7 +694,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้องนพอ.รุ่นที่ 68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -711,7 +713,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -730,7 +732,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -749,7 +751,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ประจำปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -768,7 +770,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -787,7 +789,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -806,7 +808,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบพิเศษนพอ.รุ่นที่ 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -825,7 +827,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ปี 2568",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -844,7 +846,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยจัดสิ่งแวดล้อมภายในวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -863,7 +865,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603755",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -884,7 +886,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -903,7 +905,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -922,7 +924,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบริเวณรอบรพ.สต.",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -941,7 +943,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบริเวณโรงเรียนวัดบ้านนา",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -960,7 +962,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จัดทำบอร์ดประชาสัมพันธ์ให้ความรู้สุขภาพ",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -979,7 +981,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดและตรวจสอบวันหมดอายุของเวชภัณฑ์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -998,7 +1000,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503737",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 6)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -1017,7 +1019,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -1036,7 +1038,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -1055,7 +1057,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -1074,7 +1076,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -1093,7 +1095,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -1112,7 +1114,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาเทศบาล1(จปร.)",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -1131,7 +1133,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาเทศบาล1(จปร.)",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -1150,7 +1152,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาเทศบาล1(จปร.)",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -1169,7 +1171,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาดชาด",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -1188,7 +1190,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นงานกอล์ฟ ทอ.",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -1207,7 +1209,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นงานกอล์ฟ ทอ.",
       "activityDate": "2026-02-12",
       "imageUrls": [
@@ -1226,7 +1228,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟทอ.",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -1245,7 +1247,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -1264,7 +1266,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -1283,7 +1285,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -1302,7 +1304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-05-26",
       "imageUrls": [
@@ -1321,7 +1323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603789",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -1342,7 +1344,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -1361,7 +1363,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -1380,7 +1382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ”ชัยพัฒนา“ ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -1399,7 +1401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -1418,7 +1420,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -1437,7 +1439,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดทีีมีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -1456,7 +1458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยงาน อนศ.",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -1475,7 +1477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ทำป้ายงานสัมภาษณ์นพอ.69",
       "activityDate": "2026-05-04",
       "imageUrls": [
@@ -1494,7 +1496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ทำป้ายสัมภาษณ์นพอ.69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -1513,7 +1515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568 (organize)",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -1532,7 +1534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703843",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568 (organize)",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -1553,7 +1555,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803931",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมสร้างพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -1572,7 +1574,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803931",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -1593,7 +1595,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603765",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -1612,7 +1614,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603765",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -1631,7 +1633,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603765",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -1650,7 +1652,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603765",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบพิเศษนพอ.รุ่นที่ 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -1671,7 +1673,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503749",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -1690,7 +1692,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503749",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 19.0,
+      "hours": 19,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -1707,7 +1709,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503749",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -1726,7 +1728,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503749",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -1745,7 +1747,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -1764,7 +1766,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-21",
       "imageUrls": [
@@ -1783,7 +1785,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -1802,7 +1804,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-11-25",
       "imageUrls": [
@@ -1821,7 +1823,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อนร้องประสานเสียงงานคอนเสิร์ตทัพฟ้ส",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -1840,7 +1842,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -1859,7 +1861,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -1878,7 +1880,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา รร.โยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -1897,7 +1899,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา รร.โยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -1916,7 +1918,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา รร.โยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -1935,7 +1937,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -1954,7 +1956,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -1973,7 +1975,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -1992,7 +1994,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -2011,7 +2013,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -2030,7 +2032,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -2049,7 +2051,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703875",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -2070,7 +2072,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -2089,7 +2091,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -2108,7 +2110,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -2127,7 +2129,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -2146,7 +2148,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -2165,7 +2167,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -2184,7 +2186,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -2203,7 +2205,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -2222,7 +2224,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -2241,7 +2243,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -2260,7 +2262,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -2279,7 +2281,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -2298,7 +2300,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -2317,7 +2319,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -2336,7 +2338,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -2355,7 +2357,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603809",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -2376,7 +2378,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -2395,7 +2397,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ",
       "activityDate": "2025-08-22",
       "imageUrls": [
@@ -2414,7 +2416,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ",
       "activityDate": "2025-08-23",
       "imageUrls": [
@@ -2433,7 +2435,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ",
       "activityDate": "2025-08-24",
       "imageUrls": [
@@ -2452,7 +2454,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายพัฒนาเยาวชน รร.โยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -2471,7 +2473,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -2490,7 +2492,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องเพลงประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -2509,7 +2511,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -2528,7 +2530,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -2547,7 +2549,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -2566,7 +2568,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [],
@@ -2583,7 +2585,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -2602,7 +2604,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -2621,7 +2623,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -2640,7 +2642,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703877",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ชมรมดุริยางค์ เข้าแถวตอนเช้า",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -2661,7 +2663,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the Youth Cyber Guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -2680,7 +2682,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Market",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -2699,7 +2701,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศเนื่องใน “วันกองทัพอากาศ” ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -2718,7 +2720,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -2737,7 +2739,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -2756,7 +2758,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -2775,7 +2777,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -2794,7 +2796,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -2813,7 +2815,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -2832,7 +2834,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -2851,7 +2853,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -2870,7 +2872,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -2889,7 +2891,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -2908,7 +2910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -2927,7 +2929,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803900",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big Cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -2948,7 +2950,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -2967,7 +2969,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "การแข่งขันลักบี้",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -2986,7 +2988,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -3005,7 +3007,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -3024,7 +3026,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมกิจกรรมวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -3043,7 +3045,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาดประจำปี 2568",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -3062,7 +3064,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -3081,7 +3083,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา มว.2",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -3100,7 +3102,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา มว.2",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -3119,7 +3121,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนนักเรียนบังคับบัญชา มว.2",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -3138,7 +3140,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้องสวีแด68",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -3157,7 +3159,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้องสวีแด68 เข้าหอ",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -3176,7 +3178,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -3195,7 +3197,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -3214,7 +3216,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -3233,7 +3235,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -3252,7 +3254,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -3271,7 +3273,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-03-16",
       "imageUrls": [
@@ -3290,7 +3292,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -3309,7 +3311,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -3328,7 +3330,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยเหลืองานรับสมัคร 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -3347,7 +3349,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยจัดห้อง มทด.",
       "activityDate": "2026-05-11",
       "imageUrls": [
@@ -3366,7 +3368,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -3385,7 +3387,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -3404,7 +3406,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -3423,7 +3425,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสภาพแวดล้อม วพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -3442,7 +3444,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603754",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -3463,7 +3465,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -3482,7 +3484,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ฟ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -3501,7 +3503,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ฟ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -3520,7 +3522,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -3539,7 +3541,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -3558,7 +3560,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -3577,7 +3579,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -3596,7 +3598,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -3615,7 +3617,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เปิด-ปิดทีวี",
       "activityDate": "2025-09-01",
       "imageUrls": [
@@ -3634,7 +3636,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ล้างห้องน้ำ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -3653,7 +3655,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803930",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถูบันได",
       "activityDate": "2026-05-24",
       "imageUrls": [
@@ -3674,7 +3676,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -3693,7 +3695,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-28",
       "imageUrls": [
@@ -3712,7 +3714,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-05-03",
       "imageUrls": [
@@ -3731,7 +3733,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -3750,7 +3752,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -3769,7 +3771,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -3788,7 +3790,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมการแสดงงานกอล์ฟทอ.",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -3807,7 +3809,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมการแสดงงานกอล์ฟทอ.",
       "activityDate": "2026-02-12",
       "imageUrls": [
@@ -3826,7 +3828,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แสดงงานกอล์ฟทอ.",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -3845,7 +3847,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603800",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -3866,7 +3868,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Yuth Hacker Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -3885,7 +3887,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -3904,7 +3906,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -3923,7 +3925,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -3942,7 +3944,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -3961,7 +3963,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -3980,7 +3982,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -3999,7 +4001,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกของพระราชทานพระบรมศพ",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -4018,7 +4020,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803913",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถวายความอาลัยสมเด็จพระพันปี",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -4039,7 +4041,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัฟฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -4058,7 +4060,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -4077,7 +4079,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธิเปิดปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -4096,7 +4098,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -4115,7 +4117,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมรำรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -4134,7 +4136,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -4153,7 +4155,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -4172,7 +4174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -4191,7 +4193,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -4210,7 +4212,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -4229,7 +4231,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -4248,7 +4250,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -4267,7 +4269,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -4286,7 +4288,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -4305,7 +4307,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-03-28",
       "imageUrls": [
@@ -4324,7 +4326,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703846",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-03-28",
       "imageUrls": [
@@ -4345,7 +4347,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803895",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดบ้าน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -4364,7 +4366,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803895",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -4383,7 +4385,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803895",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -4402,7 +4404,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803895",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -4421,7 +4423,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803895",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดศาลาวัดหนองผักชี",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -4442,7 +4444,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิตช่วยชีวิตเพื่อนมนุษย์ปี 4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -4461,7 +4463,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-01-06",
       "imageUrls": [
@@ -4480,7 +4482,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์ “วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -4499,7 +4501,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกของพระราชทานพระบรมศพพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -4518,7 +4520,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รดน้ำต้นไม้",
       "activityDate": "2025-12-01",
       "imageUrls": [
@@ -4537,7 +4539,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -4556,7 +4558,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -4575,7 +4577,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -4594,7 +4596,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -4613,7 +4615,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -4632,7 +4634,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหินบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -4651,7 +4653,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดบ้านถูบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -4670,7 +4672,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803936",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รดน้ำต้นไม้ ล้างจาน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -4691,7 +4693,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -4710,7 +4712,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -4729,7 +4731,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-06-08",
       "imageUrls": [
@@ -4748,7 +4750,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-05",
       "imageUrls": [
@@ -4767,7 +4769,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -4786,7 +4788,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -4805,7 +4807,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -4824,7 +4826,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-25",
       "imageUrls": [
@@ -4843,7 +4845,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703863",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "น เก็บสถานที่สอบคัดเลือก นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -4864,7 +4866,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -4883,7 +4885,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the youth hacker Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -4902,7 +4904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -4921,7 +4923,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศ เนื่องใน \"วันกองทัพอากาศ\" ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -4940,7 +4942,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -4959,7 +4961,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -4978,7 +4980,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -4997,7 +4999,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -5016,7 +5018,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -5035,7 +5037,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถวตอนเช้า",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -5054,7 +5056,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -5073,7 +5075,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -5092,7 +5094,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -5111,7 +5113,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -5130,7 +5132,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -5149,7 +5151,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -5168,7 +5170,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -5187,7 +5189,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -5206,7 +5208,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -5225,7 +5227,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -5244,7 +5246,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -5263,7 +5265,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -5282,7 +5284,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-30",
       "imageUrls": [
@@ -5301,7 +5303,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-04",
       "imageUrls": [
@@ -5320,7 +5322,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -5339,7 +5341,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จิตอาสาช่วยเหลือครอบครัว",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -5358,7 +5360,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803907",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จิตอาสาช่วยครอบครัว",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -5379,7 +5381,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -5398,7 +5400,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -5417,7 +5419,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -5436,7 +5438,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -5455,7 +5457,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -5474,7 +5476,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -5493,7 +5495,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -5512,7 +5514,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -5531,7 +5533,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -5550,7 +5552,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -5569,7 +5571,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -5588,7 +5590,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703868",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -5609,7 +5611,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -5628,7 +5630,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา“ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -5647,7 +5649,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -5666,7 +5668,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -5685,7 +5687,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -5704,7 +5706,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัดวิภาววิสัยและการทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -5723,7 +5725,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -5742,7 +5744,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -5761,7 +5763,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -5780,7 +5782,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603756",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -5801,7 +5803,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -5820,7 +5822,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน ณ วัดบ้านนา",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -5839,7 +5841,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐิน",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -5858,7 +5860,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "5ส.อนามัย",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -5877,7 +5879,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บของวัดบ้านนา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -5896,7 +5898,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -5913,7 +5915,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503743",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -5932,7 +5934,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-11",
       "imageUrls": [
@@ -5951,7 +5953,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -5970,7 +5972,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -5989,7 +5991,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -6008,7 +6010,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -6027,7 +6029,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กิจกรรมวันรักต้นไม้แห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -6046,7 +6048,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503706",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -6065,7 +6067,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-01-02",
       "imageUrls": [
@@ -6084,7 +6086,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีรับเสด็จรับปริญญา ม.มหิดล นพอ.รุ่น64",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -6103,7 +6105,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -6122,7 +6124,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -6141,7 +6143,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานสงกรานต์ เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -6160,7 +6162,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โรทาแรกค์ ปลูกป่าบางปู",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -6179,7 +6181,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยทดสอบวิภาววิสัย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -6198,7 +6200,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบนพอ.รุ่นที่ 69",
       "activityDate": "2026-06-01",
       "imageUrls": [
@@ -6217,7 +6219,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินอ่อนตกแต่งวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -6236,7 +6238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยจัดเก็บห้องปฏิบัติการมารดาทารกและการผดุงครรภ์",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -6255,7 +6257,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -6274,7 +6276,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603779",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพร",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -6295,7 +6297,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ”ชัยพัฒนา“ ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -6314,7 +6316,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -6333,7 +6335,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -6352,7 +6354,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -6371,7 +6373,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -6390,7 +6392,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -6409,7 +6411,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยจัดทำปกตารางสอนและระเบียบการเข้าเรียนออนไลน์",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -6428,7 +6430,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703831",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 15.0,
+      "hours": 15,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -6447,7 +6449,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -6466,7 +6468,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำบังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [],
@@ -6483,7 +6485,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -6502,7 +6504,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ขนของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -6521,7 +6523,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 13.0,
+      "hours": 13,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -6538,7 +6540,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐินประจำปี 2568",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -6557,7 +6559,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -6576,7 +6578,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -6595,7 +6597,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จิตอาสาช่วยเหลืองานทอดกฐินประจำปี 2568",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -6614,7 +6616,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดโรงพยาบาลส่งเสริมสุขภาพตำบลบางขวัญ",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -6633,7 +6635,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503725",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -6652,7 +6654,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -6671,7 +6673,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (กองบัญชาการกองทัพอากาศ)",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -6690,7 +6692,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -6709,7 +6711,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -6728,7 +6730,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -6747,7 +6749,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -6766,7 +6768,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -6785,7 +6787,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -6804,7 +6806,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -6823,7 +6825,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -6842,7 +6844,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -6861,7 +6863,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -6880,7 +6882,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703861",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วันเฉลิมพระชนมพรรษา",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -6901,7 +6903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งาน Green market",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -6920,7 +6922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -6939,7 +6941,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -6958,7 +6960,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -6977,7 +6979,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -6996,7 +6998,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -7015,7 +7017,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ. 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -7034,7 +7036,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-21",
       "imageUrls": [
@@ -7053,7 +7055,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหินข้างลานหอพัก",
       "activityDate": "2026-05-29",
       "imageUrls": [
@@ -7072,7 +7074,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -7091,7 +7093,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-11",
       "imageUrls": [
@@ -7110,7 +7112,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -7129,7 +7131,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -7148,7 +7150,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -7167,7 +7169,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดห้องน้ำวัด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -7186,7 +7188,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -7205,7 +7207,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ล้างห้องน้ำวัด",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -7224,7 +7226,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รดน้ำต้นไม้ ทำงานบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -7243,7 +7245,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -7262,7 +7264,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ล้างจาน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -7281,7 +7283,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803905",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถวายความอาลัย",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -7302,7 +7304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803904",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -7321,7 +7323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803904",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "อาภรณ์ภัณฑ์",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -7340,7 +7342,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803904",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแจกของพระราชทานพระบรมศพพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -7361,7 +7363,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the youth cyber guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -7380,7 +7382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -7399,7 +7401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีป",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -7418,7 +7420,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศ ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -7437,7 +7439,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -7456,7 +7458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -7475,7 +7477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -7494,7 +7496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -7513,7 +7515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -7532,7 +7534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803901",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -7553,7 +7555,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -7572,7 +7574,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -7591,7 +7593,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -7610,7 +7612,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -7629,7 +7631,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -7648,7 +7650,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -7667,7 +7669,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -7686,7 +7688,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -7705,7 +7707,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -7724,7 +7726,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -7743,7 +7745,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -7762,7 +7764,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -7781,7 +7783,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703856",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -7802,7 +7804,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -7821,7 +7823,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทัพฟ้าคู่ไทย เพื่อชัยพัฒนา",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -7840,7 +7842,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -7859,7 +7861,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -7878,7 +7880,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -7897,7 +7899,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -7916,7 +7918,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -7935,7 +7937,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -7954,7 +7956,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "วันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -7973,7 +7975,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -7992,7 +7994,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดห้องป.มทด",
       "activityDate": "2026-03-12",
       "imageUrls": [
@@ -8011,7 +8013,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -8030,7 +8032,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -8049,7 +8051,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -8068,7 +8070,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -8087,7 +8089,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603769",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัด วิภาววิสัย และทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -8108,7 +8110,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ ปี 4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -8127,7 +8129,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์ “วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน” กับพลังโรทาแรคท์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -8146,7 +8148,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the youth cyber guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -8165,7 +8167,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Youth Camp 2026 & การคัดเลือกผู้แทนโรทาแรคท์ภาครับเลือกของภาค 3350 (DRRE)",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -8184,7 +8186,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -8203,7 +8205,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมฟังบรรยาย การให้สุขศึกษาสำหรับหญิงตั้งครรภ์ โดยพี่นทน.",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -8222,7 +8224,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -8241,7 +8243,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -8260,7 +8262,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -8279,7 +8281,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -8298,7 +8300,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -8317,7 +8319,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -8336,7 +8338,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -8355,7 +8357,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-12",
       "imageUrls": [
@@ -8374,7 +8376,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -8393,7 +8395,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803914",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญถวายสังฆทาน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -8414,7 +8416,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -8433,7 +8435,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -8452,7 +8454,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การแข่งขันกีฬานักเรียนชิงถ้วย ผบ.ทอ. ครั้งที่ 51",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -8471,7 +8473,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -8490,7 +8492,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายพัฒนาเยาวชน โรงเรียนฌยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -8509,7 +8511,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายพัฒนาเยาวชน โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -8528,7 +8530,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ร่วมออกร้านงานกาช่ดสมาคมคู่สมรสทหารอากาศ",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -8547,7 +8549,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ร่วมออกร้านงานกาช่ดสมาคมคู่สมรสทหารอากาศ",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -8566,7 +8568,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -8585,7 +8587,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -8604,7 +8606,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ทยเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -8623,7 +8625,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -8642,7 +8644,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ซ้อมเดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-20",
       "imageUrls": [
@@ -8661,7 +8663,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ซ้อมเดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-27",
       "imageUrls": [
@@ -8680,7 +8682,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ซ้อมเดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -8699,7 +8701,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมเดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -8718,7 +8720,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมเดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -8737,7 +8739,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -8756,7 +8758,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -8775,7 +8777,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -8794,7 +8796,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -8813,7 +8815,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -8832,7 +8834,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -8851,7 +8853,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -8870,7 +8872,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -8889,7 +8891,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -8908,7 +8910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703869",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยเหลืองานในวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -8929,7 +8931,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -8948,7 +8950,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -8967,7 +8969,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -8986,7 +8988,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -9005,7 +9007,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-12-03",
       "imageUrls": [
@@ -9024,7 +9026,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -9043,7 +9045,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -9062,7 +9064,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -9081,7 +9083,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -9100,7 +9102,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -9119,7 +9121,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -9138,7 +9140,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -9157,7 +9159,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-30",
       "imageUrls": [
@@ -9176,7 +9178,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-04",
       "imageUrls": [
@@ -9195,7 +9197,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -9214,7 +9216,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -9233,7 +9235,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-12",
       "imageUrls": [
@@ -9252,7 +9254,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -9271,7 +9273,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -9290,7 +9292,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-24",
       "imageUrls": [
@@ -9309,7 +9311,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.29,
+      "hours": 0,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -9328,7 +9330,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.58,
+      "hours": 1,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -9347,7 +9349,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแจกของพระราชทานพระบรมศพพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -9366,7 +9368,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด ล้างห้องน้ำ",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -9385,7 +9387,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำงานบ้านทั่วไป",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -9404,7 +9406,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803896",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ถวายความอาลัยต่อสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -9425,7 +9427,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเขิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -9444,7 +9446,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ออกหน่วยงานหลวงพ่อโสธร",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -9463,7 +9465,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินวิ่งปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -9482,7 +9484,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินวิ่งปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -9501,7 +9503,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -9520,7 +9522,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -9539,7 +9541,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กิจกรรมวันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -9558,7 +9560,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้แห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -9577,7 +9579,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503710",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -9596,7 +9598,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503723",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -9615,7 +9617,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503723",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -9634,7 +9636,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -9653,7 +9655,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -9672,7 +9674,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ผู้ช่วยวิจัย",
       "activityDate": "2025-10-06",
       "imageUrls": [
@@ -9691,7 +9693,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ผู้ช่วยงานวิจัย",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -9710,7 +9712,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -9729,7 +9731,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [],
@@ -9746,7 +9748,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803916",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.6",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -9767,7 +9769,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -9786,7 +9788,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ประชุมวิชาการวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -9805,7 +9807,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "แยกขยะในวพอ.",
       "activityDate": "2025-09-22",
       "imageUrls": [
@@ -9824,7 +9826,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานรับสมัคร นพอ. ประจำปี 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -9843,7 +9845,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -9862,7 +9864,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมการแสดงวันสงกรานต์",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -9881,7 +9883,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603783",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมกิจกรรมงานวันสงกรานต์",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -9902,7 +9904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "อบรมไซเบอร์",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -9921,7 +9923,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -9940,7 +9942,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -9959,7 +9961,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -9978,7 +9980,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีบ",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -9997,7 +9999,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -10016,7 +10018,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -10035,7 +10037,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เหรัญญิกชั้นปีที่ 1",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -10054,7 +10056,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -10073,7 +10075,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -10092,7 +10094,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803898",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big Cleaning Day",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -10113,7 +10115,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เข้าร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -10132,7 +10134,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาศถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -10151,7 +10153,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาศถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -10170,7 +10172,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดและเก็บสถานที่ช่วยที่วัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -10189,7 +10191,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เตรียมช่วยงานที่จะทำโรงทานในหมู่บ้าน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -10208,7 +10210,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสวน",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -10227,7 +10229,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ร่วมงานกฐิน",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -10246,7 +10248,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503730",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 11.0,
+      "hours": 11,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -10265,7 +10267,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -10284,7 +10286,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาสีภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -10303,7 +10305,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -10322,7 +10324,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -10341,7 +10343,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -10360,7 +10362,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -10379,7 +10381,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -10398,7 +10400,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -10417,7 +10419,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -10436,7 +10438,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -10455,7 +10457,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -10474,7 +10476,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -10493,7 +10495,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -10512,7 +10514,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-03",
       "imageUrls": [
@@ -10531,7 +10533,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-06",
       "imageUrls": [
@@ -10550,7 +10552,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-10",
       "imageUrls": [
@@ -10569,7 +10571,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-28",
       "imageUrls": [
@@ -10588,7 +10590,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริงยาง",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -10607,7 +10609,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -10626,7 +10628,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -10645,7 +10647,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -10664,7 +10666,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -10683,7 +10685,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -10702,7 +10704,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803925",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -10723,7 +10725,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กาชาด",
       "activityDate": "2025-12-11",
       "imageUrls": [
@@ -10742,7 +10744,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -10761,7 +10763,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -10780,7 +10782,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -10799,7 +10801,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green markets",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -10818,7 +10820,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -10837,7 +10839,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -10856,7 +10858,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -10875,7 +10877,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -10894,7 +10896,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -10913,7 +10915,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -10932,7 +10934,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -10951,7 +10953,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ช่วยจัดงานวันสวนสนาม (ไม่มีรูปขณะปฏิบัติงาน)",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -10970,7 +10972,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -10989,7 +10991,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -11008,7 +11010,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทำบุญประจำปีของวัด (ช่วยล้างจาน)",
       "activityDate": "2025-09-21",
       "imageUrls": [
@@ -11027,7 +11029,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803919",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรเนื่องในโอกาสศวรรคตพระพันปรหลวง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -11048,7 +11050,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กาชาด",
       "activityDate": "2025-12-11",
       "imageUrls": [
@@ -11067,7 +11069,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be Green market",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -11086,7 +11088,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -11105,7 +11107,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -11124,7 +11126,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "จัดสถานที่สวนสนาม(ไม่มีภาพขณะปฏิบัติหน้าที่)",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -11143,7 +11145,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -11162,7 +11164,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-12-02",
       "imageUrls": [
@@ -11181,7 +11183,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-12-03",
       "imageUrls": [
@@ -11200,7 +11202,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -11219,7 +11221,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -11238,7 +11240,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -11257,7 +11259,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -11276,7 +11278,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -11295,7 +11297,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803920",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -11316,7 +11318,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชิวิตเพื่อนมนุษย์ ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -11335,7 +11337,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -11354,7 +11356,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -11373,7 +11375,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -11392,7 +11394,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการตอบปัญหาธรรมะ \"ทางก้าวหน้า\" ครั้งที่ ๔๓",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -11411,7 +11413,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -11430,7 +11432,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -11449,7 +11451,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -11468,7 +11470,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานวัดรับผิดชอบผ้าป่าลอยฟ้า",
       "activityDate": "2025-09-13",
       "imageUrls": [
@@ -11487,7 +11489,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดและทำความสะอาดลานวัด",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -11506,7 +11508,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดและจัดตู้เย็น",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -11525,7 +11527,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803934",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดและจัดตกแต่งสวน",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -11546,7 +11548,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -11565,7 +11567,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-03-14",
       "imageUrls": [
@@ -11584,7 +11586,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "การจัดอบรมบรรยายพิเศษ ด้านการประชาสัมพันธ์",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -11603,7 +11605,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Youth Cyber Guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -11622,7 +11624,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "พิธีแสดงความอาลัย",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -11641,7 +11643,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ดูและและจัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-04",
       "imageUrls": [
@@ -11660,7 +11662,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ดูแลและจัดห้องพักผ่อน นพอ",
       "activityDate": "2025-12-08",
       "imageUrls": [],
@@ -11677,7 +11679,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ดูแลและจัดห้องพักผ่อน นพอ",
       "activityDate": "2025-12-08",
       "imageUrls": [],
@@ -11694,7 +11696,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ดูแลและจัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-08",
       "imageUrls": [
@@ -11713,7 +11715,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -11732,7 +11734,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -11751,7 +11753,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -11770,7 +11772,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -11789,7 +11791,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2026-03-07",
       "imageUrls": [
@@ -11808,7 +11810,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2026-01-03",
       "imageUrls": [
@@ -11827,7 +11829,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2026-03-07",
       "imageUrls": [
@@ -11846,7 +11848,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -11865,7 +11867,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดวัด",
       "activityDate": "2026-01-05",
       "imageUrls": [
@@ -11884,7 +11886,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803885",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เก็บขยะ",
       "activityDate": "2026-02-28",
       "imageUrls": [
@@ -11905,7 +11907,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -11924,7 +11926,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ประจำปี 2568 AVIATION MEDICINE IN BANI WORLD เวชศาสตร์การบินกับโลกที่เปลี่ยนแปลง",
       "activityDate": "2025-08-04",
       "imageUrls": [
@@ -11943,7 +11945,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต ครั้งที่ 11 เฉลิมพระเกียรติ",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -11962,7 +11964,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "บ้านทรายมูล รวมคนฟิต ออกกำวันละนิด ชีวิตไร้โรค",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -11981,7 +11983,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "บ้านทรายมูล รวมคนฟิต ออกกำลังกายวันละนิด ชีวิตไร้โรค",
       "activityDate": "2025-10-27",
       "imageUrls": [
@@ -12000,7 +12002,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "บ้านทรายมูล รวมคนฟิต ออกกำวันละนิด ชีวิตไร้โรค",
       "activityDate": "2025-10-27",
       "imageUrls": [
@@ -12019,7 +12021,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -12038,7 +12040,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503702",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -12059,7 +12061,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เล่นดนตรี งานGreen market",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -12078,7 +12080,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -12097,7 +12099,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -12116,7 +12118,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -12135,7 +12137,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -12154,7 +12156,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -12173,7 +12175,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -12192,7 +12194,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -12211,7 +12213,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning day",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -12230,7 +12232,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -12249,7 +12251,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -12268,7 +12270,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -12287,7 +12289,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -12306,7 +12308,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-21",
       "imageUrls": [
@@ -12325,7 +12327,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -12344,7 +12346,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -12363,7 +12365,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-27",
       "imageUrls": [
@@ -12382,7 +12384,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -12401,7 +12403,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -12420,7 +12422,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -12439,7 +12441,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -12458,7 +12460,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -12477,7 +12479,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -12496,7 +12498,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -12515,7 +12517,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803910",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -12536,7 +12538,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -12555,7 +12557,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยยกของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -12574,7 +12576,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 12.0,
+      "hours": 12,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -12591,7 +12593,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการ วัดประชารัฐสร้างสุข",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -12610,7 +12612,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -12629,7 +12631,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญตักบาตร",
       "activityDate": "2025-12-13",
       "imageUrls": [
@@ -12648,7 +12650,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503748",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -12667,7 +12669,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -12686,7 +12688,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -12705,7 +12707,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -12724,7 +12726,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -12743,7 +12745,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -12762,7 +12764,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -12781,7 +12783,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -12800,7 +12802,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 13.0,
+      "hours": 13,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 2)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -12817,7 +12819,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -12836,7 +12838,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -12855,7 +12857,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -12874,7 +12876,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -12893,7 +12895,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -12912,7 +12914,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -12931,7 +12933,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -12950,7 +12952,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -12969,7 +12971,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -12988,7 +12990,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -13007,7 +13009,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703820",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 21.0,
+      "hours": 21,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -13026,7 +13028,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703848",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "สัมนาสื่อสร้างสรรค์เสริมพลังการสื่อสารพัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -13045,7 +13047,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703848",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -13064,7 +13066,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703848",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -13083,7 +13085,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703848",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -13104,7 +13106,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ธารน้ำใจสู่ชายแดน",
       "activityDate": "2025-07-24",
       "imageUrls": [
@@ -13123,7 +13125,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ธารน้ำใจสู่ชายแดน",
       "activityDate": "2025-07-24",
       "imageUrls": [
@@ -13142,7 +13144,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทับฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -13161,7 +13163,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทับฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -13180,7 +13182,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -13199,7 +13201,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -13218,7 +13220,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -13237,7 +13239,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -13256,7 +13258,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703821",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -13275,7 +13277,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503715",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิตเนื่องในวันพ่อ",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -13294,7 +13296,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503715",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -13313,7 +13315,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503715",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -13332,7 +13334,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503715",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -13351,7 +13353,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503715",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 6)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -13370,7 +13372,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503717",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ตรวจสุขภาพที่ ชุมชนประทวน",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -13389,7 +13391,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503717",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -13408,7 +13410,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503717",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำความสะอาดวัดใหม่",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -13427,7 +13429,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503717",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -13446,7 +13448,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เล่นดนตรี Green market",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -13465,7 +13467,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -13484,7 +13486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -13503,7 +13505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -13522,7 +13524,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -13541,7 +13543,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -13560,7 +13562,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -13579,7 +13581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-27",
       "imageUrls": [
@@ -13598,7 +13600,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-28",
       "imageUrls": [
@@ -13617,7 +13619,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -13636,7 +13638,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -13655,7 +13657,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-17",
       "imageUrls": [
@@ -13674,7 +13676,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -13693,7 +13695,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-15",
       "imageUrls": [
@@ -13712,7 +13714,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -13731,7 +13733,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-31",
       "imageUrls": [
@@ -13750,7 +13752,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -13769,7 +13771,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-30",
       "imageUrls": [
@@ -13788,7 +13790,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -13807,7 +13809,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -13826,7 +13828,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -13845,7 +13847,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -13864,7 +13866,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -13883,7 +13885,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -13902,7 +13904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -13921,7 +13923,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -13940,7 +13942,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning day",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -13959,7 +13961,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803935",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ถวายความอาลัย",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -13980,7 +13982,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -13999,7 +14001,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -14018,7 +14020,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -14037,7 +14039,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -14056,7 +14058,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -14075,7 +14077,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -14094,7 +14096,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -14113,7 +14115,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกายนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -14132,7 +14134,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -14151,7 +14153,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -14170,7 +14172,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -14189,7 +14191,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -14208,7 +14210,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703855",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [],
@@ -14227,7 +14229,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 1)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -14244,7 +14246,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -14263,7 +14265,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -14282,7 +14284,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-17",
       "imageUrls": [
@@ -14301,7 +14303,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -14320,7 +14322,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -14339,7 +14341,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -14358,7 +14360,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -14377,7 +14379,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -14396,7 +14398,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703833",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 24.0,
+      "hours": 24,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -14415,7 +14417,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -14434,7 +14436,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ประจำปี2568",
       "activityDate": "2025-12-16",
       "imageUrls": [
@@ -14453,7 +14455,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -14472,7 +14474,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -14491,7 +14493,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -14510,7 +14512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -14529,7 +14531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -14548,7 +14550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -14567,7 +14569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยงานห้องปฏิบัติการพยาบาล",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -14586,7 +14588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยงานห้องปฏิบัติการพยาบาล",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -14605,7 +14607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -14624,7 +14626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -14643,7 +14645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 33.0,
+      "hours": 33,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -14660,7 +14662,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703835",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแจกของพระราชทานพระบรมศพพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -14681,7 +14683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -14700,7 +14702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -14719,7 +14721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -14738,7 +14740,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -14757,7 +14759,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -14776,7 +14778,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการเเก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -14795,7 +14797,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -14814,7 +14816,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "จัดห้องสูติ",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -14833,7 +14835,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "อนุรักษ์สิ่งเเวดล้อม",
       "activityDate": "2026-04-17",
       "imageUrls": [
@@ -14852,7 +14854,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับสมัครนพอ.ประจำปี 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -14871,7 +14873,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -14890,7 +14892,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603774",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "มอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -14911,7 +14913,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-10",
       "imageUrls": [
@@ -14930,7 +14932,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -14949,7 +14951,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -14968,7 +14970,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นงานกอล์ฟ ทอ.",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -14987,7 +14989,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นงานกอล์ฟ ทอ.",
       "activityDate": "2026-02-12",
       "imageUrls": [
@@ -15006,7 +15008,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟ ทอ.",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -15025,7 +15027,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-13",
       "imageUrls": [
@@ -15044,7 +15046,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -15063,7 +15065,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟ ทอ.",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -15082,7 +15084,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603807",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหิน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -15103,7 +15105,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -15122,7 +15124,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (กองบัญชาการกองทัพอากาศ)",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -15141,7 +15143,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ศูนย์วัฒนธรรมแห่งประเทศไทย)",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -15160,7 +15162,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16 (ศูนย์วัฒนธรรมแห่งประเทศไทย)",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -15179,7 +15181,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16 (ศูนย์วัฒนธรรมแห่งประเทศไทย)",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -15198,7 +15200,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟการกุศลวิทยาลัยพยาบาลทหารอากาศ",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -15217,7 +15219,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีลงนาม บันทึกข้อตกลงความร่วมมือ (MOU) เพื่อดำเนินการพัฒนาระบบบริการเลิกผลิตภัณฑ์นิโคติน และส่งเสริมการสร้างสิ่งแวดล้อมปลอดบุหรี่ ระหว่างสมาคมแพทย์ทหารแห่งประเทศไทย ในพระบรมราชูปถัมภ์ กับสมาพันธ์เครือข่ายแห่งชาติเพื่อสังคมไทยปลอดบุหรี่ ภายใต้แพทยสมาคมแห่งประเทศไทย ในพระบรมราชูปถัมภ์",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -15236,7 +15238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดูหนังการกุศล",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -15255,7 +15257,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงาน พิธีมอบหมวกวิชาชีพปีการศึกษา 2568",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -15274,7 +15276,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -15293,7 +15295,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -15312,7 +15314,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603785",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับหมวกพยาบาลวิชาชีพปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -15333,7 +15335,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เสาร์ประทีบ",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -15352,7 +15354,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -15371,7 +15373,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -15390,7 +15392,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "พิธีเปิดการแข่งขันกีใาประเพณีโรงเรียนทหาร-ตำรวจ ครั้งที่ 59",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -15409,7 +15411,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "พิธีปิดการแข่งขันกีฬาประเพณีโรงเรียนทหาร-ตำรวจ ครั้งที่ 59",
       "activityDate": "2025-07-08",
       "imageUrls": [
@@ -15428,7 +15430,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-16",
       "imageUrls": [
@@ -15447,7 +15449,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-23",
       "imageUrls": [
@@ -15466,7 +15468,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-30",
       "imageUrls": [
@@ -15485,7 +15487,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 212",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -15504,7 +15506,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัมนา ครั้งที่ 212",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -15523,7 +15525,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัมนา ครั้งที่ 212",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -15542,7 +15544,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดูหนังการกุศล",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -15561,7 +15563,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -15580,7 +15582,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -15599,7 +15601,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -15618,7 +15620,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -15637,7 +15639,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -15656,7 +15658,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -15675,7 +15677,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy นักเรียนพยาบาลเกาหลี",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -15694,7 +15696,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.นปค.มว.นพอ.ปี 3",
       "activityDate": "2025-10-08",
       "imageUrls": [
@@ -15713,7 +15715,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.นปค.มว.นพอ.ปี 3",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -15732,7 +15734,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.นปค.มว.นพอ.ปี 3",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -15751,7 +15753,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ไถ่ชีวิตโคกระบือ ร่วมกับสโมสร Rotaract of Brgy Sta Cruz ของฟิลิปปินส์",
       "activityDate": "2026-05-17",
       "imageUrls": [
@@ -15770,7 +15772,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขายเสื้อชมรมโรทาแรคท์",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -15789,7 +15791,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหิน ตกแต่งสถานที่",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -15808,7 +15810,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -15827,7 +15829,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -15846,7 +15848,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -15865,7 +15867,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 7.5,
+      "hours": 8,
       "description": "อาสาทาสีโรงเรียน แจกขนมเด็กๆ",
       "activityDate": "2025-06-22",
       "imageUrls": [
@@ -15884,7 +15886,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 3.75,
+      "hours": 4,
       "description": "อาสาทาสีรร. แจกขนมน้องๆ",
       "activityDate": "2025-06-22",
       "imageUrls": [
@@ -15903,7 +15905,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 0.94,
+      "hours": 1,
       "description": "ช่วยทำแผล อุบัติเหตุรถจักรยานยนต์",
       "activityDate": "2026-01-03",
       "imageUrls": [
@@ -15922,7 +15924,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 1.88,
+      "hours": 2,
       "description": "ช่วยทำแผลอุบัติเหตุ",
       "activityDate": "2026-01-03",
       "imageUrls": [
@@ -15941,7 +15943,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 0.94,
+      "hours": 1,
       "description": "บริจาคเงินค่าอาหารช้าง",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -15960,7 +15962,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-01-24",
       "imageUrls": [
@@ -15979,7 +15981,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -15998,7 +16000,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "สรงน้ำพระพุทธรูป",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -16017,7 +16019,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603803",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บขยะรอบอ่างเก็บน้ำระยะทาง 6 กิโลเมตร",
       "activityDate": "2026-01-03",
       "imageUrls": [
@@ -16038,7 +16040,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503726",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-05-24",
       "imageUrls": [
@@ -16057,7 +16059,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503726",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -16076,7 +16078,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503726",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -16095,7 +16097,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503726",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -16116,7 +16118,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-21",
       "imageUrls": [
@@ -16135,7 +16137,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -16154,7 +16156,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -16173,7 +16175,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -16192,7 +16194,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -16211,7 +16213,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -16230,7 +16232,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -16249,7 +16251,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -16268,7 +16270,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -16287,7 +16289,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -16306,7 +16308,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -16325,7 +16327,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703873",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -16346,7 +16348,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the youth guardians Thailand",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -16365,7 +16367,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีป",
       "activityDate": "2026-05-16",
       "imageUrls": [
@@ -16384,7 +16386,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายยุวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -16403,7 +16405,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายยุวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -16422,7 +16424,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายยุวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -16441,7 +16443,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -16460,7 +16462,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.74,
+      "hours": 3,
       "description": "อบรมคุณแม่ตั้งครรภ์",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -16479,7 +16481,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.74,
+      "hours": 3,
       "description": "ฟังบรรยายเตรียมพร้อมคุณแม่ตั้งครรภ์",
       "activityDate": "2025-09-27",
       "imageUrls": [
@@ -16498,7 +16500,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.65,
+      "hours": 4,
       "description": "เปิดปิดทีวีอนศ.",
       "activityDate": "2025-09-01",
       "imageUrls": [
@@ -16517,7 +16519,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.74,
+      "hours": 3,
       "description": "จัดเตรียมสถานที่งานมุฑิตาจิต",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -16536,7 +16538,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.65,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -16555,7 +16557,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.65,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -16574,7 +16576,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.65,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -16593,7 +16595,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.74,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -16612,7 +16614,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.65,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -16631,7 +16633,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.82,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-06-22",
       "imageUrls": [
@@ -16650,7 +16652,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803909",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแจกของพระราชทานพระบรมศพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -16671,7 +16673,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -16690,7 +16692,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-01-31",
       "imageUrls": [
@@ -16709,7 +16711,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -16728,7 +16730,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริหารวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -16747,7 +16749,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -16766,7 +16768,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -16785,7 +16787,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -16804,7 +16806,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -16823,7 +16825,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -16842,7 +16844,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603798",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -16863,7 +16865,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -16882,7 +16884,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -16901,7 +16903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนโรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -16920,7 +16922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชน",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -16939,7 +16941,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชน",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -16958,7 +16960,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชน",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -16977,7 +16979,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -16996,7 +16998,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -17015,7 +17017,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -17034,7 +17036,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -17053,7 +17055,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -17072,7 +17074,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -17091,7 +17093,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -17110,7 +17112,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้องงานรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -17129,7 +17131,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -17148,7 +17150,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -17167,7 +17169,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกราต์วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -17186,7 +17188,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703866",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกราต์วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -17207,7 +17209,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503714",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -17226,7 +17228,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503714",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยโรงทานงานกฐิน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -17245,7 +17247,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503714",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยโรงทานงานกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -17264,7 +17266,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503714",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -17283,7 +17285,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "อบรมไซเบอร์",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -17302,7 +17304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "WOMEN THAILAND CYBER TOP TALENT 2025",
       "activityDate": "2026-01-17",
       "imageUrls": [
@@ -17321,7 +17323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -17340,7 +17342,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -17359,7 +17361,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -17378,7 +17380,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รดน้ำต้นไม้",
       "activityDate": "2025-12-01",
       "imageUrls": [
@@ -17397,7 +17399,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมฟังบรรยายการให้สุขศึกษาสำหรับหญิงตั้งครรภ์โดยพี่นทน.",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -17416,7 +17418,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหิน",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -17435,7 +17437,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดศาลาวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -17454,7 +17456,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ถูศาลาวัด",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -17473,7 +17475,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803924",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -17494,7 +17496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมพิธีไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -17513,7 +17515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -17532,7 +17534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -17551,7 +17553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -17570,7 +17572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -17589,7 +17591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานรับปริญญา",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -17608,7 +17610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -17627,7 +17629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -17646,7 +17648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -17665,7 +17667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -17684,7 +17686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -17703,7 +17705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603805",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสภาพแวดล้อมหลังอาคารเรียน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -17724,7 +17726,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503729",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -17743,7 +17745,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503729",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองเบาหวานและความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -17762,7 +17764,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503729",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนซ้อมดับเพลิงและอพยพหนีไฟ ประจำปี2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -17781,7 +17783,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503729",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -17800,7 +17802,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503729",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -17819,7 +17821,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.07,
+      "hours": 7,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -17838,7 +17840,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.07,
+      "hours": 7,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -17857,7 +17859,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.07,
+      "hours": 7,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -17876,7 +17878,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.54,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -17895,7 +17897,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.54,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -17914,7 +17916,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.07,
+      "hours": 7,
       "description": "พิธีเปิด-ปิดกีฬาสีภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -17933,7 +17935,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.65,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-03-20",
       "imageUrls": [
@@ -17952,7 +17954,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.65,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-03-27",
       "imageUrls": [
@@ -17971,7 +17973,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.65,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -17990,7 +17992,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.3,
+      "hours": 5,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -18009,7 +18011,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.3,
+      "hours": 5,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -18028,7 +18030,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.07,
+      "hours": 7,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -18047,7 +18049,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -18066,7 +18068,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกายนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18085,7 +18087,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -18104,7 +18106,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -18123,7 +18125,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -18142,7 +18144,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703819",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -18163,7 +18165,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -18182,7 +18184,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -18201,7 +18203,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -18220,7 +18222,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -18239,7 +18241,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -18258,7 +18260,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -18277,7 +18279,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสร็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -18296,7 +18298,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดูแลการสอบนพอ.ปี 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18315,7 +18317,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานสงกรานต์ เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -18334,7 +18336,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-13",
       "imageUrls": [
@@ -18353,7 +18355,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบนพอ.รุ่น 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18372,7 +18374,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินอ่อน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -18391,7 +18393,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรวันเฉลิมพระชนมพรรษา ร.10",
       "activityDate": "2025-07-28",
       "imageUrls": [
@@ -18410,7 +18412,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603772",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วันเฉลิมพระชนมพรรษา พระบรมราชนนีพันปีหลวง",
       "activityDate": "2025-08-12",
       "imageUrls": [
@@ -18431,7 +18433,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -18450,7 +18452,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -18469,7 +18471,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -18488,7 +18490,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -18507,7 +18509,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -18526,7 +18528,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานรับปริญญา",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -18545,7 +18547,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -18564,7 +18566,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "อนุรักษ์สิ่งแวดล้อม",
       "activityDate": "2026-04-17",
       "imageUrls": [
@@ -18583,7 +18585,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603778",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัด วิภาววิสัย และทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18604,7 +18606,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศ เนื่องใน \"วันกองทัพอากาศ\" ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -18623,7 +18625,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be Green  Market ประจำปี2569",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -18642,7 +18644,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -18661,7 +18663,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -18680,7 +18682,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18699,7 +18701,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -18718,7 +18720,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -18737,7 +18739,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -18756,7 +18758,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-12",
       "imageUrls": [
@@ -18775,7 +18777,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-05",
       "imageUrls": [
@@ -18794,7 +18796,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -18813,7 +18815,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -18832,7 +18834,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -18851,7 +18853,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วิ่งเพื่อการศึกษา",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -18870,7 +18872,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีบ",
       "activityDate": "2026-05-16",
       "imageUrls": [
@@ -18889,7 +18891,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัด",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -18908,7 +18910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -18927,7 +18929,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -18946,7 +18948,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพ่อเตรียมเรือ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -18965,7 +18967,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดใบไม้",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -18984,7 +18986,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยพ่อเอาเรือลง",
       "activityDate": "2026-04-12",
       "imageUrls": [
@@ -19003,7 +19005,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803883",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายความอาลัยพระพันปีหลวง",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -19024,7 +19026,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803893",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -19043,7 +19045,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803893",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -19062,7 +19064,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803893",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ฟังบรรยายเรื่องเตรียมความพร้อมคุณแม่ตั้งครรภ์",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -19081,7 +19083,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803893",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -19100,7 +19102,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803893",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -19121,7 +19123,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคมไทย",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -19140,7 +19142,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -19159,7 +19161,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์เเพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -19178,7 +19180,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "อาภรณ์ภัณฑ์",
       "activityDate": "2025-10-14",
       "imageUrls": [
@@ -19197,7 +19199,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "อาภรณ์ภัณฑ์",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -19216,7 +19218,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -19235,7 +19237,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -19254,7 +19256,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -19273,7 +19275,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -19292,7 +19294,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -19311,7 +19313,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณร้้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -19330,7 +19332,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -19349,7 +19351,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของภายในศาลาวัด",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -19368,7 +19370,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803932",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ตากผ้า ซักผ้า ทำงานบ้าน",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -19389,7 +19391,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -19408,7 +19410,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมเดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -19427,7 +19429,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมเดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -19446,7 +19448,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -19465,7 +19467,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เดินแบบงานวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -19484,7 +19486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -19503,7 +19505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่คัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -19522,7 +19524,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803938",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -19543,7 +19545,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 1)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -19560,7 +19562,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -19579,7 +19581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพ",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -19598,7 +19600,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องเพลงประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -19617,7 +19619,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -19636,7 +19638,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -19655,7 +19657,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -19674,7 +19676,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -19693,7 +19695,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -19712,7 +19714,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -19731,7 +19733,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -19750,7 +19752,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -19769,7 +19771,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -19788,7 +19790,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพในวพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -19807,7 +19809,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -19826,7 +19828,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -19845,7 +19847,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -19864,7 +19866,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703828",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 23.0,
+      "hours": 23,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -19883,7 +19885,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -19902,7 +19904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -19921,7 +19923,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -19940,7 +19942,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -19959,7 +19961,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -19978,7 +19980,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพหนีไฟ ประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -19997,7 +19999,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -20016,7 +20018,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คลินิกคัดกรองโรคเรื้อรัง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -20035,7 +20037,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คลินิกคัดกรองโรคเรื้อรัง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -20054,7 +20056,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คลินิกคัดกรองโรคเรื้อรัง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -20073,7 +20075,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503697",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20092,7 +20094,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -20111,7 +20113,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "คัดกรองสุขภาพเชิงรุก ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -20130,7 +20132,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 58.0,
+      "hours": 58,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20147,7 +20149,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐินวัดนาคู",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -20166,7 +20168,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -20185,7 +20187,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดพื้น",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -20204,7 +20206,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503724",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20223,7 +20225,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503696",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -20242,7 +20244,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503696",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20261,7 +20263,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -20280,7 +20282,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -20299,7 +20301,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีถวายพานพุ่มสักการะเนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -20318,7 +20320,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -20337,7 +20339,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -20356,7 +20358,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -20375,7 +20377,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีวางพวงมาลา ถวายสักการะพระบรมราชานุสาวรีย์ ร.8",
       "activityDate": "2026-06-09",
       "imageUrls": [
@@ -20394,7 +20396,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -20413,7 +20415,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -20432,7 +20434,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -20451,7 +20453,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -20470,7 +20472,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703849",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยจัดทำปกตารางสอนและระเบียบการเข้าเรียนออนไลน์",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -20491,7 +20493,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -20510,7 +20512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกเฉาก๊วย",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -20529,7 +20531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -20548,7 +20550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัดและตอกเสาธง",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -20567,7 +20569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทง",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -20586,7 +20588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-11-21",
       "imageUrls": [
@@ -20605,7 +20607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503746",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20624,7 +20626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -20643,7 +20645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช้อมพิธีไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -20662,7 +20664,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเกาะร่วมใจ ใส่ใจสุขภาพ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -20681,7 +20683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -20700,7 +20702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -20719,7 +20721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -20738,7 +20740,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -20757,7 +20759,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -20776,7 +20778,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -20795,7 +20797,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -20814,7 +20816,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -20833,7 +20835,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603806",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบ หมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -20854,7 +20856,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ปลูกต้นไม้โลก",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -20873,7 +20875,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "PCU",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -20892,7 +20894,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "PCU",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -20911,7 +20913,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ปลูกต้นไม้โลก",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -20930,7 +20932,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -20949,7 +20951,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503736",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -20968,7 +20970,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503747",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -20987,7 +20989,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503747",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -21006,7 +21008,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503747",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 11.0,
+      "hours": 11,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 5)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -21023,7 +21025,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503747",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -21042,7 +21044,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503747",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -21061,7 +21063,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -21080,7 +21082,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -21099,7 +21101,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-11",
       "imageUrls": [
@@ -21118,7 +21120,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -21137,7 +21139,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -21156,7 +21158,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -21175,7 +21177,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -21194,7 +21196,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -21213,7 +21215,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -21232,7 +21234,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -21251,7 +21253,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับหมวกพยาบาลวิชาชีพ ประจำปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -21270,7 +21272,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ประจำปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -21289,7 +21291,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ประจำปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -21308,7 +21310,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -21327,7 +21329,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -21346,7 +21348,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803918",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -21367,7 +21369,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -21386,7 +21388,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -21405,7 +21407,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -21424,7 +21426,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -21443,7 +21445,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -21462,7 +21464,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703862",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "การตกแต่งวิสัยทัศน์ภายในวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -21483,7 +21485,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -21502,7 +21504,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -21521,7 +21523,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -21540,7 +21542,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ปี2568",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -21559,7 +21561,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้องรพอ.รุ่นที่ 68",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -21578,7 +21580,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คัดเลือกนพอ. ปีการศึกษา 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -21597,7 +21599,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -21616,7 +21618,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -21635,7 +21637,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -21654,7 +21656,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -21673,7 +21675,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสวนขนหินหลังอาคารเรียน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -21692,7 +21694,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603762",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -21713,7 +21715,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -21732,7 +21734,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -21751,7 +21753,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทย เพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -21770,7 +21772,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -21789,7 +21791,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานกอล์ฟ",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -21808,7 +21810,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานกอล์ฟ",
       "activityDate": "2026-02-12",
       "imageUrls": [
@@ -21827,7 +21829,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603817",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟ",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -21848,7 +21850,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -21867,7 +21869,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -21886,7 +21888,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -21905,7 +21907,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -21924,7 +21926,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -21943,7 +21945,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.92,
+      "hours": 5,
       "description": "กิจกรรมปฐมนิเทศ นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ ๑ และผู้ปกครอง ประจำปีการศึกษา ๒๕๖๘",
       "activityDate": "2025-07-22",
       "imageUrls": [
@@ -21962,7 +21964,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทย กิจกรรมวันรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -21981,7 +21983,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทย กิจกรรมวันรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -22000,7 +22002,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทย กิจกรรมวันรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -22019,7 +22021,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทย กิจกรรมวันรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -22038,7 +22040,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.85,
+      "hours": 2,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -22057,7 +22059,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.46,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -22076,7 +22078,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.46,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -22095,7 +22097,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.46,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -22114,7 +22116,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.69,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -22133,7 +22135,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.46,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -22152,7 +22154,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.85,
+      "hours": 2,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -22171,7 +22173,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.62,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -22190,7 +22192,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.62,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -22209,7 +22211,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -22228,7 +22230,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -22247,7 +22249,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703822",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.23,
+      "hours": 1,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -22268,7 +22270,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -22287,7 +22289,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -22306,7 +22308,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -22325,7 +22327,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -22344,7 +22346,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -22363,7 +22365,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -22382,7 +22384,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -22401,7 +22403,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -22420,7 +22422,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -22439,7 +22441,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -22458,7 +22460,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -22477,7 +22479,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -22496,7 +22498,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -22515,7 +22517,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 34.0,
+      "hours": 34,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -22532,7 +22534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703827",
       "categoryId": 4,
       "academicYear": 2568,
-      "hours": 22.0,
+      "hours": 22,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 4)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -22551,7 +22553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -22570,7 +22572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -22589,7 +22591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -22608,7 +22610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ร่วมทำโรงทาน จากอาหาร",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -22627,7 +22629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยรวบรวมเงินบริจาคและมอบให้แก่วัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -22646,7 +22648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "โรงทานอาหาร",
       "activityDate": "2025-09-13",
       "imageUrls": [
@@ -22665,7 +22667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ขนดินเข้าอุโบสถ",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -22684,7 +22686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กำจัดวัชพืช",
       "activityDate": "2025-09-27",
       "imageUrls": [
@@ -22703,7 +22705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503713",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -22722,7 +22724,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -22741,7 +22743,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-06-26",
       "imageUrls": [
@@ -22760,7 +22762,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เข้าแถวเคารพธงชาติ",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -22779,7 +22781,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -22796,7 +22798,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกัน อัมพาต ครั้งที่ 11 เฉลิมพระเกียรติ",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -22815,7 +22817,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการ วัด ประชา รัฐ สร้างสุข",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -22834,7 +22836,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -22853,7 +22855,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ร่วมงานนมัสการหลวงพ่อโสธร ปี68",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -22872,7 +22874,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐินวัดทดราษฎร์เจริญมณีฤทธิ์",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -22891,7 +22893,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503711",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานทำบุญตักบาตรเนื่องในวันสวรรคต",
       "activityDate": "2025-10-13",
       "imageUrls": [
@@ -22912,7 +22914,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -22931,7 +22933,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดและตรวจสอบวันหมดอายุของเวชภัณฑ์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -22950,7 +22952,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จัดทำบอร์ดประชาสัมพันธ์ให้ความรู้สุขภาพ",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -22969,7 +22971,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -22988,7 +22990,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบริเวณรอบรพ.สต.",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -23007,7 +23009,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบริเวณโรงเรียนวัดบ้านนา",
       "activityDate": "2025-10-16",
       "imageUrls": [],
@@ -23024,7 +23026,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503739",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบริเวณโรงเรียนวัดบ้านนา",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -23045,7 +23047,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -23064,7 +23066,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -23083,7 +23085,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -23102,7 +23104,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -23121,7 +23123,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -23140,7 +23142,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -23159,7 +23161,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -23178,7 +23180,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -23197,7 +23199,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -23216,7 +23218,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703859",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วางพานพุ่มเนื่องในวันเฉลิมพระชนมพรรษา",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -23237,7 +23239,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -23256,7 +23258,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ฟ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -23275,7 +23277,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ฟ(2)",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -23294,7 +23296,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -23313,7 +23315,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-12",
       "imageUrls": [
@@ -23332,7 +23334,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -23351,7 +23353,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยเตรียมสถานที่จัดงานมุทิตาจิต",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -23370,7 +23372,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยเตรียมสถานที่จัดงานมุทิตาจิต",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -23389,7 +23391,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ฟังบรรยายเรื่องการเตรียมความพร้อมคุณแม่ตั้งครรภ์(1)",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -23408,7 +23410,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ฟังบรรยายเรื่องการเตรียมความพร้อมคุณแม่ตั้งครรภ์(2)",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -23427,7 +23429,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ฟังบรรยายเรื่องการเตรียมความพร้อมคุณแม่ตั้งครรภ์(2)",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -23446,7 +23448,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -23465,7 +23467,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยท่านอาจารย์ทำแผ่นป้ายฝึกนภาภิบาล",
       "activityDate": "2026-04-19",
       "imageUrls": [
@@ -23484,7 +23486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -23503,7 +23505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกของพระราชทาน",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -23522,7 +23524,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญวันขึ้นปีใหม่ไทย(ช่วยตักน้ำรดพระพุทธรูป)",
       "activityDate": "2026-04-12",
       "imageUrls": [
@@ -23541,7 +23543,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาด(เก็บดอกไม้)ภายในอุโมงค์พระธาตุ",
       "activityDate": "2026-06-14",
       "imageUrls": [
@@ -23560,7 +23562,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ถอนผมหงอกให้มารดา",
       "activityDate": "2026-05-10",
       "imageUrls": [
@@ -23579,7 +23581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803903",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ให้อาหารสุนัขจรจัด",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -23600,7 +23602,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -23619,7 +23621,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -23638,7 +23640,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Big cleaning day วัดประชารัฐสร้างสุข",
       "activityDate": "2025-10-15",
       "imageUrls": [
@@ -23657,7 +23659,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -23676,7 +23678,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -23695,7 +23697,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503703",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญทอดกฐิน",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -23716,7 +23718,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603812",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -23735,7 +23737,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603812",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับหมวกวิชาชีพ",
       "activityDate": "2026-03-24",
       "imageUrls": [
@@ -23756,7 +23758,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา” ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -23775,7 +23777,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -23794,7 +23796,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กีฬาประเพณีทหาร-ตำรวจ ครั้งที่59",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -23813,7 +23815,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -23832,7 +23834,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -23851,7 +23853,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จัดห้องภาคมารดาทารกและการผดุงครรภ์",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -23870,7 +23872,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่ ปี68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -23889,7 +23891,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "จัดห้องพักผ่อนนพอ.",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -23908,7 +23910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -23927,7 +23929,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอนคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -23946,7 +23948,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้น เพลงฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -23965,7 +23967,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้น เพลงฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -23984,7 +23986,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -24003,7 +24005,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -24022,7 +24024,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703836",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -24041,7 +24043,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-05",
       "imageUrls": [
@@ -24060,7 +24062,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -24079,7 +24081,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -24098,7 +24100,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -24117,7 +24119,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -24136,7 +24138,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีถวายพานพุ่มสักการะเนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -24155,7 +24157,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -24174,7 +24176,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -24193,7 +24195,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ถวายสังฆทาน",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -24212,7 +24214,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703857",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "บริจาคเงินช่วยเหลือร.พ./ผู้ประสบภัยน้ำท่วมภาคใต้",
       "activityDate": "2025-11-27",
       "imageUrls": [
@@ -24233,7 +24235,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "“พยาบาลไทยบริจาคบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -24252,7 +24254,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -24271,7 +24273,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -24290,7 +24292,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -24309,7 +24311,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ย้อมผมให้พ่อ",
       "activityDate": "2026-06-01",
       "imageUrls": [
@@ -24328,7 +24330,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803940",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดบ้าน",
       "activityDate": "2026-06-01",
       "imageUrls": [
@@ -24349,7 +24351,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -24368,7 +24370,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -24387,7 +24389,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาสีภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -24406,7 +24408,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.27,
+      "hours": 3,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -24425,7 +24427,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.27,
+      "hours": 3,
       "description": "จิตอาสารับนรม.",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -24444,7 +24446,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.82,
+      "hours": 1,
       "description": "จัดห้องภาคมารดา ทารก และการผดุงครรภ์",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -24463,7 +24465,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.45,
+      "hours": 2,
       "description": "ช่วยเหลืองาน อนศ.",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -24482,7 +24484,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.27,
+      "hours": 3,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -24501,7 +24503,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.63,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -24520,7 +24522,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.45,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -24539,7 +24541,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.63,
+      "hours": 2,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -24558,7 +24560,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703837",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.22,
+      "hours": 1,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -24579,7 +24581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803941",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -24598,7 +24600,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803941",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -24617,7 +24619,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803941",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -24636,7 +24638,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803941",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -24657,7 +24659,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -24676,7 +24678,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-04-12",
       "imageUrls": [
@@ -24695,7 +24697,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -24714,7 +24716,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -24733,7 +24735,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -24752,7 +24754,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานสงกรานต์ เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -24771,7 +24773,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานจัดการทดสอบความถนัด วิภาวิสัยและจิตวิทยา ประจำปีการศึกษา 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -24790,7 +24792,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จีดโต๊ะห้องประชุมชั้น4 งานทดสอบความถนัด วิภาวิสัยและจิตวิทยา ประจำปีการศึกษา 2569",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -24809,7 +24811,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603776",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -24830,7 +24832,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-12-17",
       "imageUrls": [
@@ -24849,7 +24851,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -24868,7 +24870,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -24887,7 +24889,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -24906,7 +24908,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -24925,7 +24927,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -24944,7 +24946,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -24963,7 +24965,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-13",
       "imageUrls": [
@@ -24982,7 +24984,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -25001,7 +25003,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการเเทนนักเรียนบังคับบัญชา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -25020,7 +25022,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการเเทนนพอ.บังคับบัญชา",
       "activityDate": "2025-10-15",
       "imageUrls": [
@@ -25039,7 +25041,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการเเทนนพอ.บังคับบัญชา",
       "activityDate": "2025-10-28",
       "imageUrls": [
@@ -25058,7 +25060,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-03-16",
       "imageUrls": [
@@ -25077,7 +25079,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -25096,7 +25098,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -25115,7 +25117,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยเหลืองานรับสมัคร 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -25134,7 +25136,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -25153,7 +25155,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -25172,7 +25174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -25191,7 +25193,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -25210,7 +25212,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -25229,7 +25231,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603773",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสภาพเเวดล้อม วพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -25250,7 +25252,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -25269,7 +25271,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการ วัด ประชา รัฐ สร้างสุข",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -25288,7 +25290,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -25307,7 +25309,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -25326,7 +25328,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีขบวนแห่หลวงพ่อโสธรทางบก 2568",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -25345,7 +25347,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ลอยกระทง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -25364,7 +25366,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญตักบาตรเนื่องในวันคล้ายวันสวรรคต",
       "activityDate": "2025-10-13",
       "imageUrls": [
@@ -25383,7 +25385,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503699",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำนุบำรุงศาสนา",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -25404,7 +25406,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -25423,7 +25425,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -25442,7 +25444,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -25461,7 +25463,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -25480,7 +25482,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -25499,7 +25501,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเกาะร่วมใจ ใส่ใจสุขภาพ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -25518,7 +25520,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -25537,7 +25539,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานสงกรานต์ เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -25556,7 +25558,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "จัดห้องปฏิบัติการ ทำความสะอาดหุ่นและอุปกรณ์ต่างๆ",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -25575,7 +25577,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -25594,7 +25596,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -25613,7 +25615,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -25632,7 +25634,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -25651,7 +25653,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -25670,7 +25672,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบวิภาววิสัยและจิตวิทยา ปีการศึกษา 2569",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -25689,7 +25691,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยจัดงานทดสอบวิภาววิสัยและจิตวิทยา ปีการศึกษา 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -25708,7 +25710,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -25727,7 +25729,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -25746,7 +25748,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -25765,7 +25767,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -25784,7 +25786,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -25803,7 +25805,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรวันเฉลิมพระชนมพรรษา ร.10",
       "activityDate": "2025-07-28",
       "imageUrls": [
@@ -25822,7 +25824,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603766",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วันเฉลิมพระชนมพรรษา พระบรมราชชนนีพันปีหลวง",
       "activityDate": "2025-08-12",
       "imageUrls": [
@@ -25843,7 +25845,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -25862,7 +25864,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -25881,7 +25883,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -25900,7 +25902,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -25919,7 +25921,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ”ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -25938,7 +25940,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ”ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -25957,7 +25959,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -25976,7 +25978,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-17",
       "imageUrls": [
@@ -25995,7 +25997,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -26014,7 +26016,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-20",
       "imageUrls": [
@@ -26033,7 +26035,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-27",
       "imageUrls": [
@@ -26052,7 +26054,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -26071,7 +26073,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -26090,7 +26092,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -26109,7 +26111,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -26128,7 +26130,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -26147,7 +26149,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่คัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -26166,7 +26168,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26185,7 +26187,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -26204,7 +26206,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26223,7 +26225,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703818",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 77.0,
+      "hours": 77,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -26242,7 +26244,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -26261,7 +26263,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -26280,7 +26282,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -26299,7 +26301,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -26318,7 +26320,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -26337,7 +26339,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -26356,7 +26358,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -26375,7 +26377,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกายนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -26394,7 +26396,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพในวพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26413,7 +26415,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -26432,7 +26434,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26451,7 +26453,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -26470,7 +26472,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "กวานลาดวัด",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -26489,7 +26491,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703854",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำบุญตักบาตร",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -26510,7 +26512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -26529,7 +26531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -26548,7 +26550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -26567,7 +26569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-05-09",
       "imageUrls": [
@@ -26586,7 +26588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนน.ป.ค.",
       "activityDate": "2025-10-08",
       "imageUrls": [
@@ -26605,7 +26607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนน.ป.ค.",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -26624,7 +26626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนน.ป.ค.",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -26643,7 +26645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -26662,7 +26664,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -26681,7 +26683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานทดสอบพิเศษ นักเรียนใหม่ปี 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -26700,7 +26702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสวนหินบริเวณวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26719,7 +26721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603767",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -26740,7 +26742,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703876",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -26759,7 +26761,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703876",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -26780,7 +26782,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803892",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -26799,7 +26801,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803892",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมฟังบรรยาย การให้สุขศึกษาสำหรับหญิงตั้งครรภ์ โดยพี่นทน.",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -26818,7 +26820,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803892",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการจิตอาสาทำความสะอาดศูนย์ดูแลสุนัขและแมวจรจัดของกองทัพเรือ",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -26839,7 +26841,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -26858,7 +26860,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.หมู่ 1 มว.2",
       "activityDate": "2025-11-10",
       "imageUrls": [
@@ -26877,7 +26879,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท. หมู่ 1 มว.2",
       "activityDate": "2025-11-11",
       "imageUrls": [
@@ -26896,7 +26898,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทกท. หมู่ 1 มว.2",
       "activityDate": "2025-11-10",
       "imageUrls": [
@@ -26915,7 +26917,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.หมู่ 1 มว.2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -26934,7 +26936,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทกท.หมู่1 มว.2",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -26953,7 +26955,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทำนุบำรุง วพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -26972,7 +26974,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบพิเศษ",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -26991,7 +26993,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "อนุรักษ์สิ่งแวดล้อม",
       "activityDate": "2026-04-17",
       "imageUrls": [
@@ -27010,7 +27012,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "จัดห้องสอบสูติฯ พี่ นทน.",
       "activityDate": "2026-01-07",
       "imageUrls": [
@@ -27029,7 +27031,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมเกียรติยศสวีแด",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -27048,7 +27050,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2569",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -27067,7 +27069,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2569",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -27086,7 +27088,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2569",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -27105,7 +27107,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2569",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -27124,7 +27126,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2569",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -27143,7 +27145,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.หมู่ 1 มว.2",
       "activityDate": "2026-03-09",
       "imageUrls": [
@@ -27162,7 +27164,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.หมู่ 1 มว.2",
       "activityDate": "2026-03-10",
       "imageUrls": [
@@ -27181,7 +27183,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603759",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.หมู่ 1 มว.2",
       "activityDate": "2026-03-12",
       "imageUrls": [
@@ -27202,7 +27204,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503705",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ตรวจคัดกรองสุขภาพสุขภาพเชิงรุก ทอ.",
       "activityDate": "2025-06-16",
       "imageUrls": [
@@ -27221,7 +27223,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503705",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ทำบุญงานกฐิน",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -27240,7 +27242,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503705",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -27259,7 +27261,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503705",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -27278,7 +27280,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503705",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ทำบุญ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -27299,7 +27301,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -27318,7 +27320,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -27337,7 +27339,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐิน วัดป่าคลองนา",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -27356,7 +27358,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐิน วัดพรหมสุวรรณ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -27375,7 +27377,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเหลืองานลอยกระทง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -27394,7 +27396,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503690",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -27413,7 +27415,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503718",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -27432,7 +27434,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503718",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรอง โรคเบาหวานและความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -27451,7 +27453,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503718",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -27470,7 +27472,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503718",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพหนีภัย ประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -27489,7 +27491,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503718",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -27508,7 +27510,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -27527,7 +27529,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [],
@@ -27544,7 +27546,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [],
@@ -27561,7 +27563,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -27580,7 +27582,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง SWD68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -27599,7 +27601,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง SWD68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -27618,7 +27620,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ถ่ายคลิปวิจัยสื่อการสอนเด็กตัวเหลือง",
       "activityDate": "2025-08-29",
       "imageUrls": [
@@ -27637,7 +27639,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ฟังสอนแม่ พี่นทน.",
       "activityDate": "2025-09-27",
       "imageUrls": [
@@ -27656,7 +27658,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดงานเกษียณ",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -27675,7 +27677,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy KAFNA",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -27694,7 +27696,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy KAFNA",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -27713,7 +27715,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buff KAFNA",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -27732,7 +27734,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy KAFNA",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -27751,7 +27753,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy KAFNA",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -27770,7 +27772,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy KAFNA",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -27789,7 +27791,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2025-10-07",
       "imageUrls": [
@@ -27808,7 +27810,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2025-10-08",
       "imageUrls": [
@@ -27827,7 +27829,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -27846,7 +27848,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -27865,7 +27867,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -27884,7 +27886,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะรับสมัคร นพอ.69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -27903,7 +27905,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขายเสื้อชมรมโรทาแรคท์",
       "activityDate": "2026-05-06",
       "imageUrls": [],
@@ -27920,7 +27922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-03-16",
       "imageUrls": [
@@ -27939,7 +27941,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -27958,7 +27960,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -27977,7 +27979,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603788",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อม วพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -27998,7 +28000,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -28017,7 +28019,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -28036,7 +28038,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -28055,7 +28057,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมนาสื่อสร้างสรรค์ เสริมพลังการสื่่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -28074,7 +28076,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -28093,7 +28095,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนพอ.บังคับบัญชา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -28112,7 +28114,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนพอ.บังคับบัญชา",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -28131,7 +28133,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนนพอ.บังคับบัญชา",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -28150,7 +28152,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้องสวีแด68เข้าหอ",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -28169,7 +28171,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้องสวีแด68 เข้าหอ",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -28188,7 +28190,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -28207,7 +28209,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -28226,7 +28228,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -28245,7 +28247,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -28264,7 +28266,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -28283,7 +28285,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-03-16",
       "imageUrls": [
@@ -28302,7 +28304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -28321,7 +28323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -28340,7 +28342,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยเหลืองานรับสมัคร นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -28359,7 +28361,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603757",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสวนวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -28380,7 +28382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -28399,7 +28401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -28418,7 +28420,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -28437,7 +28439,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักตันไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -28456,7 +28458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -28475,7 +28477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพหนีไฟ ประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -28494,7 +28496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -28513,7 +28515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503745",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -28534,7 +28536,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -28553,7 +28555,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -28572,7 +28574,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -28591,7 +28593,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -28610,7 +28612,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานรับปริญญา 2568",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -28629,7 +28631,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมการแสดงงานกอล์ฟวพอ. ปี 2569",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -28648,7 +28650,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อม การแสดงงานกอล์ฟวพอ. ปี 2569",
       "activityDate": "2026-02-12",
       "imageUrls": [
@@ -28667,7 +28669,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "การแสดงงานกอล์ฟวพอ. ปี 2569",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -28686,7 +28688,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.นปค.มว.นพอ.ปี 2",
       "activityDate": "2025-10-08",
       "imageUrls": [
@@ -28705,7 +28707,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.นปค.มว.นพอ.ปี 2",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -28724,7 +28726,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.นปค.มว.นพอ.ปี 2",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -28743,7 +28745,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -28762,7 +28764,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -28781,7 +28783,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -28800,7 +28802,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -28819,7 +28821,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -28838,7 +28840,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-03-16",
       "imageUrls": [
@@ -28857,7 +28859,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -28876,7 +28878,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603811",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -28897,7 +28899,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ ปี 4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -28916,7 +28918,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์ “วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน” กับพลังโรทาแรคท์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -28935,7 +28937,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -28954,7 +28956,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -28973,7 +28975,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -28992,7 +28994,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -29011,7 +29013,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -29030,7 +29032,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมฟังบรรยาย การให้สุขศึกษาสำหรับหญิงตั้งครรภ์ โดยพี่นทน.",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -29049,7 +29051,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -29068,7 +29070,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -29087,7 +29089,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -29106,7 +29108,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -29125,7 +29127,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพ่อแม่ขายของ",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -29144,7 +29146,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803927",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพ่อแม่ขายของ",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -29165,7 +29167,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -29184,7 +29186,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เสาร์ประทีป",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -29203,7 +29205,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ”ชัยพัฒนา“ ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -29222,7 +29224,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -29241,7 +29243,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "กีฬาประเพณีโรงเรียนทหาร-ตำรวจครั้งที่ 59",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -29260,7 +29262,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -29279,7 +29281,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -29298,7 +29300,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -29317,7 +29319,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -29336,7 +29338,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -29355,7 +29357,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บัดดี้นักเรียนพยาบาลเหล่าทัพเกาหลี",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -29374,7 +29376,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -29393,7 +29395,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -29412,7 +29414,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -29431,7 +29433,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -29450,7 +29452,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -29469,7 +29471,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขายเสื้อโรทาแรคท์",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -29488,7 +29490,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603801",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินตกแต่งวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -29509,7 +29511,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 1)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -29526,7 +29528,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -29545,7 +29547,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -29564,7 +29566,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -29583,7 +29585,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -29602,7 +29604,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -29621,7 +29623,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -29640,7 +29642,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -29659,7 +29661,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -29678,7 +29680,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -29697,7 +29699,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -29716,7 +29718,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -29735,7 +29737,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -29754,7 +29756,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 21.0,
+      "hours": 21,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -29771,7 +29773,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703830",
       "categoryId": 4,
       "academicYear": 2568,
-      "hours": 27.0,
+      "hours": 27,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 4)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -29790,7 +29792,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -29809,7 +29811,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัมนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -29828,7 +29830,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัมนา”ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -29847,7 +29849,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จฯเนื่องในงานรับปริญญา นพอ.64",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -29866,7 +29868,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -29885,7 +29887,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้อง นพอ. 68",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -29904,7 +29906,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้อง นพอ.68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -29923,7 +29925,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ต้อนรับวิทยาลัยพยาบาลกองทัพเรือเข้าศึกษาดูงาน",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -29942,7 +29944,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กอล์ฟการกุศล วิทยาลัยพยาบาลทหารอากาศ",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -29961,7 +29963,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบ นพอ. 69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -29980,7 +29982,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินปรับปรุงภูมิทัศน์",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -29999,7 +30001,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -30018,7 +30020,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -30037,7 +30039,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -30056,7 +30058,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603787",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคมชุมชนวัดเกาะ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -30077,7 +30079,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -30096,7 +30098,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -30115,7 +30117,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทน นปค.",
       "activityDate": "2025-10-06",
       "imageUrls": [
@@ -30134,7 +30136,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทน นปค.",
       "activityDate": "2025-10-07",
       "imageUrls": [
@@ -30153,7 +30155,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทน นปค.",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -30172,7 +30174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -30191,7 +30193,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -30210,7 +30212,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -30229,7 +30231,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korea",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -30248,7 +30250,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.มว.1",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -30267,7 +30269,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทกท.มว.1",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -30286,7 +30288,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทกท.มว.1",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -30305,7 +30307,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟวพอ.",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -30324,7 +30326,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603808",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสวนวพอ.",
       "activityDate": "2026-05-07",
       "imageUrls": [
@@ -30345,7 +30347,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503731",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -30364,7 +30366,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503731",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -30383,7 +30385,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [],
@@ -30400,7 +30402,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -30417,7 +30419,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน ณ วัดบ้านนา",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -30436,7 +30438,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "5ส.อนามัย",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -30455,7 +30457,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บของวัดบ้านนา",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -30474,7 +30476,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -30491,7 +30493,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503735",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -30510,7 +30512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -30529,7 +30531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวานความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -30548,7 +30550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวานความดันโลหิต",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -30567,7 +30569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการจัดซ้อมดับเพลิงและอพยพหนีไฟประจำปีแผนการจัดซ้อมดับเพลิงและอพยพหนีไฟประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -30586,7 +30588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -30605,7 +30607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503716",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -30624,7 +30626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "มิตรประชากองทัพอากาศ",
       "activityDate": "2025-07-07",
       "imageUrls": [
@@ -30643,7 +30645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "มิตรประชากองทัพอากาศ",
       "activityDate": "2025-07-08",
       "imageUrls": [
@@ -30662,7 +30664,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเกาะร่วมใจ ใส่ใจสุขภาพ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -30681,7 +30683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "วันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -30700,7 +30702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกวิชาชีพ swd65",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -30719,7 +30721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีมอบหมวกวิขาชีพ swd65",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -30738,7 +30740,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัด วิภาววิสัย และทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -30757,7 +30759,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -30776,7 +30778,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ที่รวมใจ ณ วัดท่าเจริญ",
       "activityDate": "2025-07-19",
       "imageUrls": [
@@ -30795,7 +30797,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวาวพระพรศวรรคตพระพันปีหลวง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -30814,7 +30816,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรแสดงความอาลัยพระพันปีหลวง",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -30833,7 +30835,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603761",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามสถวายพระพรวันวันเฉลิมพระชนพรรษา ร.10",
       "activityDate": "2025-07-28",
       "imageUrls": [
@@ -30854,7 +30856,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -30873,7 +30875,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -30892,7 +30894,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับคณะศึกษาดูงานรร.พยาบาลกห.กล.ต.(สาธารณรัฐเกาหลี)",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -30911,7 +30913,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -30930,7 +30932,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -30949,7 +30951,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -30968,7 +30970,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -30987,7 +30989,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -31006,7 +31008,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ส่งคณะศึกษาดูงานรร.พยาบาลกห.กล.ต.(สาธารณรัฐเกาหลี)",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -31025,7 +31027,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาดประจำปี2568",
       "activityDate": "2025-12-19",
       "imageUrls": [
@@ -31044,7 +31046,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบน้อง69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -31063,7 +31065,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -31082,7 +31084,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -31101,7 +31103,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -31120,7 +31122,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -31139,7 +31141,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603815",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -31160,7 +31162,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -31179,7 +31181,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -31198,7 +31200,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -31217,7 +31219,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -31236,7 +31238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -31255,7 +31257,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -31274,7 +31276,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -31293,7 +31295,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -31312,7 +31314,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -31331,7 +31333,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกีฬารักบี้ ทอ.",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -31350,7 +31352,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "วันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -31369,7 +31371,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -31388,7 +31390,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -31407,7 +31409,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -31426,7 +31428,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -31445,7 +31447,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -31464,7 +31466,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703874",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -31485,7 +31487,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -31504,7 +31506,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -31523,7 +31525,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -31542,7 +31544,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ตอบปัญหาธรรมะทางก้าวหน้า",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -31561,7 +31563,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิด กีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -31580,7 +31582,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสารับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -31599,7 +31601,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานรับขวัญสวีเเด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -31618,7 +31620,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานรับขวัญสวีเเด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -31637,7 +31639,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานรับขวัญสวีเเด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -31656,7 +31658,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -31675,7 +31677,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -31694,7 +31696,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -31713,7 +31715,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -31732,7 +31734,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -31751,7 +31753,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703838",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ. 2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -31772,7 +31774,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -31791,7 +31793,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -31810,7 +31812,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -31829,7 +31831,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -31848,7 +31850,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ประชุมวิชาการเทิดพระเกียรติสมเด็จพระศรีนครินทราบรม",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -31867,7 +31869,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานรับปริญญา",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -31886,7 +31888,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -31905,7 +31907,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -31924,7 +31926,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -31943,7 +31945,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -31962,7 +31964,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยเหลืองานรับสมัครนพอ รุ่น69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -31981,7 +31983,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603782",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยจัดเก็บห้องปฏิบัติการมารดาทารกและการผดุงครรภ์",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -32002,7 +32004,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503691",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำบังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -32021,7 +32023,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503691",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทงช่วยหน่วยงานวัด",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -32040,7 +32042,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503691",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -32059,7 +32061,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -32078,7 +32080,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -32097,7 +32099,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -32116,7 +32118,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -32135,7 +32137,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ฝึกซ้อมดนตรีไทย งานไหว้ครู10สถาบัน",
       "activityDate": "2025-06-14",
       "imageUrls": [
@@ -32154,7 +32156,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ฝึกซ้อมดนตรีไทย งานไหว้ครู10สถาบัน",
       "activityDate": "2025-06-21",
       "imageUrls": [
@@ -32173,7 +32175,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ฝึกซ้อมดนตรีไทย งานไหว้ครู10สถาบัน",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -32192,7 +32194,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กีฬาประเพณีทหาร-ตำรวจ ครั้งที่59",
       "activityDate": "2025-07-03",
       "imageUrls": [],
@@ -32209,7 +32211,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กีฬาประเพณีทหาร-ตำรวจ ครั้งที่59",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -32228,7 +32230,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 1",
       "activityDate": "2025-08-22",
       "imageUrls": [
@@ -32247,7 +32249,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 1",
       "activityDate": "2025-08-23",
       "imageUrls": [
@@ -32266,7 +32268,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 1",
       "activityDate": "2025-08-24",
       "imageUrls": [
@@ -32285,7 +32287,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -32304,7 +32306,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -32323,7 +32325,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -32342,7 +32344,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -32361,7 +32363,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -32380,7 +32382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -32399,7 +32401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา โรงเรียนโยธินบูรณะ",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -32418,7 +32420,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -32437,7 +32439,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-16",
       "imageUrls": [
@@ -32456,7 +32458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -32475,7 +32477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -32494,7 +32496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -32513,7 +32515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -32532,7 +32534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -32551,7 +32553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -32570,7 +32572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานคัดกรองมะเร้งเต้านม",
       "activityDate": "2026-05-26",
       "imageUrls": [
@@ -32589,7 +32591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสารับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -32608,7 +32610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -32627,7 +32629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -32646,7 +32648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -32665,7 +32667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -32684,7 +32686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -32703,7 +32705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -32722,7 +32724,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -32741,7 +32743,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -32760,7 +32762,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -32779,7 +32781,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -32798,7 +32800,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 157.0,
+      "hours": 157,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -32815,7 +32817,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703834",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพร",
       "activityDate": "2025-10-14",
       "imageUrls": [
@@ -32836,7 +32838,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -32855,7 +32857,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-05-17",
       "imageUrls": [
@@ -32874,7 +32876,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-05-17",
       "imageUrls": [
@@ -32893,7 +32895,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -32912,7 +32914,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -32931,7 +32933,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -32950,7 +32952,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -32969,7 +32971,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยเก็บของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -32988,7 +32990,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ขนของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -33007,7 +33009,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ขนของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -33026,7 +33028,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ขนของหอชาย",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -33045,7 +33047,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 16.0,
+      "hours": 16,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -33062,7 +33064,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503727",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -33083,7 +33085,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -33102,7 +33104,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -33121,7 +33123,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -33140,7 +33142,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริหารวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -33159,7 +33161,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-19",
       "imageUrls": [
@@ -33178,7 +33180,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแข่งขันกอล์ฟ",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -33197,7 +33199,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลาน",
       "activityDate": "2025-08-09",
       "imageUrls": [
@@ -33216,7 +33218,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -33235,7 +33237,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -33254,7 +33256,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603797",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำงานบ้าน",
       "activityDate": "2025-08-02",
       "imageUrls": [
@@ -33275,7 +33277,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503712",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -33294,7 +33296,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503712",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -33313,7 +33315,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -33332,7 +33334,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "รณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -33351,7 +33353,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เข้าร่วมสัมนา”สื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคมไทย“",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -33370,7 +33372,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -33389,7 +33391,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -33408,7 +33410,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -33427,7 +33429,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -33446,7 +33448,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "แข่งขัน Women Thailand Cyber Top Talent 2025",
       "activityDate": "2026-01-19",
       "imageUrls": [
@@ -33465,7 +33467,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ดูแลและจัดห้องพักผ่อนนพอ.",
       "activityDate": "2025-12-08",
       "imageUrls": [
@@ -33484,7 +33486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ดูแลและจัดห้องพักผ่อนนพอ.",
       "activityDate": "2025-12-09",
       "imageUrls": [
@@ -33503,7 +33505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "จัดห้องพักผ่อนนพอ.",
       "activityDate": "2025-12-04",
       "imageUrls": [
@@ -33522,7 +33524,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -33541,7 +33543,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -33560,7 +33562,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -33579,7 +33581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803887",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยทำลายเอกสาร",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -33600,7 +33602,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Youth Cyber Guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -33619,7 +33621,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานแจกของพระราชทานพระบรมศพพระพันปีหลวง",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -33638,7 +33640,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Women Thailand Cyber Top Talent 2025",
       "activityDate": "2026-01-17",
       "imageUrls": [
@@ -33657,7 +33659,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -33676,7 +33678,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -33695,7 +33697,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -33714,7 +33716,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -33733,7 +33735,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์นำเข้าแถว",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -33752,7 +33754,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -33771,7 +33773,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -33790,7 +33792,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -33809,7 +33811,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้องานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -33828,7 +33830,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -33847,7 +33849,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -33866,7 +33868,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -33885,7 +33887,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Say Hi น้องเต่า เขาทิ้งเราเก็บช่วย save สัตว์ทะเล",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -33904,7 +33906,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803926",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขัดบ่อเต่า",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -33925,7 +33927,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-12-09",
       "imageUrls": [
@@ -33944,7 +33946,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -33963,7 +33965,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -33982,7 +33984,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-17",
       "imageUrls": [
@@ -34001,7 +34003,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -34020,7 +34022,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -34039,7 +34041,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -34058,7 +34060,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -34077,7 +34079,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -34096,7 +34098,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -34115,7 +34117,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -34134,7 +34136,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -34153,7 +34155,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -34172,7 +34174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703851",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "พิธีถวายเครื่องราชสักการะวางพานพุ่มเนื่องในโอกาสวันเฉลิมพระชนมพรรษา พระบาทสมเด็จพระปรเมนทรรามาธิบดีศรีสินทรมหาวชิราลงกรณ พระวชิรเกล้าเจ้าอยู่หัว",
       "activityDate": "2025-07-28",
       "imageUrls": [
@@ -34193,7 +34195,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ ปี 4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -34212,7 +34214,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -34231,7 +34233,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -34250,7 +34252,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "กอล์ฟปิยมหาราชครั้งที่ 42",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -34269,7 +34271,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "กอล์ฟปิยมหาราชครั้งที่ 42",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -34288,7 +34290,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -34307,7 +34309,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803933",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -34328,7 +34330,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-05-11",
       "imageUrls": [
@@ -34347,7 +34349,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-20",
       "imageUrls": [
@@ -34366,7 +34368,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -34385,7 +34387,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -34404,7 +34406,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-07-06",
       "imageUrls": [
@@ -34423,7 +34425,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -34442,7 +34444,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "พิธีรับเสด็จรับปริญญา ม.มหิดล นพอ.รุ่น 64",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -34461,7 +34463,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟ",
       "activityDate": "2026-03-11",
       "imageUrls": [
@@ -34480,7 +34482,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วันคล้ายวันสถาปนาวิทลัยพยาบาลทหารอากาศ",
       "activityDate": "2025-06-16",
       "imageUrls": [
@@ -34499,7 +34501,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ต้อนรับวิทยาลัยกองทัพเรือเข้าศึกษาดูงาน",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -34518,7 +34520,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603799",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดห้องน้ำวัด",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -34539,7 +34541,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -34558,7 +34560,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -34577,7 +34579,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -34596,7 +34598,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -34615,7 +34617,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -34634,7 +34636,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -34653,7 +34655,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟการกุศลวิทยาลัยพยาบาลทหารอากาศ",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -34672,7 +34674,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะรับสมัครนพอ.69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -34691,7 +34693,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -34710,7 +34712,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -34729,7 +34731,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -34748,7 +34750,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "พิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -34767,7 +34769,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -34786,7 +34788,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603786",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพร",
       "activityDate": "2025-07-23",
       "imageUrls": [
@@ -34807,7 +34809,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -34826,7 +34828,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -34845,7 +34847,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คลีนิกคัดดรองโรคเรื้อรัง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -34864,7 +34866,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เฝ้าระวังและคัดกรองโรคเลาหวานและความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -34883,7 +34885,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพ",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -34902,7 +34904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503707",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ปลูกต้นไม้ วันรักต้นไม้แห่งชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -34923,7 +34925,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -34942,7 +34944,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -34961,7 +34963,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -34980,7 +34982,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -34999,7 +35001,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -35018,7 +35020,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -35037,7 +35039,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -35056,7 +35058,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสารับนรม.",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -35075,7 +35077,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -35094,7 +35096,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -35113,7 +35115,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -35132,7 +35134,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -35151,7 +35153,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -35170,7 +35172,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -35189,7 +35191,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -35208,7 +35210,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -35227,7 +35229,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -35246,7 +35248,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -35265,7 +35267,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -35284,7 +35286,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -35303,7 +35305,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -35322,7 +35324,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพในวพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -35341,7 +35343,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703825",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -35360,7 +35362,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -35379,7 +35381,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Youth Cyber Guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -35398,7 +35400,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -35417,7 +35419,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -35436,7 +35438,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -35455,7 +35457,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -35474,7 +35476,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -35493,7 +35495,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -35512,7 +35514,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -35531,7 +35533,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -35550,7 +35552,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -35569,7 +35571,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-28",
       "imageUrls": [
@@ -35588,7 +35590,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -35607,7 +35609,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -35626,7 +35628,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -35645,7 +35647,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -35664,7 +35666,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -35683,7 +35685,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -35702,7 +35704,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-16",
       "imageUrls": [
@@ -35721,7 +35723,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-17",
       "imageUrls": [
@@ -35740,7 +35742,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-30",
       "imageUrls": [
@@ -35759,7 +35761,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-04",
       "imageUrls": [
@@ -35778,7 +35780,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-28",
       "imageUrls": [
@@ -35797,7 +35799,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -35816,7 +35818,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -35835,7 +35837,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803912",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -35856,7 +35858,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -35875,7 +35877,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -35894,7 +35896,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -35913,7 +35915,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -35932,7 +35934,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -35951,7 +35953,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -35970,7 +35972,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานสงกรานต์ชมรมผู้สูงอายุ",
       "activityDate": "2026-04-29",
       "imageUrls": [
@@ -35989,7 +35991,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -36008,7 +36010,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -36027,7 +36029,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-06-23",
       "imageUrls": [
@@ -36046,7 +36048,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -36065,7 +36067,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603814",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -36086,7 +36088,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (ดุริยางค์ทหารอากาศ)",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -36105,7 +36107,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (กองบัญชาการกองทัพอากาศ)",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -36124,7 +36126,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า (กองบัญชาการกองทัพอากาศ)",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -36143,7 +36145,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16 (ศูนย์วัฒนธรรมแห่งประเทศไทย)",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -36162,7 +36164,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -36181,7 +36183,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -36200,7 +36202,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือก นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -36219,7 +36221,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703853",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -36240,7 +36242,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -36259,7 +36261,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -36278,7 +36280,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -36297,7 +36299,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "พิธีวางพวงมาลาวันอานันทมหิดล",
       "activityDate": "2026-06-09",
       "imageUrls": [
@@ -36316,7 +36318,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -36335,7 +36337,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703841",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -36356,7 +36358,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -36375,7 +36377,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -36394,7 +36396,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -36413,7 +36415,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -36432,7 +36434,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -36451,7 +36453,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทงหาเงินเข้าวัดหนามแดง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -36470,7 +36472,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503708",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐินวัดหนามแดง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -36491,7 +36493,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-07-18",
       "imageUrls": [
@@ -36510,7 +36512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชาพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -36529,7 +36531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -36548,7 +36550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -36567,7 +36569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "วันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -36586,7 +36588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -36605,7 +36607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -36624,7 +36626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสารับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -36643,7 +36645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสารับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -36662,7 +36664,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "งานมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -36681,7 +36683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -36700,7 +36702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานรับหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -36719,7 +36721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพภายใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -36738,7 +36740,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -36757,7 +36759,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ไหว้พระประจำบ้านเนื่องในโอกาสวันพระ",
       "activityDate": "2025-07-18",
       "imageUrls": [
@@ -36776,7 +36778,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703881",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยผู้ปกครองรดน้ำต้นปาล์มที่สวน",
       "activityDate": "2025-07-15",
       "imageUrls": [
@@ -36797,7 +36799,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803917",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -36816,7 +36818,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803917",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -36835,7 +36837,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803917",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -36854,7 +36856,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803917",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Youth Camp 2026 & การคัดเลือกผู้แทนโรทาแรคท์ภาครับเลือก ของภาค 3350 (DRRE)",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -36873,7 +36875,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803917",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -36894,7 +36896,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -36913,7 +36915,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -36932,7 +36934,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -36951,7 +36953,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -36970,7 +36972,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ”ชัยพัฒนา“ ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -36989,7 +36991,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -37008,7 +37010,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ประจำปี 2568",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -37027,7 +37029,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้อง",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -37046,7 +37048,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับน้อง",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -37065,7 +37067,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "จัดห้องปฏิบัติการและทำความสะอาดหุ่นและอุปกรณ์ต่าง ๆ",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -37084,7 +37086,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานทดสอบพิเศษ",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -37103,7 +37105,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมประสานเสียงงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -37122,7 +37124,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมประสานเสียงงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -37141,7 +37143,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมประสานเสียงงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -37160,7 +37162,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมประสานเสียงงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -37179,7 +37181,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมประสานเสียงงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -37198,7 +37200,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ผู้นำซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -37217,7 +37219,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ผู้นำซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -37236,7 +37238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603760",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหิน จัดสิ่งแวดล้อม วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -37257,7 +37259,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมวงรวมงานดนตรีไทยไหว้ครู10สถาบัน",
       "activityDate": "2025-06-14",
       "imageUrls": [
@@ -37276,7 +37278,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมวงรวมงานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-21",
       "imageUrls": [
@@ -37295,7 +37297,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมวงรวมงานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -37314,7 +37316,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมวงรวมงานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-14",
       "imageUrls": [
@@ -37333,7 +37335,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -37352,7 +37354,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -37371,7 +37373,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -37390,7 +37392,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -37409,7 +37411,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -37428,7 +37430,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด68",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -37447,7 +37449,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด68",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -37466,7 +37468,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด68",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -37485,7 +37487,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด68",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -37504,7 +37506,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703864",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -37525,7 +37527,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -37544,7 +37546,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -37563,7 +37565,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -37582,7 +37584,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -37601,7 +37603,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมดนตรีไทยวงรวม10สถาบัน งานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-14",
       "imageUrls": [
@@ -37620,7 +37622,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมดนตรีไทยวงรวม10สถาบัน งานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-21",
       "imageUrls": [
@@ -37639,7 +37641,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 7.0,
+      "hours": 7,
       "description": "ซ้อมดนตรีไทยวงรวม10สถาบัน งานไหว้ครูดนตรีไทย10สถาบัน",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -37658,7 +37660,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-16",
       "imageUrls": [
@@ -37677,7 +37679,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -37696,7 +37698,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -37715,7 +37717,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -37734,7 +37736,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกเเรกเกิดที่มีภาวะตัวเหลืองด้วยเครื่องส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -37753,7 +37755,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -37772,7 +37774,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเครื่องแบบนพอ.69",
       "activityDate": "2026-05-25",
       "imageUrls": [
@@ -37791,7 +37793,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703878",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -37812,7 +37814,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -37831,7 +37833,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-16",
       "imageUrls": [
@@ -37850,7 +37852,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -37869,7 +37871,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -37888,7 +37890,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -37907,7 +37909,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยงานเอกสาร",
       "activityDate": "2025-11-18",
       "imageUrls": [
@@ -37926,7 +37928,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีเเด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -37945,7 +37947,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -37964,7 +37966,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมงานรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -37983,7 +37985,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -38002,7 +38004,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -38021,7 +38023,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -38040,7 +38042,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703860",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพภายในวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -38061,7 +38063,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -38080,7 +38082,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ช่วยงานตรวจสุขภาพชุมชนคลองเตย",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -38099,7 +38101,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานวิ่งอสม",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -38118,7 +38120,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐิน",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -38137,7 +38139,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญ",
       "activityDate": "2025-10-04",
       "imageUrls": [
@@ -38156,7 +38158,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503722",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -38175,7 +38177,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า)",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -38194,7 +38196,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -38213,7 +38215,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -38232,7 +38234,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -38251,7 +38253,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -38270,7 +38272,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -38289,7 +38291,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -38308,7 +38310,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -38327,7 +38329,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพ  อากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -38346,7 +38348,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703865",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -38367,7 +38369,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -38386,7 +38388,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -38405,7 +38407,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -38424,7 +38426,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -38443,7 +38445,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -38462,7 +38464,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การแข่งขันกีฬานักเรียนแผนกรักบี้ฟุตบอล",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -38481,7 +38483,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -38500,7 +38502,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -38519,7 +38521,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -38538,7 +38540,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -38557,7 +38559,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -38576,7 +38578,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -38595,7 +38597,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -38614,7 +38616,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -38633,7 +38635,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703870",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือก นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -38654,7 +38656,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-30",
       "imageUrls": [
@@ -38673,7 +38675,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-04-12",
       "imageUrls": [
@@ -38692,7 +38694,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "รณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -38711,7 +38713,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -38730,7 +38732,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมฟังบรรยาย การให้สุขศึกษาสำหรับหญิงตั้งครรภ์",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -38749,7 +38751,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำลายเอกสาร",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -38768,7 +38770,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -38787,7 +38789,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -38806,7 +38808,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -38825,7 +38827,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -38844,7 +38846,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -38863,7 +38865,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -38882,7 +38884,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กิจกรรมปลูกป่าชุมชน บ้านห้วยม่วง",
       "activityDate": "2025-09-06",
       "imageUrls": [
@@ -38901,7 +38903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2026-05-23",
       "imageUrls": [
@@ -38920,7 +38922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803886",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซักผ้า",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -38941,7 +38943,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -38960,7 +38962,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -38979,7 +38981,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -38998,7 +39000,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -39017,7 +39019,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -39036,7 +39038,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -39055,7 +39057,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -39074,7 +39076,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-12-03",
       "imageUrls": [
@@ -39093,7 +39095,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -39112,7 +39114,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -39131,7 +39133,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -39150,7 +39152,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -39169,7 +39171,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -39188,7 +39190,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -39207,7 +39209,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -39226,7 +39228,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -39245,7 +39247,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-02-04",
       "imageUrls": [
@@ -39264,7 +39266,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-30",
       "imageUrls": [
@@ -39283,7 +39285,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -39302,7 +39304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-04-16",
       "imageUrls": [
@@ -39321,7 +39323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803889",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -39342,7 +39344,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-05-23",
       "imageUrls": [
@@ -39361,7 +39363,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อทร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -39380,7 +39382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -39399,7 +39401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -39418,7 +39420,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -39437,7 +39439,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเกาะร่วมใจ ใส่ใจสุขภาพ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -39456,7 +39458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับคณะศึกษาดูงานรร.พยาบาลกห.กล.ต.(สาธารณรัฐเกาหลี)",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -39475,7 +39477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -39494,7 +39496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-22",
       "imageUrls": [
@@ -39513,7 +39515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -39532,7 +39534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "Buddy Korean",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -39551,7 +39553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -39570,7 +39572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ1",
       "activityDate": "2025-08-22",
       "imageUrls": [
@@ -39589,7 +39591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ1",
       "activityDate": "2025-08-23",
       "imageUrls": [
@@ -39608,7 +39610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ1",
       "activityDate": "2025-08-24",
       "imageUrls": [
@@ -39627,7 +39629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัดวิภาววิสัยและการทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -39646,7 +39648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -39665,7 +39667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -39684,7 +39686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -39703,7 +39705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "จัดห้องปฏิบัติการ ทำความสะอาดหุ่นและอุปกรณ์ต่างๆ",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -39722,7 +39724,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหิน จัดสิ่งแวดล้อมภายในวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -39741,7 +39743,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยแม่ทำงานบ้าน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -39760,7 +39762,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยพ่อปลูกต้นไม้",
       "activityDate": "2026-05-09",
       "imageUrls": [
@@ -39779,7 +39781,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดใต้ถุนบ้าน",
       "activityDate": "2026-05-23",
       "imageUrls": [
@@ -39798,7 +39800,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรวันเฉลิมพระชนมพรรษา ร.10",
       "activityDate": "2025-07-28",
       "imageUrls": [
@@ -39817,7 +39819,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603764",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วันเฉลิมพระชนมพรรษา พระบรมราชชนนีพันปีหลวง",
       "activityDate": "2025-08-12",
       "imageUrls": [
@@ -39838,7 +39840,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603802",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานทัพฟ้า",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -39857,7 +39859,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603802",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานทัพฟ้า",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -39876,7 +39878,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603802",
       "categoryId": 4,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -39895,7 +39897,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603802",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหิน",
       "activityDate": "2026-06-11",
       "imageUrls": [
@@ -39916,7 +39918,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -39935,7 +39937,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ดุริยางค์เข้าแถววตอนเช้า",
       "activityDate": "2025-09-08",
       "imageUrls": [
@@ -39954,7 +39956,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 29.0,
+      "hours": 29,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -39971,7 +39973,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ร่วมทำบุญงานกฐินชุมชน",
       "activityDate": "2025-11-25",
       "imageUrls": [
@@ -39990,7 +39992,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เก็บกวาดวัด",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -40009,7 +40011,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขูดมะละกอช่วยชาวบ้าน",
       "activityDate": "2025-10-18",
       "imageUrls": [],
@@ -40026,7 +40028,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสวน",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -40045,7 +40047,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ล้อมผ้าถวายความอาลัย",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -40064,7 +40066,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503738",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -40083,7 +40085,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -40102,7 +40104,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาสถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -40121,7 +40123,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -40140,7 +40142,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสวนรพ.สต.",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -40159,7 +40161,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสถานที่และเก็บของช่วยวัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -40178,7 +40180,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยขูดมะละกอทำโรงทาน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -40197,7 +40199,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503700",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พัฒนาหมู่บ้าน เนื่องในวันพ่อแห่งชาติ",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -40218,7 +40220,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -40237,7 +40239,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -40256,7 +40258,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีรับเสด็จรับปริญญา นพอ.รุ่นที่64",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -40275,7 +40277,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาดไทย 2568",
       "activityDate": "2025-12-13",
       "imageUrls": [
@@ -40294,7 +40296,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทัพฟ้า",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -40313,7 +40315,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทัพฟ้า",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -40332,7 +40334,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -40351,7 +40353,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -40370,7 +40372,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -40389,7 +40391,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -40408,7 +40410,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -40427,7 +40429,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทง",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -40446,7 +40448,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยพับดอกบัว",
       "activityDate": "2025-07-11",
       "imageUrls": [
@@ -40465,7 +40467,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -40484,7 +40486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-06-26",
       "imageUrls": [
@@ -40503,7 +40505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603813",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายความอาลัย",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -40524,7 +40526,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -40543,7 +40545,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -40562,7 +40564,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -40581,7 +40583,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานสงกรานต์ เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -40600,7 +40602,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยจัดเก็บห้องปฏิบัติการมารดาทารกและการผดุงครรภ์",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -40619,7 +40621,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินอ่อนตกแต่งวิลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -40638,7 +40640,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบนพอ.รุ่นที่69",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -40657,7 +40659,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603768",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานจัดการทดสอบความถนัด วิภาวิสัยและจิตวิทยา ประจำปีการศึกษา 2569",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -40678,7 +40680,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้า คู่ไทยเพื่อ ชัยพัฒนา",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -40697,7 +40699,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้า คู่ไทยเพื่อชัยพัฒนา",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -40716,7 +40718,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัฟฟ้า คู่ไทยเพื่อชัยพัฒนา",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -40735,7 +40737,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "สื่อสร้างสรรค์เสริมพลังการสื่อสาร พัฒนาสังคมไทย",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -40754,7 +40756,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -40773,7 +40775,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ประจำปี 2568",
       "activityDate": "2025-12-19",
       "imageUrls": [
@@ -40792,7 +40794,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานสถาปนาวิทยาลัยพยาบาลทหารอากาศ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -40811,7 +40813,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "Big cleaning",
       "activityDate": "2025-12-01",
       "imageUrls": [
@@ -40830,7 +40832,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบวิภาววิสัย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -40849,7 +40851,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสถานที่ทดสอบวิภาววิสัย",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -40868,7 +40870,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับหมวกวิชาชีพพยาบาล",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -40887,7 +40889,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603816",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบวิภาววิสัย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -40908,7 +40910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -40927,7 +40929,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศเนื่องใน“วันกองทัพอากาศ”ประจำปี2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -40946,7 +40948,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วงดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -40965,7 +40967,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วงดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -40984,7 +40986,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วงดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -41003,7 +41005,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหินเพื่อจัดพื้นที่สวนหย่อม",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -41022,7 +41024,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "วงดุริยางค์",
       "activityDate": "2026-04-30",
       "imageUrls": [
@@ -41041,7 +41043,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803939",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -41062,7 +41064,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -41081,7 +41083,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -41100,7 +41102,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -41119,7 +41121,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -41138,7 +41140,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -41157,7 +41159,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -41176,7 +41178,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -41195,7 +41197,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -41214,7 +41216,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -41233,7 +41235,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803923",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์ วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -41254,7 +41256,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ปิยมหาราช",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -41273,7 +41275,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "งานกอล์ฟปิยมหาราช",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -41292,7 +41294,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -41311,7 +41313,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -41330,7 +41332,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -41349,7 +41351,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -41368,7 +41370,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -41387,7 +41389,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -41406,7 +41408,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โครงการส่งเสริมสุขภาพกาย จิตและสังคมผู้สูงอายุ",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -41425,7 +41427,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โครงการส่งเสริมสุขภาพ จิตและสังคมผู้สูงอายุ",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -41444,7 +41446,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ประชาสัมพันธ์งานเทศกาลเที่ยวไทย",
       "activityDate": "2026-03-14",
       "imageUrls": [
@@ -41463,7 +41465,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803944",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญ",
       "activityDate": "2026-02-08",
       "imageUrls": [
@@ -41484,7 +41486,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -41503,7 +41505,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet the youth cyber guardians Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -41522,7 +41524,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -41541,7 +41543,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีบ",
       "activityDate": "2026-05-16",
       "imageUrls": [
@@ -41560,7 +41562,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เสาร์ประทีบ",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -41579,7 +41581,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Be Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -41598,7 +41600,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.8,
+      "hours": 2,
       "description": "เก็บสถานที่สอบคัดเลือก นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -41617,7 +41619,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.2,
+      "hours": 1,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -41636,7 +41638,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บริจาคฝากระป๋องเพื่อทำขาเทียม",
       "activityDate": "2025-09-10",
       "imageUrls": [
@@ -41655,7 +41657,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จิตอาสามูลนิธิกระจกเงา",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -41674,7 +41676,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803899",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รดน้ำต้นไม้ที่บ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -41695,7 +41697,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503694",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -41714,7 +41716,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503694",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [],
@@ -41731,7 +41733,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503694",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -41750,7 +41752,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503694",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -41769,7 +41771,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -41788,7 +41790,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -41807,7 +41809,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -41826,7 +41828,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็ก",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -41845,7 +41847,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -41864,7 +41866,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -41883,7 +41885,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning day",
       "activityDate": "2025-09-08",
       "imageUrls": [
@@ -41902,7 +41904,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803915",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ถวายความอาลัยต่อพระพันปีหลวง",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -41923,7 +41925,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -41942,7 +41944,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -41961,7 +41963,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -41980,7 +41982,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -41999,7 +42001,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "จิตอาสาในกิจกรรมปฐมนิเทศ นพอ.ชั้นปีที่ 1",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -42018,7 +42020,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -42037,7 +42039,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -42056,7 +42058,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -42075,7 +42077,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -42094,7 +42096,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -42113,7 +42115,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -42132,7 +42134,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -42151,7 +42153,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703845",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยงานสงกรานต์ วพอ.2569",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -42172,7 +42174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -42191,7 +42193,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เสาร์ประทีบ",
       "activityDate": "2025-06-28",
       "imageUrls": [
@@ -42210,7 +42212,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -42229,7 +42231,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -42248,7 +42250,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -42267,7 +42269,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -42286,7 +42288,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -42305,7 +42307,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "สัมมนาการเรียนรู้นายกสโมสรโรทาแรคท์รับเลือก ภาค 3350 โรตารีสากล ปี 2568-69",
       "activityDate": "2025-06-21",
       "imageUrls": [
@@ -42324,7 +42326,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "สัมมนาการเรียนรู้นายกสโมสรโรทาแรคท์รับเลือก ภาค 3350 โรตารีสากล ปี 2568-69",
       "activityDate": "2025-06-22",
       "imageUrls": [
@@ -42343,7 +42345,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -42362,7 +42364,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -42381,7 +42383,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -42400,7 +42402,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายรัฐบุรุษ",
       "activityDate": "2026-08-20",
       "imageUrls": [
@@ -42419,7 +42421,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายรัฐบุรุษ",
       "activityDate": "2025-08-23",
       "imageUrls": [
@@ -42438,7 +42440,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายรัฐบุรุษ",
       "activityDate": "2025-08-24",
       "imageUrls": [
@@ -42457,7 +42459,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งาดกาชาด",
       "activityDate": "2025-12-19",
       "imageUrls": [
@@ -42476,7 +42478,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ปลูกป่าชายเลน",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -42495,7 +42497,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง swd68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -42514,7 +42516,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง swd 68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -42533,7 +42535,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยเหลืองานรัยสมัคร 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -42552,7 +42554,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ไถ่ชีวิตโคกระบือ ร่วมกับสโมสร Rotaract of Brgy Sta Cruz ของฟิลิปปินส์",
       "activityDate": "2026-05-17",
       "imageUrls": [
@@ -42571,7 +42573,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดูหนังการกุศล",
       "activityDate": "2025-12-20",
       "imageUrls": [
@@ -42590,7 +42592,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -42609,7 +42611,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -42628,7 +42630,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -42647,7 +42649,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -42666,7 +42668,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -42685,7 +42687,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -42704,7 +42706,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -42723,7 +42725,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมเต้นเพื่อนำเสนออัตลักษณ์วิทยาลัย",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -42742,7 +42744,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603771",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงสถานที่ วเอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -42763,7 +42765,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803894",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -42782,7 +42784,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803894",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -42801,7 +42803,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803894",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -42820,7 +42822,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803894",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ปูเตียงให้คุณย่า",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -42839,7 +42841,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803894",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ล้างจาน",
       "activityDate": "2026-05-16",
       "imageUrls": [
@@ -42860,7 +42862,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -42879,7 +42881,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาสถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -42898,7 +42900,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาสถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -42917,7 +42919,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสถานที่และเก็บงานช่วยวัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -42936,7 +42938,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยขูดมะละกอทำโรงทาน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -42955,7 +42957,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยจัดสวน",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -42974,7 +42976,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -42991,7 +42993,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503693",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -43010,7 +43012,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -43029,7 +43031,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -43048,7 +43050,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -43067,7 +43069,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ “ชัยพัฒนา” ครั้งที่16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -43086,7 +43088,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -43105,7 +43107,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -43124,7 +43126,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -43143,7 +43145,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -43162,7 +43164,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -43181,7 +43183,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603781",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานทดสอบพิเศษนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -43202,7 +43204,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -43221,7 +43223,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -43240,7 +43242,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกผ้าห่มแก่ผู้ยากไร้ในชุมชน",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -43259,7 +43261,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการ SMART ELDERLY",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -43278,7 +43280,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -43297,7 +43299,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -43316,7 +43318,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -43335,7 +43337,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัดท่าหลวง",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -43354,7 +43356,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดศาลาวัดคลองคะเชนทร์",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -43373,7 +43375,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดวัด",
       "activityDate": "2025-12-31",
       "imageUrls": [
@@ -43392,7 +43394,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ล้างจาน",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -43411,7 +43413,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-09-06",
       "imageUrls": [
@@ -43430,7 +43432,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซักผ้า",
       "activityDate": "2025-12-29",
       "imageUrls": [
@@ -43449,7 +43451,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บขวดของเก่าภายในบ้าน",
       "activityDate": "2026-04-11",
       "imageUrls": [
@@ -43468,7 +43470,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดบ้าน",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -43487,7 +43489,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถูพื้นบ้าน",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -43506,7 +43508,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803884",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายความอาลัยพระพันปีหลวง",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -43527,7 +43529,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -43546,7 +43548,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าเนื่องในโอกาสถวายความอาลัยสมเด็จพระพันปีหลวง",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -43565,7 +43567,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินวิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -43584,7 +43586,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสถานที่และเก็บงานช่วยวัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -43603,7 +43605,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยขูดมะละกอทำโรงทาน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -43622,7 +43624,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยจัดสวน",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -43641,7 +43643,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-06-26",
       "imageUrls": [
@@ -43660,7 +43662,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-07-03",
       "imageUrls": [
@@ -43679,7 +43681,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 10.0,
+      "hours": 10,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -43696,7 +43698,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503704",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -43715,7 +43717,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "“Give Blood New – ให้เลือด ให้ได้ ให้เลย”",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -43734,7 +43736,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทย ครั้งที่16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -43753,7 +43755,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทย ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -43772,7 +43774,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "บริการวิชาการ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -43791,7 +43793,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ประชุมวิชาการพยาบาลยุคใหม่",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -43810,7 +43812,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานปริญญา",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -43829,7 +43831,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินตกแต่งสวน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -43848,7 +43850,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้น",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -43867,7 +43869,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้น",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -43886,7 +43888,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ตักบาตรวันสงกรานต์",
       "activityDate": "2026-04-14",
       "imageUrls": [
@@ -43905,7 +43907,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ตักบาตรวันสงกรานต์",
       "activityDate": "2026-04-14",
       "imageUrls": [
@@ -43924,7 +43926,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ตักบาตรวันสงกรานต์",
       "activityDate": "2026-04-15",
       "imageUrls": [
@@ -43943,7 +43945,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "นำเที่ยวปราสาทบ้านเบญจ์",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -43962,7 +43964,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603791",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "สวดมนต์ถวายพระพรชัยมงคล",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -43983,7 +43985,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503732",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -44002,7 +44004,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503732",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -44021,7 +44023,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -44040,7 +44042,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -44059,7 +44061,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-04-11",
       "imageUrls": [
@@ -44078,7 +44080,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ดูเเลเเละจัดห้องพักผ่อน",
       "activityDate": "2025-12-09",
       "imageUrls": [
@@ -44097,7 +44099,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ดูเเลเเละจัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-08",
       "imageUrls": [
@@ -44116,7 +44118,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "จัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-04",
       "imageUrls": [
@@ -44135,7 +44137,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -44154,7 +44156,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เช่นดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -44173,7 +44175,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -44192,7 +44194,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -44211,7 +44213,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -44230,7 +44232,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -44249,7 +44251,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -44268,7 +44270,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -44287,7 +44289,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ล้างจาน",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -44306,7 +44308,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดบ้าน",
       "activityDate": "2026-05-09",
       "imageUrls": [
@@ -44325,7 +44327,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถูบ้าน",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -44344,7 +44346,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ล้างจาน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -44363,7 +44365,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กรอกน้ำ",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -44382,7 +44384,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803890",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถวายความอาลัยสมเด็จพระพันปี",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -44403,7 +44405,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -44422,7 +44424,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -44441,7 +44443,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -44460,7 +44462,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ดูแลการสอบนพอ.ปี69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -44479,7 +44481,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -44498,7 +44500,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -44517,7 +44519,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-05-26",
       "imageUrls": [
@@ -44536,7 +44538,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดโต๊ะสอบนพอ.รุ่นที่69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -44555,7 +44557,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603763",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายความอาลัย",
       "activityDate": "2025-12-04",
       "imageUrls": [
@@ -44576,7 +44578,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -44595,7 +44597,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-11",
       "imageUrls": [
@@ -44614,7 +44616,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ช่วยจัดงานวันสวนสนาม(ไม่มีรูปขณะปฏิบัติงาน)",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -44633,7 +44635,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green market",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -44652,7 +44654,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.97,
+      "hours": 4,
       "description": "อาภรณ์ภัณฑ์",
       "activityDate": "2025-10-14",
       "imageUrls": [
@@ -44671,7 +44673,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.97,
+      "hours": 4,
       "description": "อาภรณ์ภัณฑ์",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -44690,7 +44692,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.35,
+      "hours": 6,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -44709,7 +44711,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.38,
+      "hours": 2,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -44728,7 +44730,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.38,
+      "hours": 2,
       "description": "เก็บหินจัดสวน",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -44747,7 +44749,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.18,
+      "hours": 3,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -44766,7 +44768,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.59,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -44785,7 +44787,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.18,
+      "hours": 3,
       "description": "ช่วยพับหมวกและทำของขวัญวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -44804,7 +44806,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803922",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เต่าตัวน้อยกับรอยตระไคร่ที่หายไป",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -44825,7 +44827,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-12-09",
       "imageUrls": [
@@ -44844,7 +44846,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -44863,7 +44865,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -44882,7 +44884,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -44901,7 +44903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -44920,7 +44922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -44939,7 +44941,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การแข่งขันทักษะทางไซเบอร์ระดับโรงเรียนทหาร-ตำรวจ และอุดมศึกษา",
       "activityDate": "2025-07-15",
       "imageUrls": [
@@ -44958,7 +44960,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Youth Hacker Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -44977,7 +44979,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -44996,7 +44998,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีถวายพานพุ่มสักการะเนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -45015,7 +45017,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -45034,7 +45036,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -45053,7 +45055,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -45072,7 +45074,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -45091,7 +45093,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเครื่องแบบ นพอ.69",
       "activityDate": "2026-05-25",
       "imageUrls": [
@@ -45110,7 +45112,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -45129,7 +45131,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -45148,7 +45150,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -45167,7 +45169,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703844",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -45188,7 +45190,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803937",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "\"พยาบาลไทยบริจาคโลหิต ช่วยชิวิตเพื่อนมนุษย์ ปี4\"",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -45207,7 +45209,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803937",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -45226,7 +45228,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803937",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -45245,7 +45247,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803937",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -45266,7 +45268,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -45285,7 +45287,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนาครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -45304,7 +45306,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -45323,7 +45325,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "สงกรานต์เบิกบานจิต",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -45342,7 +45344,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "อนุรักษ์สิ่งแวดล้อม",
       "activityDate": "2026-04-17",
       "imageUrls": [
@@ -45361,7 +45363,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -45380,7 +45382,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การทดสอบความถนัด วิภาววิสัย และทดสอบร่างกาย",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -45399,7 +45401,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603758",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -45420,7 +45422,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503720",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -45439,7 +45441,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503720",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 5)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -45456,7 +45458,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503720",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยทำความสะอาด และกวาดลานวัด",
       "activityDate": "2025-08-23",
       "imageUrls": [
@@ -45475,7 +45477,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503720",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 9.0,
+      "hours": 9,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 6)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -45494,7 +45496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -45513,7 +45515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -45532,7 +45534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -45551,7 +45553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -45570,7 +45572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -45589,7 +45591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -45608,7 +45610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -45627,7 +45629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -45646,7 +45648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -45665,7 +45667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -45684,7 +45686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -45703,7 +45705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -45722,7 +45724,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -45741,7 +45743,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -45760,7 +45762,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -45779,7 +45781,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -45798,7 +45800,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703824",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 159.0,
+      "hours": 159,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -45817,7 +45819,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -45836,7 +45838,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -45855,7 +45857,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรคท์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -45874,7 +45876,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -45893,7 +45895,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -45912,7 +45914,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -45931,7 +45933,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -45950,7 +45952,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -45969,7 +45971,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -45988,7 +45990,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยงาน อนศ. จัดระเบียบชั้นเก็บของในห้องพักผ่อนนพอ.",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -46007,7 +46009,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703842",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักาาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -46028,7 +46030,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมกิจกรรมคัดกรองกำลังพลเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -46047,7 +46049,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เข้าร่วมโครงการ แสงนำใจไทยทั้งชาติ เดิน วิ่ง ปั่น ป้องกันอัมพาต ครั้งที่ 11 เฉลิมพระเกียรติ",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -46066,7 +46068,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยทำนุบำรุงรพ.สต.",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -46085,7 +46087,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 5)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -46102,7 +46104,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเตรียมงานทอดกฐิน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -46121,7 +46123,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -46140,7 +46142,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503751",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยเก็บของที่วัด",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -46161,7 +46163,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503709",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -46180,7 +46182,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503709",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการ วัด ประชา รัฐ สร้างสุข",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -46199,7 +46201,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503709",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ทอดกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -46218,7 +46220,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503709",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -46237,7 +46239,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503709",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ลอยกระทง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -46258,7 +46260,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -46277,7 +46279,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -46296,7 +46298,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -46315,7 +46317,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-16",
       "imageUrls": [
@@ -46334,7 +46336,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-23",
       "imageUrls": [
@@ -46353,7 +46355,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทย งานไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-05-30",
       "imageUrls": [
@@ -46372,7 +46374,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พร้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -46391,7 +46393,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -46410,7 +46412,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -46429,7 +46431,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ต้อนรับคณะดูงานจาก วพร.ทร.",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -46448,7 +46450,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้อง นพอ.68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -46467,7 +46469,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหิน ตกแต่งวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -46486,7 +46488,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -46505,7 +46507,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ล้างจาน",
       "activityDate": "2025-09-13",
       "imageUrls": [
@@ -46524,7 +46526,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ถูบ้าน",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -46543,7 +46545,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603795",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรสมเด็จพระบรมราชินีพันปีหลวง",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -46564,7 +46566,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -46583,7 +46585,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -46602,7 +46604,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานทดสอบพิเศษ",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -46621,7 +46623,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -46640,7 +46642,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [],
@@ -46657,7 +46659,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินตกแต่งวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -46676,7 +46678,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603770",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -46697,7 +46699,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟเพื่อการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -46716,7 +46718,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -46735,7 +46737,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -46754,7 +46756,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -46773,7 +46775,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -46792,7 +46794,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-20",
       "imageUrls": [
@@ -46811,7 +46813,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-03-27",
       "imageUrls": [
@@ -46830,7 +46832,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-03",
       "imageUrls": [
@@ -46849,7 +46851,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-07",
       "imageUrls": [
@@ -46868,7 +46870,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เดินแบบเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-08",
       "imageUrls": [
@@ -46887,7 +46889,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เดินแบงเนื่องในวันกองทัพอากาศ 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -46906,7 +46908,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็ก 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -46925,7 +46927,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -46944,7 +46946,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บหิน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -46963,7 +46965,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำความสะอาดชุมชน",
       "activityDate": "2025-12-05",
       "imageUrls": [
@@ -46982,7 +46984,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803891",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทาสีสนามเด็กเล่นโรงเรียน",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -47003,7 +47005,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -47022,7 +47024,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -47041,7 +47043,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "รณรงค์วันโลกรำลึกถึงผู้เสียชีวิตจากอุบัติเหตุทางถนน",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -47060,7 +47062,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -47079,7 +47081,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "การแข่งขันกอล์ฟการกุศล กองทัพอากาศ",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -47098,7 +47100,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.35,
+      "hours": 4,
       "description": "จัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-04",
       "imageUrls": [
@@ -47117,7 +47119,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.48,
+      "hours": 3,
       "description": "ดูแลและจัดห้องพักผ่อน นพอ.",
       "activityDate": "2025-12-08",
       "imageUrls": [
@@ -47136,7 +47138,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.61,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -47155,7 +47157,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.61,
+      "hours": 3,
       "description": "เก็บหิน",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -47174,7 +47176,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.74,
+      "hours": 2,
       "description": "กวาดลาน",
       "activityDate": "2026-05-29",
       "imageUrls": [
@@ -47193,7 +47195,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.61,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -47212,7 +47214,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.61,
+      "hours": 3,
       "description": "เก็บหินตกแต่ง",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -47231,7 +47233,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ปล่อยปลา",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -47250,7 +47252,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803882",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ไหว้พระทำบุญ",
       "activityDate": "2026-04-14",
       "imageUrls": [
@@ -47271,7 +47273,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "การแข่งขันทักษะทางไซเบอร์ระดับโรงเรียนทหาร-ตำรวจ และอุดมศึกษา",
       "activityDate": "2025-07-15",
       "imageUrls": [
@@ -47290,7 +47292,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "ฟังการสัมมนาสื่อสร้างสรรค์ เสริมพลังการสื่อสาร พัฒนาสังคม",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -47309,7 +47311,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The youth Hacker Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -47328,7 +47330,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -47347,7 +47349,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -47366,7 +47368,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703850",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยงานห้องปฏิบัติการพยาบาล",
       "activityDate": "2025-11-28",
       "imageUrls": [
@@ -47387,7 +47389,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503728",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [],
@@ -47404,7 +47406,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503728",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -47423,7 +47425,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503728",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 21.0,
+      "hours": 21,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -47440,7 +47442,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503728",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานทอดกฐิน",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -47459,7 +47461,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503728",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -47478,7 +47480,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-04-18",
       "imageUrls": [
@@ -47497,7 +47499,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เล่นดนตรีในงาน green market",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -47516,7 +47518,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยอาจารย์ทำวิจัย",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -47535,7 +47537,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยอาจารย์ทำวิจัย",
       "activityDate": "2025-10-15",
       "imageUrls": [
@@ -47554,7 +47556,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-12-03",
       "imageUrls": [
@@ -47573,7 +47575,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -47592,7 +47594,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-23",
       "imageUrls": [
@@ -47611,7 +47613,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -47630,7 +47632,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -47649,7 +47651,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-06",
       "imageUrls": [
@@ -47668,7 +47670,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-19",
       "imageUrls": [
@@ -47687,7 +47689,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-21",
       "imageUrls": [
@@ -47706,7 +47708,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803902",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-06-01",
       "imageUrls": [
@@ -47727,7 +47729,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -47746,7 +47748,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ สมเด็จพระกนิษฐาธิราชเจ้า กรมสมเด็จพระเทพรัตนราชสุดาฯ สยามบรมราชกุมารี",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -47765,7 +47767,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -47784,7 +47786,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ประชุมวิชาการเทิดพระเกียรติสมเด็จพระศรีนครินทราบรมราชชนี",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -47803,7 +47805,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ลงนาม MOU ขับเคลื่อนสังคมไทยปลอดบุหรี่",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -47822,7 +47824,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกอล์ฟ วพอ.",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -47841,7 +47843,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ต้อนรับคณะดูงานจาดวิทยาลัยพยาบาลกองทัพเรือ",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -47860,7 +47862,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -47879,7 +47881,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -47898,7 +47900,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -47917,7 +47919,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -47936,7 +47938,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -47955,7 +47957,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยเหลือผู้บาดเจ็บ",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -47974,7 +47976,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603792",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "แนะแนวศึกษาต่อในระดับชั้นปริญญาตรี",
       "activityDate": "2025-07-14",
       "imageUrls": [
@@ -47995,7 +47997,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "\"พยาบาลไทยบริจาคโลหิต ช่วยชีวิตเพื่อนมนุษย์ปี4\"",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -48014,7 +48016,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "be Green Market ประจำปี2569",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -48033,7 +48035,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -48052,7 +48054,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวข้างรั้วหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -48071,7 +48073,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -48090,7 +48092,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินข้างรั้วหอพัก",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -48109,7 +48111,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทาสีบ้านเด็กกำพร้า",
       "activityDate": "2025-08-30",
       "imageUrls": [
@@ -48128,7 +48130,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทาสีบ้านเด็กกำพร้า",
       "activityDate": "2025-08-30",
       "imageUrls": [
@@ -48147,7 +48149,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -48166,7 +48168,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยแจกธูปเทียน",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -48185,7 +48187,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยงานและทำความสะอาดรอบโบสถ์วัด",
       "activityDate": "2026-04-18",
       "imageUrls": [
@@ -48204,7 +48206,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดโบสถ์",
       "activityDate": "2026-03-07",
       "imageUrls": [
@@ -48223,7 +48225,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บขยะซอยหมู่บ้าน",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -48242,7 +48244,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-09-06",
       "imageUrls": [
@@ -48261,7 +48263,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รดน้ำต้นไม้จัดสวน",
       "activityDate": "2026-03-21",
       "imageUrls": [
@@ -48280,7 +48282,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803945",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -48301,7 +48303,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-10-24",
       "imageUrls": [
@@ -48320,7 +48322,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -48339,7 +48341,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กิจกรรมรับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -48358,7 +48360,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -48377,7 +48379,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมพิธีไหว้ครูดนตรีไทย 10 สถาบัน",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -48396,7 +48398,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "การแข่งขันกอล์ฟการกุศล ครั้งที่ 17",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -48415,7 +48417,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับน้องนพอ.รุ่นที่ 68",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -48434,7 +48436,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -48453,7 +48455,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -48472,7 +48474,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินอ่อนตกแต่ง",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -48491,7 +48493,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -48510,7 +48512,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -48529,7 +48531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -48548,7 +48550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -48567,7 +48569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -48586,7 +48588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603810",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพร",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -48607,7 +48609,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -48626,7 +48628,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -48645,7 +48647,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -48664,7 +48666,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -48683,7 +48685,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอตเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -48702,7 +48704,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-15",
       "imageUrls": [
@@ -48721,7 +48723,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-16",
       "imageUrls": [
@@ -48740,7 +48742,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายอบรมเยาวชนพัฒนา",
       "activityDate": "2025-08-17",
       "imageUrls": [
@@ -48759,7 +48761,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -48778,7 +48780,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-08",
       "imageUrls": [
@@ -48797,7 +48799,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -48816,7 +48818,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "พิธีถวายพานพุ่มสักการะ เนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -48835,7 +48837,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -48854,7 +48856,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -48873,7 +48875,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Meet The Youth Hacker Thailand 2025",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -48892,7 +48894,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -48911,7 +48913,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -48930,7 +48932,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -48949,7 +48951,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเครื่องแบบ นพอ.69",
       "activityDate": "2026-05-25",
       "imageUrls": [
@@ -48968,7 +48970,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือก นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -48987,7 +48989,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -49006,7 +49008,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -49025,7 +49027,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -49044,7 +49046,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -49063,7 +49065,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703872",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -49084,7 +49086,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วยชีวิตย์เพื่อนมนุษย์ปี4",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -49103,7 +49105,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -49122,7 +49124,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -49141,7 +49143,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -49160,7 +49162,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -49179,7 +49181,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วงดนตรีไทยงานสงกรานต์วพอ.",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -49198,7 +49200,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "นพอ.อชิรญา อ่อนเปรี้ยว",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -49217,7 +49219,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดอุโบสถและบริเวณโดยรอบ",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -49236,7 +49238,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานหน้าบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -49255,7 +49257,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดบ้าน",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -49274,7 +49276,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กิจกรรมปลูกป่าชุมชนบ้านห้วยม่วง",
       "activityDate": "2025-09-06",
       "imageUrls": [
@@ -49293,7 +49295,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ดูแลสวนหน้าบ้าน และทำงานบ้าน(ทิ้งขยะ,ให้อาหารปลา)",
       "activityDate": "2026-04-13",
       "imageUrls": [
@@ -49312,7 +49314,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803942",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "จัดระเบียบและทำความสะอาดชั้นหนังสือ",
       "activityDate": "2026-05-09",
       "imageUrls": [
@@ -49333,7 +49335,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -49352,7 +49354,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทงกับชาวบ้าน",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -49371,7 +49373,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-11-10",
       "imageUrls": [
@@ -49390,7 +49392,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -49409,7 +49411,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เต้นแอโรบิคร่วมกับชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -49428,7 +49430,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐินวัดขวัญสะอาด",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -49447,7 +49449,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐินวัดหนามแดง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -49466,7 +49468,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำงานบ้าน",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -49485,7 +49487,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503750",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -49504,7 +49506,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -49523,7 +49525,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานกฐิน ณ วัดบ้านนา",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -49542,7 +49544,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -49561,7 +49563,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยทำความสะอาดบริเวณหน้าโรงเรียน",
       "activityDate": "2025-10-17",
       "imageUrls": [
@@ -49580,7 +49582,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ช่วยจัดเก็บของในรพ.สต.",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -49599,7 +49601,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -49616,7 +49618,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503701",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -49635,7 +49637,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "บริจาคเลือด",
       "activityDate": "2025-08-07",
       "imageUrls": [
@@ -49654,7 +49656,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "บริจาคเลือด",
       "activityDate": "2025-08-05",
       "imageUrls": [
@@ -49673,7 +49675,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "บริจาคเลือด",
       "activityDate": "2026-01-15",
       "imageUrls": [
@@ -49692,7 +49694,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "บริจาคเลือด",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -49711,7 +49713,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -49730,7 +49732,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -49749,7 +49751,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -49768,7 +49770,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -49787,7 +49789,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -49806,7 +49808,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603804",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -49827,7 +49829,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503734",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -49846,7 +49848,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503734",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -49865,7 +49867,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503734",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 5)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -49882,7 +49884,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503734",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเก็บของงานกฐิน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -49901,7 +49903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503734",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ร่วมกิจกรรมรับหลวงพ่อทางน้ำ",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -49922,7 +49924,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -49941,7 +49943,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -49960,7 +49962,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "แอโรบิคชมรมผู้สูงอายุสานสัมพันธ์ชาวหนามแดง",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -49979,7 +49981,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -49998,7 +50000,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐินวัดหนามแดง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -50017,7 +50019,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทอดกฐินวัดขวัญสะอาด",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -50036,7 +50038,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503741",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ตักบาตร",
       "activityDate": "2025-06-05",
       "imageUrls": [
@@ -50057,7 +50059,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16 (ศูนย์วัฒนธรรมแห่งประเทศไทย)",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -50076,7 +50078,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -50095,7 +50097,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีถวายพานพุ่มสักการะเนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -50114,7 +50116,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -50133,7 +50135,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -50152,7 +50154,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้อง นรม.",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -50171,7 +50173,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -50190,7 +50192,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเครื่องแบบ นพอ.69",
       "activityDate": "2026-05-25",
       "imageUrls": [
@@ -50209,7 +50211,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703858",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -50230,7 +50232,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โครงการมิตรประชา",
       "activityDate": "2025-07-05",
       "imageUrls": [
@@ -50249,7 +50251,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โครงการมิตรประชา",
       "activityDate": "2025-07-06",
       "imageUrls": [
@@ -50268,7 +50270,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -50287,7 +50289,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โรทาแรกค์ปลูกป่า ณ บางปู",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -50306,7 +50308,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -50325,7 +50327,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -50344,7 +50346,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีมอบหมวกพยาบาลวิชาชีพ",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -50363,7 +50365,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานรับน้อง นพอ.รุ่นที่ 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -50382,7 +50384,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603784",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยเหลือจัดห้องป.มดท.",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -50403,7 +50405,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -50422,7 +50424,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -50441,7 +50443,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -50460,7 +50462,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -50479,7 +50481,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -50498,7 +50500,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -50517,7 +50519,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -50536,7 +50538,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -50555,7 +50557,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กิจกรรมปฐมนิเทศ นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ ๑ และผู้ปกครอง ประจำปีการศึกษา ๒๕๖๘",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -50574,7 +50576,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -50593,7 +50595,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -50612,7 +50614,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703829",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 34.0,
+      "hours": 34,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -50631,7 +50633,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-05-02",
       "imageUrls": [
@@ -50650,7 +50652,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์ “วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน” กับพลังโรทาแรคท์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -50669,7 +50671,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -50688,7 +50690,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -50707,7 +50709,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -50726,7 +50728,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -50745,7 +50747,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -50764,7 +50766,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-27",
       "imageUrls": [
@@ -50783,7 +50785,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กิจกรรม ๕ ส. Big cleaning day",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -50802,7 +50804,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "จัดสถานที่สวนสนาม(ไม่มีภาพขณะปฏิบัติงาน)",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -50821,7 +50823,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -50840,7 +50842,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -50859,7 +50861,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -50878,7 +50880,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -50897,7 +50899,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -50916,7 +50918,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -50935,7 +50937,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -50954,7 +50956,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -50973,7 +50975,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803921",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดวัด",
       "activityDate": "2025-09-20",
       "imageUrls": [
@@ -50994,7 +50996,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -51013,7 +51015,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -51032,7 +51034,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -51051,7 +51053,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -51070,7 +51072,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -51089,7 +51091,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -51108,7 +51110,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -51127,7 +51129,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -51146,7 +51148,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -51165,7 +51167,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -51184,7 +51186,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -51203,7 +51205,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703879",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51224,7 +51226,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -51243,7 +51245,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -51262,7 +51264,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -51281,7 +51283,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด ประจำปี 2568",
       "activityDate": "2025-12-16",
       "imageUrls": [
@@ -51300,7 +51302,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -51319,7 +51321,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กเเห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -51338,7 +51340,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -51357,7 +51359,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -51376,7 +51378,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51395,7 +51397,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51414,7 +51416,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยจัดทำปกตารางสอนและระเบียบการเข้าเรียนออนไลน์",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -51433,7 +51435,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 23.0,
+      "hours": 23,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -51450,7 +51452,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำบุญตักบาตร",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -51469,7 +51471,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703826",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "กวาดลานวัด",
       "activityDate": "2026-05-30",
       "imageUrls": [
@@ -51490,7 +51492,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-05-16",
       "imageUrls": [
@@ -51509,7 +51511,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -51528,7 +51530,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ ชัยพัฒนา ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -51547,7 +51549,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -51566,7 +51568,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยขนของรับน้องนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -51585,7 +51587,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -51604,7 +51606,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -51623,7 +51625,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -51642,7 +51644,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51661,7 +51663,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51680,7 +51682,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญ ตักบาตร",
       "activityDate": "2026-05-02",
       "imageUrls": [
@@ -51699,7 +51701,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703832",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -51720,7 +51722,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-11-15",
       "imageUrls": [
@@ -51739,7 +51741,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-02-14",
       "imageUrls": [
@@ -51758,7 +51760,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จงานรับปริญญา",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -51777,7 +51779,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วัดเกาะร่วมใจ ใส่ใจสุขภาพ",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -51796,7 +51798,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานวันเด็กแห่งชาติ 2569",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -51815,7 +51817,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาดประจำปี 2568",
       "activityDate": "2025-12-19",
       "imageUrls": [
@@ -51834,7 +51836,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ช่วยจัดเก็บห้องปฏิบัติการมารดาทารกและการผดุงครรภ์",
       "activityDate": "2026-03-13",
       "imageUrls": [
@@ -51853,7 +51855,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -51872,7 +51874,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -51891,7 +51893,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -51910,7 +51912,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -51929,7 +51931,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -51948,7 +51950,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทดสอบพิเศษนักเรียนปีการศึกษา 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -51967,7 +51969,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวิทยาลัยให้น่าอยู่",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -51986,7 +51988,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแพทย์อาสา หมอเดินดอย-อมก๋อย เดินเท้าเข้าหมู่บ้าน",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -52005,7 +52007,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแพทย์อาสา หมอเดินดอย-อมก๋อย เดินเท้าเข้าหมู่บ้าน",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -52024,7 +52026,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -52043,7 +52045,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603777",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายอาลัย",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -52064,7 +52066,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503742",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำกระทฃ",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -52083,7 +52085,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503742",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงาน ทอดกฐินวัดขวัญสะอาด",
       "activityDate": "2025-11-02",
       "imageUrls": [],
@@ -52100,7 +52102,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503742",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยงานทอดกฐินวัดหนามแด",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -52119,7 +52121,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503742",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52138,7 +52140,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -52157,7 +52159,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -52176,7 +52178,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แยกข้าวสารอาหารแห้ง",
       "activityDate": "2025-10-13",
       "imageUrls": [
@@ -52195,7 +52197,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญตักบาตรข้าวสารอาหารแห้ง",
       "activityDate": "2025-10-13",
       "imageUrls": [
@@ -52214,7 +52216,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยแม่ทำงานบ้าน",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -52233,7 +52235,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยแม่ทำงานบ้าน",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -52252,7 +52254,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยพ่อล้างรถ",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -52271,7 +52273,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503733",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52290,7 +52292,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503692",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 15.0,
+      "hours": 15,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52307,7 +52309,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503692",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52326,7 +52328,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ต",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -52345,7 +52347,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -52364,7 +52366,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -52383,7 +52385,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -52402,7 +52404,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -52421,7 +52423,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -52440,7 +52442,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ วันรับปริญญา มหิดล",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -52459,7 +52461,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ลงนาม MOU ขับเคลื่อนสังคมไทยปลอดบุหรี่",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -52478,7 +52480,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานกอล์ฟการกุศล ทอ.2569",
       "activityDate": "2026-02-13",
       "imageUrls": [
@@ -52497,7 +52499,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง SWD68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -52516,7 +52518,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง SWD 68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -52535,7 +52537,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -52554,7 +52556,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-06-22",
       "imageUrls": [
@@ -52573,7 +52575,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -52592,7 +52594,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมใน วพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -52611,7 +52613,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603790",
       "categoryId": 4,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -52632,7 +52634,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "คัดกรองสุขภาพเชิงรุกทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -52651,7 +52653,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขูดมะละกอเตรียมงานกฐิน",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -52670,7 +52672,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำบุญงานกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -52689,7 +52691,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยวัดเก็บของ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -52708,7 +52710,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำสวน",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -52727,7 +52729,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52744,7 +52746,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503740",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -52763,7 +52765,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -52782,7 +52784,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -52801,7 +52803,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Youth Camp 2026 & การคัดเลือกผู้แทนโรทาแรคท์ภาครับเลือกของภาค 3350 (DRRE)",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -52820,7 +52822,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศ เนื่องใน “วันกองทัพอากาศ” ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -52839,7 +52841,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "งานกาชาด",
       "activityDate": "2025-12-21",
       "imageUrls": [
@@ -52858,7 +52860,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสถานที่งานเกษียณอาจารย์บังอร",
       "activityDate": "2025-09-28",
       "imageUrls": [
@@ -52877,7 +52879,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -52896,7 +52898,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -52915,7 +52917,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดอุโบสถ",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -52934,7 +52936,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญไหว้พระ",
       "activityDate": "2025-08-30",
       "imageUrls": [
@@ -52953,7 +52955,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดศาลาพระ",
       "activityDate": "2025-10-11",
       "imageUrls": [
@@ -52972,7 +52974,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญวันวิสาขบูชา",
       "activityDate": "2026-05-31",
       "imageUrls": [
@@ -52991,7 +52993,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803908",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ทำบุญตักบาตรวันขึ้นปีใหม่",
       "activityDate": "2026-01-01",
       "imageUrls": [
@@ -53012,7 +53014,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พยาบาลไทยบริจาคโลหิต ช่วจชีวิตเพื่อนมนุษย์ ปี4",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -53031,7 +53033,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -53050,7 +53052,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -53069,7 +53071,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -53088,7 +53090,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -53107,7 +53109,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803911",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -53128,7 +53130,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -53147,7 +53149,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -53166,7 +53168,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานกาชาด",
       "activityDate": "2025-12-18",
       "imageUrls": [
@@ -53185,7 +53187,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -53204,7 +53206,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -53223,7 +53225,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -53242,7 +53244,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -53261,7 +53263,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -53280,7 +53282,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -53299,7 +53301,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -53318,7 +53320,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "รับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -53337,7 +53339,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703823",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 34.0,
+      "hours": 34,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -53356,7 +53358,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-02",
       "imageUrls": [
@@ -53375,7 +53377,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -53394,7 +53396,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -53413,7 +53415,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -53432,7 +53434,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -53451,7 +53453,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับนักเรียนใหม่",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -53470,7 +53472,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -53489,7 +53491,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -53508,7 +53510,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703880",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -53529,7 +53531,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีฟังสารผู้บัญชาการทหารอากาศ เนื่องใน \"วันกองทัพอากาศ\" ประจำปี 2569",
       "activityDate": "2026-04-09",
       "imageUrls": [
@@ -53548,7 +53550,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green Markets",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -53567,7 +53569,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -53586,7 +53588,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -53605,7 +53607,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -53624,7 +53626,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-21",
       "imageUrls": [
@@ -53643,7 +53645,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -53662,7 +53664,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -53681,7 +53683,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -53700,7 +53702,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-27",
       "imageUrls": [
@@ -53719,7 +53721,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-28",
       "imageUrls": [
@@ -53738,7 +53740,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-16",
       "imageUrls": [
@@ -53757,7 +53759,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-29",
       "imageUrls": [
@@ -53776,7 +53778,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-30",
       "imageUrls": [
@@ -53795,7 +53797,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-03",
       "imageUrls": [
@@ -53814,7 +53816,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -53833,7 +53835,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -53852,7 +53854,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -53871,7 +53873,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-14",
       "imageUrls": [
@@ -53890,7 +53892,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -53909,7 +53911,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Big cleaning",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -53928,7 +53930,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -53947,7 +53949,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -53966,7 +53968,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-02-26",
       "imageUrls": [
@@ -53985,7 +53987,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-04-02",
       "imageUrls": [
@@ -54004,7 +54006,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -54023,7 +54025,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -54042,7 +54044,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -54061,7 +54063,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-27",
       "imageUrls": [
@@ -54080,7 +54082,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-12",
       "imageUrls": [
@@ -54099,7 +54101,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-06",
       "imageUrls": [
@@ -54118,7 +54120,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-15",
       "imageUrls": [
@@ -54137,7 +54139,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-01-13",
       "imageUrls": [
@@ -54156,7 +54158,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-01",
       "imageUrls": [
@@ -54175,7 +54177,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-26",
       "imageUrls": [
@@ -54194,7 +54196,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-03-04",
       "imageUrls": [
@@ -54213,7 +54215,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-07",
       "imageUrls": [
@@ -54232,7 +54234,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2026-05-14",
       "imageUrls": [
@@ -54251,7 +54253,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803906",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำงานบ้าน รดน้ำต้นไม้",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -54272,7 +54274,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-09",
       "imageUrls": [
@@ -54291,7 +54293,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -54310,7 +54312,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 16.0,
+      "hours": 16,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -54327,7 +54329,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -54346,7 +54348,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -54365,7 +54367,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -54384,7 +54386,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักตันไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -54403,7 +54405,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพหนีไฟ ประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -54422,7 +54424,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503753",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -54443,7 +54445,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-08-12",
       "imageUrls": [
@@ -54462,7 +54464,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "อบรมงานไซเบอร์",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -54481,7 +54483,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Green market",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -54500,7 +54502,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.76,
+      "hours": 2,
       "description": "ช่วยแพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -54519,7 +54521,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-12",
       "imageUrls": [
@@ -54538,7 +54540,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -54557,7 +54559,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-21",
       "imageUrls": [
@@ -54576,7 +54578,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-11-24",
       "imageUrls": [
@@ -54595,7 +54597,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 0.88,
+      "hours": 1,
       "description": "เล่นดุริยางค์",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -54614,7 +54616,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -54633,7 +54635,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -54652,7 +54654,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -54671,7 +54673,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -54690,7 +54692,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-05-27",
       "imageUrls": [
@@ -54709,7 +54711,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.76,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -54728,7 +54730,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 7.06,
+      "hours": 7,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -54747,7 +54749,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 7.06,
+      "hours": 7,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา  2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -54766,7 +54768,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.76,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรอบรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -54785,7 +54787,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.53,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -54804,7 +54806,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803897",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-09-27",
       "imageUrls": [
@@ -54825,7 +54827,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพล ทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -54844,7 +54846,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -54863,7 +54865,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดิน วิ่ง ปั่น ป้องกันอัมพาต",
       "activityDate": "2025-10-26",
       "imageUrls": [
@@ -54882,7 +54884,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานกฐินวัดป่าคลองนา",
       "activityDate": "2025-10-18",
       "imageUrls": [
@@ -54901,7 +54903,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "งานกฐิน วัดพรหมสุวรรณ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -54920,7 +54922,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยเหลืองานลอยกระทง",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -54939,7 +54941,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503698",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 8)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -54958,7 +54960,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "กีฬารักบี้",
       "activityDate": "2025-09-07",
       "imageUrls": [
@@ -54977,7 +54979,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมกิจกรรมวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -54996,7 +54998,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาสีภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -55015,7 +55017,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "คัดกรองมะเร็งเต้านม",
       "activityDate": "2026-05-26",
       "imageUrls": [
@@ -55034,7 +55036,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยรับขวัญสวีแด",
       "activityDate": "2025-08-18",
       "imageUrls": [
@@ -55053,7 +55055,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยรับขวัญสวีแด",
       "activityDate": "2025-08-19",
       "imageUrls": [
@@ -55072,7 +55074,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -55091,7 +55093,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "รับน้อง นรม.",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -55110,7 +55112,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ซ้อมดนตรีไทยรับขวัญสวีแด",
       "activityDate": "2025-08-20",
       "imageUrls": [
@@ -55129,7 +55131,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสกานทีสอบคัดลือกนพอ. 69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -55148,7 +55150,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703852",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ. พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -55169,7 +55171,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-04-01",
       "imageUrls": [
@@ -55188,7 +55190,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [],
@@ -55205,7 +55207,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -55224,7 +55226,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -55243,7 +55245,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -55262,7 +55264,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ“ชัยพัฒนา”ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -55281,7 +55283,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603794",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหิน",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -55302,7 +55304,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2025-09-16",
       "imageUrls": [
@@ -55321,7 +55323,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "การเดินรณรงค์เพื่อรำลึกถึงผู้สูญเสียจากอุบัติเหตุจราจร",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -55340,7 +55342,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "2026 ROTARACT DAY ปลูกป่าชายโร",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -55359,7 +55361,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมายพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -55378,7 +55380,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -55397,7 +55399,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -55416,7 +55418,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-12-07",
       "imageUrls": [
@@ -55435,7 +55437,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำงานบ้าน",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -55454,7 +55456,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -55473,7 +55475,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803888",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "Women Thailand Cyber Top Talent 2025",
       "activityDate": "2026-01-17",
       "imageUrls": [
@@ -55494,7 +55496,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -55513,7 +55515,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ 2568",
       "activityDate": "2026-04-10",
       "imageUrls": [
@@ -55532,7 +55534,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยท่านอาจารย์แพ็คเสื้อ",
       "activityDate": "2025-08-26",
       "imageUrls": [
@@ -55551,7 +55553,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ช่วยทำบัญชีรายรับรายจ่าย",
       "activityDate": "2025-12-08",
       "imageUrls": [
@@ -55570,7 +55572,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยพับหมวกและทำของขวัญงานวันเด็ก",
       "activityDate": "2026-01-09",
       "imageUrls": [
@@ -55589,7 +55591,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -55608,7 +55610,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เก็บหินขาวบริเวณรั้วข้างหอพัก",
       "activityDate": "2026-05-22",
       "imageUrls": [
@@ -55627,7 +55629,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-12-06",
       "imageUrls": [
@@ -55646,7 +55648,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -55665,7 +55667,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คุณแม่ตากผ้า",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -55684,7 +55686,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยคุณพ่อรีดผ้า",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -55703,7 +55705,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพร",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -55722,7 +55724,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6803928",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-29",
       "imageUrls": [
@@ -55743,7 +55745,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -55762,7 +55764,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เก็บกวาดวันและตำส้มตำวันงานกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -55781,7 +55783,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เก็บกวาดวัดและตำส้มตำงานกฐิน",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -55800,7 +55802,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "จัดสวนรพ.สต.",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -55819,7 +55821,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าถวายความอาลัย",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -55838,7 +55840,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "จับผ้าถวายความอาลัย",
       "activityDate": "2025-11-05",
       "imageUrls": [
@@ -55857,7 +55859,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503744",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -55876,7 +55878,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2025-11-20",
       "imageUrls": [
@@ -55895,7 +55897,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-02-24",
       "imageUrls": [
@@ -55914,7 +55916,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคเลือด",
       "activityDate": "2026-05-11",
       "imageUrls": [
@@ -55933,7 +55935,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -55952,7 +55954,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "เล่นดุริยางค์ตอนเช้า",
       "activityDate": "2025-09-08",
       "imageUrls": [
@@ -55971,7 +55973,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "ตรวจสอบเอกสารของการรับสมัครนักเรียนใหม่",
       "activityDate": "2026-05-08",
       "imageUrls": [
@@ -55990,7 +55992,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ขนหินตกแต่งวิทยาลัย",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -56009,7 +56011,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลงฉันมีความสุข",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -56028,7 +56030,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วิ่งห่างไกลจากโรคNCDsและบุหรี่ไฟฟ้า",
       "activityDate": "2025-07-20",
       "imageUrls": [
@@ -56047,7 +56049,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-23",
       "imageUrls": [
@@ -56066,7 +56068,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "กวาดลานวัด",
       "activityDate": "2025-11-22",
       "imageUrls": [
@@ -56085,7 +56087,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-05-09",
       "imageUrls": [
@@ -56104,7 +56106,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดลานวัด",
       "activityDate": "2026-05-10",
       "imageUrls": [
@@ -56123,7 +56125,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -56142,7 +56144,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ทำความสะอาดบ้าน",
       "activityDate": "2025-07-08",
       "imageUrls": [
@@ -56161,7 +56163,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 7,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "กวาดบ้าน",
       "activityDate": "2026-06-07",
       "imageUrls": [
@@ -56180,7 +56182,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายพระพรสมเด็จพระบรมราชินีพันปีหลวง",
       "activityDate": "2025-08-10",
       "imageUrls": [
@@ -56199,7 +56201,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603796",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ลงนามถวายอาลัย สมเด็จพระนางเจ้าสิริกิติ์ พระบรมราชินีนาถ พระบรมราชชนนีพันปีหลวง",
       "activityDate": "2025-11-06",
       "imageUrls": [
@@ -56220,7 +56222,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ”ชัยพัฒนา“",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -56239,7 +56241,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "พิธีรับเสด็จรับปริญญา นพอ.รุ่น 64",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -56258,7 +56260,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการบริการวิชาการแก่สังคม",
       "activityDate": "2025-06-15",
       "imageUrls": [
@@ -56277,7 +56279,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "โรทาแรคท์เดย์2569",
       "activityDate": "2026-02-07",
       "imageUrls": [
@@ -56296,7 +56298,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทน นพอ.บังคับบัญชา ปี68",
       "activityDate": "2025-10-07",
       "imageUrls": [
@@ -56315,7 +56317,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทน นพอ.บังคับบัญชา ปี68",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -56334,7 +56336,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทน นพอ.บังคับบัญชา ปี68",
       "activityDate": "2025-11-13",
       "imageUrls": [
@@ -56353,7 +56355,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพปีการศึกษา2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -56372,7 +56374,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -56391,7 +56393,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -56410,7 +56412,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -56429,7 +56431,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ร่วมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -56448,7 +56450,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ช่วยงานทดสอบพิเศษนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -56467,7 +56469,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำหน้าที่แทนนักเรียนปกครอง",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -56486,7 +56488,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนปกครอง",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -56505,7 +56507,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำหน้าที่แทนนักเรียนปกครอง",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -56524,7 +56526,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603780",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "จัดสิ่งแวดล้อมภายในวพอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -56545,7 +56547,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -56564,7 +56566,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -56583,7 +56585,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -56602,7 +56604,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -56621,7 +56623,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -56640,7 +56642,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -56659,7 +56661,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -56678,7 +56680,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -56697,7 +56699,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -56716,7 +56718,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -56735,7 +56737,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -56754,7 +56756,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -56773,7 +56775,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยจัดทำปกตารางสอนและระเบียบการเข้าเรียนออนไลน์",
       "activityDate": "2026-06-05",
       "imageUrls": [
@@ -56792,7 +56794,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703847",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
@@ -56813,7 +56815,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เดินรณรงค์“วันโลกรำลึกถึงผู้สูญเสียจากอุบัติเหตุทางถนน”กับพลังโรทาแรค์",
       "activityDate": "2025-11-16",
       "imageUrls": [
@@ -56832,7 +56834,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -56851,7 +56853,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -56870,7 +56872,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-26",
       "imageUrls": [
@@ -56889,7 +56891,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เข้าร่วมพิธีรับ-ส่งหน้าที่ผู้บัญชาการทหารอากาศ",
       "activityDate": "2025-09-30",
       "imageUrls": [
@@ -56908,7 +56910,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -56927,7 +56929,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -56946,7 +56948,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -56965,7 +56967,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนา ครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -56984,7 +56986,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ช่วยงาน อนศ.",
       "activityDate": "2025-08-06",
       "imageUrls": [
@@ -57003,7 +57005,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมการฝึกการรักษาทารกแรกเกิดที่มีภาวะตัวเหลืองด้วยการส่องไฟ",
       "activityDate": "2025-11-26",
       "imageUrls": [
@@ -57022,7 +57024,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ทดสอบสมรรถภาพร่างกาย นพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -57041,7 +57043,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -57060,7 +57062,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703839",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 40.0,
+      "hours": 40,
       "description": "ชั่วโมงกิจกรรมสะสมเพิ่มเติม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -57079,7 +57081,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "โครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -57098,7 +57100,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 19.0,
+      "hours": 19,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 3)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -57115,7 +57117,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ พ.ศ.2568",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -57134,7 +57136,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แจกเฉาก๊วยที่โรงทาน",
       "activityDate": "2025-11-01",
       "imageUrls": [
@@ -57153,7 +57155,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ขัดลาน",
       "activityDate": "2025-10-20",
       "imageUrls": [
@@ -57172,7 +57174,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัดและตอกเสาธง",
       "activityDate": "2025-10-31",
       "imageUrls": [
@@ -57191,7 +57193,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ช่วยจัดงานกฐิน",
       "activityDate": "2025-11-02",
       "imageUrls": [
@@ -57210,7 +57212,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503752",
       "categoryId": 6,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "กวาดวัด",
       "activityDate": "2025-10-25",
       "imageUrls": [
@@ -57231,7 +57233,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง 68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -57250,7 +57252,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 5.0,
+      "hours": 5,
       "description": "รับน้อง 68",
       "activityDate": "2025-07-21",
       "imageUrls": [
@@ -57269,7 +57271,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนปกครอง",
       "activityDate": "2025-10-08",
       "imageUrls": [
@@ -57288,7 +57290,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนปกครอง",
       "activityDate": "2025-10-09",
       "imageUrls": [
@@ -57307,7 +57309,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนนักเรียนปกครอง",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -57326,7 +57328,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ต้อนรับคณะดูงานจาก วพร.ทร.",
       "activityDate": "2026-02-11",
       "imageUrls": [
@@ -57345,7 +57347,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "เตรียมงานนภาภิบาล",
       "activityDate": "2026-04-19",
       "imageUrls": [],
@@ -57362,7 +57364,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568(ฝ่ายลงทะเบียนและอาหาร)",
       "activityDate": "2026-04-28",
       "imageUrls": [
@@ -57381,7 +57383,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2026-02-04",
       "imageUrls": [
@@ -57400,7 +57402,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2026-02-18",
       "imageUrls": [
@@ -57419,7 +57421,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ทำการแทนนักเรียนบังคับบัญชา",
       "activityDate": "2026-03-25",
       "imageUrls": [
@@ -57438,7 +57440,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6603793",
       "categoryId": 8,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "รับเสด็จ",
       "activityDate": "2025-10-10",
       "imageUrls": [
@@ -57459,7 +57461,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "ร่วมโครงการคัดกรองสุขภาพเชิงรุกกำลังพลทอ.",
       "activityDate": "2025-07-16",
       "imageUrls": [
@@ -57478,7 +57480,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "โครงการตรวจสุขภาพเคลื่อนที่",
       "activityDate": "2025-11-19",
       "imageUrls": [
@@ -57497,7 +57499,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "คลินิกคัดกรองโรคเรื้อรัง",
       "activityDate": "2025-11-30",
       "imageUrls": [
@@ -57516,7 +57518,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [],
@@ -57533,7 +57535,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 6.0,
+      "hours": 6,
       "description": "เฝ้าระวังและคัดกรองโรคเบาหวาน ความดันโลหิตสูง",
       "activityDate": "2025-10-12",
       "imageUrls": [
@@ -57552,7 +57554,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "แผนการซ้อมดับเพลิงและอพยพหนีไฟประจำปี 2568",
       "activityDate": "2025-11-04",
       "imageUrls": [
@@ -57571,7 +57573,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -57590,7 +57592,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 5,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "วันรักต้นไม้ประจำปีของชาติ",
       "activityDate": "2025-10-19",
       "imageUrls": [
@@ -57609,7 +57611,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6503695",
       "categoryId": 9,
       "academicYear": 2568,
-      "hours": 20.0,
+      "hours": 20,
       "description": "ชั่วโมงกิจกรรมสะสม (หมวด 9)",
       "activityDate": "2025-06-01",
       "imageUrls": [],
@@ -57628,7 +57630,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 1,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "บริจาคโลหิต",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -57647,7 +57649,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 2.0,
+      "hours": 2,
       "description": "เข้าร่วมพิธีถวายพานพุ่มสักการะเนื่องในวันพยาบาลแห่งชาติ",
       "activityDate": "2025-10-21",
       "imageUrls": [
@@ -57666,7 +57668,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-07",
       "imageUrls": [
@@ -57685,7 +57687,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายแนะแนวรัฐบุรุษ 2",
       "activityDate": "2025-11-09",
       "imageUrls": [
@@ -57704,7 +57706,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียง",
       "activityDate": "2025-06-17",
       "imageUrls": [
@@ -57723,7 +57725,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-25",
       "imageUrls": [
@@ -57742,7 +57744,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมร้องประสานเสียงงานคอนเสิร์ตทัพฟ้า",
       "activityDate": "2025-06-30",
       "imageUrls": [
@@ -57761,7 +57763,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-02",
       "imageUrls": [
@@ -57780,7 +57782,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "คอนเสิร์ตทัพฟ้าคู่ไทยเพื่อ \"ชัยพัฒนา\" ครั้งที่ 16",
       "activityDate": "2025-07-01",
       "imageUrls": [
@@ -57799,7 +57801,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "เข้าร่วมงานวันเด็กแห่งชาติ",
       "activityDate": "2026-01-10",
       "imageUrls": [
@@ -57818,7 +57820,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "พิธีเปิด-ปิดกีฬาภายในกองทัพอากาศ",
       "activityDate": "2026-02-25",
       "imageUrls": [
@@ -57837,7 +57839,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-24",
       "imageUrls": [
@@ -57856,7 +57858,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-25",
       "imageUrls": [
@@ -57875,7 +57877,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 2,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ค่ายเยาวชนพัฒนาครั้งที่ 215",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -57894,7 +57896,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-21",
       "imageUrls": [
@@ -57913,7 +57915,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-22",
       "imageUrls": [
@@ -57932,7 +57934,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-23",
       "imageUrls": [
@@ -57951,7 +57953,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 8.0,
+      "hours": 8,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-26",
       "imageUrls": [
@@ -57970,7 +57972,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "ซ้อมงานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -57989,7 +57991,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 4.0,
+      "hours": 4,
       "description": "งานพิธีมอบหมวกพยาบาลวิชาชีพ ปีการศึกษา 2568",
       "activityDate": "2026-04-27",
       "imageUrls": [
@@ -58008,7 +58010,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "เก็บสถานที่สอบคัดเลือกนพอ.69",
       "activityDate": "2026-05-05",
       "imageUrls": [
@@ -58027,7 +58029,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 3.0,
+      "hours": 3,
       "description": "ปรับปรุงทัศนียภาพใน วพอ.พอ.",
       "activityDate": "2026-06-04",
       "imageUrls": [
@@ -58046,7 +58048,7 @@ const IMPORTED_DEEDS = {
       "studentId": "6703867",
       "categoryId": 3,
       "academicYear": 2568,
-      "hours": 1.0,
+      "hours": 1,
       "description": "ซ้อมเต้นเพลง ฉันมีความสุข",
       "activityDate": "2026-06-03",
       "imageUrls": [
