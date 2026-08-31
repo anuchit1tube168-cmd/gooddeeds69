@@ -250,15 +250,71 @@ class ChibiHero3D {
     this.scene.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
   }
 
+  static getSvgDataUrl(level) {
+    const wingsColors = [
+      ['#ffffff', '#e2e8f0'], // 1
+      ['#93c5fd', '#60a5fa'], // 2
+      ['#cd7f32', '#b45309'], // 3
+      ['#e2e8f0', '#94a3b8'], // 4
+      ['#fde047', '#eab308'], // 5
+      ['#38bdf8', '#818cf8'], // 6
+      ['#fbbf24', '#f59e0b'], // 7
+      ['#f43f5e', '#fbbf24'], // 8
+    ];
+    const lv = Math.max(1, Math.min(8, parseInt(level) || 1));
+    const wCol = wingsColors[lv - 1] || wingsColors[0];
+    const hasCrown = lv >= 7;
+    const hasHalo = lv >= 5;
+    const hasStethoscope = lv >= 3;
+
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160">
+      <defs>
+        <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${wCol[0]}"/>
+          <stop offset="100%" stop-color="${wCol[1]}"/>
+        </linearGradient>
+        <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#000000" flood-opacity="0.3"/>
+        </filter>
+      </defs>
+      ${hasHalo ? '<circle cx="80" cy="28" r="20" fill="none" stroke="#fde047" stroke-width="3.5" filter="url(#shadow)"/>' : ''}
+      <g filter="url(#shadow)">
+        <path d="M 52 75 C 20 60, 10 30, 25 18 C 38 8, 48 35, 56 62 Z" fill="url(#wingGrad)"/>
+        <path d="M 45 80 C 15 80, 5 60, 15 48 C 26 38, 38 60, 48 72 Z" fill="url(#wingGrad)" opacity="0.85"/>
+        <path d="M 108 75 C 140 60, 150 30, 135 18 C 122 8, 112 35, 104 62 Z" fill="url(#wingGrad)"/>
+        <path d="M 115 80 C 145 80, 155 60, 145 48 C 134 38, 122 60, 112 72 Z" fill="url(#wingGrad)" opacity="0.85"/>
+      </g>
+      <path d="M 58 95 Q 80 88 102 95 L 110 135 Q 80 142 50 135 Z" fill="#ffffff" filter="url(#shadow)"/>
+      <path d="M 72 94 L 80 108 L 88 94 Z" fill="#1e3a8a"/>
+      <path d="M 78 108 L 82 108 L 80 120 Z" fill="#c9a227"/>
+      <circle cx="80" cy="65" r="32" fill="#ffe4d6" filter="url(#shadow)"/>
+      <path d="M 48 65 Q 46 38 80 38 Q 114 38 112 65 Q 112 78 106 82 Q 80 76 54 82 Q 48 78 48 65 Z" fill="#3b2716"/>
+      <path d="M 50 56 Q 65 48 80 56 Q 95 48 110 56 Q 105 44 80 44 Q 55 44 50 56 Z" fill="#523824"/>
+      <path d="M 60 38 Q 80 30 100 38 L 96 24 Q 80 20 64 24 Z" fill="#ffffff" filter="url(#shadow)"/>
+      <path d="M 64 34 Q 80 30 96 34" stroke="#1e3a8a" stroke-width="2.5" fill="none"/>
+      <path d="M 78 26 L 82 26 M 80 24 L 80 28" stroke="#dc2626" stroke-width="2" stroke-linecap="round"/>
+      <ellipse cx="68" cy="66" rx="4.5" ry="6" fill="#1e293b"/>
+      <ellipse cx="92" cy="66" rx="4.5" ry="6" fill="#1e293b"/>
+      <circle cx="69.5" cy="64" r="1.8" fill="#ffffff"/>
+      <circle cx="93.5" cy="64" r="1.8" fill="#ffffff"/>
+      <ellipse cx="62" cy="73" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+      <ellipse cx="98" cy="73" rx="4.5" ry="2.5" fill="#f87171" opacity="0.6"/>
+      <path d="M 75 74 Q 80 79 85 74" fill="none" stroke="#b91c1c" stroke-width="2" stroke-linecap="round"/>
+      ${hasCrown ? '<path d="M 70 20 L 73 10 L 80 16 L 87 10 L 90 20 Z" fill="#facc15" stroke="#ca8a04" stroke-width="1.5" filter="url(#shadow)"/>' : ''}
+      ${hasStethoscope ? '<path d="M 65 98 Q 80 122 95 98" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round"/>' : ''}
+    </svg>`;
+
+    return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+  }
+
   // ── Public API ─────────────────────────────────────────────────
   setLevel(level, hours, options = {}) {
     const prevLv = this.level;
     this.level = Math.max(1, Math.min(8, level));
     this.hours = hours;
 
-    // Update character image
-    const imgPath = `photos/chibi/chibi_lv${this.level}.png`;
-    this.charImg.src = imgPath;
+    // Use SVG vector avatar for crisp rendering without 404
+    this.charImg.src = ChibiHero3D.getSvgDataUrl(this.level);
     this.charImg.style.display = 'block';
     this.charEmoji.style.display = 'none';
 

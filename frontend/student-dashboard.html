@@ -1641,7 +1641,10 @@
             // Set floating Chibi image on the Starbucks Card
             const cardChibiEl = document.getElementById('card-chibi-wrap');
             if (cardChibiEl) {
-                cardChibiEl.innerHTML = `<img src="photos/chibi/chibi_lv${level}.png" alt="Chibi Level ${level}">`;
+                const chibiUrl = (typeof ChibiHero3D !== 'undefined' && ChibiHero3D.getSvgDataUrl) 
+                    ? ChibiHero3D.getSvgDataUrl(level) 
+                    : `photos/chibi/chibi_lv${level}.png`;
+                cardChibiEl.innerHTML = `<img src="${chibiUrl}" alt="Chibi Level ${level}" style="width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(201,162,39,0.5));">`;
             }
         }
 
