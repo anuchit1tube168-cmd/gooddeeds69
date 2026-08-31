@@ -25,6 +25,7 @@ function doGet(e) {
     if (action === 'getDeeds') return jsonResponse(getDeeds(e.parameter.studentId));
     if (action === 'getSummary') return jsonResponse(getSummary(e.parameter.studentId));
     if (action === 'getAllPending') return jsonResponse(getAllPending());
+    if (action === 'getSettings') return jsonResponse(getSettings());
     if (action === 'ping') return jsonResponse({ status: 'ok', time: new Date().toISOString() });
     return jsonResponse({ error: 'Unknown action' });
   } catch (err) {
@@ -209,7 +210,60 @@ function updateDeedStatus(deedId, status, approvedBy, rejectReason) {
   return false;
 }
 
-function getStudents() { return []; }
+function getStudents() {
+  const cache = CacheService.getScriptCache();
+  const cached = cache.get('students_data');
+  if (cached) {
+    return JSON.parse(cached);
+  }
+
+  try {
+    const FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
+    const folder = DriveApp.getFolderById(FOLDER_ID);
+    const files = folder.getFilesByName('students_data.json');
+    
+    if (files.hasNext()) {
+      const file = files.next();
+      const content = file.getBlob().getDataAsString();
+      
+      // Cache the string representation for 5 minutes (300 seconds)
+      cache.put('students_data', content, 300);
+      
+      return JSON.parse(content);
+    }
+  } catch (err) {
+    console.error('Error fetching students:', err);
+  }
+  
+  return [];
+}
+
+function getSettings() {
+  return {
+    academic_year: '2569',
+    min_hours: MIN_HOURS
+  };
+}
+
+function getStudentPhotoDriveUrl(studentId) {
+  try {
+    const FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
+    const folder = DriveApp.getFolderById(FOLDER_ID);
+    const photoFolders = folder.getFoldersByName('photos');
+    
+    if (photoFolders.hasNext()) {
+      const photoFolder = photoFolders.next();
+      const files = photoFolder.searchFiles("title contains '" + studentId + "'");
+      if (files.hasNext()) {
+        const file = files.next();
+        return 'https://lh3.googleusercontent.com/d/' + file.getId();
+      }
+    }
+  } catch (err) {
+    console.error('Error fetching photo URL:', err);
+  }
+  return '';
+}
 function getStudent(id) { return null; }
 function getDeeds(id) { return []; }
 function getSummary(id) { return { totalHours: 0 }; }

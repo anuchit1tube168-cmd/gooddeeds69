@@ -13,13 +13,22 @@ thai-docx/
 .agents/
 .vscode/
 
-# RTAFNC ONE private-data boundary
+# RTAFNC ONE private-data boundary & PDPA Compliance
 # Real identities, student rosters, advisor mappings, health/counselling records,
 # operational exports and backups belong in private Google Drive/backend only.
 private/
 data/private/
 exports/
 backups/
+records/
+frontend/photos/
+data/raw_photos/
+data/backup/
+data/photos.json
+data/students.json
+data/students_data.js
+data/students_photos.js
+.local_backup_pdpa/
 *.xlsx
 *.xls
 *.xlsm

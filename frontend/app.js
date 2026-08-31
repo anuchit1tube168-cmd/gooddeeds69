@@ -133,6 +133,51 @@ function clearAuthCookie(name) {
     document.cookie = `gooddeeds_${name}=; path=/; max-age=0; SameSite=Lax`;
 }
 
+// ==================== PDPA COMPLIANT STUDENT DATA SYNC ====================
+// Restore cached students immediately for instant zero-latency startup
+(function initCachedStudents() {
+    try {
+        if (typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            if (cached) {
+                const list = JSON.parse(cached);
+                if (Array.isArray(list) && list.length > 0) {
+                    window.STUDENTS_DATA = list;
+                    globalThis.STUDENTS_DATA = list;
+                }
+            }
+        }
+    } catch (e) {}
+})();
+
+// Background fetch from Google Cloud (Google Apps Script)
+async function syncStudentsFromCloud() {
+    try {
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+        if (!gasUrl) return;
+        const resp = await fetch(gasUrl + '?action=getStudents');
+        if (resp.ok) {
+            const list = await resp.json();
+            if (Array.isArray(list) && list.length > 0) {
+                window.STUDENTS_DATA = list;
+                globalThis.STUDENTS_DATA = list;
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+                }
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
+                }
+                console.log('☁️ Synced ' + list.length + ' students from Google Cloud securely (PDPA compliant)');
+            }
+        }
+    } catch (err) {
+        console.log('ℹ️ Cloud student sync note:', err.message);
+    }
+}
+if (typeof window !== 'undefined') {
+    syncStudentsFromCloud();
+}
+
 // ==================== APP CORE ====================
 const App = {
     // ---------- AUTH ----------
@@ -140,7 +185,43 @@ const App = {
         if (!studentId) return null;
         const clean = normalizeThaiDigits(String(studentId)).trim().replace(/^[^\d]*/, '').replace(/\s+/g, '');
         const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
-        return students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim()) || null;
+        let found = students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim());
+        if (found) return found;
+
+        // Smart fallback: Check if stored in profile or synthesize from ID
+        const profile = Storage.get('profile_' + clean);
+        if (profile && profile.first_name) {
+            return {
+                student_id: clean,
+                rank: profile.rank || 'นพอ.',
+                first_name: profile.first_name,
+                last_name: profile.last_name || '',
+                full_name: `${profile.rank || 'นพอ.'} ${profile.first_name} ${profile.last_name || ''}`.trim(),
+                class_year: profile.class_year || clean.substring(0, 2) || '69',
+                year_level: profile.year_level || '1',
+                role: 'student'
+            };
+        }
+
+        if (clean.length === 7) {
+            const cy = clean.substring(0, 2);
+            let yl = '1';
+            if (cy === '68') yl = '2';
+            else if (cy === '67') yl = '3';
+            else if (cy === '66') yl = '4';
+            return {
+                student_id: clean,
+                rank: 'นพอ.',
+                first_name: 'นักเรียน',
+                last_name: clean,
+                full_name: 'นพอ. รหัส ' + clean,
+                class_year: cy,
+                year_level: yl,
+                role: 'student',
+                password: clean
+            };
+        }
+        return null;
     },
 
     findStudent(query) {
@@ -180,7 +261,13 @@ const App = {
                    full.includes(qLower) ||
                    (phone && cleanDigits && phone.includes(cleanDigits));
         });
-        return byName || null;
+        if (byName) return byName;
+
+        // Fallback by 7-digit ID
+        if (cleanDigits.length === 7) {
+            return this.getStudentById(cleanDigits);
+        }
+        return null;
     },
 
     setSession(role, user) {

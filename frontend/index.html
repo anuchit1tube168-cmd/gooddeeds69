@@ -419,11 +419,11 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3340"></script>
-    <script src="data/deeds_data.js?v=3340"></script>
-    <script src="data/app_settings.js?v=3340"></script>
-    <script src="app.js?v=3380"></script>
-    <script src="liff-sdk.js?v=3360"></script>
+    <script src="data/students_data.js?v=3390"></script>
+    <script src="data/deeds_data.js?v=3390"></script>
+    <script src="data/app_settings.js?v=3390"></script>
+    <script src="app.js?v=3390"></script>
+    <script src="liff-sdk.js?v=3390"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -473,7 +473,7 @@
                             LiffHelper.bindCurrentStudentProfile();
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/student-dashboard.html', 800);
+                        setTimeout(() => window.location.href = 'student-dashboard.html', 800);
                     } else {
                         showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -503,7 +503,7 @@
                             LiffHelper.bindCurrentStudentProfile();
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/teacher-dashboard.html', 800);
+                        setTimeout(() => window.location.href = 'teacher-dashboard.html', 800);
                     } else {
                         showAlert(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -521,8 +521,8 @@
         window.addEventListener('load', () => {
             const user = App.getCurrentUser();
             if (user) {
-                if (user.role === 'student') window.location.href = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/student-dashboard.html';
-                else window.location.href = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/teacher-dashboard.html';
+                if (user.role === 'student') window.location.href = 'student-dashboard.html';
+                else window.location.href = 'teacher-dashboard.html';
             }
 
             // Dynamic look-up for Student ID

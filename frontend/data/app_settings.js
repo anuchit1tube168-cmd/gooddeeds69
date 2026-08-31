@@ -1,32 +1,16 @@
-// Auto-generated from Excel Settings sheet
+// Configuration settings (Secrets & student personal data are stored exclusively in Google Cloud)
 const EXCEL_SETTINGS = {
-  "admin": {
-    "username": "admin",
-    "password": "admin69",
-    "role": "admin",
-    "name": "ผู้ดูแลระบบ (Admin)",
-    "line_user_id": "Ueac3a1d2c5cd552e25ac0a710703ff0c"
-  },
-  "teacher": {
-    "username": "teacher",
-    "password": "teacher69",
-    "role": "teacher",
-    "name": "อาจารย์ผู้ควบคุม (Teacher)"
-  },
-  "telegram": {
-    "bot_token": "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k",
-    "chat_id": "-4839151586"
-  },
-  "line": {
-    "line_oa_id": "@586diwio",
-    "line_oa_url": "https://line.me/R/ti/p/@586diwio",
-    "channel_token": "vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=",
-    "bot_name": "SMART DBS RTAFNC (@586diwio)"
-  },
   "config": {
     "academic_year": 2569,
     "min_hours_semester": 25,
     "min_hours": 50,
     "max_hours": 400
+  },
+  "line": {
+    "line_oa_id": "@586diwio",
+    "line_oa_url": "https://line.me/R/ti/p/@586diwio",
+    "bot_name": "SMART DBS RTAFNC (@586diwio)"
   }
 };
+if (typeof window !== "undefined") { window.EXCEL_SETTINGS = EXCEL_SETTINGS; }
+if (typeof globalThis !== "undefined") { globalThis.EXCEL_SETTINGS = EXCEL_SETTINGS; }

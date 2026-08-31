@@ -20,6 +20,70 @@ function doGet(e) {
     return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
   }
   
+  // ==================== GET STUDENTS (PDPA-SAFE API) ====================
+  // อ่านข้อมูลนักเรียนจาก Main_2569 sheet — ส่งเฉพาะข้อมูลที่จำเป็นสำหรับ Frontend
+  if (action === 'getStudents') {
+    try {
+      var cache = CacheService.getScriptCache();
+      var cached = cache.get('students_api_v2');
+      if (cached) {
+        return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      var sheet = ss.getSheetByName('Main_2569');
+      if (!sheet) {
+        return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+      }
+      
+      var data = sheet.getDataRange().getValues();
+      var students = [];
+      for (var i = 1; i < data.length; i++) {
+        var sid = String(data[i][1] || '').trim();
+        if (!sid || sid === 'undefined') continue;
+        
+        var classYearRaw = String(data[i][5] || '');
+        var classYear = classYearRaw.replace(/รุ่น\s*/, '').trim();
+        var yearLevel = '';
+        if (classYear === '69') yearLevel = '1';
+        else if (classYear === '68') yearLevel = '2';
+        else if (classYear === '67') yearLevel = '3';
+        else if (classYear === '66') yearLevel = '4';
+        
+        students.push({
+          student_id: sid,
+          rank: String(data[i][2] || 'นพอ.'),
+          first_name: String(data[i][3] || ''),
+          last_name: String(data[i][4] || ''),
+          full_name: String(data[i][3] || '') + ' ' + String(data[i][4] || ''),
+          class_year: classYear,
+          year_level: yearLevel,
+          role: 'student',
+          password: sid,
+          line_user_id: String(data[i][19] || ''),
+          total_hours: data[i][15] || 0
+        });
+      }
+      
+      var jsonStr = JSON.stringify(students);
+      // Cache for 5 minutes
+      cache.put('students_api_v2', jsonStr, 300);
+      
+      return ContentService.createTextOutput(jsonStr).setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      return ContentService.createTextOutput(JSON.stringify({ error: err.message })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+  
+  // ==================== GET SETTINGS (SAFE — NO TOKENS) ====================
+  if (action === 'getSettings') {
+    return ContentService.createTextOutput(JSON.stringify({
+      academic_year: 2569,
+      min_hours_semester: 25,
+      min_hours: 50,
+      max_hours: 400
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+  
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
     message: 'GoodDeeds 69 Cloud Engine Active 🟢',

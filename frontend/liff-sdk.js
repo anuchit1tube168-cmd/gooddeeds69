@@ -191,7 +191,7 @@ const LiffHelper = {
                     App.setSession('student', student);
                 }
                 if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-                    window.location.href = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/student-dashboard.html';
+                    window.location.href = 'student-dashboard.html';
                     return;
                 }
             } else {

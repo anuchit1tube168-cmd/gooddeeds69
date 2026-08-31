@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบบันทึกความดี - กำลังนำทาง...</title>
+    <script>
+        // Smart GitHub Pages Single Page / Redirect Handler
+        (function() {
+            var path = window.location.pathname;
+            var search = window.location.search;
+            var hash = window.location.hash;
+            
+            // Map possible path segments to target pages
+            var pages = ['student-dashboard', 'teacher-dashboard', 'approve_sign', 'deed_slip', 'history', 'submit-deed', 'profile', 'ranking', 'report', 'settings', 'qa-board', 'view_cards'];
+            var target = 'index.html';
+            
+            for (var i = 0; i < pages.length; i++) {
+                if (path.indexOf(pages[i]) !== -1) {
+                    target = pages[i] + '.html';
+                    break;
+                }
+            }
+            
+            // Determine base url
+            var isGitHub = window.location.hostname.indexOf('github.io') !== -1;
+            var prefix = isGitHub ? '/gooddeeds69/frontend/' : 'frontend/';
+            if (path.indexOf('/frontend/') !== -1) {
+                prefix = isGitHub ? '/gooddeeds69/frontend/' : '';
+            }
+            
+            window.location.replace(prefix + target + search + hash);
+        })();
+    </script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Sarabun", sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+        }
+        .card {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 16px;
+            padding: 30px;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #d97706;
+            color: #ffffff;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        a:hover { background: #b45309; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🔄 กำลังนำคุณไปยังหน้าระบบ...</h2>
+        <p>กรุณารอสักครู่ ระบบกำลังนำคุณไปยังหน้าที่ถูกต้อง</p>
+        <a href="/gooddeeds69/frontend/index.html">🏠 ไปที่หน้าหลักระบบบันทึกความดี</a>
+    </div>
+</body>
+</html>
