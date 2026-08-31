@@ -1,7 +1,4 @@
-// Auto-generated from Data & Main 2568.xlsx — DO NOT EDIT MANUALLY
-// Generated: 2026-08-20 10:32
-// นักเรียนที่มีความดี: 252 คน, รายการความดีทั้งหมด: 3041 รายการ
-
+// Auto-updated by telegram_bot_listener.py
 const IMPORTED_DEEDS = {
   "6503721": [
     {
@@ -16,10 +13,12 @@ const IMPORTED_DEEDS = {
       "pdfUrl": "",
       "status": "approved",
       "submittedAt": "2025-12-31T00:00:00.000Z",
-      "approvedBy": "ระบบนำเข้าข้อมูล",
-      "approvedAt": "2025-12-31T00:00:00.000Z",
+      "approvedBy": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "approvedAt": "2026-08-31T12:22:40Z",
       "rejectReason": null,
-      "note": "นำเข้าสะสมจาก Main 2568.xlsx"
+      "note": "นำเข้าสะสมจาก Main 2568.xlsx",
+      "approved_by": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "updated_at": "2026-08-31T12:22:40Z"
     },
     {
       "id": "import_2568_inj_6503721_9",
@@ -58063,3 +58062,7 @@ const IMPORTED_DEEDS = {
     }
   ]
 };
+const DEEDS_DATA = IMPORTED_DEEDS;
+
+if (typeof window !== 'undefined') { window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }
+if (typeof globalThis !== 'undefined') { globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }

@@ -1,6 +1,4 @@
-// Auto-generated from Data & Main 2568.xlsx — DO NOT EDIT MANUALLY
-// Cleaned August test deeds: 1 items removed
-
+// Auto-updated by telegram_bot_listener.py
 const IMPORTED_DEEDS = {
   "6503721": [
     {
@@ -15,10 +13,12 @@ const IMPORTED_DEEDS = {
       "pdfUrl": "",
       "status": "approved",
       "submittedAt": "2025-12-31T00:00:00.000Z",
-      "approvedBy": "ระบบนำเข้าข้อมูล",
-      "approvedAt": "2025-12-31T00:00:00.000Z",
+      "approvedBy": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "approvedAt": "2026-08-31T12:22:40Z",
       "rejectReason": null,
-      "note": "นำเข้าสะสมจาก Main 2568.xlsx"
+      "note": "นำเข้าสะสมจาก Main 2568.xlsx",
+      "approved_by": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "updated_at": "2026-08-31T12:22:40Z"
     },
     {
       "id": "import_2568_inj_6503721_9",
@@ -42396,6 +42396,25 @@ const IMPORTED_DEEDS = {
       "note": "นำเข้าจาก Data 2568.xlsx"
     },
     {
+      "id": "import_2568_1035_6603771",
+      "studentId": "6603771",
+      "categoryId": 2,
+      "academicYear": 2568,
+      "hours": 4.0,
+      "description": "ค่ายรัฐบุรุษ",
+      "activityDate": "2026-08-20",
+      "imageUrls": [
+        "https://lh5.googleusercontent.com/d/1z6nmxlxKiUWoChJ3MILt1cCkpftpgncR"
+      ],
+      "pdfUrl": "https://drive.google.com/file/d/1t0lSWd0VfNfM_q0MKL1dDnerAmvI2LxP/view?usp=drivesdk",
+      "status": "approved",
+      "submittedAt": "2025-12-31T00:00:00.000Z",
+      "approvedBy": "น.ต.หญิงขวัญชนก พ่วงนาคพันธุ์",
+      "approvedAt": "2025-12-31T00:00:00.000Z",
+      "rejectReason": null,
+      "note": "นำเข้าจาก Data 2568.xlsx"
+    },
+    {
       "id": "import_2568_1036_6603771",
       "studentId": "6603771",
       "categoryId": 2,
@@ -58043,6 +58062,7 @@ const IMPORTED_DEEDS = {
     }
   ]
 };
+const DEEDS_DATA = IMPORTED_DEEDS;
 
-if (typeof window !== "undefined") { window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = Object.values(IMPORTED_DEEDS).flat(); }
-if (typeof globalThis !== "undefined") { globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = Object.values(IMPORTED_DEEDS).flat(); }
+if (typeof window !== 'undefined') { window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }
+if (typeof globalThis !== 'undefined') { globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }

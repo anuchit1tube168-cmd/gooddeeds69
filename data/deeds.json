@@ -12,10 +12,12 @@
       "pdfUrl": "",
       "status": "approved",
       "submittedAt": "2025-12-31T00:00:00.000Z",
-      "approvedBy": "ระบบนำเข้าข้อมูล",
-      "approvedAt": "2025-12-31T00:00:00.000Z",
+      "approvedBy": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "approvedAt": "2026-08-31T12:22:40Z",
       "rejectReason": null,
-      "note": "นำเข้าสะสมจาก Main 2568.xlsx"
+      "note": "นำเข้าสะสมจาก Main 2568.xlsx",
+      "approved_by": "น.ต.หญิง ขวัญชนก พ่วงนาคพันธุ์",
+      "updated_at": "2026-08-31T12:22:40Z"
     },
     {
       "id": "import_2568_inj_6503721_9",

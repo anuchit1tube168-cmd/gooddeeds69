@@ -118,7 +118,18 @@ def main():
     # Load master deeds
     deeds_p = os.path.join(DATA_DIR, 'deeds.json')
     with open(deeds_p, 'r', encoding='utf-8') as f:
-        deeds = json.load(f)
+        data = json.load(f)
+
+    deeds = []
+    if isinstance(data, list):
+        deeds = data
+    elif isinstance(data, dict):
+        for sid, dlist in data.items():
+            if isinstance(dlist, list):
+                for item in dlist:
+                    if 'student_id' not in item and 'studentId' in item:
+                        item['student_id'] = item['studentId']
+                    deeds.append(item)
 
     category_names = {
         1: 'หมวด 1 - บริจาคโลหิต/เกล็ดเลือด/พลาสมา',
@@ -136,7 +147,7 @@ def main():
     os.makedirs(RECORDS_DIR, exist_ok=True)
 
     for d in deeds:
-        sid = str(d.get('student_id'))
+        sid = str(d.get('student_id') or d.get('studentId') or '')
         stu = students.get(sid, {'student_id': sid})
         stu_name = f"{stu.get('rank', 'นพอ.')} {stu.get('first_name', '')} {stu.get('last_name', '')}".strip()
         stu_folder_name = f"{sid} - {stu_name}" if stu_name else f"Student_{sid}"
