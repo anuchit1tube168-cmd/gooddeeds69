@@ -1373,6 +1373,22 @@
             renderCategories();
             renderInteractiveTable();
             renderRecentDeeds();
+
+            // Start Real-time Auto-Sync with Telegram & Cloud (Instant UI Reaction)
+            if (App.startRealtimeSync) {
+                App.startRealtimeSync(currentUser.student_id, () => {
+                    console.log('⚡ Real-time update received from Cloud/Telegram!');
+                    summary = App.getStudentSummary(currentUser.student_id);
+                    renderHero();
+                    renderStatusBanner();
+                    renderChibiHero();
+                    renderStats();
+                    renderCategories();
+                    renderInteractiveTable();
+                    renderRecentDeeds();
+                    showToast('🎉 สถานะความดีได้รับการอนุมัติเรียบร้อยแล้ว!', 'success');
+                });
+            }
         }
 
                 function renderHero() {

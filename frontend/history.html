@@ -303,6 +303,15 @@
             });
             renderSummary();
             renderDeeds();
+
+            if (App.startRealtimeSync) {
+                App.startRealtimeSync(currentUser.student_id, () => {
+                    allDeeds = App.getDeeds(currentUser.student_id)
+                        .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+                    renderSummary();
+                    renderDeeds();
+                });
+            }
         }
 
         function renderSummary() {

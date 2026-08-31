@@ -594,25 +594,90 @@ const App = {
         return null;
     },
 
-    async syncAllDeedsWithBackend() {
-        if (!this.canUseBackendApi()) return null;
-
+    async syncDeedsFromCloud(studentId) {
+        if (!studentId) return null;
         try {
-            const res = await fetch('/api/get_all_deeds', {
-                headers: this.getAuthHeaders(),
-            });
-            if (res.ok) {
-                const allDeeds = await res.json();
-                for (const [sid, deeds] of Object.entries(allDeeds)) {
-                    this.saveDeeds(sid, deeds);
+            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+            let updatedDeeds = null;
+
+            // 1. Fetch latest deeds.json from GitHub raw with cache buster
+            try {
+                const rawUrl = `https://raw.githubusercontent.com/anuchit1tube168-cmd/gooddeeds69/main/frontend/data/deeds.json?t=${Date.now()}`;
+                const res = await fetch(rawUrl, { cache: 'no-store' });
+                if (res.ok) {
+                    const allDeeds = await res.json();
+                    if (Array.isArray(allDeeds)) {
+                        updatedDeeds = allDeeds.filter(d => String(d.student_id || d.studentId) === String(studentId));
+                    }
                 }
-                console.log(`🔄 Synced all deeds from backend`);
-                return allDeeds;
+            } catch (e) {}
+
+            // 2. Fallback to GAS endpoint
+            if (!updatedDeeds && gasUrl) {
+                try {
+                    const res = await fetch(`${gasUrl}?action=getDeeds&studentId=${studentId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (Array.isArray(data)) updatedDeeds = data;
+                    }
+                } catch (e) {}
             }
-        } catch (e) {
-            console.error('❌ Failed to sync all deeds with backend:', e);
+
+            if (updatedDeeds && Array.isArray(updatedDeeds)) {
+                const currentLocal = Storage.get('deeds_' + studentId) || [];
+                let hasChanges = false;
+
+                currentLocal.forEach(localDeed => {
+                    const matched = updatedDeeds.find(u => String(u.id) === String(localDeed.id));
+                    if (matched && matched.status !== localDeed.status) {
+                        localDeed.status = matched.status;
+                        localDeed.approvedBy = matched.approved_by || matched.approvedBy || localDeed.approvedBy;
+                        localDeed.approved_by = matched.approved_by || matched.approvedBy || localDeed.approved_by;
+                        localDeed.approvedAt = matched.updated_at || matched.approvedAt || localDeed.approvedAt;
+                        hasChanges = true;
+                    }
+                });
+
+                if (hasChanges) {
+                    this.saveDeeds(studentId, currentLocal);
+                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId } }));
+                }
+                return updatedDeeds;
+            }
+        } catch (err) {
+            console.warn('Realtime sync note:', err);
         }
         return null;
+    },
+
+    startRealtimeSync(studentId, onChangeCallback) {
+        if (!studentId) return null;
+        let isPolling = false;
+
+        const poll = async () => {
+            if (isPolling) return;
+            isPolling = true;
+            try {
+                await this.syncDeedsFromCloud(studentId);
+            } finally {
+                isPolling = false;
+            }
+        };
+
+        // Poll every 3 seconds
+        const timer = setInterval(poll, 3000);
+
+        // Immediate poll on tab focus
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') poll();
+        });
+
+        // Event listener
+        if (typeof onChangeCallback === 'function') {
+            window.addEventListener('deeds_updated', onChangeCallback);
+        }
+
+        return timer;
     },
 
     async addDeed(deed) {
