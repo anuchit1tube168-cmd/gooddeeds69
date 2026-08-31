@@ -44,6 +44,17 @@ const rules=[
   {name:'bearer_secret_literal',re:/Authorization\s*[:=]\s*['\"]Bearer\s+[A-Za-z0-9._~-]{20,}['\"]/gi}
 ];
 
+// Explicit synthetic fixtures reserved for the isolated pilot only.
+// They are not accepted anywhere else and the pilot file must clearly identify itself as demo/example content.
+const reservedSyntheticStudentIds=new Set(['6900000','6900001','6900002','6900003']);
+function isAllowedSyntheticPilotMatch(file,ruleName,matchText,fullText){
+  if(!file.startsWith('rtafnc-one-pilot/')) return false;
+  if(ruleName!=='student_id_context_literal' && ruleName!=='legacy_student_id_literal') return false;
+  const id=matchText.match(/\b\d{7}\b/)?.[0];
+  if(!id || !reservedSyntheticStudentIds.has(id)) return false;
+  return /(?:\bDEMO\b|ตัวอย่าง|ข้อมูลจำลอง)/i.test(fullText);
+}
+
 // Guard implementation itself contains detector patterns by definition.
 const allowFiles=new Set(['scripts/pii-guard.mjs']);
 let failed=false;
@@ -66,7 +77,7 @@ for(const file of files){
   try{text=fs.readFileSync(path.resolve(file),'utf8')}catch{continue}
   for(const rule of rules){
     rule.re.lastIndex=0;
-    const matches=[...text.matchAll(rule.re)];
+    const matches=[...text.matchAll(rule.re)].filter(m=>!isAllowedSyntheticPilotMatch(file,rule.name,m[0],text));
     if(!matches.length) continue;
     failed=true;
     for(const m of matches.slice(0,10)){
