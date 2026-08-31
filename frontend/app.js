@@ -772,6 +772,48 @@ const App = {
         };
     },
 
+    // Ensure students are loaded (from Cache or Google Cloud)
+    async ensureStudentsLoaded() {
+        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0) {
+            return STUDENTS_DATA;
+        }
+        try {
+            if (typeof localStorage !== 'undefined') {
+                const cached = localStorage.getItem('gooddeeds_cached_students');
+                if (cached) {
+                    const list = JSON.parse(cached);
+                    if (Array.isArray(list) && list.length > 0) {
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                        return list;
+                    }
+                }
+            }
+        } catch (e) {}
+
+        try {
+            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+            if (gasUrl) {
+                const resp = await fetch(gasUrl + '?action=getStudents');
+                if (resp.ok) {
+                    const list = await resp.json();
+                    if (Array.isArray(list) && list.length > 0) {
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                        if (typeof localStorage !== 'undefined') {
+                            localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+                        }
+                        return list;
+                    }
+                }
+            }
+        } catch (err) {
+            console.warn('Could not load students from GAS:', err);
+        }
+
+        return [];
+    },
+
     // All students summary for teacher view
     getAllStudentsSummary() {
         const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
@@ -785,12 +827,30 @@ const App = {
     getAllPendingDeeds() {
         const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
         const pending = [];
+        const checkedStudents = new Set();
+
         students.forEach(s => {
+            checkedStudents.add(String(s.student_id));
             const deeds = this.getDeeds(s.student_id);
             deeds.filter(d => d.status === 'pending').forEach(d => {
                 pending.push({ ...d, student: s });
             });
         });
+
+        // Also check all localStorage deed keys directly
+        if (typeof localStorage !== 'undefined') {
+            Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_deeds_')).forEach(k => {
+                const sid = k.replace('gooddeeds_deeds_', '');
+                if (!checkedStudents.has(sid)) {
+                    const deeds = Storage.get('deeds_' + sid) || [];
+                    const stu = this.getStudentById(sid) || { student_id: sid, rank: 'นพอ.', first_name: 'นักเรียน', last_name: sid, full_name: 'นพอ. ' + sid };
+                    deeds.filter(d => d.status === 'pending').forEach(d => {
+                        pending.push({ ...d, student: stu });
+                    });
+                }
+            });
+        }
+
         return pending.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
     },
 

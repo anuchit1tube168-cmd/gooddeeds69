@@ -815,33 +815,28 @@
       try {
         teacher = App.requireAuth(['teacher', 'admin']);
         if (!teacher) return;
-        await App.syncAllDeedsWithBackend();
+        
         document.getElementById('teacher-name').textContent = teacher.name || teacher.username || 'อาจารย์';
-      if (teacher.role !== 'admin') {
-        document.getElementById('nav-settings').style.display = 'none';
-      }
+        if (teacher.role !== 'admin') {
+          const navSettings = document.getElementById('nav-settings');
+          if (navSettings) navSettings.style.display = 'none';
+        }
 
-      // ตรวจสอบว่า STUDENTS_DATA โหลดแล้ว
-      if (typeof STUDENTS_DATA === 'undefined' || !STUDENTS_DATA || STUDENTS_DATA.length === 0) {
-        document.querySelector('.main-content').innerHTML = `
-          <div style="text-align:center;padding:80px 20px">
-            <div style="font-size:4rem;margin-bottom:16px">⚠️</div>
-            <h2 style="color:var(--yellow);margin-bottom:8px">ข้อมูลนักเรียนยังไม่โหลด</h2>
-            <p style="color:var(--text-muted);margin-bottom:8px">กรุณาเปิดระบบจาก URL ที่ถูกต้อง แล้วกดโหลดใหม่</p>
-            <p style="color:var(--text-muted);font-size:0.8rem;margin-bottom:24px">
-              URL ที่ถูกต้อง: <code style="color:var(--gold)">http://localhost:8000/frontend/index.html</code>
-            </p>
-            <button class="btn btn-primary" onclick="location.reload(true)" style="margin-right:8px">🔄 โหลดใหม่</button>
-            <button class="btn btn-outline" onclick="App.logout()">🚪 ออกจากระบบ</button>
-          </div>`;
-        return;
-      }
+        // Gracefully ensure student data is loaded from Cache or Google Cloud
+        await App.ensureStudentsLoaded();
+        await App.syncAllDeedsWithBackend();
 
-      loadData();
+        loadData();
       } catch (err) {
         console.error("Init Error:", err);
+        loadData();
       }
     }
+
+    // Auto-refresh when cloud students finish loading in background
+    window.addEventListener('students_loaded', () => {
+      loadData();
+    });
 
     function loadData() {
       pendingDeeds = App.getAllPendingDeeds();
