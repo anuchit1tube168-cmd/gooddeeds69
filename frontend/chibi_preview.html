@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👼 Chibi Hero 10 Levels Showcase — วพอ. 2569</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;700;800&family=Sarabun:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #070d18;
+      --card-bg: rgba(15, 23, 42, 0.85);
+      --gold: #f59e0b;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Kanit', sans-serif;
+      background: radial-gradient(circle at top, #1e293b 0%, #070d18 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 30px 20px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { text-align: center; margin-bottom: 40px; }
+    .header h1 { font-size: 2.2rem; font-weight: 800; background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .header p { color: var(--text-muted); font-size: 1.05rem; margin-top: 8px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 24px; }
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      border-color: rgba(245, 158, 11, 0.6);
+      box-shadow: 0 20px 35px rgba(245, 158, 11, 0.25);
+    }
+    .avatar-wrap {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 16px auto;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .avatar-wrap img {
+      width: 115px;
+      height: 115px;
+      object-fit: contain;
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+      animation: float 3s ease-in-out infinite alternate;
+    }
+    @keyframes float {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-8px) scale(1.03); }
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .title { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .hours { font-size: 0.9rem; color: #fbbf24; font-weight: 600; margin-bottom: 12px; }
+    .desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; font-family: 'Sarabun', sans-serif; }
+    
+    .glow-1 { background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%); }
+    .glow-2 { background: radial-gradient(circle, rgba(56,189,248,0.3) 0%, transparent 70%); }
+    .glow-3 { background: radial-gradient(circle, rgba(217,119,6,0.3) 0%, transparent 70%); }
+    .glow-4 { background: radial-gradient(circle, rgba(226,232,240,0.35) 0%, transparent 70%); }
+    .glow-5 { background: radial-gradient(circle, rgba(245,158,11,0.4) 0%, transparent 70%); }
+    .glow-6 { background: radial-gradient(circle, rgba(129,140,248,0.4) 0%, transparent 70%); }
+    .glow-7 { background: radial-gradient(circle, rgba(239,68,68,0.4) 0%, transparent 70%); }
+    .glow-8 { background: radial-gradient(circle, rgba(245,158,11,0.5) 0%, transparent 70%); }
+    .glow-9 { background: radial-gradient(circle, rgba(168,85,247,0.5) 0%, transparent 70%); }
+    .glow-10 { background: radial-gradient(circle, rgba(236,72,153,0.6) 0%, transparent 70%); }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="student-dashboard.html" class="btn-back">← กลับสู่หน้าแดชบอร์ด</a>
+    <div class="header">
+      <h1>👼 รวมตัวละคร Chibi Hero ทั้ง 10 แบบ (วพอ. 2569)</h1>
+      <p>วิวัฒนาการนางฟ้าพยาบาลทหารอากาศ ตามระดับชั่วโมงจิตอาสาสะสมของนักเรียน</p>
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="avatar-wrap glow-1"><img src="photos/chibi/chibi_lv1.png" alt="Lv.1"></div>
+        <span class="badge" style="background:rgba(255,255,255,0.15); color:#e2e8f0;">Lv.1 Novice</span>
+        <div class="title">Cadet Novice</div>
+        <div class="hours">0 – 9 ชั่วโมง</div>
+        <p class="desc">นักเรียนพยาบาลฝึกหัดเริ่มต้น ปีกสีขาวบริสุทธิ์ เครื่องแบบ นพอ. ปกกะลาสี</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-2"><img src="photos/chibi/chibi_lv2.png" alt="Lv.2"></div>
+        <span class="badge" style="background:rgba(56,189,248,0.2); color:#38bdf8;">Lv.2 Apprentice</span>
+        <div class="title">Cadet Apprentice</div>
+        <div class="hours">10 – 24 ชั่วโมง</div>
+        <p class="desc">นักเรียนฝึกงานพยาบาล ปีกสีฟ้าครามสดใส พร้อมออร่าประกายแสงสีฟ้า</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-3"><img src="photos/chibi/chibi_lv3.png" alt="Lv.3"></div>
+        <span class="badge" style="background:rgba(217,119,6,0.2); color:#fb923c;">Lv.3 Bronze</span>
+        <div class="title">Bronze Service Cadet</div>
+        <div class="hours">25 – 49 ชั่วโมง</div>
+        <p class="desc">พยาบาลจิตอาสาปีกทองแดง ได้รับหูฟังแพทย์ประจำกาย (Stethoscope)</p>
+      </div>
+
+      <div class="card" style="border-color: rgba(226,232,240,0.4);">
+        <div class="avatar-wrap glow-4"><img src="photos/chibi/chibi_lv4.png" alt="Lv.4"></div>
+        <span class="badge" style="background:rgba(226,232,240,0.25); color:#f8fafc; border:1px solid rgba(255,255,255,0.4);">Lv.4 Silver ⭐ ผ่านเกณฑ์</span>
+        <div class="title">Silver Care Hero</div>
+        <div class="hours">50 – 79 ชั่วโมง</div>
+        <p class="desc">วีรบุรุษพยาบาลปีกเงิน ระดับที่ผ่านเกณฑ์ขั้นต่ำ 50 ชม./ปี ของ วพอ.</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-5"><img src="photos/chibi/chibi_lv5.png" alt="Lv.5"></div>
+        <span class="badge" style="background:rgba(245,158,11,0.25); color:#fbbf24;">Lv.5 Gold</span>
+        <div class="title">Gold Flight Rescue Hero</div>
+        <div class="hours">80 – 119 ชั่วโมง</div>
+        <p class="desc">ฮีโร่กู้ชีพเวชศาสตร์การบิน ปีกทองคำแท้ พร้อมรัศมีแสงเทวทูต (Golden Halo)</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-6"><img src="photos/chibi/chibi_lv6.png" alt="Lv.6"></div>
+        <span class="badge" style="background:rgba(129,140,248,0.25); color:#818cf8;">Lv.6 Guardian</span>
+        <div class="title">Guardian Angel of Health</div>
+        <div class="hours">120 – 179 ชั่วโมง</div>
+        <p class="desc">เทวทูตผู้พิทักษ์สุขภาพ ปีกประกายฟ้าคอสมิก ละอองดาวลูกแก้วพลังงาน</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-7"><img src="photos/chibi/chibi_lv7.png" alt="Lv.7"></div>
+        <span class="badge" style="background:rgba(239,68,68,0.25); color:#f87171;">Lv.7 Commander</span>
+        <div class="title">Nurse Commander</div>
+        <div class="hours">180 – 249 ชั่วโมง</div>
+        <p class="desc">ผู้บัญชาการจิตอาสา วพอ. ปีกทองคำอัครเสนาบดี สวมมงกุฎทับทิมสีแดง</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-8"><img src="photos/chibi/chibi_lv8.png" alt="Lv.8"></div>
+        <span class="badge" style="background:rgba(245,158,11,0.3); color:#f59e0b;">Lv.8 Sovereign</span>
+        <div class="title">Ultimate Sovereign Hero</div>
+        <div class="hours">250 – 299 ชั่วโมง</div>
+        <p class="desc">สุดยอดวีรบุรุษปีกทองคำสูงสุด ปีกทองคำเปลวสุริยัน รัศมีทองคำคู่</p>
+      </div>
+
+      <div class="card">
+        <div class="avatar-wrap glow-9"><img src="photos/chibi/chibi_lv9.png" alt="Lv.9"></div>
+        <span class="badge" style="background:rgba(168,85,247,0.3); color:#c084fc;">Lv.9 Platinum</span>
+        <div class="title">Platinum Sovereign Hero</div>
+        <div class="hours">300 – 349 ชั่วโมง</div>
+        <p class="desc">อัครเทวทูตปีกคริสตัลพิเศษ ปีกคริสตัลอเมทิสต์สีม่วงประกายรุ้ง</p>
+      </div>
+
+      <div class="card" style="border: 2px solid #ec4899; box-shadow: 0 0 30px rgba(236,72,153,0.35);">
+        <div class="avatar-wrap glow-10"><img src="photos/chibi/chibi_lv10.png" alt="Lv.10"></div>
+        <span class="badge" style="background:linear-gradient(135deg,#ec4899,#8b5cf6); color:#fff; font-weight:800;">Lv.10 👑 Supreme Master</span>
+        <div class="title">Celestial Supreme Commander</div>
+        <div class="hours">350 – 400+ ชั่วโมง</div>
+        <p class="desc">จอมจักรพรรดิจิตอาสาสวรรค์ (ระดับสูงสุดแห่ง วพอ.) ปีกรุ้งสวรรค์คอสมิก มงกุฎแสงจักรพรรดิ</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
