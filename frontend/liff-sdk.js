@@ -433,10 +433,10 @@ const LiffHelper = {
     }
 };
 
-// Safe conditional initialize on load
+// Safe conditional initialize on load - Only auto-initialize on the landing/login page to prevent OAuth redirect loops on dashboards
 window.addEventListener('load', () => {
-    // Check if liff is present and valid
-    if (typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
+    const isLanding = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
+    if (isLanding && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
         try {
             LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
         } catch(e) {}

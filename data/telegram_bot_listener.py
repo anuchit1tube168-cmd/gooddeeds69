@@ -33,10 +33,13 @@ def send_telegram_request(method, payload):
         return {}
 
 def load_students():
-    p = os.path.join(DATA_DIR, 'students.json')
-    if os.path.exists(p):
-        with open(p, 'r', encoding='utf-8') as f:
-            return {s['student_id']: s for s in json.load(f)}
+    for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(BASE_DIR, '.local_backup_pdpa', 'students.json')]:
+        if os.path.exists(p):
+            try:
+                with open(p, 'r', encoding='utf-8') as f:
+                    return {s['student_id']: s for s in json.load(f)}
+            except Exception:
+                pass
     return {}
 
 def calculate_student_total_hours(student_id):
