@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .env
 .env.*
+!.env.example
 scratch/
 good-deeds-system/
 graphify-8/
@@ -13,25 +14,47 @@ thai-docx/
 .agents/
 .vscode/
 
-# RTAFNC ONE private-data boundary & PDPA Compliance
-# Real identities, student rosters, advisor mappings, health/counselling records,
-# operational exports and backups belong in private Google Drive/backend only.
+# RTAFNC private-data boundary / PDPA
 private/
+secrets/
 data/private/
 exports/
 backups/
+backup/
 records/
-frontend/photos/*
-!frontend/photos/*.jpg
-!frontend/photos/chibi/
-!frontend/photos/chibi/*
+.local_backup_pdpa/
+
+# Student / staff / operational data must stay in private backend or Drive
+frontend/photos/
 data/raw_photos/
 data/backup/
 data/photos.json
 data/students.json
 data/students_data.js
 data/students_photos.js
-.local_backup_pdpa/
+data/teachers_data.js
+data/deeds.json
+data/deeds_data.js
+data/line_mappings.json
+frontend/data/students.json
+frontend/data/students_data.js
+frontend/data/students_photos.js
+frontend/data/teachers_data.js
+frontend/data/deeds.json
+frontend/data/deeds_data.js
+frontend/data/line_mappings.json
+
+# Credentials / keys
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+credentials*.json
+service-account*.json
+service_account*.json
+
+# Data exports and local databases
 *.xlsx
 *.xls
 *.xlsm
@@ -44,3 +67,7 @@ data/students_photos.js
 *.sql
 *.parquet
 *.avro
+*.bak
+*.backup
+*.dump
+*.log
