@@ -1,10 +1,21 @@
 {
   "module": "gooddeed",
-  "phase": "2A",
+  "phase": "2B",
   "productionCutover": false,
   "productionWrites": false,
   "gatewayPath": "/api/gooddeed",
+  "authSource": "rtafnc-one-core",
+  "sessionCookie": "__Host-rtafnc_session",
+  "studentMasterLinkRequired": true,
+  "localAuthAllowed": false,
+  "localLineSubjectStorageAllowed": false,
+  "csrfRequiredForWrites": true,
   "publicBrowserData": ["liffId", "uiLabels", "nonSensitiveThresholds"],
   "serverOnlyData": ["studentMaster", "passwordHashes", "lineUserId", "deedRecords", "evidence", "telegramToken", "lineMessagingToken", "auditTrail"],
-  "requiredControls": ["lineServerVerification", "session", "rbac", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
+  "requiredPermissions": {
+    "selfRead": "gooddeed:self:read",
+    "selfSubmit": "gooddeed:self:submit",
+    "review": "gooddeed:review"
+  },
+  "requiredControls": ["lineServerVerification", "coreSession", "studentMasterLink", "rbac", "csrf", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
 }
