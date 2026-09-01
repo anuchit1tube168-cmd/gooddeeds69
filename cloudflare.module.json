@@ -1,0 +1,10 @@
+{
+  "module": "gooddeed",
+  "phase": "2A",
+  "productionCutover": false,
+  "productionWrites": false,
+  "gatewayPath": "/api/gooddeed",
+  "publicBrowserData": ["liffId", "uiLabels", "nonSensitiveThresholds"],
+  "serverOnlyData": ["studentMaster", "passwordHashes", "lineUserId", "deedRecords", "evidence", "telegramToken", "lineMessagingToken", "auditTrail"],
+  "requiredControls": ["lineServerVerification", "session", "rbac", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
+}
