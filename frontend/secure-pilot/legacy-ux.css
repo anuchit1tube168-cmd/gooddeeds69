@@ -1,0 +1,16 @@
+:root{--gd-gold:#c9a227;--gd-gold-soft:#f4dd87;--gd-navy:#071a32;--gd-card:#0d223e;--gd-line:rgba(201,162,39,.28)}
+body{background:radial-gradient(circle at 15% 0%,rgba(201,162,39,.10),transparent 26%),linear-gradient(180deg,#071a32 0%,#061322 100%)!important}
+.login-card{border:1px solid var(--gd-line)!important;box-shadow:0 22px 60px rgba(0,0,0,.38),0 0 0 1px rgba(201,162,39,.06) inset!important}
+.login-mark{filter:drop-shadow(0 10px 18px rgba(201,162,39,.18))}
+.login-mark img{border-radius:50%;border:3px solid rgba(201,162,39,.58);background:#fff;object-fit:contain}
+.pilot-badge{color:#9ee5bd!important;background:rgba(6,199,85,.10)!important;border-color:rgba(6,199,85,.24)!important}
+.login-card h1,.topbar h1{color:var(--gd-gold-soft)!important}
+.line-box{border-color:rgba(6,199,85,.25)!important;background:rgba(6,199,85,.06)!important}
+.legacy-login-note{margin:10px 0 2px;text-align:center;color:#9fb0c7;font-size:.78rem;line-height:1.5}
+.legacy-identity-card{display:grid;grid-template-columns:150px minmax(0,1fr);gap:22px;align-items:center;margin:0 0 20px;padding:22px;border-radius:22px;background:linear-gradient(135deg,rgba(201,162,39,.12),rgba(13,34,62,.82) 48%,rgba(7,26,50,.94));border:1px solid var(--gd-line);box-shadow:0 18px 48px rgba(0,0,0,.26);position:relative;overflow:hidden}
+.legacy-identity-card::after{content:'🎖️';position:absolute;right:-8px;bottom:-24px;font-size:8rem;opacity:.035;pointer-events:none}
+.legacy-chibi{height:142px;display:flex;align-items:center;justify-content:center;position:relative;border-radius:28px;background:radial-gradient(circle,rgba(201,162,39,.22),transparent 70%)}
+.legacy-chibi img{max-width:138px;max-height:138px;object-fit:contain;filter:drop-shadow(0 14px 15px rgba(0,0,0,.42))}
+.legacy-level-pill{position:absolute;right:0;bottom:5px;padding:6px 10px;border-radius:999px;background:linear-gradient(135deg,#b78d19,#f2d56f);color:#071a32;font:700 .76rem 'Kanit',sans-serif;box-shadow:0 5px 14px rgba(0,0,0,.25)}
+.legacy-card-copy{min-width:0}.legacy-kicker{margin:0 0 5px;color:var(--gd-gold-soft);font:600 .72rem 'Kanit',sans-serif;letter-spacing:.08em}.legacy-card-copy h3{margin:0;color:#fff;font:700 1.35rem/1.2 'Kanit',sans-serif}.legacy-meta{margin:5px 0 16px;color:#aebdd0;font-size:.85rem}.legacy-stats{display:flex;gap:12px;flex-wrap:wrap}.legacy-stat{min-width:112px;padding:10px 13px;border-radius:13px;background:rgba(3,13,26,.48);border:1px solid rgba(255,255,255,.07)}.legacy-stat strong{display:block;color:var(--gd-gold-soft);font:700 1.35rem 'Kanit',sans-serif}.legacy-stat span{font-size:.72rem;color:#9fb0c7}.hero{border-color:rgba(201,162,39,.18)!important}.crest{background-image:url('../510903.jpg')!important;background-size:cover!important;background-position:center!important;color:transparent!important;border:1px solid rgba(201,162,39,.4)!important}.tabs .tab.active{color:var(--gd-gold-soft)!important;border-color:var(--gd-gold)!important}
+@media(max-width:620px){.legacy-identity-card{grid-template-columns:105px minmax(0,1fr);gap:12px;padding:15px;border-radius:17px}.legacy-chibi{height:108px;border-radius:20px}.legacy-chibi img{max-width:104px;max-height:104px}.legacy-card-copy h3{font-size:1.05rem}.legacy-meta{font-size:.76rem;margin-bottom:10px}.legacy-stat{min-width:92px;padding:8px 10px}.legacy-stat strong{font-size:1.1rem}}
