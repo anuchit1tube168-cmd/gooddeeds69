@@ -36,7 +36,16 @@ if (!wrangler.includes('"binding": "RTAFNC_GATEWAY"') || !wrangler.includes('"se
 
 for (const p of ["functions/auth/[[path]].ts", "functions/api/[[path]].ts", "functions/health.ts"]) {
   const source = read(p);
-  if (!source.includes("RTAFNC_GATEWAY.fetch(context.request)")) throw new Error(`invalid gateway proxy: ${p}`);
+  const required = [
+    "new URL(request.url).origin",
+    "headers.set(\"origin\", sourceUrl.origin)",
+    "new Request(request, { headers })",
+    "RTAFNC_GATEWAY.fetch(toGatewayRequest(context.request))"
+  ];
+  for (const marker of required) {
+    if (!source.includes(marker)) throw new Error(`gateway proxy must derive trusted Pages origin: ${p}`);
+  }
+  if (source.includes("headers.get(\"origin\")")) throw new Error(`gateway proxy must not trust client Origin: ${p}`);
 }
 
 console.log("Secure Cloudflare view_cards migration verification passed");
