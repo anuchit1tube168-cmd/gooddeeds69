@@ -38,3 +38,5 @@ jobs:
             exit 1
           fi
           echo 'Security Guard passed.'
+      - name: Verify Cloudflare view_cards privacy migration
+        run: node scripts/verify_view_cards_cloudflare.mjs
