@@ -1,0 +1,10 @@
+/*
+  Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+/view_cards.html
+  Cache-Control: no-store
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://api.line.me https://access.line.me https://liff.line.me https://*.line.me; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'
