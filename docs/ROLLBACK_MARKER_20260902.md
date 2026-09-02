@@ -1,0 +1,1 @@
+Rollback source is the current production main commit before the UI restore patch. Do not use this file as a runtime source; it exists only as an audit marker.
