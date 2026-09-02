@@ -1,6 +1,6 @@
 {
   "module": "gooddeed",
-  "phase": "2D",
+  "phase": "2E",
   "productionCutover": false,
   "productionWrites": false,
   "gatewayPath": "/api/gooddeed",
