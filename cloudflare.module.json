@@ -1,12 +1,15 @@
 {
   "module": "gooddeed",
-  "phase": "2B",
+  "phase": "2D",
   "productionCutover": false,
   "productionWrites": false,
   "gatewayPath": "/api/gooddeed",
   "authSource": "rtafnc-one-core",
   "sessionCookie": "__Host-rtafnc_session",
   "studentMasterLinkRequired": true,
+  "studentMasterLinkSource": "owner-approved-core-only",
+  "browserSelfLinkAllowed": false,
+  "localRoleAssignmentAllowed": false,
   "localAuthAllowed": false,
   "localLineSubjectStorageAllowed": false,
   "csrfRequiredForWrites": true,
@@ -17,5 +20,5 @@
     "selfSubmit": "gooddeed:self:submit",
     "review": "gooddeed:review"
   },
-  "requiredControls": ["lineServerVerification", "coreSession", "studentMasterLink", "rbac", "csrf", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
+  "requiredControls": ["lineServerVerification", "coreSession", "ownerApprovedStudentMasterLink", "rbac", "csrf", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
 }
