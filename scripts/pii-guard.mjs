@@ -7,12 +7,23 @@ import {execFileSync} from 'node:child_process';
 // account identifiers and secrets must stay in private backend/Google Drive.
 const MODE=String(process.env.PII_GUARD_MODE||'changed').toLowerCase();
 const BASE_REF=String(process.env.PII_GUARD_BASE_REF||'HEAD^').trim();
-function git(args){return execFileSync('git',args,{encoding:'utf8'}).trim()}
+function git(args,options={}){return execFileSync('git',args,{encoding:'utf8',stdio:['ignore','pipe','pipe'],...options}).trim()}
 function trackedFiles(){return git(['ls-files']).split(/\r?\n/).filter(Boolean)}
+function hasCommit(ref){
+  try{git(['cat-file','-e',`${ref}^{commit}`]);return true}catch{return false}
+}
+function ensureBaseCommit(){
+  if(hasCommit(BASE_REF)) return;
+  if(!/^[0-9a-f]{40}$/i.test(BASE_REF)) throw new Error('base_ref_unavailable');
+  // Checkout intentionally keeps fetch-depth small. Pull only the exact PR base
+  // commit when it is outside the shallow checkout; never fetch full history.
+  git(['fetch','--no-tags','--depth=1','origin',BASE_REF]);
+  if(!hasCommit(BASE_REF)) throw new Error('base_ref_unavailable');
+}
 function changedFiles(){
   try{
-    const base=git(['merge-base',BASE_REF,'HEAD']);
-    return git(['diff','--name-only','--diff-filter=ACMR',base,'HEAD']).split(/\r?\n/).filter(Boolean);
+    ensureBaseCommit();
+    return git(['diff','--name-only','--diff-filter=ACMR',BASE_REF,'HEAD']).split(/\r?\n/).filter(Boolean);
   }catch{
     console.error(`[PII-GUARD] Cannot resolve base ref ${BASE_REF}.`);
     process.exit(2);
