@@ -22,6 +22,13 @@ const files=MODE==='full'?trackedFiles():changedFiles();
 const allowedTemplate=/^data\/templates\/[^/]+\.(?:csv|json)$/i;
 const disallowedFile=/\.(?:xlsx?|xlsm|ods|pdf|docx?|rtf|pptx?|zip|7z|rar|db|sqlite3?|sql|parquet|avro)$/i;
 const suspiciousDataPath=/(?:^|\/)(?:private|exports?|backups?|students?|people|persons?|patients?|health-records?|counselling|advisor-mapping|identity-data)(?:\/|$)/i;
+
+// Public repo may keep only these reviewed, non-PII visual assets.
+// Do not broaden this allowlist to student/profile photographs.
+const allowedBinaryUiAsset=/^(?:frontend\/510903\.jpg|frontend\/photos\/chibi\/chibi_lv(?:10|[1-9])\.png)$/i;
+const protectedPhotoPath=/^frontend\/photos\//i;
+const imageFile=/\.(?:png|jpe?g|gif|webp|avif|svg)$/i;
+
 const rules=[
   {name:'student_id_context_literal',re:/(?:student[_ -]?id|รหัส(?:นักเรียน|นพอ\.?))\s*[:=,\t ]+['\"]?\d{7}\b/gi},
   {name:'legacy_student_id_literal',re:/\b(?:66|67|68|69)\d{5}\b/g},
@@ -37,12 +44,28 @@ const allowFiles=new Set(['scripts/pii-guard.mjs']);
 let failed=false;
 for(const file of files){
   if(!fs.existsSync(file)||allowFiles.has(file)) continue;
+
+  if(allowedBinaryUiAsset.test(file)){
+    // Exact reviewed allowlist only. Binary data must not be decoded as UTF-8,
+    // otherwise arbitrary image bytes can create false-positive PII matches.
+    continue;
+  }
+
+  if(protectedPhotoPath.test(file)&&imageFile.test(file)){
+    failed=true;
+    console.error(`[PII-GUARD] non_allowlisted_public_photo: ${file}`);
+    continue;
+  }
+
   if(disallowedFile.test(file)&&!allowedTemplate.test(file)){
     failed=true; console.error(`[PII-GUARD] disallowed_code_only_file: ${file}`); continue;
   }
   if(suspiciousDataPath.test(file)&&!allowedTemplate.test(file)){
     failed=true; console.error(`[PII-GUARD] suspicious_data_path: ${file}`);
   }
+
+  if(imageFile.test(file)) continue;
+
   let text=''; try{text=fs.readFileSync(path.resolve(file),'utf8')}catch{continue}
   for(const rule of rules){
     rule.re.lastIndex=0;
