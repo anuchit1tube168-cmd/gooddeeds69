@@ -7,7 +7,7 @@ const config = read("frontend/cloudflare-config.js");
 const wrangler = read("wrangler.cards.jsonc");
 
 const forbidden = [
-  "students_data.js", "students_photos.js", "deeds_data.js", "teachers_data.js",
+  "style.css", "students_data.js", "students_photos.js", "deeds_data.js", "teachers_data.js",
   "STUDENTS_DATA", "STUDENT_PHOTOS", "DEEDS_DATA", "App.requireAuth", "App.getStudentSummary",
   "localStorage", "sessionStorage", "TELEGRAM_BOT_TOKEN", "LINE_CHANNEL_ACCESS_TOKEN",
   "fonts.googleapis.com", "fonts.gstatic.com", "umami", "__manus__", "sessionReplay", "gtag("
@@ -21,7 +21,7 @@ if (js.includes(".innerHTML") || js.includes("insertAdjacentHTML")) {
   throw new Error("server/user data rendering must not use HTML injection APIs");
 }
 
-const requiredHtml = ["cloudflare-config.js", "static.line-scdn.net/liff/edge/2/sdk.js", "view_cards.cloudflare.js"];
+const requiredHtml = ["view_cards.cloudflare.css", "cloudflare-config.js", "static.line-scdn.net/liff/edge/2/sdk.js", "view_cards.cloudflare.js"];
 for (const marker of requiredHtml) if (!html.includes(marker)) throw new Error(`missing secure card dependency: ${marker}`);
 
 const requiredJs = ["/auth/session", "/auth/line/verify", "/api/gooddeed/card-self", "credentials: \"include\"", "getIDToken()"];
