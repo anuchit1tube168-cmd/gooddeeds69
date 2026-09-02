@@ -1,9 +1,12 @@
 {
   "module": "gooddeed",
-  "phase": "2E",
+  "phase": "2E-view-cards-first",
+  "priority": 1,
   "productionCutover": false,
   "productionWrites": false,
   "gatewayPath": "/api/gooddeed",
+  "firstMigratedPage": "/frontend/view_cards.html",
+  "cardSelfEndpoint": "/api/gooddeed/card-self",
   "authSource": "rtafnc-one-core",
   "sessionCookie": "__Host-rtafnc_session",
   "studentMasterLinkRequired": true,
@@ -16,9 +19,10 @@
   "publicBrowserData": ["liffId", "uiLabels", "nonSensitiveThresholds"],
   "serverOnlyData": ["studentMaster", "passwordHashes", "lineUserId", "deedRecords", "evidence", "telegramToken", "lineMessagingToken", "auditTrail"],
   "requiredPermissions": {
+    "cardSelf": "gooddeed:self:read",
     "selfRead": "gooddeed:self:read",
     "selfSubmit": "gooddeed:self:submit",
     "review": "gooddeed:review"
   },
-  "requiredControls": ["lineServerVerification", "coreSession", "ownerApprovedStudentMasterLink", "rbac", "csrf", "audit", "originAllowlist", "requestValidation", "rateLimit", "noStore"]
+  "requiredControls": ["lineServerVerification", "coreSession", "ownerApprovedStudentMasterLink", "rbac", "csrf", "audit", "originAllowlist", "requestValidation", "rateLimit", "sameOriginServiceBinding", "noBrowserStudentDataset", "noStore"]
 }
