@@ -37,7 +37,8 @@ if (!wrangler.includes('"binding": "RTAFNC_GATEWAY"') || !wrangler.includes('"se
 for (const p of ["functions/auth/[[path]].ts", "functions/api/[[path]].ts", "functions/health.ts"]) {
   const source = read(p);
   const required = [
-    "new URL(request.url).origin",
+    "new URL(request.url)",
+    "sourceUrl.origin",
     "headers.set(\"origin\", sourceUrl.origin)",
     "new Request(request, { headers })",
     "RTAFNC_GATEWAY.fetch(toGatewayRequest(context.request))"
