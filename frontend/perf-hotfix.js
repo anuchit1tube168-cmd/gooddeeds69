@@ -2,17 +2,30 @@
   'use strict';
 
   // RTAFNC Good Deed production load-shedding hotfix.
-  // This wrapper changes network behavior only. It does not change LIFF IDs,
-  // student data, permissions, backend endpoints, or write payloads.
+  // Network/timing behavior only: no LIFF ID, endpoint, role, data or payload changes.
   const originalFetch = window.fetch.bind(window);
+  const originalSetInterval = window.setInterval.bind(window);
   const responseCache = new Map();
   const inFlight = new Map();
   const GET_TIMEOUT_MS = 10000;
   const POST_TIMEOUT_MS = 25000;
+  const LEGACY_POLL_MS = 15000;
+  const POLL_MIN_MS = 90000;
+  const POLL_JITTER_MS = 30000;
   const TTL_MS = Object.freeze({
     getStudents: 5 * 60 * 1000,
-    getDeeds: 75 * 1000,
+    getDeeds: 20 * 1000,
   });
+
+  // The legacy dashboard schedules exactly one 15s polling loop. Stretch only that
+  // interval and add per-client jitter so 100+ open LIFF clients do not synchronize.
+  window.setInterval = function rtafncSetInterval(handler, timeout, ...args) {
+    if (Number(timeout) === LEGACY_POLL_MS) {
+      const spread = POLL_MIN_MS + Math.floor(Math.random() * (POLL_JITTER_MS + 1));
+      return originalSetInterval(handler, spread, ...args);
+    }
+    return originalSetInterval(handler, timeout, ...args);
+  };
 
   function requestInfo(input, init = {}) {
     let url;
