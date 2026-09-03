@@ -1259,6 +1259,10 @@ const App = {
             `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
+        const baseUrl = this.getBaseUrl();
+        const approveUrl = `${baseUrl}/approve_sign.html?id=${deed.id}&studentId=${student.student_id}`;
+        const dashboardUrl = `${baseUrl}/teacher-dashboard.html`;
+
         const replyMarkup = {
             inline_keyboard: [
                 [
@@ -1266,10 +1270,10 @@ const App = {
                     { text: '❌ ปฏิเสธ', callback_data: `reject_${deed.id}_${student.student_id}` }
                 ],
                 [
-                    { text: '✍️ ตรวจสอบ & เซ็นชื่อดิจิทัล', url: `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id=${deed.id}&studentId=${student.student_id}` }
+                    { text: '✍️ ตรวจสอบ & เซ็นชื่อดิจิทัล', url: approveUrl }
                 ],
                 [
-                    { text: '🌐 เปิดแผงควบคุมอาจารย์', url: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/teacher-dashboard.html' }
+                    { text: '🌐 เปิดแผงควบคุมอาจารย์', url: dashboardUrl }
                 ]
             ]
         };
@@ -1300,6 +1304,22 @@ const App = {
 
 
     // ---------- UTILS ----------
+    getBaseUrl() {
+        if (typeof window !== 'undefined' && window.location) {
+            const loc = window.location;
+            if (loc.origin && !loc.origin.startsWith('file:')) {
+                const pathParts = loc.pathname.split('/');
+                const fIndex = pathParts.indexOf('frontend');
+                if (fIndex !== -1) {
+                    return loc.origin + pathParts.slice(0, fIndex + 1).join('/');
+                }
+                return loc.origin;
+            }
+        }
+        const settings = this.getSettings();
+        return settings.systemUrl || 'http://localhost:3000';
+    },
+
     formatDate(iso) {
         if (!iso) return '-';
         const d = new Date(iso);

@@ -459,14 +459,43 @@
     </div>
 
     <div class="toast-container" id="toast-container"></div>
+
+    <!-- Post-Submission Action Modal -->
+    <div id="submit-success-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(6px);">
+        <div style="background:#0f172a; border:1px solid var(--gold); border-radius:16px; max-width:480px; width:100%; padding:24px; text-align:center; color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
+            <div style="font-size:3rem; margin-bottom:12px;">🎉</div>
+            <h2 style="color:var(--gold); font-family:'Kanit',sans-serif; margin-bottom:6px;">บันทึกกิจกรรมความดีสำเร็จ!</h2>
+            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:16px;">
+                สถานะปัจจุบัน: <span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:2px 8px; border-radius:12px; font-weight:600;">⏳ รอการอนุมัติ</span><br>
+                <small style="color:#64748b;">(ยอดชั่วโมงจะถูกบวกเพิ่ม และพิมพ์สลิป A4 ได้ เมื่ออาจารย์/แผนกปกครองลงนามอนุมัติ)</small>
+            </p>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
+                <button type="button" id="modal-line-share-btn" class="btn" style="background:#06c755; color:#fff; font-weight:700; border:none; padding:12px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
+                    <span>📲 ส่งเข้า LINE ให้ผู้ตรวจ / ผู้ปกครองเซ็น</span>
+                </button>
+                <button type="button" id="modal-copy-link-btn" class="btn btn-outline" style="border-color:var(--gold); color:var(--gold); padding:10px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
+                    <span>📋 คัดลอกลิงก์ให้ผู้ตรวจ / ผู้ปกครองเซ็นชื่อ</span>
+                </button>
+                <button type="button" id="modal-view-slip-btn" class="btn btn-outline" style="border-color:#38bdf8; color:#38bdf8; padding:10px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
+                    <span>📄 ดูสลิป (จะปลดล็อกพิมพ์ได้เมื่ออนุมัติ)</span>
+                </button>
+            </div>
+
+            <button type="button" onclick="window.location.href='history.html'" style="background:rgba(255,255,255,0.08); color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:0.85rem;">
+                กลับหน้ารวมประวัติความดี →
+            </button>
+        </div>
+    </div>
+
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/teachers_data.js?v=3400"></script>
-    <script src="data/students_data.js?v=3400"></script>
-    <script src="data/deeds_data.js?v=3400"></script>
-    <script src="data/app_settings.js?v=3400"></script>
-    <script src="chibi3d.js?v=3400"></script>
-    <script src="app.js?v=3400"></script>
-    <script src="liff-sdk.js?v=3400"></script>
+    <script src="data/teachers_data.js?v=3404"></script>
+    <script src="data/students_data.js?v=3404"></script>
+    <script src="data/deeds_data.js?v=3404"></script>
+    <script src="data/app_settings.js?v=3404"></script>
+    <script src="chibi3d.js?v=3404"></script>
+    <script src="app.js?v=3404"></script>
+    <script src="liff-sdk.js?v=3404"></script>
     <script>
         let currentUser = null;
         let selectedCategoryId = null;
@@ -759,12 +788,61 @@
             // Notify admin via Telegram + LINE (if configured)
             const notified = await App.notifyAdmins(deed, currentUser);
 
-            if (notified) {
-                showToast('บันทึกสำเร็จ! แจ้งเตือนอาจารย์แล้ว 📢', 'success');
-            } else {
-                showToast('บันทึกความดีสำเร็จ! รอการอนุมัติจากอาจารย์ 🎉', 'success');
+            showToast('บันทึกความดีสำเร็จ! (สถานะ: รอการอนุมัติ) 🎉', 'success');
+            btn.disabled = false;
+            btn.innerHTML = '<span>💾</span> บันทึกความดี';
+            showSuccessModal(deed);
+        }
+
+        function showSuccessModal(deed) {
+            const modal = document.getElementById('submit-success-modal');
+            if (!modal) {
+                setTimeout(() => window.location.href = 'history.html', 1200);
+                return;
             }
-            setTimeout(() => window.location.href = 'history.html', 1200);
+            modal.style.display = 'flex';
+
+            const baseUrl = App.getBaseUrl();
+            const signUrl = `${baseUrl}/approve_sign.html?id=${deed.id}&studentId=${currentUser.student_id}`;
+            const slipUrl = `${baseUrl}/deed_slip.html?id=${deed.id}&studentId=${currentUser.student_id}`;
+
+            // 1. Line Share button
+            const lineBtn = document.getElementById('modal-line-share-btn');
+            if (lineBtn) {
+                lineBtn.onclick = async () => {
+                    if (typeof LiffHelper !== 'undefined' && LiffHelper.createDeedFlex) {
+                        const flex = LiffHelper.createDeedFlex(deed, currentUser);
+                        const shared = await LiffHelper.shareFlex(flex);
+                        if (shared) return;
+                    }
+                    const shareText = `ขออนุญาตส่งบันทึกความดีจิตอาสา นพอ. เพื่อให้อาจารย์/ผู้ปกครองตรวจประเมินและลงนามครับ:\n${signUrl}`;
+                    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(shareText)}`, '_blank');
+                };
+            }
+
+            // 2. Copy Link button
+            const copyBtn = document.getElementById('modal-copy-link-btn');
+            if (copyBtn) {
+                copyBtn.onclick = () => {
+                    if (navigator.clipboard && navigator.clipboard.writeText) {
+                        navigator.clipboard.writeText(signUrl).then(() => {
+                            alert('📋 คัดลอกลิงก์สำหรับส่งให้อาจารย์/ผู้ปกครองลงนามเรียบร้อยแล้ว:\n' + signUrl);
+                        }).catch(() => {
+                            prompt('คัดลอกลิงก์ด้านล่างนี้ได้เลยครับ:', signUrl);
+                        });
+                    } else {
+                        prompt('คัดลอกลิงก์ด้านล่างนี้ได้เลยครับ:', signUrl);
+                    }
+                };
+            }
+
+            // 3. View Slip button
+            const slipBtn = document.getElementById('modal-view-slip-btn');
+            if (slipBtn) {
+                slipBtn.onclick = () => {
+                    window.location.href = slipUrl;
+                };
+            }
         }
 
         init();

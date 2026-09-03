@@ -781,38 +781,28 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 line_pic = payload.get('linePictureUrl', '')
                 
                 if student_id and line_user_id:
-                    for json_p in [
-                        os.path.join(BASE_DIR, 'data', 'students.json'),
-                        os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
-                    ]:
-                        if os.path.exists(json_p):
-                            with open(json_p, 'r', encoding='utf-8') as f:
-                                stu_list = json.load(f)
-                            for s in stu_list:
-                                if str(s.get('student_id')) == str(student_id):
-                                    s['line_user_id'] = line_user_id
-                                    s['line_display_name'] = line_name
-                                    s['line_picture_url'] = line_pic
-                                    break
-                            with open(json_p, 'w', encoding='utf-8') as f:
-                                json.dump(stu_list, f, ensure_ascii=False, indent=2)
+                    # 1. Store strictly in private backend storage (never in git or public frontend)
+                    private_map_path = os.path.join(BASE_DIR, 'data', 'private', 'line_mappings.json')
+                    mappings = {}
+                    if os.path.exists(private_map_path):
+                        try:
+                            with open(private_map_path, 'r', encoding='utf-8') as f:
+                                mappings = json.load(f)
+                        except Exception:
+                            mappings = {}
+                    
+                    mappings[str(student_id)] = {
+                        'student_id': str(student_id),
+                        'line_user_id': line_user_id,
+                        'line_display_name': line_name,
+                        'line_picture_url': line_pic,
+                        'updated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+                    }
+                    
+                    with open(private_map_path, 'w', encoding='utf-8') as f:
+                        json.dump(mappings, f, ensure_ascii=False, indent=2)
 
-                    # Update JS files
-                    for js_p in [
-                        os.path.join(BASE_DIR, 'data', 'students_data.js'),
-                        os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js')
-                    ]:
-                        if os.path.exists(js_p):
-                            with open(os.path.join(BASE_DIR, 'frontend', 'data', 'students.json'), 'r', encoding='utf-8') as f:
-                                stu_list = json.load(f)
-                            js_content = "// Auto-generated student data - DO NOT EDIT MANUALLY\n"
-                            js_content += "const STUDENTS_DATA = " + json.dumps(stu_list, ensure_ascii=False, indent=2) + ";\n\n"
-                            js_content += "if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n"
-                            js_content += "if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n"
-                            with open(js_p, 'w', encoding='utf-8') as f:
-                                f.write(js_content)
-
-                    print(f"🔗 Bound LINE ID ({line_user_id[:8]}... - {line_name}) to student {student_id}")
+                    print(f"🔒 Bound LINE ID safely in private backend ({line_user_id[:8]}... - {line_name}) for student {student_id}")
                     sync_to_google_drive_bg()
 
                 self.send_response(200)

@@ -234,7 +234,10 @@ const LiffHelper = {
         const cat = (typeof App !== 'undefined' && App.getCategoryById) ? App.getCategoryById(deed.categoryId) : { emoji: '🎖️', name: 'กิจกรรมจิตอาสา' };
         const statusText = deed.status === 'approved' ? '✅ อนุมัติแล้ว' : (deed.status === 'rejected' ? '❌ ปฏิเสธ' : '⏳ รอตรวจประเมิน');
         const statusColor = deed.status === 'approved' ? '#22c55e' : (deed.status === 'rejected' ? '#ef4444' : '#f59e0b');
-        const slipUrl = `https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/deed_slip.html?id=${deed.id}&studentId=${student.student_id}&autoprint=true`;
+        const isApproved = deed.status === 'approved';
+        const baseUrl = (typeof App !== 'undefined' && App.getBaseUrl) ? App.getBaseUrl() : window.location.origin;
+        const slipUrl = `${baseUrl}/deed_slip.html?id=${deed.id}&studentId=${student.student_id}&autoprint=true`;
+        const signUrl = `${baseUrl}/approve_sign.html?id=${deed.id}&studentId=${student.student_id}`;
 
         return {
             type: "flex",
@@ -393,11 +396,11 @@ const LiffHelper = {
                             type: "button",
                             action: {
                                 type: "uri",
-                                label: "📄 พิมพ์ใบบันทึกความดี (A4 Slip)",
-                                uri: slipUrl
+                                label: isApproved ? "📄 พิมพ์ใบบันทึกความดี (A4 PDF)" : "✍️ ส่งให้ผู้ตรวจ / ผู้ปกครอง เซ็นชื่อ",
+                                uri: isApproved ? slipUrl : signUrl
                             },
                             style: "primary",
-                            color: "#0a192f"
+                            color: isApproved ? "#0a192f" : "#0284c7"
                         }
                     ]
                 }
