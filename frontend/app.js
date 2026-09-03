@@ -1329,14 +1329,14 @@ const App = {
 
 
 
-    // ดึงรูปโปรไฟล์นักเรียน: localStorage ก่อน, ถ้าไม่มีใช้ STUDENT_PHOTOS
+    // ดึงรูปโปรไฟล์นักเรียน: localStorage ก่อน, ถ้าไม่มีใช้ STUDENT_PHOTOS หรือ photos/{studentId}.jpg
     getProfilePhoto(studentId) {
         const local = Storage.get('photo_' + studentId);
         if (local) return local;
         if (typeof STUDENT_PHOTOS !== 'undefined' && STUDENT_PHOTOS[studentId]) {
             return STUDENT_PHOTOS[studentId];
         }
-        return null;
+        return `photos/${studentId}.jpg`;
     },
 
     saveProfilePhoto(studentId, base64) {
