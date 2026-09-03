@@ -206,13 +206,34 @@
             align-items: center;
             justify-content: center;
             overflow: hidden;
-            background: #f8fafc;
+            background: #ffffff;
+            border-radius: 4px;
         }
 
         .evidence-photo-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+            max-width: 96%;
+            max-height: 96%;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* Card Mode for Crisp Telegram/Social Image Preview */
+        body.card-mode {
+            background: #ffffff !important;
+            padding: 0 !important;
+            margin: 0 !important;
+            min-height: auto !important;
+            display: block !important;
+        }
+        body.card-mode .no-print-bar {
+            display: none !important;
+        }
+        body.card-mode .a4-page {
+            box-shadow: none !important;
+            padding: 24px 14px 16px 14px !important;
+            width: 800px !important;
+            margin: 0 auto !important;
         }
 
         @media print {
@@ -354,6 +375,9 @@
 
         function loadSlipData() {
             const params = new URLSearchParams(window.location.search);
+            if (params.get('mode') === 'card' || params.get('card') === 'true') {
+                document.body.classList.add('card-mode');
+            }
             const deedId = params.get('id');
             const studentId = params.get('studentId');
 
@@ -395,7 +419,11 @@
                 const cat = App.getCategoryById(deed.categoryId || deed.category_id);
                 document.getElementById('doc-category-name').textContent = cat.name || 'ช่วยเหลืองานภายใน วพอ.';
                 document.getElementById('doc-activity-title').textContent = deed.description || deed.title || 'กิจกรรมจิตอาสา';
-                document.getElementById('doc-activity-location').textContent = deed.note || deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
+                let loc = deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ';
+                if (!loc || loc.includes('.xlsx') || loc.includes('import') || loc.includes('Data 2568')) {
+                    loc = 'วิทยาลัยพยาบาลทหารอากาศ';
+                }
+                document.getElementById('doc-activity-location').textContent = loc;
                 
                 const dt = deed.activityDate || deed.event_date;
                 if (dt) {
@@ -436,10 +464,16 @@
                 }
 
                 const evidenceImg = document.getElementById('doc-evidence-img');
+                evidenceImg.onerror = function() {
+                    this.onerror = null;
+                    this.src = '510903.jpg';
+                };
                 const imgKey = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]);
-                if (imgKey) {
+                if (imgKey && !imgKey.startsWith('http')) {
                     const localImg = App.getImage(imgKey);
-                    evidenceImg.src = localImg || (imgKey.startsWith('http') ? imgKey : 'photos/' + imgKey);
+                    evidenceImg.src = localImg || (imgKey === '510903.jpg' ? '510903.jpg' : 'photos/' + imgKey);
+                } else if (imgKey && !imgKey.includes('googleusercontent')) {
+                    evidenceImg.src = imgKey;
                 } else {
                     evidenceImg.src = '510903.jpg';
                 }
