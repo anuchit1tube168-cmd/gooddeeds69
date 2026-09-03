@@ -390,6 +390,13 @@ class CustomHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=FRONTEND_DIR, **kwargs)
 
+    def translate_path(self, path):
+        if path.startswith('/frontend/'):
+            path = path[9:]
+        elif path == '/frontend':
+            path = '/'
+        return super().translate_path(path)
+
     def get_auth_context(self):
         cookies = parse_cookie_header(self.headers.get('Cookie'))
         return {
@@ -533,7 +540,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         clients.remove(q)
             return
         else:
-            # Serve static files normally
+            # Serve static files normally (support both /frontend/path and /path)
+            if self.path.startswith('/frontend/'):
+                self.path = self.path[9:]
             super().do_GET()
 
     def do_POST(self):

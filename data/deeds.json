@@ -31476,6 +31476,32 @@
       "approvedAt": "2025-12-31T00:00:00.000Z",
       "rejectReason": null,
       "note": "นำเข้าจาก Data 2568.xlsx"
+    },
+    {
+      "id": "deed_1788418454515_6703874",
+      "studentId": "6703874",
+      "student_id": "6703874",
+      "categoryId": 3,
+      "category_id": 3,
+      "academicYear": 2569,
+      "academic_year": 2569,
+      "hours": 4,
+      "description": "จิตอาสาพัฒนาห้องเรียนและเตรียมอุปกรณ์การสอน ภาคต้น ๒๕๖๙",
+      "activityDate": "2026-09-03",
+      "date": "2026-09-03",
+      "location": "อาคารเรียน วิทยาลัยพยาบาลทหารอากาศ",
+      "imageUrls": [
+        "photos/510903.jpg"
+      ],
+      "pdfUrl": "",
+      "status": "approved",
+      "submittedAt": "2026-09-03T06:54:14Z",
+      "approvedBy": "น.ต.ศักชัย บุญประสิทธิ์",
+      "approved_by": "น.ต.ศักชัย บุญประสิทธิ์",
+      "approvedAt": "2026-09-03T06:54:14Z",
+      "approverRole": "teacher",
+      "rejectReason": null,
+      "note": "ทดสอบระบบบันทึกความดีและอนุมัติรายบุคคล"
     }
   ],
   "6703838": [
