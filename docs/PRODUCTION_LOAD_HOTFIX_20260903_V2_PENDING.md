@@ -1,0 +1,1 @@
+This marker documents the pre-v2 hotfix state. Do not use as runtime configuration.
