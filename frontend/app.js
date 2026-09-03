@@ -28,12 +28,13 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================== CONFIG ====================
 const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
-    TELEGRAM_BOT_TOKEN: '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k',
+    TELEGRAM_BOT_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
     TELEGRAM_CHAT_ID: '-4839151586',
+    SYSTEM_URL: 'https://gaps-shift-illustrations-pci.trycloudflare.com',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
-    APP_VERSION: '1.1.0',
+    APP_VERSION: '1.2.0',
     ACADEMIC_YEAR: 2569,
 };
 
@@ -1305,9 +1306,14 @@ const App = {
 
     // ---------- UTILS ----------
     getBaseUrl() {
+        const fallbackSystemUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
         if (typeof window !== 'undefined' && window.location) {
             const loc = window.location;
             if (loc.origin && !loc.origin.startsWith('file:')) {
+                // If on localhost, prefer public system URL for shareable links if available
+                if ((loc.origin.includes('localhost') || loc.origin.includes('127.0.0.1')) && fallbackSystemUrl) {
+                    return fallbackSystemUrl + (loc.pathname.includes('/frontend') ? '/frontend' : '');
+                }
                 const pathParts = loc.pathname.split('/');
                 const fIndex = pathParts.indexOf('frontend');
                 if (fIndex !== -1) {
@@ -1317,7 +1323,7 @@ const App = {
             }
         }
         const settings = this.getSettings();
-        return settings.systemUrl || 'http://localhost:3000';
+        return settings.systemUrl || fallbackSystemUrl || 'http://localhost:3000';
     },
 
     formatDate(iso) {
