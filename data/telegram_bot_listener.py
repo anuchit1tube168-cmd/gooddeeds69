@@ -18,8 +18,23 @@ import threading
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
-BOT_TOKEN = '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'
-CHAT_ID = '-4839151586'
+def get_env_config(key, default=''):
+    val = os.environ.get(key)
+    if val: return val
+    env_file = os.path.join(BASE_DIR, '.env')
+    if os.path.exists(env_file):
+        try:
+            with open(env_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith(f"{key}="):
+                        return line.split('=', 1)[1].strip(' "\'')
+        except Exception:
+            pass
+    return default
+
+BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN', '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')
+CHAT_ID = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
 
 def send_telegram_request(method, payload):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
