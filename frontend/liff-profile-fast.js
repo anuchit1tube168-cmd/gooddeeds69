@@ -11,8 +11,7 @@
   if (!liff || typeof liff.getProfile !== 'function' || liff.__rtafncFastProfile) return;
 
   const originalGetProfile = liff.getProfile.bind(liff);
-
-  liff.getProfile = async function rtafncFastGetProfile() {
+  const fastGetProfile = async function rtafncFastGetProfile() {
     try {
       const decoded = typeof liff.getDecodedIDToken === 'function' ? liff.getDecodedIDToken() : null;
       const userId = String(decoded && decoded.sub || '');
@@ -31,8 +30,14 @@
   };
 
   try {
+    liff.getProfile = fastGetProfile;
+  } catch (_) {
+    return;
+  }
+
+  try {
     Object.defineProperty(liff, '__rtafncFastProfile', { value: true, configurable: false });
   } catch (_) {
-    liff.__rtafncFastProfile = true;
+    // The speed-up is still safe even if the marker cannot be installed.
   }
 })();
