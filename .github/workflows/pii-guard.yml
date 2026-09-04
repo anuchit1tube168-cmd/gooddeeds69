@@ -14,10 +14,10 @@ jobs:
   pii-guard:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout minimal repository state read-only
+      - name: Checkout repository history read-only
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
-          fetch-depth: 2
+          fetch-depth: 0
           persist-credentials: false
       - name: Block new PDPA data and secrets
         env:
