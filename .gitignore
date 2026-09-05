@@ -22,7 +22,6 @@ exports/
 backups/
 records/
 frontend/photos/*
-!frontend/photos/*.jpg
 !frontend/photos/chibi/
 !frontend/photos/chibi/*
 data/raw_photos/
