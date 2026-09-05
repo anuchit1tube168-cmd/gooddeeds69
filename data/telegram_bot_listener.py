@@ -34,7 +34,7 @@ def get_env_config(key, default=''):
             pass
     return default
 
-BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN', '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s')
+BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN')
 CHAT_ID = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
 
 def send_telegram_request(method, payload):
@@ -42,8 +42,9 @@ def send_telegram_request(method, payload):
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
     ctx = ssl._create_unverified_context()
+    timeout_val = 35 if method == 'getUpdates' else 15
     try:
-        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
+        with urllib.request.urlopen(req, timeout=timeout_val, context=ctx) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ Telegram API Error ({method}): {e}")
