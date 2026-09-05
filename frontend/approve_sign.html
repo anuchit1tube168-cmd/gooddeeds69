@@ -439,10 +439,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3530"></script>
-    <script src="data/students_data.js?v=3530"></script>
-    <script src="data/deeds_data.js?v=3530"></script>
-    <script src="app.js?v=3530"></script>
+    <script src="data/teachers_data.js?v=3531"></script>
+    <script src="data/students_data.js?v=3531"></script>
+    <script src="data/deeds_data.js?v=3531"></script>
+    <script src="app.js?v=3531"></script>
     <script>
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
@@ -736,14 +736,13 @@
 
                 // Evidence Photo
                 const evidenceImg = document.getElementById('evidence-img');
+                evidenceImg.onerror = function() {
+                    this.onerror = null;
+                    this.src = '510903.jpg';
+                };
                 const imgKey = currentDeed.imageUrl || currentDeed.imageData || (currentDeed.imageUrls && currentDeed.imageUrls[0]) || urlImg;
                 if (imgKey) {
-                    if (imgKey.startsWith('data:image') || imgKey.startsWith('http')) {
-                        evidenceImg.src = imgKey;
-                    } else {
-                        const localImg = App.getImage(imgKey);
-                        evidenceImg.src = localImg || (imgKey.startsWith('photos/') ? imgKey : 'photos/' + imgKey);
-                    }
+                    evidenceImg.src = (typeof App !== 'undefined' && App.resolveImageUrl) ? App.resolveImageUrl(imgKey) : imgKey;
                 } else {
                     evidenceImg.src = '510903.jpg';
                 }

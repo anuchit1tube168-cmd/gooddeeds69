@@ -1652,6 +1652,12 @@ const App = {
             status: deed.status || 'pending'
         });
 
+        const rawImg = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || deed.imageData || '';
+        const resolvedImg = this.resolveImageUrl(rawImg);
+        if (resolvedImg && resolvedImg !== '510903.jpg') {
+            qParams.set('img', resolvedImg);
+        }
+
         const baseUrl = this.getBaseUrl();
         const approveUrl = `${baseUrl}/approve_sign.html?${qParams.toString()}`;
         const slipPdfUrl = `${baseUrl}/deed_slip.html?${qParams.toString()}`;
@@ -1817,6 +1823,34 @@ const App = {
         }
         const fullKey = key.startsWith('img_') ? key : 'img_' + key;
         return Storage.get(fullKey) || Storage.get(key) || null;
+    },
+
+    resolveImageUrl(key) {
+        if (!key) return '510903.jpg';
+        if (typeof key === 'string') {
+            if (key.startsWith('data:image') || key.startsWith('blob:')) return key;
+            if (key.startsWith('http://') || key.startsWith('https://')) return key;
+        }
+        // Check localStorage first
+        const fromLocal = this.getImage(key);
+        if (fromLocal && typeof fromLocal === 'string' && (fromLocal.startsWith('data:image') || fromLocal.startsWith('http'))) {
+            return fromLocal;
+        }
+
+        // Clean relative path
+        let clean = typeof key === 'string' ? key.trim() : '';
+        if (clean.startsWith('./')) clean = clean.substring(2);
+        if (clean.startsWith('/')) clean = clean.substring(1);
+        if (!clean.startsWith('photos/')) clean = 'photos/' + clean;
+
+        // If on GitHub Pages or external origin, prepend Cloudflare tunnel / backend server URL
+        const isExternal = typeof location !== 'undefined' && (location.hostname.includes('github.io') || (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1'));
+        const tunnelUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL.replace(/\/+$/, '') : '';
+
+        if (isExternal && tunnelUrl) {
+            return `${tunnelUrl}/${clean}`;
+        }
+        return clean;
     },
 };
 
