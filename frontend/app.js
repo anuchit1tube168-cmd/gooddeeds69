@@ -200,7 +200,20 @@ const App = {
     getStudentById(studentId) {
         if (!studentId) return null;
         const clean = normalizeThaiDigits(String(studentId)).trim().replace(/^[^\d]*/, '').replace(/\s+/g, '');
-        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+        let students = typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0 ? STUDENTS_DATA : [];
+        if (students.length === 0 && typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            if (cached) {
+                try {
+                    const list = JSON.parse(cached);
+                    if (Array.isArray(list) && list.length > 0) {
+                        students = list;
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                    }
+                } catch (e) {}
+            }
+        }
         let found = students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim());
         if (found) return found;
 
@@ -263,7 +276,20 @@ const App = {
         if (!query) return null;
         const q = String(query).trim();
         const cleanDigits = normalizeThaiDigits(q).replace(/[^\d]/g, '');
-        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+        let students = typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0 ? STUDENTS_DATA : [];
+        if (students.length === 0 && typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            if (cached) {
+                try {
+                    const list = JSON.parse(cached);
+                    if (Array.isArray(list) && list.length > 0) {
+                        students = list;
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                    }
+                } catch (e) {}
+            }
+        }
 
         // 1. Direct ID match or digits match
         if (cleanDigits.length >= 4) {
@@ -318,7 +344,10 @@ const App = {
         return session;
     },
 
-    loginStudent(studentId, password) {
+    async loginStudent(studentId, password) {
+        if (this.ensureStudentsLoaded) {
+            await this.ensureStudentsLoaded().catch(() => {});
+        }
         return new Promise((resolve) => {
             setTimeout(() => {
                 const inputId = String(studentId || '').trim();
@@ -711,6 +740,12 @@ const App = {
                         });
                         this.saveDeeds(sid, current);
                     });
+
+                    // Set memory globals for instant fast access
+                    window.IMPORTED_DEEDS = byStudent;
+                    window.DEEDS_DATA = deedsList;
+                    globalThis.IMPORTED_DEEDS = byStudent;
+                    globalThis.DEEDS_DATA = deedsList;
 
                     window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: deedsList.length } }));
                     return deedsList;
@@ -1176,7 +1211,13 @@ const App = {
         const pending = deeds.filter(d => d.status === 'pending');
         const rejected = deeds.filter(d => d.status === 'rejected');
 
-        const totalHours = Math.round(approved.reduce((s, d) => s + (parseFloat(d.hours) || 0), 0));
+        let totalHours = Math.round(approved.reduce((s, d) => s + (parseFloat(d.hours) || 0), 0));
+        if (totalHours === 0 && approved.length === 0) {
+            const stu = this.getStudentById(studentId);
+            if (stu && stu.total_hours) {
+                totalHours = Math.round(parseFloat(stu.total_hours) || 0);
+            }
+        }
         const byCategory = CATEGORIES.map(cat => ({
             ...cat,
             hours: Math.round(approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + (parseFloat(d.hours) || 0), 0)),
@@ -1187,14 +1228,14 @@ const App = {
             totalHours,
             pendingCount: pending.length,
             rejectedCount: rejected.length,
-            approvedCount: approved.length,
+            approvedCount: approved.length > 0 ? approved.length : (totalHours > 0 ? 1 : 0),
             totalCount: deeds.length,
             passed: totalHours >= CONFIG.MIN_HOURS_PER_YEAR,
             byCategory,
         };
     },
 
-    // Ensure students are loaded (from Cache, students.json, or Google Cloud)
+    // Ensure students are loaded (from Memory, Cache, Backend API, students.json, or Google Cloud)
     async ensureStudentsLoaded() {
         if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0) {
             return STUDENTS_DATA;
@@ -1208,13 +1249,36 @@ const App = {
                         window.STUDENTS_DATA = list;
                         globalThis.STUDENTS_DATA = list;
                         window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
-                        return list;
                     }
                 }
             }
         } catch (e) {}
 
-        // Fallback: fetch relative students.json
+        // 1. Try Backend API (Cloudflare tunnel or local server)
+        if (this.canUseBackendApi && this.canUseBackendApi()) {
+            try {
+                const apiUrl = `${this.getApiBaseUrl()}/api/students`;
+                const resp = await fetch(apiUrl, {
+                    headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
+                });
+                if (resp.ok) {
+                    const list = await resp.json();
+                    if (Array.isArray(list) && list.length > 0) {
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                        if (typeof localStorage !== 'undefined') {
+                            localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+                        }
+                        window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
+                        return list;
+                    }
+                }
+            } catch (err) {
+                console.warn('Backend student sync error:', err);
+            }
+        }
+
+        // 2. Fallback: fetch relative students.json
         try {
             const jsonPath = (typeof window !== 'undefined' && window.location.pathname.includes('/frontend/')) ? 'data/students.json' : 'frontend/data/students.json';
             const resp = await fetch(jsonPath + '?v=' + Date.now());
@@ -1232,6 +1296,7 @@ const App = {
             }
         } catch (e) {}
 
+        // 3. Fallback: Google Apps Script
         try {
             const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
             if (gasUrl) {
@@ -1253,12 +1318,29 @@ const App = {
             console.warn('Could not load students from GAS:', err);
         }
 
+        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0) {
+            return STUDENTS_DATA;
+        }
+
         return [];
     },
 
     // All students summary for teacher view
     getAllStudentsSummary() {
-        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+        let students = typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0 ? STUDENTS_DATA : [];
+        if (students.length === 0 && typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            if (cached) {
+                try {
+                    const list = JSON.parse(cached);
+                    if (Array.isArray(list) && list.length > 0) {
+                        students = list;
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                    }
+                } catch (e) {}
+            }
+        }
         return students.map(s => {
             const summary = this.getStudentSummary(s.student_id);
             return { ...s, ...summary };
@@ -1267,7 +1349,20 @@ const App = {
 
     // Pending deeds across all students
     getAllPendingDeeds() {
-        const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
+        let students = typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0 ? STUDENTS_DATA : [];
+        if (students.length === 0 && typeof localStorage !== 'undefined') {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            if (cached) {
+                try {
+                    const list = JSON.parse(cached);
+                    if (Array.isArray(list) && list.length > 0) {
+                        students = list;
+                        window.STUDENTS_DATA = list;
+                        globalThis.STUDENTS_DATA = list;
+                    }
+                } catch (e) {}
+            }
+        }
         const pending = [];
         const checkedStudents = new Set();
 
@@ -1811,6 +1906,10 @@ const App = {
         if (typeof STUDENT_PHOTOS !== 'undefined' && STUDENT_PHOTOS[studentId]) {
             return STUDENT_PHOTOS[studentId];
         }
+        const apiBase = (typeof this.getApiBaseUrl === 'function') ? this.getApiBaseUrl() : '';
+        if (apiBase) {
+            return `${apiBase}/photos/${studentId}.jpg`;
+        }
         return `photos/${studentId}.jpg`;
     },
 
@@ -2069,6 +2168,9 @@ function startRealtimeUpdates() {
 
 if (typeof document !== 'undefined') {
     document.addEventListener('DOMContentLoaded', () => {
+        if (typeof App !== 'undefined' && typeof App.ensureStudentsLoaded === 'function') {
+            App.ensureStudentsLoaded().catch(() => {});
+        }
         startRealtimeUpdates();
     });
 }

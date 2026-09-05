@@ -8,11 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css?v=3300">
-  <script src="data/students_data.js?v=3400"></script>
-  <script src="data/students_photos.js?v=3400"></script>
-  <script src="data/deeds_data.js?v=3400"></script>
-  <script src="data/app_settings.js?v=3400"></script>
-  <script src="app.js?v=3400"></script>
+  <script src="data/students_data.js?v=3541"></script>
+  <script src="data/students_photos.js?v=3541"></script>
+  <script src="data/deeds_data.js?v=3541"></script>
+  <script src="data/app_settings.js?v=3541"></script>
+  <script src="app.js?v=3541"></script>
   <style>
     /* ===== PRINT / SCREEN LAYOUT ===== */
     :root {
@@ -1104,9 +1104,16 @@ function populateStudentSelect() {
 }
 
 // ─── INIT ─────────────────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   const user = App.requireAuth(['teacher', 'admin', 'student']);
   if (!user) return;
+
+  if (typeof App.ensureStudentsLoaded === 'function') {
+    await App.ensureStudentsLoaded();
+  }
+  if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncAllDeedsWithBackend === 'function' && (user.role === 'teacher' || user.role === 'admin')) {
+    await App.syncAllDeedsWithBackend();
+  }
   
   populateStudentSelect();
 
@@ -1128,6 +1135,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
   
+  renderReport();
+});
+
+window.addEventListener('students_loaded', () => {
+  populateStudentSelect();
+  renderReport();
+});
+window.addEventListener('deeds_updated', () => {
+  populateStudentSelect();
   renderReport();
 });
 </script>

@@ -282,18 +282,23 @@
     </div>
 
     <div class="toast-container" id="toast-container"></div>
-    <script src="data/students_data.js?v=3400"></script>
-    <script src="data/deeds_data.js?v=3400"></script>
-    <script src="data/app_settings.js?v=3400"></script>
-  <script src="app.js?v=3400"></script>
+    <script src="data/students_data.js?v=3541"></script>
+    <script src="data/deeds_data.js?v=3541"></script>
+    <script src="data/app_settings.js?v=3541"></script>
+    <script src="app.js?v=3541"></script>
     <script>
         let currentUser = null;
         let allDeeds = [];
         let currentFilter = 'all';
 
-        function init() {
+        async function init() {
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
+
+            if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncDeedsWithBackend === 'function') {
+                await App.syncDeedsWithBackend(currentUser.student_id);
+            }
+
             allDeeds = App.getDeeds(currentUser.student_id)
                 .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
             // Populate category filter dropdown
@@ -316,6 +321,15 @@
                 });
             }
         }
+
+        window.addEventListener('deeds_updated', () => {
+            if (currentUser) {
+                allDeeds = App.getDeeds(currentUser.student_id)
+                    .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+                renderSummary();
+                renderDeeds();
+            }
+        });
 
         function renderSummary() {
             const s = App.getStudentSummary(currentUser.student_id);

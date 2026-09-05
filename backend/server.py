@@ -700,8 +700,15 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
         elif parsed_path.path == '/api/students':
             s_map = load_students_map()
+            all_deeds = get_all_deeds()
+            hours_map = {}
+            for sid_k, d_list in all_deeds.items():
+                tot = sum(float(d.get('hours', 0)) for d in d_list if d.get('status') == 'approved')
+                hours_map[str(sid_k)] = round(tot, 1)
+
             safe_list = []
             for sid, s in s_map.items():
+                sid_str = str(s.get('student_id'))
                 safe_list.append({
                     'student_id': s.get('student_id'),
                     'rank': s.get('rank', 'นพอ.'),
@@ -711,7 +718,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'class_year': s.get('class_year', ''),
                     'year_level': s.get('year_level', ''),
                     'position': s.get('position', ''),
-                    'role': s.get('role', 'student')
+                    'role': s.get('role', 'student'),
+                    'total_hours': hours_map.get(sid_str, 0)
                 })
             self.send_json_response(200, safe_list)
             return

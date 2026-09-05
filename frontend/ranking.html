@@ -330,19 +330,26 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3400"></script>
-    <script src="data/students_photos.js?v=3400"></script>
-    <script src="data/deeds_data.js?v=3400"></script>
-    <script src="data/app_settings.js?v=3400"></script>
-  <script src="app.js?v=3400"></script>
+    <script src="data/students_data.js?v=3541"></script>
+    <script src="data/students_photos.js?v=3541"></script>
+    <script src="data/deeds_data.js?v=3541"></script>
+    <script src="data/app_settings.js?v=3541"></script>
+    <script src="app.js?v=3541"></script>
     <script>
         let currentUser = null;
         let allSummary = [];
         let yearFilter = 'all';
 
-        function init() {
+        async function init() {
             currentUser = App.requireAuth(['student', 'teacher', 'admin']);
             if (!currentUser) return;
+
+            if (typeof App.ensureStudentsLoaded === 'function') {
+                await App.ensureStudentsLoaded();
+            }
+            if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncAllDeedsWithBackend === 'function' && (currentUser.role === 'teacher' || currentUser.role === 'admin')) {
+                await App.syncAllDeedsWithBackend();
+            }
 
             // Render nav profile
             if (currentUser.role === 'student') {
@@ -364,6 +371,13 @@
 
             loadData();
         }
+
+        window.addEventListener('students_loaded', () => {
+            loadData();
+        });
+        window.addEventListener('deeds_updated', () => {
+            loadData();
+        });
 
         function renderStudentSidebar() {
             document.getElementById('sidebar-menu').innerHTML = `
