@@ -172,6 +172,8 @@ def process_callback_query(cb):
     data_str = cb.get('data', '')
     msg = cb.get('message', {})
     msg_id = msg.get('message_id')
+    chat = msg.get('chat', {})
+    target_chat_id = chat.get('id') or CHAT_ID
     from_user = cb.get('from', {})
     
     approver_name = f"{from_user.get('first_name', '')} {from_user.get('last_name', '')}".strip()
@@ -181,6 +183,14 @@ def process_callback_query(cb):
         approver_name = "ร.อ.อนุชิต ทำจะดี (Bird)"
     elif not approver_name:
         approver_name = "ร.อ.อนุชิต ทำจะดี (Bird)"
+
+    if data_str.startswith('done_'):
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': "ℹ️ รายการนี้ได้รับการบันทึกข้อมูลและอนุมัติเรียบร้อยแล้วครับ",
+            'show_alert': True
+        })
+        return
 
     is_approve = data_str.startswith('approve_')
     is_reject = data_str.startswith('reject_')
@@ -206,52 +216,53 @@ def process_callback_query(cb):
         student_name = f"นพอ. รหัส {student_id}"
     cy = student.get('class_year', '69')
 
-    # STEP 1: IMMEDIATELY ANSWER TELEGRAM CALLBACK QUERY (NO DELAY!)
-    if is_approve:
-        send_telegram_request('answerCallbackQuery', {
-            'callback_query_id': cb_id,
-            'text': f"✅ อนุมัติความดีของ {student_name} เรียบร้อยแล้ว!",
-            'show_alert': True
-        })
-    else:
-        send_telegram_request('answerCallbackQuery', {
-            'callback_query_id': cb_id,
-            'text': f"❌ ปฏิเสธบันทึกความดีของ {student_name} เรียบร้อยแล้ว",
-            'show_alert': True
-        })
-
-    # STEP 2: UPDATE DATABASE
+    # STEP 1: UPDATE DATABASE FIRST TO GET ACCURATE STATS
     if is_approve:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'approved', approver_name)
         total_hrs = calculate_student_total_hours(student_id)
         is_pass = total_hrs >= 50
+        deed_desc = target_deed.get('description', 'บันทึกความดีจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'
+        deed_hrs = target_deed.get('hours', 2) if target_deed else 2
 
-        # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE WITH LINE LIFF PDF SLIP LINK & BUTTON
+        # IMMEDIATELY ANSWER TELEGRAM CALLBACK QUERY WITH DETAILED POPUP ALERT
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': f"✅ บันทึกข้อมูลอนุมัติเรียบร้อยแล้ว!\n\n👤 {student_name}\n📂 {deed_desc}\n⏱ +{deed_hrs} ชม. (รวมสะสม: {total_hrs:.1f} ชม.)\n👩‍🏫 ผู้อนุมัติ: {approver_name}",
+            'show_alert': True
+        })
+
+        # STEP 2: SEND OFFICIAL TELEGRAM CONFIRMATION REPLY MESSAGE
         encoded_name = urllib.parse.quote(student_name)
         pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={deed_id}&studentId={student_id}&name={encoded_name}"
-        reply_html = f"""🎉 <b>อนุมัติความดีเรียบร้อยแล้ว!</b>
+        approve_sign_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id={deed_id}&studentId={student_id}&name={encoded_name}&status=approved"
+        pass_badge = "✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม." if is_pass else "⏳ กำลังสะสมความดี"
+
+        reply_html = f"""🎉 <b>บันทึกข้อมูลอนุมัติความดีเรียบร้อยแล้ว ✅</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}
 🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> | รุ่น {cy}
-📂 <b>กิจกรรม:</b> {target_deed.get('description', 'บันทึกความดีจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'}
-⏱ <b>ชั่วโมงกิจกรรม:</b> {target_deed.get('hours', 2)} ชม.
+📂 <b>กิจกรรม:</b> {deed_desc}
+⏱ <b>จำนวนชั่วโมง:</b> <b>{deed_hrs} ชม.</b>
 
-👩‍🏫 <b>อนุมัติโดย:</b> {approver_name} (ผ่าน Telegram)
-📊 <b>ชั่วโมงสะสมรวมล่าสุด:</b> <b>{total_hrs:.1f} / 400 ชม.</b> ({'✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม.' if is_pass else '⏳ สะสมความดี'})
+👩‍🏫 <b>ผู้อนุมัติ:</b> {approver_name}
+📊 <b>ชั่วโมงสะสมรวมล่าสุด:</b> <b>{total_hrs:.1f} / 400 ชม.</b> ({pass_badge})
+✍️ <b>สถานะการรับรอง:</b> <u>ลงข้อมูลและอนุมัติรับรองในระบบเรียบร้อยแล้ว</u>
+<i>(หากต้องการจรดลายมือชื่อสดลงบนเอกสารใบสลิป สามารถคลิกปุ่มด้านล่างเพื่อลงนามสดได้ทุกเมื่อ)</i>
 ━━━━━━━━━━━━━━━━━━━━━━━
-📄 <b>ใบบันทึกความดีส่วนบุคคล (PDF):</b>
-<a href="{pdf_slip_url}">เปิดดู / พิมพ์ใบบันทึกความดี A4 (PDF Slip)</a>
-🌐 <i>อัปเดตข้อมูลขึ้นระบบ GitHub Pages เรียบร้อยแล้ว</i>"""
+✍️ <a href="{approve_sign_url}">เปิดหน้าจรดลายมือชื่อสด (Live Signature)</a>
+📄 <a href="{pdf_slip_url}">เปิดดู / พิมพ์ใบบันทึกความดี A4 (PDF Slip)</a>
+🌐 <i>ระบบซิงก์ข้อมูลลงฐานข้อมูลและแสดงผลบนออนไลน์เรียบร้อยแล้ว</i>"""
 
         send_telegram_request('sendMessage', {
-            'chat_id': CHAT_ID,
+            'chat_id': target_chat_id,
             'text': reply_html,
             'parse_mode': 'HTML',
             'reply_to_message_id': msg_id,
             'reply_markup': {
                 'inline_keyboard': [
                     [
-                        {'text': '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', 'url': pdf_slip_url}
+                        {'text': '✍️ จรดลายเซ็นสดในระบบ ↗️', 'url': approve_sign_url},
+                        {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': pdf_slip_url}
                     ]
                 ]
             }
@@ -259,42 +270,67 @@ def process_callback_query(cb):
 
         if msg_id:
             send_telegram_request('editMessageReplyMarkup', {
-                'chat_id': CHAT_ID,
+                'chat_id': target_chat_id,
                 'message_id': msg_id,
                 'reply_markup': {
                     'inline_keyboard': [
-                        [{'text': f'✅ อนุมัติแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}],
-                        [{'text': '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', 'url': pdf_slip_url}]
+                        [{'text': f'✅ บันทึกอนุมัติแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}],
+                        [
+                            {'text': '✍️ จรดลายเซ็นสดในระบบ ↗️', 'url': approve_sign_url},
+                            {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': pdf_slip_url}
+                        ]
                     ]
                 }
             })
 
     elif is_reject:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'rejected', approver_name)
+        deed_desc = target_deed.get('description', 'กิจกรรมจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'
+
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': f"❌ ปฏิเสธบันทึกความดีของ {student_name} เรียบร้อยแล้ว",
+            'show_alert': True
+        })
 
         reply_html = f"""❌ <b>แจ้งปฏิเสธบันทึกความดี</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}
 🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code>
-📂 <b>กิจกรรม:</b> {target_deed.get('description', 'กิจกรรมจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'}
+📂 <b>กิจกรรม:</b> {deed_desc}
 
 👩‍🏫 <b>ปฏิเสธโดย:</b> {approver_name} (ผ่าน Telegram)
 📝 <b>คำแนะนำ:</b> กรุณาตรวจสอบข้อมูลและรูปภาพหลักฐาน แล้วยื่นบันทึกใหม่อีกครั้ง
 ━━━━━━━━━━━━━━━━━━━━━━━"""
 
         send_telegram_request('sendMessage', {
-            'chat_id': CHAT_ID,
+            'chat_id': target_chat_id,
             'text': reply_html,
             'parse_mode': 'HTML',
             'reply_to_message_id': msg_id
         })
+
+        if msg_id:
+            send_telegram_request('editMessageReplyMarkup', {
+                'chat_id': target_chat_id,
+                'message_id': msg_id,
+                'reply_markup': {
+                    'inline_keyboard': [
+                        [{'text': f'❌ ปฏิเสธแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}]
+                    ]
+                }
+            })
 
 def start_listener_loop():
     print("🤖 Telegram Bot Listener Daemon started (24/7 Long-Polling Instant Reaction)...")
     offset = 0
     while True:
         try:
-            res = send_telegram_request('getUpdates', {'offset': offset, 'timeout': 20})
+            res = send_telegram_request('getUpdates', {
+                'offset': offset,
+                'timeout': 20,
+                'allowed_updates': ['message', 'callback_query']
+            })
             if res.get('ok') and res.get('result'):
                 for update in res['result']:
                     offset = max(offset, update['update_id'] + 1)
