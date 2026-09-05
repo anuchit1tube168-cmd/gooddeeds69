@@ -615,6 +615,34 @@ const App = {
         return null;
     },
 
+    async syncAllDeedsWithBackend() {
+        if (this.canUseBackendApi()) {
+            try {
+                const res = await fetch('/api/get_all_deeds', {
+                    headers: this.getAuthHeaders(),
+                });
+                if (res.ok) {
+                    const allDeeds = await res.json();
+                    if (Array.isArray(allDeeds)) {
+                        allDeeds.forEach(d => {
+                            const sid = d.student_id || d.studentId;
+                            if (sid) {
+                                const current = this.getDeeds(sid);
+                                const idx = current.findIndex(x => x.id === d.id);
+                                if (idx >= 0) { current[idx] = d; } else { current.unshift(d); }
+                                this.saveDeeds(sid, current);
+                            }
+                        });
+                        return allDeeds;
+                    }
+                }
+            } catch (e) {
+                console.warn('Backend sync all deeds error:', e);
+            }
+        }
+        return null;
+    },
+
     async syncDeedsFromCloud(studentId) {
         if (!studentId) return null;
         try {
@@ -1039,7 +1067,7 @@ const App = {
         };
     },
 
-    // Ensure students are loaded (from Cache or Google Cloud)
+    // Ensure students are loaded (from Cache, students.json, or Google Cloud)
     async ensureStudentsLoaded() {
         if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA) && STUDENTS_DATA.length > 0) {
             return STUDENTS_DATA;
@@ -1052,8 +1080,27 @@ const App = {
                     if (Array.isArray(list) && list.length > 0) {
                         window.STUDENTS_DATA = list;
                         globalThis.STUDENTS_DATA = list;
+                        window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
                         return list;
                     }
+                }
+            }
+        } catch (e) {}
+
+        // Fallback: fetch relative students.json
+        try {
+            const jsonPath = (typeof window !== 'undefined' && window.location.pathname.includes('/frontend/')) ? 'data/students.json' : 'frontend/data/students.json';
+            const resp = await fetch(jsonPath + '?v=' + Date.now());
+            if (resp.ok) {
+                const list = await resp.json();
+                if (Array.isArray(list) && list.length > 0) {
+                    window.STUDENTS_DATA = list;
+                    globalThis.STUDENTS_DATA = list;
+                    if (typeof localStorage !== 'undefined') {
+                        localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+                    }
+                    window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
+                    return list;
                 }
             }
         } catch (e) {}
@@ -1070,6 +1117,7 @@ const App = {
                         if (typeof localStorage !== 'undefined') {
                             localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
                         }
+                        window.dispatchEvent(new CustomEvent('students_loaded', { detail: list }));
                         return list;
                     }
                 }

@@ -828,7 +828,9 @@
 
         // Gracefully ensure student data is loaded from Cache or Google Cloud
         await App.ensureStudentsLoaded();
-        await App.syncAllDeedsWithBackend();
+        if (typeof App.syncAllDeedsWithBackend === 'function') {
+          await App.syncAllDeedsWithBackend();
+        }
 
         loadData();
       } catch (err) {
@@ -845,6 +847,9 @@
     function loadData() {
       pendingDeeds = App.getAllPendingDeeds();
       allSummary = App.getAllStudentsSummary();
+
+      const fltAll = document.getElementById('flt-all');
+      if (fltAll) fltAll.textContent = `ทั้งหมด (${allSummary.length})`;
 
       const activeStudents = allSummary.filter(s => [69, 68, 67, 66].includes(Number(s.class_year)));
       const alumniStudents = allSummary.filter(s => ![69, 68, 67, 66].includes(Number(s.class_year)));
