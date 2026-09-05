@@ -919,6 +919,25 @@ const App = {
             }
         }
         
+        // Sync status update to Google Apps Script (Cloud Google Sheets)
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl) {
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'updateDeedStatus',
+                    deedId,
+                    studentId,
+                    status,
+                    approvedBy: teacherName,
+                    rejectReason
+                })
+            }).then(() => console.log('☁️ Synced status update to Google Apps Script'))
+              .catch(err => console.warn('⚠️ GAS Status Update Sync Error:', err));
+        }
+        
         return deed;
     },
 

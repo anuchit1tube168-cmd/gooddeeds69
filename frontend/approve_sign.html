@@ -859,9 +859,24 @@
 
                 alert(status === 'approved' ? `✅ อนุมัติและประทับลายมือชื่อเรียบร้อยแล้ว!\nผู้รับรอง: ${approverName}` : '❌ บันทึกสถานะปฏิเสธแล้ว');
 
-                // Redirect to slip or dashboard
+                // Redirect to slip or dashboard with full query parameters for instant hydration
                 if (status === 'approved') {
-                    window.location.href = 'deed_slip.html?id=' + currentDeed.id + '&studentId=' + currentStudent.student_id;
+                    const slipParams = new URLSearchParams({
+                        id: currentDeed.id,
+                        studentId: currentStudent.student_id,
+                        name: (currentStudent.rank ? currentStudent.rank + ' ' : '') + ((currentStudent.first_name || '') + ' ' + (currentStudent.last_name || '')).trim(),
+                        year: currentStudent.class_year ? (currentStudent.year_level ? `${currentStudent.year_level} (รุ่น ${currentStudent.class_year})` : `รุ่น ${currentStudent.class_year}`) : '',
+                        cat: currentDeed.categoryId || currentDeed.category_id || 3,
+                        catName: currentDeed.category_name || '',
+                        hours: currentDeed.hours || 1,
+                        date: currentDeed.activityDate || '',
+                        desc: currentDeed.description || currentDeed.title || '',
+                        loc: currentDeed.location || '',
+                        appr: approverName,
+                        status: 'approved',
+                        img: currentDeed.imageUrl || currentDeed.imageData || ''
+                    });
+                    window.location.href = 'deed_slip.html?' + slipParams.toString();
                 } else {
                     window.location.href = 'teacher-dashboard.html';
                 }
