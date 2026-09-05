@@ -31,6 +31,8 @@ data/photos.json
 data/students.json
 data/students_data.js
 data/students_photos.js
+data/deeds.json
+data/deeds_data.js
 frontend/data/students.json
 frontend/data/students_data.js
 frontend/data/students_photos.js
