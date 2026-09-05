@@ -364,13 +364,13 @@
                     <div class="form-group" style="margin-bottom: 24px;">
                         <label class="form-label">5. อาจารย์ผู้ควบคุม / ผู้รับรองกิจกรรม</label>
                         <select class="form-input" id="approver-select" style="padding: 12px 14px; font-size: 1rem; margin-bottom: 8px; cursor: pointer;" onchange="onSelectApproverPreset(this.value)">
-                            <option value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์" selected>น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์ (ผู้บังคับหมวด / อาจารย์ผู้ควบคุม)</option>
-                            <option value="ร.อ.อนุชิต ทำจะดี">ร.อ.อนุชิต ทำจะดี (นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ)</option>
+                            <option value="ร.อ.อนุชิต ทำจะดี" selected>⭐ ร.อ.อนุชิต ทำจะดี (Bird) — นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ &amp; แอดมิน</option>
+                            <option value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์">น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์ (ผู้บังคับหมวด / อาจารย์ผู้ควบคุม)</option>
                             <option value="น.อ.หญิง สุมาลี รัตนโชติ">น.อ.หญิง สุมาลี รัตนโชติ (ผู้อำนวยการวิทยาลัยพยาบาลทหารอากาศ)</option>
                             <option value="น.อ.หญิง พิชญาภา สิทธิชัย">น.อ.หญิง พิชญาภา สิทธิชัย (รองผู้อำนวยการฯ)</option>
                             <option value="custom">✏️ ระบุชื่ออาจารย์/ผู้รับรองท่านอื่น...</option>
                         </select>
-                        <input type="text" class="form-input" id="approver-name" value="น.ต.หญิง ขวัญชนก พ่วงนาคพันธ์" placeholder="พิมพ์ ยศ ชื่อ นามสกุล อาจารย์ผู้รับรอง..." style="padding: 12px 14px; font-size: 1rem;">
+                        <input type="text" class="form-input" id="approver-name" value="ร.อ.อนุชิต ทำจะดี" placeholder="พิมพ์ ยศ ชื่อ นามสกุล อาจารย์ผู้รับรอง..." style="padding: 12px 14px; font-size: 1rem;">
                     </div>
 
                     <!-- Note -->
@@ -463,42 +463,89 @@
 
     <div class="toast-container" id="toast-container"></div>
 
-    <!-- Post-Submission Action Modal -->
-    <div id="submit-success-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.8); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(6px);">
-        <div style="background:#0f172a; border:1px solid var(--gold); border-radius:16px; max-width:480px; width:100%; padding:24px; text-align:center; color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.6);">
-            <div style="font-size:3rem; margin-bottom:12px;">🎉</div>
-            <h2 style="color:var(--gold); font-family:'Kanit',sans-serif; margin-bottom:6px;">บันทึกกิจกรรมความดีสำเร็จ!</h2>
-            <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:16px;">
-                สถานะปัจจุบัน: <span style="background:rgba(245,158,11,0.2); color:#f59e0b; padding:2px 8px; border-radius:12px; font-weight:600;">⏳ รอการอนุมัติ</span><br>
-                <small style="color:#64748b;">(ยอดชั่วโมงจะถูกบวกเพิ่ม และพิมพ์สลิป A4 ได้ เมื่ออาจารย์/แผนกปกครองลงนามอนุมัติ)</small>
-            </p>
+    <!-- Chibi Angel Nurse Loading Overlay -->
+    <div id="chibi-loading-overlay" style="display:none; position:fixed; inset:0; background:rgba(7,13,24,0.92); z-index:10000; align-items:center; justify-content:center; flex-direction:column; backdrop-filter:blur(10px); animation:fadeIn 0.3s ease;">
+        <div style="position:relative; width:150px; height:150px; display:flex; align-items:center; justify-content:center;">
+            <div style="position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle, rgba(245,158,11,0.35) 0%, transparent 70%); animation:pulse-ring 2s infinite ease-in-out;"></div>
+            <img id="chibi-loading-img" src="photos/chibi/chibi_lv5.png" alt="พยาบาลนางฟ้า" style="width:120px; height:120px; object-fit:contain; filter:drop-shadow(0 10px 20px rgba(245,158,11,0.5)); animation:float 2.5s infinite alternate ease-in-out;">
+        </div>
+        <div style="margin-top:20px; text-align:center; padding:0 20px;">
+            <div style="font-size:1.25rem; font-weight:700; color:#fbbf24; font-family:'Kanit',sans-serif; display:flex; align-items:center; justify-content:center; gap:8px;">
+                <span>👼</span> <span>พยาบาลนางฟ้ากำลังบันทึกความดี...</span>
+            </div>
+            <p style="color:#94a3b8; font-size:0.85rem; margin-top:6px;">กำลังเชื่อมต่อระบบและส่งการแจ้งเตือนให้อาจารย์ผู้ตรวจประเมิน</p>
+            <div style="width:220px; height:5px; background:rgba(255,255,255,0.1); border-radius:999px; margin:16px auto 0 auto; overflow:hidden;">
+                <div style="width:100%; height:100%; background:linear-gradient(90deg, #f59e0b, #38bdf8, #f59e0b); border-radius:999px; animation:shimmer 1.5s infinite;"></div>
+            </div>
+        </div>
+    </div>
 
-            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;">
-                <button type="button" id="modal-line-share-btn" class="btn" style="background:#06c755; color:#fff; font-weight:700; border:none; padding:12px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
-                    <span>📲 ส่งเข้า LINE ให้ผู้ตรวจ / ผู้ปกครองเซ็น</span>
+    <!-- Post-Submission Action Modal with Chibi Angel Nurse Pose -->
+    <div id="submit-success-modal" style="display:none; position:fixed; inset:0; background:rgba(7,13,24,0.85); z-index:9999; align-items:center; justify-content:center; padding:20px; backdrop-filter:blur(10px);">
+        <div style="background:linear-gradient(180deg, #0f172a 0%, #070d18 100%); border:2px solid rgba(245,158,11,0.6); border-radius:24px; max-width:480px; width:100%; padding:28px 24px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(245,158,11,0.25); position:relative; overflow:hidden;">
+            <!-- Angel Glow Backdrop -->
+            <div style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:250px; height:250px; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
+            
+            <!-- Chibi Angel Nurse Pose -->
+            <div style="position:relative; width:140px; height:140px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:center;">
+                <img id="modal-chibi-img" src="photos/chibi/chibi_lv5.png" alt="พยาบาลนางฟ้าโพสท่าสำเร็จ" style="width:125px; height:125px; object-fit:contain; filter:drop-shadow(0 12px 24px rgba(245,158,11,0.6)); animation:float 3s ease-in-out infinite alternate;">
+                <div style="position:absolute; bottom:0; right:15px; background:linear-gradient(135deg, #22c55e, #16a34a); color:#fff; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; box-shadow:0 4px 10px rgba(0,0,0,0.4); border:2px solid #0f172a;">✓</div>
+            </div>
+
+            <div style="display:inline-block; padding:4px 14px; background:rgba(245,158,11,0.15); border:1px solid rgba(245,158,11,0.4); border-radius:999px; font-size:0.8rem; font-weight:700; color:#fbbf24; margin-bottom:8px;">
+                👼 พยาบาลนางฟ้าจิตอาสา วพอ. ๒๕๖๙
+            </div>
+
+            <h2 style="color:#ffffff; font-family:'Kanit',sans-serif; font-size:1.45rem; font-weight:700; margin-bottom:6px;">
+                🎉 บันทึกความดีจิตอาสาสำเร็จ!
+            </h2>
+            
+            <!-- Deed Summary Box -->
+            <div id="modal-deed-summary" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; margin:14px 0 18px 0; text-align:left; font-size:0.85rem;">
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:#94a3b8;">ผู้บันทึก:</span>
+                    <strong style="color:#f8fafc;" id="modal-student-name">นพอ. กรกนก เจียรนัย</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:#94a3b8;">หมวดความดี:</span>
+                    <strong style="color:#fbbf24;" id="modal-cat-name">หมวด 1 บริจาคโลหิต</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
+                    <span style="color:#94a3b8;">จำนวนชั่วโมง:</span>
+                    <strong style="color:#4ade80;" id="modal-hours-text">+8.0 ชั่วโมง</strong>
+                </div>
+                <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.1); padding-top:6px; margin-top:4px;">
+                    <span style="color:#94a3b8;">สถานะปัจจุบัน:</span>
+                    <span style="background:rgba(245,158,11,0.25); color:#f59e0b; padding:2px 8px; border-radius:10px; font-size:0.75rem; font-weight:700;">⏳ รออาจารย์อนุมัติ</span>
+                </div>
+            </div>
+
+            <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+                <button type="button" id="modal-line-share-btn" class="btn" style="background:#06c755; color:#fff; font-weight:700; border:none; padding:12px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:0.95rem; box-shadow:0 4px 15px rgba(6,199,85,0.3);">
+                    <span>📲 ส่งเข้า LINE ให้อาจารย์ผู้ตรวจประเมิน</span>
                 </button>
-                <button type="button" id="modal-copy-link-btn" class="btn btn-outline" style="border-color:var(--gold); color:var(--gold); padding:10px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
-                    <span>📋 คัดลอกลิงก์ให้ผู้ตรวจ / ผู้ปกครองเซ็นชื่อ</span>
+                <button type="button" id="modal-copy-link-btn" class="btn btn-outline" style="border-color:var(--gold); color:var(--gold); padding:10px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:0.9rem;">
+                    <span>📋 คัดลอกลิงก์ให้อาจารย์ลงนามดิจิทัล</span>
                 </button>
-                <button type="button" id="modal-view-slip-btn" class="btn btn-outline" style="border-color:#38bdf8; color:#38bdf8; padding:10px; border-radius:8px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer;">
-                    <span>📄 ดูสลิป (จะปลดล็อกพิมพ์ได้เมื่ออนุมัติ)</span>
+                <button type="button" id="modal-view-slip-btn" class="btn btn-outline" style="border-color:#38bdf8; color:#38bdf8; padding:10px; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; cursor:pointer; font-size:0.9rem;">
+                    <span>📄 เปิดดูสลิปใบรับรอง (A4 Slip)</span>
                 </button>
             </div>
 
-            <button type="button" onclick="window.location.href='history.html'" style="background:rgba(255,255,255,0.08); color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:0.85rem;">
-                กลับหน้ารวมประวัติความดี →
+            <button type="button" onclick="window.location.href='student-dashboard.html'" style="background:rgba(255,255,255,0.08); color:#cbd5e1; border:none; padding:8px 16px; border-radius:8px; cursor:pointer; font-size:0.85rem; width:100%;">
+                ← กลับสู่หน้าแดชบอร์ดนักเรียน
             </button>
         </div>
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/teachers_data.js?v=3405"></script>
-    <script src="data/students_data.js?v=3405"></script>
-    <script src="data/deeds_data.js?v=3405"></script>
-    <script src="data/app_settings.js?v=3405"></script>
-    <script src="chibi3d.js?v=3405"></script>
-    <script src="app.js?v=3405"></script>
-    <script src="liff-sdk.js?v=3405"></script>
+    <script src="data/teachers_data.js?v=3510"></script>
+    <script src="data/students_data.js?v=3510"></script>
+    <script src="data/deeds_data.js?v=3510"></script>
+    <script src="data/app_settings.js?v=3510"></script>
+    <script src="chibi3d.js?v=3510"></script>
+    <script src="app.js?v=3510"></script>
+    <script src="liff-sdk.js?v=3510"></script>
     <script>
         let currentUser = null;
         let selectedCategoryId = null;
@@ -534,21 +581,23 @@
             // Check URL parameters for prefill or success display
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('prefill')) {
-                selectCategory(2);
-                document.getElementById('description').value = 'กิจกรรมจิตอาสาพัฒนาสิ่งแวดล้อม ปลูกต้นไม้และทำความสะอาดพื้นที่ วิทยาลัยพยาบาลทหารอากาศ';
-                document.getElementById('location').value = 'วิทยาลัยพยาบาลทหารอากาศ';
-                document.getElementById('hours').value = 5;
+                selectCategory(1);
+                document.getElementById('description').value = 'บริจาคโลหิตเพื่อผู้ป่วยวิกฤต ณ ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย (ภาคการศึกษาที่ 1/2569)';
+                document.getElementById('location').value = 'ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย ถนนอังรีดูนังต์';
+                document.getElementById('hours').value = 8;
                 calculateProjectedChibi();
             }
             const successDeedId = urlParams.get('showSuccess');
             if (successDeedId) {
-                const deed = (App.getDeeds(currentUser.student_id) || []).find(d => String(d.id) === String(successDeedId)) || {
+                const deedsList = App.getDeeds ? App.getDeeds(currentUser.student_id) : [];
+                const deed = deedsList.find(d => String(d.id) === String(successDeedId)) || {
                     id: successDeedId,
-                    hours: 5,
+                    categoryId: 1,
+                    hours: 8.0,
                     status: 'pending',
-                    description: 'กิจกรรมจิตอาสาพัฒนาสิ่งแวดล้อม ปลูกต้นไม้และทำความสะอาดพื้นที่ วิทยาลัยพยาบาลทหารอากาศ'
+                    description: 'บริจาคโลหิตเพื่อผู้ป่วยวิกฤต ณ ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย'
                 };
-                showSuccessModal(deed);
+                setTimeout(() => showSuccessModal(deed), 300);
             }
         }
 
@@ -844,6 +893,9 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span> กำลังบันทึก...';
 
+            const loadingOverlay = document.getElementById('chibi-loading-overlay');
+            if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
             // Save images
             const imageKeys = uploadedImages.map((img, i) => {
                 const key = `${currentUser.student_id}_${Date.now()}_${i}`;
@@ -866,6 +918,7 @@
             // Notify admin via Telegram + LINE (if configured)
             const notified = await App.notifyAdmins(deed, currentUser);
 
+            if (loadingOverlay) loadingOverlay.style.display = 'none';
             showToast('บันทึกความดีสำเร็จ! (สถานะ: รอการอนุมัติ) 🎉', 'success');
             btn.disabled = false;
             btn.innerHTML = '<span>💾</span> บันทึกความดี';
@@ -878,6 +931,35 @@
                 setTimeout(() => window.location.href = 'history.html', 1200);
                 return;
             }
+
+            // Populate Chibi Angel Nurse and deed summary
+            const studentNameEl = document.getElementById('modal-student-name');
+            if (studentNameEl && currentUser) {
+                const rank = currentUser.rank || 'นพอ.';
+                const yr = currentUser.year_level || currentUser.year || '1';
+                studentNameEl.textContent = `${rank} ${currentUser.first_name || ''} ${currentUser.last_name || ''} (ชั้นปี ${yr})`;
+            }
+
+            const cat = CATEGORIES.find(c => c.id === (deed.categoryId || deed.category_id));
+            const catNameEl = document.getElementById('modal-cat-name');
+            if (catNameEl && cat) {
+                catNameEl.textContent = `${cat.emoji} ${cat.name}`;
+            }
+
+            const hoursEl = document.getElementById('modal-hours-text');
+            if (hoursEl) {
+                hoursEl.textContent = `+${Number(deed.hours || 0).toFixed(1)} ชั่วโมง`;
+            }
+
+            const chibiImg = document.getElementById('modal-chibi-img');
+            if (chibiImg) {
+                const totalHours = App.getTotalHours ? App.getTotalHours(currentUser.student_id) : 0;
+                const projected = totalHours + Number(deed.hours || 0);
+                const lv = Math.max(1, Math.min(10, Math.floor(projected / 10) + 1));
+                chibiImg.src = `photos/chibi/chibi_lv${lv}.png`;
+                chibiImg.onerror = () => { chibiImg.src = 'photos/chibi/chibi_lv5.png'; };
+            }
+
             modal.style.display = 'flex';
 
             const baseUrl = App.getBaseUrl();

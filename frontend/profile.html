@@ -197,6 +197,7 @@
           <div style="font-size:1.15rem;font-weight:700;color:var(--text-primary);margin-top:8px" id="profile-fullname">
             -</div>
           <div style="font-size:0.85rem;color:var(--text-muted)" id="profile-id-year">-</div>
+          <div id="profile-position-badge" style="margin-top:6px;"></div>
           <button class="btn btn-outline btn-sm" style="margin-top:12px" onclick="removePhoto()" id="remove-photo-btn"
             style="display:none">🗑️ ลบรูปที่อัพโหลด</button>
         </div>
@@ -301,11 +302,11 @@
 
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="data/students_data.js?v=3400"></script>
-  <script src="data/deeds_data.js?v=3400"></script>
-  <script src="data/app_settings.js?v=3400"></script>
-  <script src="app.js?v=3400"></script>
-  <script src="liff-sdk.js?v=3400"></script>
+  <script src="data/students_data.js?v=3520"></script>
+  <script src="data/deeds_data.js?v=3520"></script>
+  <script src="data/app_settings.js?v=3520"></script>
+  <script src="app.js?v=3520"></script>
+  <script src="liff-sdk.js?v=3520"></script>
   <script>
     let currentUser;
 
@@ -316,6 +317,16 @@
       document.getElementById('profile-initials').textContent = initials;
       document.getElementById('profile-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;
       document.getElementById('profile-id-year').textContent = `${currentUser.student_id} · ${App.getYearName(currentUser.class_year)}`;
+      
+      const posWrap = document.getElementById('profile-position-badge');
+      if (posWrap) {
+        if (currentUser.position && currentUser.position !== 'นักเรียนพยาบาล') {
+          posWrap.innerHTML = `<span class="executive-badge">🎖️ ${currentUser.position}</span>`;
+        } else {
+          posWrap.innerHTML = '';
+        }
+      }
+
       loadPhoto();
       loadBio();
       loadContact();

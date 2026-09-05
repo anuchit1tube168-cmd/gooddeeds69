@@ -470,9 +470,12 @@
       <a href="manual.html#sop" class="btn btn-outline btn-sm" style="border-color:var(--gold);color:var(--gold-light);text-decoration:none;display:inline-flex;align-items:center;gap:4px;">📖 คู่มือ &amp; SOP</a>
       <span class="badge badge-pending" id="pending-badge" style="font-size:0.8rem;padding:5px 12px">⏳ <span
           id="pending-count">0</span> รออนุมัติ</span>
-      <div class="nav-user">
-        <div class="avatar">👩‍🏫</div>
-        <span id="teacher-name" class="text-sm text-muted">อาจารย์</span>
+      <div class="nav-user" style="display:flex; align-items:center; gap:10px;">
+        <div class="avatar" id="teacher-avatar" style="font-size:1.3rem;">👨‍✈️</div>
+        <div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+          <span id="teacher-name" style="font-size:0.88rem; font-weight:600; color:var(--text-primary);">ร.อ.อนุชิต ทำจะดี (Bird)</span>
+          <span id="teacher-role-badge" style="font-size:0.72rem; color:var(--gold); background:rgba(201,162,39,0.15); padding:1px 6px; border-radius:4px; margin-top:2px;">อาจารย์ &amp; แอดมิน</span>
+        </div>
         <button class="btn btn-outline btn-sm" onclick="App.logout()">ออก</button>
       </div>
     </div>
@@ -791,12 +794,12 @@
 
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="data/students_data.js?v=3415"></script>
-  <script src="data/students_photos.js?v=3415"></script>
-  <script src="data/deeds_data.js?v=3415"></script>
-  <script src="data/app_settings.js?v=3415"></script>
-  <script src="app.js?v=3415"></script>
-  <script src="liff-sdk.js?v=3415"></script>
+  <script src="data/students_data.js?v=3430"></script>
+  <script src="data/students_photos.js?v=3430"></script>
+  <script src="data/deeds_data.js?v=3430"></script>
+  <script src="data/app_settings.js?v=3430"></script>
+  <script src="app.js?v=3430"></script>
+  <script src="liff-sdk.js?v=3430"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -819,14 +822,34 @@
       try {
         let currentUser = App.getCurrentUser();
         if (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'admin')) {
-          currentUser = { role: 'teacher', username: 'teacher', name: 'อาจารย์ผู้ตรวจประเมิน วพอ.' };
-          if (App.setSession) App.setSession('teacher', currentUser);
+          currentUser = {
+            role: 'admin',
+            username: 'anuchit',
+            name: 'ร.อ.อนุชิต ทำจะดี (Bird)',
+            isAdmin: true,
+            isTeacher: true,
+            title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน'
+          };
+          if (App.setSession) App.setSession('admin', currentUser);
           else Storage.set('session', currentUser);
         }
         teacher = currentUser;
         
-        document.getElementById('teacher-name').textContent = teacher.name || teacher.username || 'อาจารย์';
-        if (teacher.role !== 'admin') {
+        const teacherNameEl = document.getElementById('teacher-name');
+        if (teacherNameEl) teacherNameEl.textContent = teacher.name || teacher.username || 'ร.อ.อนุชิต ทำจะดี (Bird)';
+
+        const roleBadgeEl = document.getElementById('teacher-role-badge');
+        if (roleBadgeEl) {
+          if (teacher.username === 'anuchit' || teacher.username === 'bird' || (teacher.isAdmin && teacher.isTeacher)) {
+            roleBadgeEl.textContent = 'อาจารย์ & แอดมิน';
+          } else if (teacher.role === 'admin') {
+            roleBadgeEl.textContent = 'ผู้ดูแลระบบ';
+          } else {
+            roleBadgeEl.textContent = 'อาจารย์ผู้ตรวจ';
+          }
+        }
+
+        if (teacher.role !== 'admin' && !teacher.isAdmin) {
           const navSettings = document.getElementById('nav-settings');
           if (navSettings) navSettings.style.display = 'none';
         }
@@ -956,7 +979,7 @@
 
     async function quickApprove(studentId, deedId) {
       const u = App.getCurrentUser();
-      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      const approverName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี (Bird)';
       await App.updateDeedStatus(studentId, deedId, 'approved', approverName);
       showToast('✅ อนุมัติความดีเรียบร้อยแล้ว', 'success');
       loadData();
@@ -969,7 +992,7 @@
       }
       if (!confirm(`ต้องการอนุมัติรายการความดีทั้งหมด ${pendingDeeds.length} รายการ หรือไม่?`)) return;
       const u = App.getCurrentUser();
-      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      const approverName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี (Bird)';
       for (const d of pendingDeeds) {
         const sid = d.student?.student_id || d.studentId;
         await App.updateDeedStatus(sid, d.id, 'approved', approverName);
@@ -993,7 +1016,7 @@
       if (!rejectTarget) return;
       const reason = document.getElementById('reject-reason').value.trim() || 'หลักฐานไม่ชัดเจนหรือไม่ตรงตามเกณฑ์';
       const u = App.getCurrentUser();
-      const approverName = u ? (u.name || u.username || 'อาจารย์') : 'อาจารย์ผู้ควบคุม';
+      const approverName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี (Bird)';
       await App.updateDeedStatus(rejectTarget.studentId, rejectTarget.deedId, 'rejected', approverName, reason);
       closeRejectModal();
       showToast('❌ ปฏิเสธรายการความดีเรียบร้อยแล้ว', 'warning');

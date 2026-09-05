@@ -14,6 +14,7 @@ import os
 import time
 import subprocess
 import threading
+import ssl
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
@@ -33,15 +34,16 @@ def get_env_config(key, default=''):
             pass
     return default
 
-BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN', '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')
+BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN', '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s')
 CHAT_ID = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
 
 def send_telegram_request(method, payload):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+    ctx = ssl._create_unverified_context()
     try:
-        with urllib.request.urlopen(req, timeout=10) as resp:
+        with urllib.request.urlopen(req, timeout=10, context=ctx) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ Telegram API Error ({method}): {e}")
@@ -170,9 +172,13 @@ def process_callback_query(cb):
     msg_id = msg.get('message_id')
     from_user = cb.get('from', {})
     
-    approver_name = f"{from_user.get('first_name', 'อาจารย์')} {from_user.get('last_name', '')}".strip()
-    if not approver_name:
-        approver_name = "อาจารย์ผู้ควบคุม"
+    approver_name = f"{from_user.get('first_name', '')} {from_user.get('last_name', '')}".strip()
+    u_name = (from_user.get('username') or '').lower()
+    fn = (from_user.get('first_name') or '').lower()
+    if 'anuchit' in u_name or 'bird' in u_name or 'anuchit' in fn or 'bird' in fn or 'อนุชิต' in approver_name:
+        approver_name = "ร.อ.อนุชิต ทำจะดี (Bird)"
+    elif not approver_name:
+        approver_name = "ร.อ.อนุชิต ทำจะดี (Bird)"
 
     is_approve = data_str.startswith('approve_')
     is_reject = data_str.startswith('reject_')
@@ -247,6 +253,18 @@ def process_callback_query(cb):
                 ]
             }
         })
+
+        if msg_id:
+            send_telegram_request('editMessageReplyMarkup', {
+                'chat_id': CHAT_ID,
+                'message_id': msg_id,
+                'reply_markup': {
+                    'inline_keyboard': [
+                        [{'text': f'✅ อนุมัติแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}],
+                        [{'text': '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', 'url': pdf_slip_url}]
+                    ]
+                }
+            })
 
     elif is_reject:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'rejected', approver_name)

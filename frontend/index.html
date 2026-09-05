@@ -381,10 +381,24 @@
                 <div class="info-box">
                     ℹ️ สำหรับอาจารย์และเจ้าหน้าที่ที่ได้รับมอบหมาย บัญชีจะได้รับจากผู้ดูแลระบบ
                 </div>
+
+                <div style="margin-bottom: 16px; padding: 12px 14px; background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.3); border-radius: 12px;">
+                    <div style="font-size: 0.82rem; color: var(--gold-light); margin-bottom: 8px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
+                        <span>⭐ บัญชีอาจารย์ &amp; แอดมินหลัก:</span>
+                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">Dual Role</span>
+                    </div>
+                    <button type="button" class="btn btn-sm" style="width: 100%; background: linear-gradient(135deg, #1e3a8a, #0b2f64); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.88rem; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAnuchit()">
+                        <span style="display:flex; align-items:center; gap:8px;">
+                            <span>👨‍✈️</span> <strong>ร.อ.อนุชิต ทำจะดี (Bird)</strong>
+                        </span>
+                        <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">คลิกเพื่อกรอก</span>
+                    </button>
+                </div>
+
                 <form id="form-teacher" onsubmit="handleLogin(event,'teacher')">
                     <div class="form-group">
                         <label class="form-label">ชื่อผู้ใช้ <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="teacher-username" placeholder="username"
+                        <input type="text" class="form-input" id="teacher-username" placeholder="username เช่น anuchit หรือ admin"
                             autocomplete="username">
                     </div>
                     <div class="form-group">
@@ -404,7 +418,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-teacher-login">
-                        <span>🔐</span> เข้าสู่ระบบ (อาจารย์)
+                        <span>🔐</span> เข้าสู่ระบบ (อาจารย์ / แอดมิน)
                     </button>
                 </form>
             </div>
@@ -419,11 +433,11 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3400"></script>
-    <script src="data/deeds_data.js?v=3400"></script>
-    <script src="data/app_settings.js?v=3400"></script>
-    <script src="app.js?v=3400"></script>
-    <script src="liff-sdk.js?v=3400"></script>
+    <script src="data/students_data.js?v=3430"></script>
+    <script src="data/deeds_data.js?v=3430"></script>
+    <script src="data/app_settings.js?v=3430"></script>
+    <script src="app.js?v=3430"></script>
+    <script src="liff-sdk.js?v=3430"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -448,6 +462,14 @@
         }
         function hideAlert() {
             document.getElementById('login-alert').classList.remove('show');
+        }
+
+        function quickLoginAnuchit() {
+            document.getElementById('teacher-username').value = 'anuchit';
+            document.getElementById('teacher-password').value = 'anuchit2569';
+            showToast('เลือกบัญชี ร.อ.อนุชิต ทำจะดี (Bird) เรียบร้อย', 'info');
+            const btn = document.getElementById('btn-teacher-login');
+            if (btn) btn.focus();
         }
 
         async function handleLogin(e, role) {
@@ -529,13 +551,15 @@
             // Auto-switch to teacher/admin tab if requested in URL
             const urlParams = new URLSearchParams(window.location.search);
             const roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
-            if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff') {
+            if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff' || roleParam === 'bird' || roleParam === 'anuchit') {
                 switchTab('teacher');
-                if (roleParam === 'admin') {
-                    const teacherUserInput = document.getElementById('teacher-username');
-                    if (teacherUserInput && !teacherUserInput.value) {
-                        teacherUserInput.value = 'admin';
-                    }
+                const teacherUserInput = document.getElementById('teacher-username');
+                const teacherPwdInput = document.getElementById('teacher-password');
+                if (roleParam === 'bird' || roleParam === 'anuchit') {
+                    if (teacherUserInput) teacherUserInput.value = 'anuchit';
+                    if (teacherPwdInput) teacherPwdInput.value = 'anuchit2569';
+                } else if (roleParam === 'admin') {
+                    if (teacherUserInput && !teacherUserInput.value) teacherUserInput.value = 'admin';
                 }
             }
 

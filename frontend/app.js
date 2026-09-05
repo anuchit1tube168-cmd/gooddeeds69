@@ -90,11 +90,23 @@ function seedImportedDeeds() {
 
         const merged = [...existing];
 
-        // เอาเฉพาะความดีจากไฟล์ที่ยังไม่มีใน localStorage เพิ่มเข้าไป
+        // เอาเฉพาะความดีจากไฟล์ที่ยังไม่มีใน localStorage เพิ่มเข้าไป และอัปเดตข้อมูลล่าสุด (เช่น ผู้ตรวจ)
         deeds.forEach(d => {
-            if (!existing.find(e => e.id === d.id)) {
+            const idx = merged.findIndex(e => e.id === d.id);
+            if (idx === -1) {
                 merged.push(d);
                 newCount++;
+            } else {
+                // อัปเดตข้อมูลผู้ตรวจประเมินหรือสถานะล่าสุดจากฐานข้อมูลไฟล์
+                const fileApprover = d.approved_by || d.approvedBy || d.approver;
+                if (fileApprover && fileApprover !== merged[idx].approved_by) {
+                    merged[idx].approved_by = fileApprover;
+                    merged[idx].approvedBy = fileApprover;
+                    merged[idx].approver = fileApprover;
+                }
+                if (d.status && d.status !== merged[idx].status) {
+                    merged[idx].status = d.status;
+                }
             }
         });
 
@@ -110,12 +122,15 @@ function seedImportedDeeds() {
 seedImportedDeeds();
 
 
-const TEACHERS = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.admin && EXCEL_SETTINGS.teacher) ? [
-    EXCEL_SETTINGS.admin,
-    EXCEL_SETTINGS.teacher
-] : [
-    { username: 'admin', password: 'admin69', role: 'admin', name: 'ผู้ดูแลระบบ' },
-    { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์' },
+const TEACHERS = [
+    { username: 'anuchit', password: 'anuchit2569', role: 'admin', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', isAdmin: true, isTeacher: true, title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน' },
+    { username: 'bird', password: 'bird2569', role: 'admin', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', isAdmin: true, isTeacher: true, title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน' },
+    { username: 'admin', password: 'admin69', role: 'admin', name: 'ผู้ดูแลระบบ', isAdmin: true, isTeacher: true },
+    { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์ผู้ตรวจประเมิน', isTeacher: true },
+    ...((typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.admin && EXCEL_SETTINGS.teacher) ? [
+        EXCEL_SETTINGS.admin,
+        EXCEL_SETTINGS.teacher
+    ] : [])
 ];
 
 function normalizeThaiDigits(str) {
@@ -367,9 +382,13 @@ const App = {
                 const teacher = this.getStaffAccounts().find(t => {
                     if (t.username !== u) return false;
                     if (t.password === p) return true;
-                    // Accept password aliases (e.g. teacher or teacher69, admin or admin69)
-                    if (u === 'teacher' && (p === 'teacher' || p === 'teacher69')) return true;
-                    if (u === 'admin' && (p === 'admin' || p === 'admin69')) return true;
+                    // Accept password aliases
+                    if ((u === 'anuchit' || u === 'bird') && (
+                        p === 'anuchit' || p === 'anuchit2569' || p === 'bird' || p === 'bird2569' ||
+                        p === 'admin' || p === 'admin69' || p === 'admin2569' || p === 'teacher' || p === 'teacher69' || p === 'teacher2569'
+                    )) return true;
+                    if (u === 'teacher' && (p === 'teacher' || p === 'teacher69' || p === 'teacher2569')) return true;
+                    if (u === 'admin' && (p === 'admin' || p === 'admin69' || p === 'admin2569')) return true;
                     return false;
                 });
                 if (!teacher) {
@@ -1486,6 +1505,7 @@ const App = {
         ];
         const plainMsg = msgLines.join('\n');
 
+        const reqApprover = deed.approver || deed.approved_by || deed.approvedBy || 'ร.อ.อนุชิต ทำจะดี (Bird)';
         const htmlMsg = [
             `🔔 <b>แจ้งเตือนการขออนุมัติความดี</b>`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
@@ -1495,13 +1515,14 @@ const App = {
             `⏱ <b>จำนวน:</b> <b>${deed.hours} ชั่วโมง</b>`,
             `📅 <b>วันที่:</b> ${deed.activityDate}`,
             `📝 <b>รายละเอียด:</b> ${deed.description}`,
+            `👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> ${reqApprover}`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
             `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
         const baseUrl = this.getBaseUrl();
         const approveUrl = `${baseUrl}/approve_sign.html?id=${deed.id}&studentId=${student.student_id}`;
-        const dashboardUrl = `${baseUrl}/teacher-dashboard.html`;
+        const slipPdfUrl = `${baseUrl}/deed_slip.html?id=${deed.id}&studentId=${student.student_id}`;
 
         const replyMarkup = {
             inline_keyboard: [
@@ -1510,10 +1531,8 @@ const App = {
                     { text: '❌ ปฏิเสธ', callback_data: `reject_${deed.id}_${student.student_id}` }
                 ],
                 [
-                    { text: '✍️ ตรวจสอบ & เซ็นชื่อดิจิทัล', url: approveUrl }
-                ],
-                [
-                    { text: '🌐 เปิดแผงควบคุมอาจารย์', url: dashboardUrl }
+                    { text: '✍️ ตรวจสอบ & ลงนาม ↗️', url: approveUrl },
+                    { text: '📄 พิมพ์สลิป A4 (PDF) ↗️', url: slipPdfUrl }
                 ]
             ]
         };

@@ -337,9 +337,9 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3404"></script>
-    <script src="data/deeds_data.js?v=3404"></script>
-    <script src="app.js?v=3404"></script>
+    <script src="data/students_data.js?v=3520"></script>
+    <script src="data/deeds_data.js?v=3520"></script>
+    <script src="app.js?v=3520"></script>
     <script>
         function findDeed(deedId, studentId) {
             function str(v) { return v ? String(v).trim() : ''; }
@@ -396,7 +396,8 @@
             if (student) {
                 const rank = student.rank || 'นพอ.';
                 const fullName = rank + ' ' + (student.first_name || '') + ' ' + (student.last_name || '');
-                document.getElementById('doc-student-name').textContent = fullName;
+                const posSuffix = (student.position && student.position !== 'นักเรียนพยาบาล') ? ` [${student.position}]` : '';
+                document.getElementById('doc-student-name').textContent = fullName + posSuffix;
                 document.getElementById('doc-seq-student').textContent = student.student_id;
                 document.getElementById('doc-student-no').textContent = student.no || student.student_id.slice(-2) || '-';
                 document.getElementById('doc-academic-year').textContent = student.academic_year || '2569';
@@ -442,6 +443,15 @@
                 
                 const approver = deed.approved_by || deed.approvedBy || deed.signer || 'อาจารย์ผู้รับรองการทำกิจกรรม';
                 document.getElementById('doc-approver-name').textContent = approver;
+
+                const rankEl = document.getElementById('doc-approver-rank');
+                if (rankEl) {
+                    if (approver.includes('อนุชิต') || approver.toLowerCase().includes('bird')) {
+                        rankEl.textContent = 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจประเมิน วพอ.';
+                    } else if (approver.includes('บิดา') || approver.includes('มารดา') || approver.includes('ผู้ปกครอง')) {
+                        rankEl.textContent = 'ผู้ปกครอง';
+                    }
+                }
 
                 // Render Digital Signature if available
                 const sigKey = deed.signatureKey || deed.signature;

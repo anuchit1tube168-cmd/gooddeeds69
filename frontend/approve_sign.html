@@ -298,7 +298,8 @@
             <!-- Panel 1: Teacher (อาจารย์ วพอ.) -->
             <div id="panel-teacher" class="role-panel">
                 <select id="approver-select" class="approver-input" style="margin-bottom:8px; cursor:pointer;" onchange="onSelectApprover(this.value)">
-                    <option value="">-- เลือกรายชื่ออาจารย์ผู้ตรวจประเมิน (๗๒ ท่าน) --</option>
+                    <option value="ร.อ.อนุชิต ทำจะดี" selected>⭐ ร.อ.อนุชิต ทำจะดี (Bird) — อาจารย์ผู้ตรวจ &amp; แอดมิน</option>
+                    <option value="">-- หรือเลือกรายชื่ออาจารย์ผู้ตรวจประเมินท่านอื่น (๗๒ ท่าน) --</option>
                     <option value="น.อ.หญิง วัลลภา อันดารา">1. น.อ.หญิง วัลลภา อันดารา</option>
                     <option value="น.อ.หญิง ชนิตา อมรรัตนธาดา">2. น.อ.หญิง ชนิตา อมรรัตนธาดา</option>
                     <option value="น.อ.หญิง สุกฤตา มีตาทิพฐิ์">3. น.อ.หญิง สุกฤตา มีตาทิพฐิ์</option>
@@ -438,10 +439,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3404"></script>
-    <script src="data/students_data.js?v=3404"></script>
-    <script src="data/deeds_data.js?v=3404"></script>
-    <script src="app.js?v=3404"></script>
+    <script src="data/teachers_data.js?v=3430"></script>
+    <script src="data/students_data.js?v=3430"></script>
+    <script src="data/deeds_data.js?v=3430"></script>
+    <script src="app.js?v=3430"></script>
     <script>
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
@@ -704,6 +705,17 @@
                         const opt = [...select.options].find(o => o.value.trim() === approver.trim() || o.value.includes(approver));
                         if (opt) select.value = opt.value;
                         else select.value = 'custom';
+                    }
+                } else {
+                    setApproverRole('teacher');
+                    const approverInput = document.getElementById('approver-name');
+                    const select = document.getElementById('approver-select');
+                    const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+                    const defaultName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี';
+                    if (approverInput) approverInput.value = defaultName;
+                    if (select) {
+                        const opt = [...select.options].find(o => o.value.includes('อนุชิต') || o.value.trim() === defaultName.trim());
+                        if (opt) select.value = opt.value;
                     }
                 }
 
