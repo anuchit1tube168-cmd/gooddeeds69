@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "rtafnc-gooddeed-cards-staging",
+  "pages_build_output_dir": "./frontend",
+  "compatibility_date": "2026-08-01",
+  "send_metrics": false,
+  "upload_source_maps": false,
+  "services": [
+    {
+      "binding": "RTAFNC_GATEWAY",
+      "service": "rtafnc-one-gateway-staging"
+    }
+  ]
+}

@@ -11,6 +11,7 @@ permissions:
 jobs:
   security-guard:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
       - name: Checkout repository read-only
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
@@ -38,3 +39,7 @@ jobs:
             exit 1
           fi
           echo 'Security Guard passed.'
+      - name: Verify Cloudflare view_cards privacy migration
+        run: node scripts/verify_view_cards_cloudflare.mjs
+      - name: Compile Cloudflare Pages Functions
+        run: npx --yes wrangler@4.127.1 pages functions build functions --outfile=/tmp/rtafnc-gooddeed-pages.mjs

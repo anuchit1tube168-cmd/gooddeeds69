@@ -1,0 +1,2 @@
+Restored non-PII UI assets (logo + chibi) from pre-PDPA Git history on staging only.
+Student photographs, rosters, credentials, and other PII remain excluded from public GitHub.

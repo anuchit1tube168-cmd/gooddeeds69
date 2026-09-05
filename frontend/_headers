@@ -1,0 +1,24 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), serial=()
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+
+/view_cards.html
+  Cache-Control: no-store
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.line-scdn.net; connect-src 'self' https://api.line.me https://access.line.me https://liff.line.me https://*.line.me; frame-src https://liff.line.me https://*.line.me; img-src 'self' data: blob:; style-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'self'
+
+/cloudflare-config.js
+  Cache-Control: no-store
+
+/view_cards.cloudflare.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/view_cards.cloudflare.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/510903.jpg
+  Cache-Control: public, max-age=31536000, immutable
+
+/photos/chibi/*
+  Cache-Control: public, max-age=31536000, immutable

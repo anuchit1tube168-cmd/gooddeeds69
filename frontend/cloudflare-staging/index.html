@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Good Deed Cloudflare Staging</title>
+  <link rel="stylesheet" href="./styles.css">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">RTAFNC ONE · CLOUDFLARE STAGING</p>
+        <h1>ระบบบันทึกความดี วพอ.</h1>
+        <p class="sub">Phase 3A · Read-only integration shell · Production unchanged</p>
+      </div>
+      <span id="mode-badge" class="badge">STAGING ONLY</span>
+    </section>
+
+    <section class="grid">
+      <article class="card">
+        <h2>Core Gateway</h2>
+        <dl id="health" class="status-list"><div><dt>สถานะ</dt><dd>กำลังตรวจสอบ…</dd></div></dl>
+        <button id="check-health" type="button">ตรวจ Gateway อีกครั้ง</button>
+      </article>
+
+      <article class="card">
+        <h2>Session / LINE</h2>
+        <dl id="session" class="status-list"><div><dt>สถานะ</dt><dd>กำลังตรวจสอบ…</dd></div></dl>
+        <div class="actions">
+          <button id="line-connect" type="button">เชื่อมต่อ LINE สำหรับ Staging</button>
+          <button id="logout" type="button" class="secondary">ออกจากระบบ</button>
+        </div>
+      </article>
+
+      <article class="card full">
+        <h2>Good Deed module probe</h2>
+        <p class="muted">Shell นี้ไม่บันทึกข้อมูล ไม่ส่งหลักฐาน และไม่อนุมัติรายการ จนกว่า Core adapter + RBAC + CSRF + audit จะผ่าน E2E</p>
+        <pre id="probe" class="probe">ยังไม่ได้ทดสอบโมดูล</pre>
+        <button id="probe-module" type="button">ทดสอบ GET /api/gooddeed</button>
+      </article>
+    </section>
+
+    <section class="guardrail">
+      <strong>Guardrails</strong>
+      <span>Production cutover = FALSE</span>
+      <span>Writes = FALSE</span>
+      <span>No username/password login</span>
+      <span>No browser self-link</span>
+      <span>No PII in browser config</span>
+    </section>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
