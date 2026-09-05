@@ -439,10 +439,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3531"></script>
-    <script src="data/students_data.js?v=3531"></script>
-    <script src="data/deeds_data.js?v=3531"></script>
-    <script src="app.js?v=3531"></script>
+    <script src="data/teachers_data.js?v=3532"></script>
+    <script src="data/students_data.js?v=3532"></script>
+    <script src="data/deeds_data.js?v=3532"></script>
+    <script src="app.js?v=3532"></script>
     <script>
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
@@ -468,11 +468,17 @@
             const titleEl = document.getElementById('sig-title-text');
             if (titleEl) titleEl.textContent = labelMap[role] || '🖋️ ลายมือชื่อผู้รับรอง:';
 
-            // Auto load saved signature for this role/person
+            // Auto load saved signature for this specific role/person (strictly personal)
             const approverInfo = getApproverInfo();
-            if (approverInfo.name) {
-                const savedSig = Storage.get('sig_' + approverInfo.name) || (role === 'teacher' ? Storage.get('my_teacher_signature') : null);
-                if (savedSig) drawSignatureToCanvas(savedSig);
+            if (approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน' && approverInfo.name !== 'ผู้ปกครอง' && approverInfo.name !== 'ผู้แทนหน่วยงาน' && approverInfo.name !== 'ผู้รับรองกิจกรรม') {
+                const savedSig = Storage.get('sig_' + approverInfo.name) || Storage.get('teacher_sig_' + approverInfo.name);
+                if (savedSig) {
+                    drawSignatureToCanvas(savedSig);
+                } else {
+                    clearSignature();
+                }
+            } else {
+                clearSignature();
             }
         }
 
@@ -594,11 +600,16 @@
 
         function loadSavedSignature() {
             const approverInfo = getApproverInfo();
-            const saved = (approverInfo.name && Storage.get('sig_' + approverInfo.name)) || Storage.get('my_teacher_signature');
+            const name = approverInfo.name;
+            if (!name || name === 'อาจารย์ผู้ตรวจประเมิน' || name === 'ผู้ปกครอง' || name === 'ผู้แทนหน่วยงาน' || name === 'ผู้รับรองกิจกรรม') {
+                alert('กรุณาเลือกหรือระบุชื่อผู้ตรวจประเมินก่อนดึงลายเซ็นครับ');
+                return;
+            }
+            const saved = Storage.get('sig_' + name) || Storage.get('teacher_sig_' + name);
             if (saved) {
                 drawSignatureToCanvas(saved);
             } else {
-                alert('ยังไม่พบลายมือชื่อที่เคยบันทึกไว้ ท่านสามารถใช้นิ้ว/ปากกาเซ็นชื่อในกรอบ หรือกด "แนบรูปภาพลายเซ็น" ได้เลยครับ');
+                alert(`ยังไม่พบลายมือชื่อของ "${name}" ในเครื่องนี้\nท่านสามารถใช้นิ้ว/ปากกาเซ็นชื่อในกรอบ หรือกด "📁 แนบรูปภาพลายเซ็น" ได้เลยครับ`);
             }
         }
 
@@ -609,8 +620,10 @@
             reader.onload = function(e) {
                 drawSignatureToCanvas(e.target.result);
                 const approverInfo = getApproverInfo();
-                if (approverInfo.name) Storage.set('sig_' + approverInfo.name, e.target.result);
-                if (currentApproverRole === 'teacher') Storage.set('my_teacher_signature', e.target.result);
+                if (approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน') {
+                    Storage.set('sig_' + approverInfo.name, e.target.result);
+                    Storage.set('teacher_sig_' + approverInfo.name, e.target.result);
+                }
             };
             reader.readAsDataURL(file);
         }
@@ -786,7 +799,7 @@
                         drawSignatureToCanvas(sigSrc);
                     }
                 } else if (approver) {
-                    const savedSig = Storage.get('sig_' + approver) || Storage.get('my_teacher_signature');
+                    const savedSig = Storage.get('sig_' + approver) || Storage.get('teacher_sig_' + approver);
                     if (savedSig) {
                         drawSignatureToCanvas(savedSig);
                     }
@@ -822,11 +835,16 @@
             if (val === 'custom') {
                 input.value = '';
                 input.focus();
+                clearSignature();
             } else {
                 input.value = val;
-                // Auto load saved signature for selected teacher if available
+                // Auto load saved signature strictly for selected teacher
                 const savedSig = Storage.get('sig_' + val) || Storage.get('teacher_sig_' + val);
-                if (savedSig) drawSignatureToCanvas(savedSig);
+                if (savedSig) {
+                    drawSignatureToCanvas(savedSig);
+                } else {
+                    clearSignature();
+                }
             }
         }
 
@@ -838,9 +856,10 @@
             if (hasSignature && canvas) {
                 sigDataUrl = canvas.toDataURL('image/png');
                 const chk = document.getElementById('save-sig-checkbox');
-                if (chk && chk.checked) {
-                    if (approverInfo.name) Storage.set('sig_' + approverInfo.name, sigDataUrl);
-                    if (currentApproverRole === 'teacher') Storage.set('my_teacher_signature', sigDataUrl);
+                if (chk && chk.checked && approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน') {
+                    // Strictly save signature to THIS specific teacher / person
+                    Storage.set('sig_' + approverInfo.name, sigDataUrl);
+                    Storage.set('teacher_sig_' + approverInfo.name, sigDataUrl);
                 }
             }
 
@@ -873,7 +892,8 @@
                         loc: currentDeed.location || '',
                         appr: approverName,
                         status: 'approved',
-                        img: currentDeed.imageUrl || currentDeed.imageData || ''
+                        img: currentDeed.imageUrl || currentDeed.imageData || '',
+                        sig: sigKey || currentDeed.signatureKey || ''
                     });
                     window.location.href = 'deed_slip.html?' + slipParams.toString();
                 } else {

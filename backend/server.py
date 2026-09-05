@@ -858,6 +858,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 deed_data['approved_by'] = teacher_name
                 deed_data['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
                 deed_data['updated_at'] = deed_data['approvedAt']
+                if payload.get('signatureKey'):
+                    deed_data['signatureKey'] = payload.get('signatureKey')
+                if payload.get('signature'):
+                    deed_data['signature'] = payload.get('signature')
                 if status == 'rejected':
                     deed_data['rejectReason'] = reject_reason
 

@@ -337,9 +337,9 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3531"></script>
-    <script src="data/deeds_data.js?v=3531"></script>
-    <script src="app.js?v=3531"></script>
+    <script src="data/students_data.js?v=3532"></script>
+    <script src="data/deeds_data.js?v=3532"></script>
+    <script src="app.js?v=3532"></script>
     <script>
         function findDeed(deedId, studentId) {
             function str(v) { return v ? String(v).trim() : ''; }
@@ -497,11 +497,21 @@
                     }
                 }
 
-                // Render Digital Signature if available
-                const sigKey = deed.signatureKey || deed.signature;
+                // Render Digital Signature strictly for the specific approver
+                const urlSig = params.get('sig');
+                const sigKey = deed.signatureKey || deed.signature || urlSig;
                 let sigSrc = sigKey ? (App.getImage(sigKey) || (sigKey.startsWith('data:image') ? sigKey : null)) : null;
-                if (!sigSrc && approver && deed.status === 'approved') {
-                    sigSrc = Storage.get('teacher_sig_' + approver) || Storage.get('my_teacher_signature');
+                if (!sigSrc && approver && (deed.status === 'approved' || urlStatus === 'approved')) {
+                    // Check signature strictly saved for THIS specific approver name
+                    sigSrc = Storage.get('sig_' + approver) || Storage.get('teacher_sig_' + approver);
+                    if (!sigSrc) {
+                        // Check if current logged-in user is this exact teacher
+                        const cu = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+                        const myName = cu ? (cu.name || cu.username || '') : '';
+                        if (myName && approver.includes(myName)) {
+                            sigSrc = Storage.get('my_teacher_signature');
+                        }
+                    }
                 }
 
                 if (sigSrc) {

@@ -910,6 +910,8 @@ const App = {
                         status,
                         teacherName,
                         rejectReason,
+                        signatureKey: deed.signatureKey || '',
+                        signature: deed.signature || '',
                         deedData: deed
                     })
                 });
