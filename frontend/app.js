@@ -452,11 +452,25 @@ const App = {
         clearAuthCookie('username');
     },
 
+    getApiBaseUrl() {
+        if (typeof window !== 'undefined' && window.location) {
+            const { hostname } = window.location;
+            if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('trycloudflare.com')) {
+                return '';
+            }
+        }
+        if (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) {
+            return String(CONFIG.SYSTEM_URL).replace(/\/+$/, '');
+        }
+        return '';
+    },
+
     isBackendMode() {
         if (typeof window === 'undefined' || !window.location) return false;
         const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        if (hostname.includes('github.io')) return false;
+        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('trycloudflare.com')) return true;
+        if (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) return true;
         return true;
     },
 
@@ -619,7 +633,8 @@ const App = {
         if (!this.canUseBackendApi()) return null;
 
         try {
-            const res = await fetch(`/api/get_deeds?studentId=${studentId}`, {
+            const apiUrl = `${this.getApiBaseUrl()}/api/get_deeds?studentId=${encodeURIComponent(studentId)}`;
+            const res = await fetch(apiUrl, {
                 headers: this.getAuthHeaders(),
             });
             if (res.ok) {
@@ -637,23 +652,49 @@ const App = {
     async syncAllDeedsWithBackend() {
         if (this.canUseBackendApi()) {
             try {
-                const res = await fetch('/api/get_all_deeds', {
+                const apiUrl = `${this.getApiBaseUrl()}/api/get_all_deeds`;
+                const res = await fetch(apiUrl, {
                     headers: this.getAuthHeaders(),
                 });
                 if (res.ok) {
                     const allDeeds = await res.json();
+                    let deedsList = [];
                     if (Array.isArray(allDeeds)) {
-                        allDeeds.forEach(d => {
-                            const sid = d.student_id || d.studentId;
-                            if (sid) {
-                                const current = this.getDeeds(sid);
-                                const idx = current.findIndex(x => x.id === d.id);
-                                if (idx >= 0) { current[idx] = d; } else { current.unshift(d); }
-                                this.saveDeeds(sid, current);
+                        deedsList = allDeeds;
+                    } else if (allDeeds && typeof allDeeds === 'object') {
+                        Object.entries(allDeeds).forEach(([sid, list]) => {
+                            if (Array.isArray(list)) {
+                                list.forEach(d => {
+                                    deedsList.push({
+                                        ...d,
+                                        studentId: d.studentId || sid,
+                                        student_id: d.student_id || sid
+                                    });
+                                });
                             }
                         });
-                        return allDeeds;
                     }
+
+                    // Group by student and save to localStorage
+                    const byStudent = {};
+                    deedsList.forEach(d => {
+                        const sid = String(d.student_id || d.studentId);
+                        if (!byStudent[sid]) byStudent[sid] = [];
+                        byStudent[sid].push(d);
+                    });
+
+                    Object.entries(byStudent).forEach(([sid, deeds]) => {
+                        const current = this.getDeeds(sid);
+                        deeds.forEach(d => {
+                            const idx = current.findIndex(x => String(x.id) === String(d.id));
+                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; } 
+                            else { current.unshift(d); }
+                        });
+                        this.saveDeeds(sid, current);
+                    });
+
+                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: deedsList.length } }));
+                    return deedsList;
                 }
             } catch (e) {
                 console.warn('Backend sync all deeds error:', e);
@@ -800,7 +841,8 @@ const App = {
                     student: user
                 };
                 
-                await fetch('/api/submit_deed', {
+                const apiUrl = `${this.getApiBaseUrl()}/api/submit_deed`;
+                const res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -808,7 +850,11 @@ const App = {
                     },
                     body: JSON.stringify(payload)
                 });
-                console.log('✅ Sent deed to backend successfully');
+                if (res.ok) {
+                    console.log('✅ Sent deed to backend successfully');
+                } else {
+                    console.warn('⚠️ Backend response not ok:', res.status);
+                }
             } catch (error) {
                 console.error('❌ Failed to send deed to backend:', error);
             }
@@ -846,7 +892,8 @@ const App = {
         // Save to backend via API
         if (this.canUseBackendApi()) {
             try {
-                await fetch('/api/approve_deed', {
+                const apiUrl = `${this.getApiBaseUrl()}/api/approve_deed`;
+                await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

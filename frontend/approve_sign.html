@@ -439,10 +439,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3430"></script>
-    <script src="data/students_data.js?v=3430"></script>
-    <script src="data/deeds_data.js?v=3430"></script>
-    <script src="app.js?v=3430"></script>
+    <script src="data/teachers_data.js?v=3431"></script>
+    <script src="data/students_data.js?v=3431"></script>
+    <script src="data/deeds_data.js?v=3431"></script>
+    <script src="app.js?v=3431"></script>
     <script>
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
@@ -647,7 +647,7 @@
             return null;
         }
 
-        function loadDeedData() {
+        async function loadDeedData() {
             const params = new URLSearchParams(window.location.search);
             const deedId = params.get('id');
             const studentId = params.get('studentId');
@@ -655,6 +655,18 @@
             function str(v) { return v ? String(v).trim() : ''; }
 
             currentDeed = findDeed(deedId, studentId);
+
+            // If not found in local memory, fetch dynamically from backend
+            if (!currentDeed && studentId) {
+                try {
+                    const fetched = await App.syncDeedsWithBackend(studentId);
+                    if (fetched) {
+                        currentDeed = findDeed(deedId, studentId);
+                    }
+                } catch (e) {
+                    console.warn('Could not fetch deed from backend:', e);
+                }
+            }
 
             if (currentDeed) {
                 const sid = currentDeed.student_id || currentDeed.studentId;

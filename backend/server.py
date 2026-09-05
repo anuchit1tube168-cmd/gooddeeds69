@@ -617,6 +617,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
         self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
         self.end_headers()
         self.wfile.write(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
 
@@ -634,6 +636,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
             return True
         self.deny_json('ต้องใช้สิทธิ์อาจารย์หรือผู้ดูแลระบบ')
         return False
+
+    def do_OPTIONS(self):
+        self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', '*')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
+        self.send_header('Access-Control-Max-Age', '86400')
+        self.end_headers()
 
     def do_GET(self):
         parsed_path = urlparse(self.path)
