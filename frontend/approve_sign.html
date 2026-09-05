@@ -407,28 +407,19 @@
             </div>
         </div>
 
-        <!-- E-Signature Pad -->
+        <!-- E-Signature Pad (Strict Live Signature Policy - No Reuse) -->
         <div class="sig-container">
-            <div class="sig-title" style="display:flex; justify-content:space-between; align-items:center;">
-                <span id="sig-title-text">🖋️ ลายมือชื่ออาจารย์ผู้ตรวจประเมิน:</span>
-                <span id="sig-status-badge" style="font-size:0.8rem; font-weight:600; color:#0284c7;"></span>
+            <div class="sig-title" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:6px;">
+                <span id="sig-title-text">🖋️ ลายมือชื่ออาจารย์ผู้ตรวจประเมิน (ลงนามสด):</span>
+                <span class="badge" style="background:#fee2e2; color:#b91c1c; font-size:0.75rem; font-weight:600; padding:3px 8px; border-radius:6px; border:1px solid #fca5a5;">🔒 กฎระเบียบ: ต้องเซ็นสดทุกครั้ง ห้ามวนซ้ำ</span>
             </div>
-            <div class="canvas-box" id="canvas-wrap">
+            <div class="canvas-box" id="canvas-wrap" style="position:relative;">
                 <canvas id="sig-canvas"></canvas>
-                <div class="sig-hint" id="sig-hint">✍️ ใช้นิ้ว ปากกาเซ็นชื่อ หรือกดปุ่มแนบไฟล์รูปลายเซ็นด้านล่าง</div>
+                <div class="sig-hint" id="sig-hint">✍️ กรุณาใช้นิ้วหรือปากกาลงลายมือชื่อสดในกรอบนี้ (ห้ามวนใช้ลายเซ็นเดิม)</div>
             </div>
             <div class="sig-tools" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
-                <div style="display:flex; gap:8px; flex-wrap:wrap;">
-                    <button class="btn-clear" type="button" onclick="clearSignature()">🗑️ ล้างลายเซ็น</button>
-                    <button class="btn-clear" type="button" style="color:#0284c7; border-color:#0284c7;" onclick="loadSavedSignature()">🖊️ ดึงลายเซ็นที่เคยบันทึก</button>
-                    <label class="btn-clear" style="color:#10b981; border-color:#10b981; cursor:pointer; margin-bottom:0; display:inline-flex; align-items:center; gap:4px;">
-                        📁 แนบรูปภาพลายเซ็น
-                        <input type="file" accept="image/*" style="display:none" onchange="uploadSignatureImage(event)">
-                    </label>
-                </div>
-                <label style="font-size:0.75rem; color:#64748b; display:inline-flex; align-items:center; gap:4px; cursor:pointer;">
-                    <input type="checkbox" id="save-sig-checkbox" checked> บันทึกลายเซ็นนี้ไว้ใช้ครั้งถัดไป
-                </label>
+                <button class="btn-clear" type="button" onclick="clearSignature()">🗑️ ล้างลายเซ็น (เพื่อเซ็นใหม่)</button>
+                <span id="sig-status-badge" style="font-size:0.8rem; font-weight:600; color:#059669;"></span>
             </div>
         </div>
 
@@ -439,11 +430,16 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3540"></script>
-    <script src="data/students_data.js?v=3540"></script>
-    <script src="data/deeds_data.js?v=3540"></script>
-    <script src="app.js?v=3540"></script>
+    <script src="data/teachers_data.js?v=3545"></script>
+    <script src="data/students_data.js?v=3545"></script>
+    <script src="data/deeds_data.js?v=3545"></script>
+    <script src="app.js?v=3545"></script>
     <script>
+        // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
+        try {
+            Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_sig_') || k.startsWith('gooddeeds_teacher_sig_') || k === 'gooddeeds_my_teacher_signature').forEach(k => localStorage.removeItem(k));
+        } catch (e) {}
+
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
         let currentApproverRole = 'teacher';
@@ -460,26 +456,16 @@
 
             // Dynamic signature title
             const labelMap = {
-                teacher: '🖋️ ลายมือชื่ออาจารย์ผู้ตรวจประเมิน:',
-                parent: '🖋️ ลายมือชื่อผู้ปกครองผู้รับรองกิจกรรม:',
-                org: '🖋️ ลายมือชื่อผู้แทนหน่วยงาน / ผู้จัดกิจกรรม:',
-                other: '🖋️ ลายมือชื่อผู้รับรองกิจกรรม:'
+                teacher: '🖋️ ลายมือชื่ออาจารย์ผู้ตรวจประเมิน (ลงนามสด):',
+                parent: '🖋️ ลายมือชื่อผู้ปกครองผู้รับรองกิจกรรม (ลงนามสด):',
+                org: '🖋️ ลายมือชื่อผู้แทนหน่วยงาน / ผู้จัดกิจกรรม (ลงนามสด):',
+                other: '🖋️ ลายมือชื่อผู้รับรองกิจกรรม (ลงนามสด):'
             };
             const titleEl = document.getElementById('sig-title-text');
-            if (titleEl) titleEl.textContent = labelMap[role] || '🖋️ ลายมือชื่อผู้รับรอง:';
+            if (titleEl) titleEl.textContent = labelMap[role] || '🖋️ ลายมือชื่อผู้รับรอง (ลงนามสด):';
 
-            // Auto load saved signature for this specific role/person (strictly personal)
-            const approverInfo = getApproverInfo();
-            if (approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน' && approverInfo.name !== 'ผู้ปกครอง' && approverInfo.name !== 'ผู้แทนหน่วยงาน' && approverInfo.name !== 'ผู้รับรองกิจกรรม') {
-                const savedSig = Storage.get('sig_' + approverInfo.name) || Storage.get('teacher_sig_' + approverInfo.name);
-                if (savedSig) {
-                    drawSignatureToCanvas(savedSig);
-                } else {
-                    clearSignature();
-                }
-            } else {
-                clearSignature();
-            }
+            // Strict Live Signature Policy: never reuse or auto-load signatures
+            clearSignature();
         }
 
         function getApproverInfo() {
@@ -539,6 +525,8 @@
                 hasSignature = true;
                 const hint = document.getElementById('sig-hint');
                 if (hint) hint.style.display = 'none';
+                const badge = document.getElementById('sig-status-badge');
+                if (badge) badge.textContent = '✍️ กำลังลงลายมือชื่อสด...';
                 const pos = getPos(e);
                 ctx.beginPath();
                 ctx.moveTo(pos.x, pos.y);
@@ -552,7 +540,15 @@
                 ctx.stroke();
             }
 
-            function stopDraw() { isDrawing = false; }
+            function stopDraw() {
+                if (isDrawing) {
+                    isDrawing = false;
+                    if (hasSignature && !isCanvasBlank(canvas)) {
+                        const badge = document.getElementById('sig-status-badge');
+                        if (badge) badge.textContent = '✅ ลงลายมือชื่อสดเรียบร้อย';
+                    }
+                }
+            }
 
             canvas.addEventListener('mousedown', startDraw);
             canvas.addEventListener('mousemove', draw);
@@ -574,58 +570,17 @@
             if (badge) badge.textContent = '';
         }
 
-        function drawSignatureToCanvas(imgSrc) {
-            if (!imgSrc) return;
-            const img = new Image();
-            img.onload = function() {
-                if (!canvas || !ctx) return;
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                // Draw centered inside the canvas (account for 2x scale)
-                const cWidth = canvas.width / 2;
-                const cHeight = canvas.height / 2;
-                const ratio = Math.min((cWidth * 0.8) / img.width, (cHeight * 0.8) / img.height, 1);
-                const nw = img.width * ratio;
-                const nh = img.height * ratio;
-                const nx = (cWidth / 2) - (nw / 2);
-                const ny = (cHeight / 2) - (nh / 2);
-                ctx.drawImage(img, nx, ny, nw, nh);
-                hasSignature = true;
-                const hint = document.getElementById('sig-hint');
-                if (hint) hint.style.display = 'none';
-                const badge = document.getElementById('sig-status-badge');
-                if (badge) badge.textContent = '✅ โหลดลายมือชื่อแล้ว';
-            };
-            img.src = imgSrc;
-        }
-
-        function loadSavedSignature() {
-            const approverInfo = getApproverInfo();
-            const name = approverInfo.name;
-            if (!name || name === 'อาจารย์ผู้ตรวจประเมิน' || name === 'ผู้ปกครอง' || name === 'ผู้แทนหน่วยงาน' || name === 'ผู้รับรองกิจกรรม') {
-                alert('กรุณาเลือกหรือระบุชื่อผู้ตรวจประเมินก่อนดึงลายเซ็นครับ');
-                return;
+        function isCanvasBlank(cvs) {
+            if (!cvs) return true;
+            try {
+                const context = cvs.getContext('2d');
+                const pixelBuffer = new Uint32Array(
+                    context.getImageData(0, 0, cvs.width, cvs.height).data.buffer
+                );
+                return !pixelBuffer.some(color => color !== 0);
+            } catch (e) {
+                return false;
             }
-            const saved = Storage.get('sig_' + name) || Storage.get('teacher_sig_' + name);
-            if (saved) {
-                drawSignatureToCanvas(saved);
-            } else {
-                alert(`ยังไม่พบลายมือชื่อของ "${name}" ในเครื่องนี้\nท่านสามารถใช้นิ้ว/ปากกาเซ็นชื่อในกรอบ หรือกด "📁 แนบรูปภาพลายเซ็น" ได้เลยครับ`);
-            }
-        }
-
-        function uploadSignatureImage(event) {
-            const file = event.target.files && event.target.files[0];
-            if (!file) return;
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                drawSignatureToCanvas(e.target.result);
-                const approverInfo = getApproverInfo();
-                if (approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน') {
-                    Storage.set('sig_' + approverInfo.name, e.target.result);
-                    Storage.set('teacher_sig_' + approverInfo.name, e.target.result);
-                }
-            };
-            reader.readAsDataURL(file);
         }
 
         function findDeed(deedId, studentId) {
@@ -838,41 +793,33 @@
                     }
                 }
 
-                // Check and load real signature if available
+                // Strict Live Signature Rule: If deed is already approved, show its recorded signature; otherwise start blank
                 const sigKey = currentDeed.signatureKey || currentDeed.signature;
-                if (sigKey) {
+                if (currentDeed.status === 'approved' && sigKey) {
                     const sigSrc = App.getImage(sigKey) || (sigKey.startsWith('data:image') ? sigKey : null);
                     if (sigSrc) {
-                        drawSignatureToCanvas(sigSrc);
+                        const img = new Image();
+                        img.onload = function() {
+                            if (!canvas || !ctx) return;
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            const cWidth = canvas.width / 2;
+                            const cHeight = canvas.height / 2;
+                            const ratio = Math.min((cWidth * 0.8) / img.width, (cHeight * 0.8) / img.height, 1);
+                            const nw = img.width * ratio;
+                            const nh = img.height * ratio;
+                            const nx = (cWidth / 2) - (nw / 2);
+                            const ny = (cHeight / 2) - (nh / 2);
+                            ctx.drawImage(img, nx, ny, nw, nh);
+                            hasSignature = true;
+                            const hint = document.getElementById('sig-hint');
+                            if (hint) hint.style.display = 'none';
+                            const badge = document.getElementById('sig-status-badge');
+                            if (badge) badge.textContent = '✅ ลายมือชื่อที่ได้รับรองไว้';
+                        };
+                        img.src = sigSrc;
                     }
-                } else if (approver) {
-                    const savedSig = Storage.get('sig_' + approver) || Storage.get('teacher_sig_' + approver);
-                    if (savedSig) {
-                        drawSignatureToCanvas(savedSig);
-                    }
-                }
-
-                // Auto draw realistic signature curve if requested
-                const urlParams = new URLSearchParams(window.location.search);
-                if (urlParams.get('autoDrawSig') && canvas && ctx) {
-                    ctx.beginPath();
-                    ctx.strokeStyle = '#0b2f64';
-                    ctx.lineWidth = 3;
-                    ctx.lineCap = 'round';
-                    ctx.lineJoin = 'round';
-                    ctx.moveTo(40, 55);
-                    ctx.bezierCurveTo(80, 25, 120, 75, 160, 40);
-                    ctx.bezierCurveTo(190, 20, 230, 65, 270, 48);
-                    ctx.stroke();
-                    ctx.beginPath();
-                    ctx.moveTo(60, 68);
-                    ctx.lineTo(280, 62);
-                    ctx.stroke();
-                    hasSignature = true;
-                    const hint = document.getElementById('sig-hint');
-                    if (hint) hint.style.display = 'none';
-                    const badge = document.getElementById('sig-status-badge');
-                    if (badge) badge.textContent = '✅ ประทับลายมือชื่อดิจิทัลแล้ว';
+                } else {
+                    clearSignature();
                 }
             }
         }
@@ -882,36 +829,42 @@
             if (val === 'custom') {
                 input.value = '';
                 input.focus();
-                clearSignature();
             } else {
                 input.value = val;
-                // Auto load saved signature strictly for selected teacher
-                const savedSig = Storage.get('sig_' + val) || Storage.get('teacher_sig_' + val);
-                if (savedSig) {
-                    drawSignatureToCanvas(savedSig);
-                } else {
-                    clearSignature();
-                }
             }
+            // Strict Live Signature Rule: never reuse saved signatures
+            clearSignature();
         }
 
         async function handleAction(status) {
             const approverInfo = getApproverInfo();
             const approverName = approverInfo.display;
-            let sigDataUrl = '';
-            
-            if (hasSignature && canvas) {
-                sigDataUrl = canvas.toDataURL('image/png');
-                const chk = document.getElementById('save-sig-checkbox');
-                if (chk && chk.checked && approverInfo.name && approverInfo.name !== 'อาจารย์ผู้ตรวจประเมิน') {
-                    // Strictly save signature to THIS specific teacher / person
-                    Storage.set('sig_' + approverInfo.name, sigDataUrl);
-                    Storage.set('teacher_sig_' + approverInfo.name, sigDataUrl);
+
+            if (status === 'approved') {
+                // Strict validation: Live signature required
+                if (!hasSignature || isCanvasBlank(canvas)) {
+                    alert('⚠️ กรุณาลงลายมือชื่อสดในกรอบก่อนทำการอนุมัติ\n(ตามระเบียบ วพอ. ต้องลงนามสดทุกครั้ง ห้ามเว้นว่างหรือวนใช้ลายเซ็นซ้ำ)');
+                    const wrap = document.getElementById('canvas-wrap');
+                    if (wrap) {
+                        wrap.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        wrap.style.border = '2px solid #ef4444';
+                        wrap.style.boxShadow = '0 0 0 4px rgba(239, 68, 68, 0.25)';
+                        setTimeout(() => {
+                            wrap.style.border = '';
+                            wrap.style.boxShadow = '';
+                        }, 3000);
+                    }
+                    return;
                 }
             }
 
+            let sigDataUrl = '';
+            if (hasSignature && canvas) {
+                sigDataUrl = canvas.toDataURL('image/png');
+            }
+
             if (currentDeed && currentStudent) {
-                // Save signature image key
+                // Save signature image key strictly for THIS specific deed
                 let sigKey = '';
                 if (sigDataUrl) {
                     sigKey = 'sig_' + currentDeed.id;
@@ -922,7 +875,7 @@
                 currentDeed.signatureKey = sigKey;
                 await App.updateDeedStatus(currentStudent.student_id, currentDeed.id, status, approverName, '', currentDeed);
 
-                alert(status === 'approved' ? `✅ อนุมัติและประทับลายมือชื่อเรียบร้อยแล้ว!\nผู้รับรอง: ${approverName}` : '❌ บันทึกสถานะปฏิเสธแล้ว');
+                alert(status === 'approved' ? `✅ อนุมัติและประทับลายมือชื่อสดเรียบร้อยแล้ว!\nผู้รับรอง: ${approverName}` : '❌ บันทึกสถานะปฏิเสธแล้ว');
 
                 // Redirect to slip or dashboard with full query parameters for instant hydration
                 if (status === 'approved') {
