@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบสร้าง LINE Flex Message & บัตรประชาสัมพันธ์ PNG | วพอ. ๒๕๖๙</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3520">
+    <style>
+        :root {
+            --navy-dark: #07111e;
+            --navy-card: #0d1e36;
+            --line-green: #06c755;
+            --line-dark: #05a045;
+        }
+
+        body {
+            background-color: var(--navy-dark);
+            color: var(--text-primary);
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .generator-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px 60px 20px;
+        }
+
+        .gen-hero {
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.95) 0%, rgba(7, 17, 30, 0.98) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .gen-hero h1 {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.7rem;
+            color: var(--gold-light);
+            margin: 0 0 6px 0;
+        }
+
+        .gen-hero p {
+            color: var(--text-secondary);
+            margin: 0;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .gen-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            align-items: flex-start;
+        }
+
+        @media (max-width: 900px) {
+            .gen-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .panel-card {
+            background: rgba(13, 30, 54, 0.85);
+            border: 1px solid var(--navy-border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.35);
+        }
+
+        .panel-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.2rem;
+            color: var(--gold-light);
+            margin: 0 0 16px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid rgba(201, 162, 39, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            background: rgba(7, 17, 30, 0.7);
+            border: 1px solid var(--navy-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Sarabun', sans-serif;
+            font-size: 0.92rem;
+            box-sizing: border-box;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--gold);
+            outline: none;
+            box-shadow: 0 0 8px rgba(201, 162, 39, 0.3);
+        }
+
+        /* FLEX PREVIEW PHONE SIMULATOR */
+        .phone-mockup {
+            background: #111;
+            border: 8px solid #2a2a2a;
+            border-radius: 36px;
+            padding: 18px 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            max-width: 380px;
+            margin: 0 auto 20px auto;
+        }
+
+        .phone-screen {
+            background: #849ebf;
+            border-radius: 24px;
+            padding: 14px 10px;
+            min-height: 480px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .flex-bubble {
+            background: #ffffff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+            font-family: 'Sarabun', sans-serif;
+            color: #111;
+        }
+
+        .flex-hero {
+            background: linear-gradient(135deg, #0A1628 0%, #152A4A 100%);
+            padding: 18px 16px;
+            color: #fff;
+            text-align: center;
+            border-bottom: 3px solid #C9A227;
+            position: relative;
+        }
+
+        .flex-hero-logo {
+            width: 54px;
+            height: 54px;
+            border-radius: 50%;
+            border: 2px solid #C9A227;
+            margin: 0 auto 8px auto;
+            display: block;
+            object-fit: cover;
+            background: #fff;
+        }
+
+        .flex-hero-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: #F3E5AB;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .flex-hero-sub {
+            font-size: 0.8rem;
+            color: #d1d5db;
+            margin-top: 3px;
+        }
+
+        .flex-body {
+            padding: 16px;
+            background: #fafafa;
+        }
+
+        .flex-badge {
+            display: inline-block;
+            background: #FEF3C7;
+            color: #92400E;
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 99px;
+            margin-bottom: 8px;
+            border: 1px solid #FCD34D;
+        }
+
+        .flex-desc {
+            font-size: 0.88rem;
+            color: #374151;
+            line-height: 1.5;
+            margin-bottom: 12px;
+        }
+
+        .flex-progress-wrap {
+            background: #E5E7EB;
+            border-radius: 99px;
+            height: 10px;
+            overflow: hidden;
+            margin: 8px 0 4px 0;
+        }
+
+        .flex-progress-bar {
+            background: linear-gradient(90deg, #D97706, #059669);
+            height: 100%;
+            width: 68%;
+            border-radius: 99px;
+        }
+
+        .flex-footer {
+            padding: 12px 16px 16px 16px;
+            background: #ffffff;
+            border-top: 1px solid #f3f4f6;
+        }
+
+        .flex-btn-line {
+            display: block;
+            width: 100%;
+            background: #06C755;
+            color: #ffffff;
+            font-weight: 700;
+            font-size: 0.95rem;
+            text-align: center;
+            padding: 10px 0;
+            border-radius: 10px;
+            text-decoration: none;
+            box-shadow: 0 3px 8px rgba(6, 199, 85, 0.35);
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .flex-btn-line:hover {
+            background: #05a045;
+            transform: translateY(-1px);
+        }
+
+        .btn-action-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-gold {
+            background: linear-gradient(135deg, #C9A227 0%, #A68018 100%);
+            color: #07111e;
+            font-weight: 700;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Kanit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .btn-gold:hover {
+            background: linear-gradient(135deg, #E6BF3A 0%, #C9A227 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(201, 162, 39, 0.4);
+        }
+
+        .btn-line-action {
+            background: #06C755;
+            color: #ffffff;
+            font-weight: 700;
+            border: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Kanit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .btn-line-action:hover {
+            background: #05a045;
+            transform: translateY(-2px);
+        }
+
+        /* GOOGLE SITES EMBED CODE BOX */
+        .embed-box {
+            background: rgba(0,0,0,0.5);
+            border: 1px dashed var(--gold);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .embed-box pre {
+            margin: 8px 0 0 0;
+            color: #93c5fd;
+            font-family: monospace;
+            font-size: 0.85rem;
+            white-space: pre-wrap;
+            word-break: break-all;
+        }
+
+        /* HIDDEN CANVAS FOR HIGH RES PNG RENDERING */
+        #renderCanvas {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- CANVAS FOR EXPORT -->
+    <canvas id="renderCanvas" width="1080" height="1080"></canvas>
+
+    <div class="generator-container">
+        <!-- HERO -->
+        <div class="gen-hero">
+            <div>
+                <span class="badge badge-gold mb-8">LINE FLEX &amp; GOOGLE SITES PR HUB</span>
+                <h1>ระบบสร้างบัตรประชาสัมพันธ์ &amp; LINE Flex Message</h1>
+                <p>สร้างรูปภาพการ์ดความละเอียดสูง (PNG 1080x1080) เพื่อโพสต์ลงกลุ่ม LINE และคัดลอกโค้ดไปใส่ Google Sites หรือส่ง Broadcast ได้ทันที</p>
+            </div>
+            <div style="display:flex;gap:10px;">
+                <a href="manual.html" class="btn btn-outline" style="border-color:var(--gold);color:var(--gold-light);">
+                    📖 กลับสู่คู่มือ SOP
+                </a>
+                <a href="index.html" class="btn btn-primary">
+                    📱 เปิดระบบบันทึกความดี
+                </a>
+            </div>
+        </div>
+
+        <!-- MAIN GRID -->
+        <div class="gen-grid">
+            <!-- LEFT: CONTROLS & PRESET CONFIG -->
+            <div class="panel-card">
+                <div class="panel-title">
+                    <span>⚙️</span> ปรับแต่งเนื้อหาประกาศ / ประชาสัมพันธ์
+                </div>
+
+                <!-- PRESET SELECTOR -->
+                <div class="form-group">
+                    <label>เลือกแม่แบบสำเร็จรูป (Preset Template):</label>
+                    <select id="presetSelect" class="form-control" onchange="applyPreset()">
+                        <option value="reminder">📢 แม่แบบที่ ๑: แจ้งเตือนสะสมชั่วโมงจิตอาสา (Reminder)</option>
+                        <option value="congrats">🌟 แม่แบบที่ ๒: ยินดีด้วย! ผ่านเกณฑ์ ๕๐ ชั่วโมง (Achievement)</option>
+                        <option value="activity">🤝 แม่แบบที่ ๓: ประชาสัมพันธ์กิจกรรมจิตอาสาใหม่ (New Event)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>หัวข้อประกาศ (Title):</label>
+                    <input type="text" id="cardTitle" class="form-control" value="แจ้งเตือนสะสมชั่วโมงจิตอาสา ๒๕๖๙">
+                </div>
+
+                <div class="form-group">
+                    <label>ข้อความย่อย / กลุ่มเป้าหมาย (Subtitle):</label>
+                    <input type="text" id="cardSub" class="form-control" value="นักเรียนพยาบาลทหารอากาศ ทุกชั้นปี">
+                </div>
+
+                <div class="form-group">
+                    <label>ป้ายไฮไลต์ (Badge):</label>
+                    <input type="text" id="cardBadge" class="form-control" value="⏳ เหลือเวลาอีก ๔๕ วัน ก่อนสิ้นสุดภาคเรียน">
+                </div>
+
+                <div class="form-group">
+                    <label>รายละเอียดสาระสำคัญ (Description):</label>
+                    <textarea id="cardDesc" class="form-control" rows="3">ขอให้ นพอ. ทุกนายตรวจสอบยอดชั่วโมงจิตอาสาสะสมในระบบ ให้เป็นไปตามเกณฑ์ขั้นต่ำ ๒๕ ชม./เทอม (๕๐ ชม./ปีการศึกษา) เพื่อสิทธิ์การประเมินผลและการเลื่อนชั้นปี</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>เปอร์เซ็นต์ความคืบหน้า (Progress Bar %):</label>
+                    <input type="number" id="cardProgress" class="form-control" value="68" min="0" max="100">
+                </div>
+
+                <div class="form-group">
+                    <label>ข้อความบนปุ่ม (Button Label):</label>
+                    <input type="text" id="cardBtnText" class="form-control" value="📱 เปิดระบบบันทึกความดี (LINE LIFF)">
+                </div>
+
+                <div class="form-group">
+                    <label>ลิงก์ปลายทาง (Target URL / LIFF):</label>
+                    <input type="text" id="cardUrl" class="form-control" value="https://liff.line.me/2010948179-Ympqt2bT">
+                </div>
+
+                <!-- ACTIONS -->
+                <div class="btn-action-group">
+                    <button class="btn-gold" onclick="downloadPngCard()">
+                        <span>📥</span> ดาวน์โหลดรูปภาพ PNG (1080x1080)
+                    </button>
+                    <button class="btn-line-action" onclick="copyFlexJson()">
+                        <span>📋</span> คัดลอก LINE Flex JSON
+                    </button>
+                </div>
+
+                <!-- GOOGLE SITES EMBED CODE -->
+                <div class="embed-box">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-weight:700;color:var(--gold-light);font-size:0.9rem;">
+                            🌐 โค้ดสำหรับฝังใน Google Sites (Embed HTML):
+                        </span>
+                        <button class="btn btn-xs btn-outline" style="border-color:var(--gold);color:var(--gold-light);" onclick="copyEmbedCode()">
+                            คัดลอกโค้ด
+                        </button>
+                    </div>
+                    <pre id="embedCodeSnippet">&lt;iframe src="https://the-salon-theoretical-northeast.trycloudflare.com/frontend/flex_card_generator.html" width="100%" height="820" frameborder="0" style="border-radius:16px;box-shadow:0 8px 30px rgba(0,0,0,0.4);"&gt;&lt;/iframe&gt;</pre>
+                </div>
+            </div>
+
+            <!-- RIGHT: LIVE PHONE SIMULATOR -->
+            <div class="panel-card" style="text-align:center;">
+                <div class="panel-title" style="justify-content:center;">
+                    <span>📱</span> พรีวิวข้อความจริงในแอป LINE (LINE Flex Simulator)
+                </div>
+
+                <!-- PHONE -->
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <!-- BUBBLE -->
+                        <div class="flex-bubble">
+                            <div class="flex-hero">
+                                <img src="510903.jpg" alt="RTAFNC" class="flex-hero-logo" onerror="this.src='../510903.jpg'">
+                                <h3 class="flex-hero-title" id="prevTitle">แจ้งเตือนสะสมชั่วโมงจิตอาสา ๒๕๖๙</h3>
+                                <div class="flex-hero-sub" id="prevSub">นักเรียนพยาบาลทหารอากาศ ทุกชั้นปี</div>
+                            </div>
+
+                            <div class="flex-body">
+                                <div class="flex-badge" id="prevBadge">⏳ เหลือเวลาอีก ๔๕ วัน ก่อนสิ้นสุดภาคเรียน</div>
+                                <div class="flex-desc" id="prevDesc">
+                                    ขอให้ นพอ. ทุกนายตรวจสอบยอดชั่วโมงจิตอาสาสะสมในระบบ ให้เป็นไปตามเกณฑ์ขั้นต่ำ ๒๕ ชม./เทอม (๕๐ ชม./ปีการศึกษา) เพื่อสิทธิ์การประเมินผลและการเลื่อนชั้นปี
+                                </div>
+
+                                <div style="display:flex;justify-content:space-between;font-size:0.75rem;color:#6b7280;font-weight:700;">
+                                    <span>ความคืบหน้าภาพรวม</span>
+                                    <span id="prevProgressNum">68% (34/50 ชม.)</span>
+                                </div>
+                                <div class="flex-progress-wrap">
+                                    <div class="flex-progress-bar" id="prevProgressBar" style="width: 68%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex-footer">
+                                <a href="https://liff.line.me/2010948179-Ympqt2bT" target="_blank" class="flex-btn-line" id="prevBtn">
+                                    📱 เปิดระบบบันทึกความดี (LINE LIFF)
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="font-size:0.85rem;color:var(--text-secondary);">
+                    💡 ภาพจำลองขนาดมาตรฐาน LINE Flex Message Bubble (300px) ที่แสดงผลบนสมาร์ตโฟนของนักเรียน
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPT -->
+    <script>
+        const PRESETS = {
+            reminder: {
+                title: "แจ้งเตือนสะสมชั่วโมงจิตอาสา ๒๕๖๙",
+                sub: "นักเรียนพยาบาลทหารอากาศ ทุกชั้นปี",
+                badge: "⏳ เหลือเวลาอีก ๔๕ วัน ก่อนสิ้นสุดภาคเรียน",
+                desc: "ขอให้ นพอ. ทุกนายตรวจสอบยอดชั่วโมงจิตอาสาสะสมในระบบ ให้เป็นไปตามเกณฑ์ขั้นต่ำ ๒๕ ชม./เทอม (๕๐ ชม./ปีการศึกษา) เพื่อสิทธิ์การประเมินผลและการเลื่อนชั้นปี",
+                progress: 68,
+                btnText: "📱 เปิดระบบบันทึกความดี (LINE LIFF)",
+                url: "https://liff.line.me/2010948179-Ympqt2bT"
+            },
+            congrats: {
+                title: "🎉 ยินดีด้วย! ผ่านเกณฑ์ ๕๐ ชั่วโมง",
+                sub: "วิทยาลัยพยาบาลทหารอากาศ ประจำปีการศึกษา ๒๕๖๙",
+                badge: "🌟 ผ่านเกณฑ์สมบูรณ์ (Lv.8 Ultimate Sovereign)",
+                desc: "ท่านได้สะสมชั่วโมงจิตอาสาครบถ้วนตามเกณฑ์ ๕๐ ชั่วโมงเรียบร้อยแล้ว สามารถกดรับเกียรติบัตรอิเล็กทรอนิกส์และพิมพ์สลิปความดี A4 ได้ทันที",
+                progress: 100,
+                btnText: "🎖️ ดูเกียรติบัตร & สลิปความดี A4",
+                url: "https://liff.line.me/2010948179-Ympqt2bT?page=certificate"
+            },
+            activity: {
+                title: "🤝 เชิญชวนร่วมกิจกรรมจิตอาสาใหม่",
+                sub: "กิจกรรมบริจาคโลหิต & บำเพ็ญประโยชน์ วพอ.",
+                badge: "🩸 หมวด ๑: รับสูงสุด ๘ ชม./ครั้ง",
+                desc: "เปิดรับสมัครจิตอาสาร่วมบริจาคโลหิตและช่วยเหลือผู้ป่วย ณ โรงพยาบาลภูมิพลอดุลยเดช พอ. ในวันศุกร์นี้ บันทึกชั่วโมงจิตอาสาเข้าระบบอัตโนมัติ",
+                progress: 40,
+                btnText: "📝 ลงชื่อเข้าร่วมกิจกรรม",
+                url: "https://liff.line.me/2010948179-Ympqt2bT?page=activity"
+            }
+        };
+
+        function applyPreset() {
+            const key = document.getElementById('presetSelect').value;
+            const p = PRESETS[key] || PRESETS.reminder;
+            document.getElementById('cardTitle').value = p.title;
+            document.getElementById('cardSub').value = p.sub;
+            document.getElementById('cardBadge').value = p.badge;
+            document.getElementById('cardDesc').value = p.desc;
+            document.getElementById('cardProgress').value = p.progress;
+            document.getElementById('cardBtnText').value = p.btnText;
+            document.getElementById('cardUrl').value = p.url;
+            updatePreview();
+        }
+
+        function updatePreview() {
+            const title = document.getElementById('cardTitle').value;
+            const sub = document.getElementById('cardSub').value;
+            const badge = document.getElementById('cardBadge').value;
+            const desc = document.getElementById('cardDesc').value;
+            const prog = Math.min(100, Math.max(0, parseInt(document.getElementById('cardProgress').value) || 0));
+            const btnText = document.getElementById('cardBtnText').value;
+            const url = document.getElementById('cardUrl').value;
+
+            document.getElementById('prevTitle').textContent = title;
+            document.getElementById('prevSub').textContent = sub;
+            document.getElementById('prevBadge').textContent = badge;
+            document.getElementById('prevDesc').textContent = desc;
+            document.getElementById('prevProgressBar').style.width = prog + '%';
+            document.getElementById('prevProgressNum').textContent = prog + '% (' + Math.round(prog*0.5) + '/50 ชม.)';
+            document.getElementById('prevBtn').textContent = btnText;
+            document.getElementById('prevBtn').href = url;
+        }
+
+        // Listen for input changes
+        ['cardTitle', 'cardSub', 'cardBadge', 'cardDesc', 'cardProgress', 'cardBtnText', 'cardUrl'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('input', updatePreview);
+            }
+        });
+
+        // Copy Google Sites Embed Code
+        function copyEmbedCode() {
+            const snippet = document.getElementById('embedCodeSnippet').textContent;
+            navigator.clipboard.writeText(snippet).then(() => {
+                alert('✅ คัดลอกโค้ดสำหรับฝังใน Google Sites เรียบร้อยแล้ว!');
+            }).catch(() => {
+                prompt('คัดลอกโค้ดนี้:', snippet);
+            });
+        }
+
+        // Generate and copy LINE Flex Message JSON
+        function copyFlexJson() {
+            const title = document.getElementById('cardTitle').value;
+            const sub = document.getElementById('cardSub').value;
+            const badge = document.getElementById('cardBadge').value;
+            const desc = document.getElementById('cardDesc').value;
+            const prog = parseInt(document.getElementById('cardProgress').value) || 50;
+            const btnText = document.getElementById('cardBtnText').value;
+            const url = document.getElementById('cardUrl').value;
+
+            const flexPayload = {
+                "type": "flex",
+                "altText": title + " - วพอ. ๒๕๖๙",
+                "contents": {
+                    "type": "bubble",
+                    "hero": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "image",
+                                "url": "https://raw.githubusercontent.com/anuchit1tube168-cmd/gooddeeds69/main/frontend/510903.jpg",
+                                "size": "sm",
+                                "aspectRatio": "1:1",
+                                "aspectMode": "cover"
+                            },
+                            {
+                                "type": "text",
+                                "text": title,
+                                "weight": "bold",
+                                "size": "lg",
+                                "color": "#F3E5AB",
+                                "align": "center",
+                                "margin": "md",
+                                "wrap": true
+                            },
+                            {
+                                "type": "text",
+                                "text": sub,
+                                "size": "xs",
+                                "color": "#D1D5DB",
+                                "align": "center",
+                                "margin": "xs"
+                            }
+                        ],
+                        "backgroundColor": "#0A1628",
+                        "paddingAll": "20px"
+                    },
+                    "body": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "box",
+                                "layout": "baseline",
+                                "contents": [
+                                    {
+                                        "type": "text",
+                                        "text": badge,
+                                        "color": "#92400E",
+                                        "size": "xs",
+                                        "weight": "bold"
+                                    }
+                                ],
+                                "backgroundColor": "#FEF3C7",
+                                "paddingAll": "6px",
+                                "cornerRadius": "10px"
+                            },
+                            {
+                                "type": "text",
+                                "text": desc,
+                                "size": "sm",
+                                "color": "#374151",
+                                "wrap": true,
+                                "margin": "md",
+                                "lineSpacing": "4px"
+                            },
+                            {
+                                "type": "box",
+                                "layout": "vertical",
+                                "contents": [
+                                    {
+                                        "type": "box",
+                                        "layout": "horizontal",
+                                        "contents": [
+                                            { "type": "text", "text": "ความคืบหน้าสะสม", "size": "xs", "color": "#6B7280" },
+                                            { "type": "text", "text": prog + "%", "size": "xs", "color": "#059669", "align": "end", "weight": "bold" }
+                                        ]
+                                    },
+                                    {
+                                        "type": "box",
+                                        "layout": "vertical",
+                                        "contents": [
+                                            {
+                                                "type": "box",
+                                                "layout": "vertical",
+                                                "contents": [],
+                                                "backgroundColor": "#059669",
+                                                "width": prog + "%",
+                                                "height": "8px",
+                                                "cornerRadius": "99px"
+                                            }
+                                        ],
+                                        "backgroundColor": "#E5E7EB",
+                                        "height": "8px",
+                                        "cornerRadius": "99px",
+                                        "margin": "xs"
+                                    }
+                                ],
+                                "margin": "lg"
+                            }
+                        ],
+                        "paddingAll": "16px"
+                    },
+                    "footer": {
+                        "type": "box",
+                        "layout": "vertical",
+                        "contents": [
+                            {
+                                "type": "button",
+                                "action": {
+                                    "type": "uri",
+                                    "label": btnText,
+                                    "uri": url
+                                },
+                                "style": "primary",
+                                "color": "#06C755",
+                                "height": "sm"
+                            }
+                        ],
+                        "paddingAll": "14px"
+                    }
+                }
+            };
+
+            const jsonStr = JSON.stringify(flexPayload, null, 2);
+            navigator.clipboard.writeText(jsonStr).then(() => {
+                alert('✅ คัดลอก LINE Flex JSON สำเร็จ!\nสามารถนำไปวางใน LINE Official Account Manager > Broadcast หรือ Flex Message Simulator ได้ทันทีครับ');
+            }).catch(() => {
+                prompt('คัดลอก JSON ด้านล่างนี้:', jsonStr);
+            });
+        }
+
+        // Render high resolution PNG card using HTML5 Canvas (1080x1080)
+        function downloadPngCard() {
+            const canvas = document.getElementById('renderCanvas');
+            const ctx = canvas.getContext('2d');
+            const w = 1080;
+            const h = 1080;
+
+            const title = document.getElementById('cardTitle').value;
+            const sub = document.getElementById('cardSub').value;
+            const badge = document.getElementById('cardBadge').value;
+            const desc = document.getElementById('cardDesc').value;
+            const prog = Math.min(100, Math.max(0, parseInt(document.getElementById('cardProgress').value) || 0));
+
+            // 1. Navy Background Gradient
+            const grad = ctx.createLinearGradient(0, 0, w, h);
+            grad.addColorStop(0, '#07111E');
+            grad.addColorStop(0.5, '#0E223D');
+            grad.addColorStop(1, '#050B14');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, w, h);
+
+            // 2. Gold Border Frame
+            ctx.strokeStyle = '#C9A227';
+            ctx.lineWidth = 14;
+            ctx.strokeRect(36, 36, w - 72, h - 72);
+
+            ctx.strokeStyle = 'rgba(201, 162, 39, 0.4)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(52, 52, w - 104, h - 104);
+
+            // Corner Ornaments
+            drawCorner(ctx, 42, 42);
+            drawCorner(ctx, w - 42, 42);
+            drawCorner(ctx, 42, h - 42);
+            drawCorner(ctx, w - 42, h - 42);
+
+            // 3. Load Logo & Draw Center
+            const logoImg = new Image();
+            logoImg.crossOrigin = "anonymous";
+            logoImg.src = "510903.jpg";
+            logoImg.onload = () => {
+                renderContent(ctx, logoImg, w, h, title, sub, badge, desc, prog);
+            };
+            logoImg.onerror = () => {
+                renderContent(ctx, null, w, h, title, sub, badge, desc, prog);
+            };
+        }
+
+        function drawCorner(ctx, x, y) {
+            ctx.fillStyle = '#C9A227';
+            ctx.beginPath();
+            ctx.arc(x, y, 10, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function renderContent(ctx, logoImg, w, h, title, sub, badge, desc, prog) {
+            // Draw Emblem circle
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(w / 2, 170, 75, 0, Math.PI * 2);
+            ctx.fillStyle = '#102A4A';
+            ctx.fill();
+            ctx.strokeStyle = '#C9A227';
+            ctx.lineWidth = 6;
+            ctx.stroke();
+            ctx.clip();
+            if (logoImg) {
+                ctx.drawImage(logoImg, w / 2 - 75, 95, 150, 150);
+            }
+            ctx.restore();
+
+            // Header Title
+            ctx.fillStyle = '#F3E5AB';
+            ctx.font = 'bold 52px Kanit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText(title, w / 2, 310);
+
+            // Subtitle
+            ctx.fillStyle = '#D1D5DB';
+            ctx.font = '32px Sarabun, sans-serif';
+            ctx.fillText(sub, w / 2, 365);
+
+            // Gold Divider
+            ctx.strokeStyle = '#C9A227';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(w / 2 - 220, 400);
+            ctx.lineTo(w / 2 + 220, 400);
+            ctx.stroke();
+
+            // Center Content Card
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.07)';
+            roundRect(ctx, 100, 440, w - 200, 360, 24);
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(201, 162, 39, 0.3)';
+            ctx.lineWidth = 2;
+            roundRect(ctx, 100, 440, w - 200, 360, 24);
+            ctx.stroke();
+
+            // Badge pill
+            ctx.fillStyle = '#FEF3C7';
+            roundRect(ctx, w / 2 - 280, 470, 560, 48, 24);
+            ctx.fill();
+            ctx.fillStyle = '#92400E';
+            ctx.font = 'bold 24px Sarabun, sans-serif';
+            ctx.fillText(badge, w / 2, 503);
+
+            // Description lines (wrap)
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = '30px Sarabun, sans-serif';
+            wrapText(ctx, desc, w / 2, 570, w - 280, 44);
+
+            // Progress Section
+            ctx.fillStyle = '#F3E5AB';
+            ctx.font = 'bold 26px Kanit, sans-serif';
+            ctx.textAlign = 'left';
+            ctx.fillText('เป้าหมายสะสม ๕๐ ชั่วโมง/ปีการศึกษา', 140, 710);
+
+            ctx.textAlign = 'right';
+            ctx.fillText(`${prog}% (${Math.round(prog * 0.5)} / 50 ชม.)`, w - 140, 710);
+
+            // Progress Bar
+            ctx.fillStyle = 'rgba(255,255,255,0.15)';
+            roundRect(ctx, 140, 730, w - 280, 24, 12);
+            ctx.fill();
+
+            const barW = Math.max(20, (w - 280) * (prog / 100));
+            const barGrad = ctx.createLinearGradient(140, 0, 140 + barW, 0);
+            barGrad.addColorStop(0, '#C9A227');
+            barGrad.addColorStop(1, '#06C755');
+            ctx.fillStyle = barGrad;
+            roundRect(ctx, 140, 730, barW, 24, 12);
+            ctx.fill();
+
+            // Bottom CTA Box (LINE LIFF Button Simulation)
+            ctx.fillStyle = '#06C755';
+            roundRect(ctx, 240, 840, w - 480, 76, 20);
+            ctx.fill();
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.font = 'bold 36px Kanit, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('📱 เปิดระบบบันทึกความดี (LINE LIFF)', w / 2, 892);
+
+            // Footer note
+            ctx.fillStyle = '#9CA3AF';
+            ctx.font = '22px Sarabun, sans-serif';
+            ctx.fillText('วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ | ปีการศึกษา ๒๕๖๙', w / 2, 970);
+            ctx.fillText('เข้าใช้งานผ่าน LINE Official หรือ https://liff.line.me/2010948179-Ympqt2bT', w / 2, 1005);
+
+            // Trigger Download
+            const link = document.createElement('a');
+            link.download = `rtafnc_gooddeeds_pr_${Date.now()}.png`;
+            link.href = document.getElementById('renderCanvas').toDataURL('image/png');
+            link.click();
+        }
+
+        function roundRect(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x + radius, y);
+            ctx.closePath();
+        }
+
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split('');
+            let line = '';
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n];
+                const metrics = ctx.measureText(testLine);
+                const testWidth = metrics.width;
+                if (testWidth > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n];
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        // Initialize preview
+        window.addEventListener('DOMContentLoaded', applyPreset);
+    </script>
+</body>
+
+</html>

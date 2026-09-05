@@ -361,6 +361,124 @@
         .raci-a { background: rgba(201, 162, 39, 0.2); color: #fbbf24; border: 1px solid rgba(201, 162, 39, 0.5); }
         .raci-c { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
         .raci-i { background: rgba(156, 163, 175, 0.2); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); }
+
+        /* FLOWCHART PIPELINE & CARDS */
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin: 20px 0;
+        }
+        .flow-node {
+            display: flex;
+            align-items: flex-start;
+            gap: 18px;
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.9) 0%, rgba(10, 22, 40, 0.95) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 18px 22px;
+            transition: all 0.25s ease;
+        }
+        .flow-node:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+        }
+        .flow-icon-circle {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(201,162,39,0.2) 0%, rgba(201,162,39,0.05) 100%);
+            border: 2px solid var(--gold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.6rem;
+            flex-shrink: 0;
+            color: var(--gold-light);
+        }
+        .flow-badge-step {
+            display: inline-block;
+            background: rgba(201, 162, 39, 0.2);
+            color: var(--gold-light);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 99px;
+            margin-bottom: 4px;
+            border: 1px solid rgba(201,162,39,0.4);
+        }
+        .flow-connector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold);
+            font-size: 1.4rem;
+            margin: -4px 0;
+        }
+
+        /* SKILL TRAY (CHIBI 8 TIERS) */
+        .skill-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .skill-card {
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.85) 0%, rgba(7, 17, 30, 0.95) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-lg);
+            padding: 20px 16px;
+            text-align: center;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .skill-card:hover {
+            border-color: var(--gold);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(201, 162, 39, 0.25);
+        }
+        .skill-avatar {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin-bottom: 12px;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            transition: transform 0.3s ease;
+        }
+        .skill-card:hover .skill-avatar {
+            transform: scale(1.08);
+        }
+        .skill-level-badge {
+            background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+            color: var(--navy-dark);
+            font-weight: 800;
+            font-size: 0.8rem;
+            padding: 3px 12px;
+            border-radius: 99px;
+            margin-bottom: 6px;
+            display: inline-block;
+        }
+        .skill-title {
+            font-family: 'Kanit', sans-serif;
+            font-size: 1.1rem;
+            color: var(--gold-light);
+            margin: 0 0 4px 0;
+        }
+        .skill-hours {
+            font-size: 0.9rem;
+            color: #60a5fa;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .skill-desc {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
@@ -434,6 +552,12 @@
                 <button class="m-tab-btn active" onclick="switchTab('criteria', this)">
                     <span>📜</span> เกณฑ์ ๙ หมวดหมู่ &amp; โควตา
                 </button>
+                <button class="m-tab-btn" onclick="switchTab('flowchart', this)">
+                    <span>🗺️</span> แผนภาพกระบวนการ (Visual Flow)
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('skills', this)">
+                    <span>🎖️</span> ถาดทักษะ &amp; บัตรเกียรติยศ (Skill Tray)
+                </button>
                 <button class="m-tab-btn" onclick="switchTab('sop', this)">
                     <span>📊</span> ขั้นตอนการปฏิบัติงาน (Flow &amp; SOP)
                 </button>
@@ -449,6 +573,9 @@
                 <button class="m-tab-btn" onclick="switchTab('faq', this)">
                     <span>❓</span> คำถามพบบ่อย (FAQ)
                 </button>
+                <a href="flex_card_generator.html" class="m-tab-btn" style="border-color:#06C755;color:#06C755;text-decoration:none;">
+                    <span>📣</span> สร้าง LINE Flex &amp; บัตร PNG
+                </a>
             </div>
 
             <!-- TAB 1: CRITERIA -->
@@ -635,6 +762,241 @@
                         </div>
                         <div class="crit-rules">
                             สำหรับนักเรียนที่มีตำแหน่งหน้าที่เพื่อส่วนรวม ได้แก่ นักเรียนปกครอง, แอดมินระบบ, น.สารสนเทศ, น.ตัดต่อสื่อ และ น.พยาบาลประจำรุ่น (หากมีมากกว่า ๑ ตำแหน่ง จะได้รับเพียงตำแหน่งเดียว)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+<!-- TAB: VISUAL FLOWCHART -->
+            <div class="tab-pane" id="pane-flowchart">
+                <div class="card mb-20" style="background:rgba(201, 162, 39, 0.08);border-color:var(--gold);">
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <span style="font-size:2.2rem;">🗺️</span>
+                        <div>
+                            <h3 style="margin:0;color:var(--gold-light);font-family:Kanit,sans-serif;">แผนภาพกระบวนการทำงานครบวงจร (End-to-End Visual Flowchart)</h3>
+                            <p style="margin:4px 0 0 0;font-size:0.88rem;color:var(--text-secondary);">
+                                ลำดับขั้นตอนตั้งแต่ นพอ. ปฏิบัติกิจกรรมจิตอาสา ยื่นบันทึกผ่านมือถือ การแจ้งเตือนอาจารย์แบบ Real-time การลงนามสด จนถึงการออกสลิป A4 และซิงก์ Google Drive
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FLOW NODES PIPELINE -->
+                <div class="flow-container">
+                    <!-- STEP 1 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">📸</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๑: ปฏิบัติกิจกรรม</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๑. บำเพ็ญกิจกรรมจิตอาสา &amp; บันทึกหลักฐาน</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                นพอ. ปฏิบัติกิจกรรมจิตอาสาตามระเบียบ ๙ หมวด พร้อมถ่ายภาพหลักฐานกิจกรรมอย่างน้อย ๑-๒ รูป โดยเห็นตนเองขณะปฏิบัติงานอย่างชัดเจน
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 2 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">📱</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๒: เข้าสู่ระบบ</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๒. เข้าสู่ระบบผ่าน LINE Official LIFF หรือเบราว์เซอร์</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                เปิดผ่าน LINE บนโทรศัพท์มือถือที่ลิงก์ <code>https://liff.line.me/2010948179-Ympqt2bT</code> ระบบจะล็อกอินอัตโนมัติ หรือเข้าสู่ระบบด้วยรหัสนักเรียน ๗ หลัก
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 3 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">📝</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๓: บันทึกข้อมูล</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๓. ยื่นบันทึกความดี &amp; ตรวจสอบโควตาอัตโนมัติ</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                กรอกรายละเอียด เลือกล็อกหมวด ๑-๙ แนบรูปถ่าย โดยระบบ AI Guard จะตรวจสอบข้อจำกัดเวลา (เพดานรายครั้ง/รายเทอม/รายปี) และป้องกันการส่งซ้ำซ้อนทันที
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 4 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">🤖</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๔: แจ้งเตือนด่วน</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๔. ระบบยิงแจ้งเตือนผ่าน Telegram Bot &amp; LINE</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                ระบบส่งข้อความแจ้งเตือนพร้อมรูปถ่ายหลักฐานเข้ากลุ่มอาจารย์ผู้ตรวจประเมินทาง Telegram ทันทีแบบ Real-time พร้อมปุ่มกดอนุมัติ/ตรวจสลิป
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 5 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">✒️</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๕: ลงนามดิจิทัล</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๕. ผู้รับรองลงนามสดบน Digital Signature Canvas</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                นพอ. แชร์ลิงก์รับรองเฉพาะรายการ ให้ผู้รับรอง ๔ บทบาท (อาจารย์ วพอ. / ผู้ปกครอง / หน่วยงานภายนอก / บุคคลอื่น) เซ็นชื่อสดด้วยนิ้วมือบนหน้าจอมือถือ
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 6 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">✅</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๖: อาจารย์อนุมัติ</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๖. อาจารย์อนุมัติผ่าน Teacher Dashboard</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                อาจารย์ผู้ควบคุมตรวจสอบความถูกต้อง กดอนุมัติ (Approve) รายคนหรืออนุมัติทั้งกลุ่ม ระบบจะประทับตรารับรองราชการทันที
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="flow-connector">▼</div>
+
+                    <!-- STEP 7 -->
+                    <div class="flow-node">
+                        <div class="flow-icon-circle">🌟</div>
+                        <div style="flex:1;">
+                            <span class="flow-badge-step">ขั้นตอนที่ ๗: ออกสลิป &amp; ซิงก์ข้อมูล</span>
+                            <h4 style="margin:2px 0 6px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">๗. ปลดล็อกใบบันทึก A4, เลื่อนขั้น Chibi &amp; ซิงก์ Google Drive</h4>
+                            <p style="margin:0;font-size:0.88rem;color:var(--text-secondary);line-height:1.5;">
+                                ระบบปลดล็อกใบบันทึกความดี A4 (PDF Slip), เลื่อนระดับขั้น Chibi 3D สู่ทำเนียบเกียรติยศ และสำรองประวัติทั้งหมดขึ้น Google Drive ส่วนตัวอย่างปลอดภัย
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: SKILL TRAY & CHIBI 3D LEVELS -->
+            <div class="tab-pane" id="pane-skills">
+                <div class="card mb-20" style="background:rgba(201, 162, 39, 0.08);border-color:var(--gold);">
+                    <div style="display:flex;align-items:center;gap:14px;">
+                        <span style="font-size:2.2rem;">🎖️</span>
+                        <div>
+                            <h3 style="margin:0;color:var(--gold-light);font-family:Kanit,sans-serif;">ถาดทักษะจิตอาสา &amp; ระดับขั้นเกียรติยศ Chibi 3D</h3>
+                            <p style="margin:4px 0 0 0;font-size:0.88rem;color:var(--text-secondary);">
+                                เกียรติยศแห่งจิตอาสา ๘ ระดับขั้น สำหรับนักเรียนพยาบาลทหารอากาศ ปลดล็อกตามยอดชั่วโมงสะสมจริง
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8 CHIBI TIERS GRID -->
+                <h4 style="color:var(--gold);margin:0 0 14px 0;font-family:Kanit,sans-serif;">
+                    👑 ระดับขั้นเกียรติยศนักเรียนจิตอาสา (8 Tiers of Honor)
+                </h4>
+                <div class="skill-grid">
+                    <!-- LV 1 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv1.png" alt="Lv.1" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๑</span>
+                        <h4 class="skill-title">Cadet Novice</h4>
+                        <div class="skill-hours">สะสม ๐ - ๔ ชม. 👶</div>
+                        <p class="skill-desc">จุดเริ่มต้นแห่งจิตอาสา นพอ. ชั้นต้น พร้อมเรียนรู้และเริ่มบำเพ็ญประโยชน์เพื่อสังคม</p>
+                    </div>
+
+                    <!-- LV 2 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv2.png" alt="Lv.2" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๒</span>
+                        <h4 class="skill-title">Cadet Apprentice</h4>
+                        <div class="skill-hours">สะสม ๕ - ๙ ชม. 📝</div>
+                        <p class="skill-desc">จิตอาสาขั้นฝึกหัด ร่วมกิจกรรมช่วยเหลือภายในวิทยาลัยและชุมชนรอบข้างอย่างสม่ำเสมอ</p>
+                    </div>
+
+                    <!-- LV 3 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv3.png" alt="Lv.3" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๓</span>
+                        <h4 class="skill-title">Bronze Service</h4>
+                        <div class="skill-hours">สะสม ๑๐ - ๑๔ ชม. 🩺</div>
+                        <p class="skill-desc">ผู้บำเพ็ญประโยชน์ระดับทองแดง มีทักษะการช่วยเหลือดูแลผู้ป่วยและผู้สูงอายุ</p>
+                    </div>
+
+                    <!-- LV 4 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv4.png" alt="Lv.4" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๔</span>
+                        <h4 class="skill-title">Silver Care Hero</h4>
+                        <div class="skill-hours">สะสม ๑๕ - ๑๙ ชม. 🧑‍⚕️</div>
+                        <p class="skill-desc">ผู้พิทักษ์การบริบาลระดับเงิน เสียสละเวลาส่วนตัวร่วมโครงการภายนอกและงานอาสาต่อเนื่อง</p>
+                    </div>
+
+                    <!-- LV 5 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv5.png" alt="Lv.5" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๕</span>
+                        <h4 class="skill-title">Flight Rescue</h4>
+                        <div class="skill-hours">สะสม ๒๐ - ๒๙ ชม. ✈️</div>
+                        <p class="skill-desc">วีรชนพยาบาลเวหา ผ่านเกณฑ์ครึ่งทางประจำปีการศึกษา พร้อมรับภารกิจกู้ชีพและการดูแลพิเศษ</p>
+                    </div>
+
+                    <!-- LV 6 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv6.png" alt="Lv.6" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๖</span>
+                        <h4 class="skill-title">Guardian Angel</h4>
+                        <div class="skill-hours">สะสม ๓๐ - ๓๕ ชม. 👼</div>
+                        <p class="skill-desc">เทวทูตผู้พิทักษ์ จิตอาสาขั้นสูง เป็นแบบอย่างที่ดีแก่ นพอ. รุ่นน้องในการทำคุณประโยชน์</p>
+                    </div>
+
+                    <!-- LV 7 -->
+                    <div class="skill-card">
+                        <img src="photos/chibi/chibi_lv7.png" alt="Lv.7" class="skill-avatar" onerror="this.src='photos/chibi/chibi_lv8.png'">
+                        <span class="skill-level-badge">ระดับที่ ๗</span>
+                        <h4 class="skill-title">Nurse Commander</h4>
+                        <div class="skill-hours">สะสม ๓๖ - ๓๙ ชม. 👑</div>
+                        <p class="skill-desc">ผู้นำจิตอาสา วพอ. มีความรับผิดชอบและบทบาทพิเศษในการบริหารจัดการกิจกรรมส่วนรวม</p>
+                    </div>
+
+                    <!-- LV 8 -->
+                    <div class="skill-card" style="border-color:var(--gold);background:linear-gradient(135deg, rgba(201,162,39,0.15) 0%, rgba(14,31,61,0.95) 100%);">
+                        <img src="photos/chibi/chibi_lv8.png" alt="Lv.8" class="skill-avatar">
+                        <span class="skill-level-badge" style="background:linear-gradient(135deg,#FFF,#C9A227);">ระดับสูงสุด</span>
+                        <h4 class="skill-title" style="color:#FFF;">Ultimate Sovereign</h4>
+                        <div class="skill-hours" style="color:var(--gold-light);">สะสม ๔๐ - ๕๐+ ชม. 🌟</div>
+                        <p class="skill-desc">เกียรติยศสูงสุดแห่งจิตอาสา วพอ. ผ่านเกณฑ์ ๕๐ ชั่วโมงสมบูรณ์แบบ พร้อมรับเกียรติบัตรทองคำ</p>
+                    </div>
+                </div>
+
+                <!-- SPECIAL BADGES TRAY -->
+                <h4 style="color:var(--gold);margin:30px 0 14px 0;font-family:Kanit,sans-serif;">
+                    🎖️ ตราสัญลักษณ์เชิดชูเกียรติพิเศษ (Special Honor Badges)
+                </h4>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:14px;">
+                    <div class="card" style="background:rgba(239,68,68,0.08);border-color:#ef4444;display:flex;gap:14px;align-items:center;">
+                        <span style="font-size:2.4rem;">🩸</span>
+                        <div>
+                            <h5 style="margin:0;color:#f87171;font-family:Kanit,sans-serif;">ผู้บริจาคโลหิตเกียรติยศ</h5>
+                            <p style="margin:3px 0 0 0;font-size:0.8rem;color:var(--text-secondary);">บริจาคโลหิต/เกล็ดเลือด ครบ ๔ ครั้งต่อปีการศึกษา (รับสูงสุด ๑๖ ชม./ปี)</p>
+                        </div>
+                    </div>
+                    <div class="card" style="background:rgba(236,72,153,0.08);border-color:#ec4899;display:flex;gap:14px;align-items:center;">
+                        <span style="font-size:2.4rem;">👑</span>
+                        <div>
+                            <h5 style="margin:0;color:#f472b6;font-family:Kanit,sans-serif;">จิตอาสาพระราชทาน ๙๐๔</h5>
+                            <p style="margin:3px 0 0 0;font-size:0.8rem;color:var(--text-secondary);">ร่วมกิจกรรมจงรักภักดีและจิตอาสาพระราชทานครบตามเพดาน ๘ ชม./ปี</p>
+                        </div>
+                    </div>
+                    <div class="card" style="background:rgba(168,85,247,0.08);border-color:#a855f7;display:flex;gap:14px;align-items:center;">
+                        <span style="font-size:2.4rem;">🎖️</span>
+                        <div>
+                            <h5 style="margin:0;color:#c084fc;font-family:Kanit,sans-serif;">นักเรียนผู้นำจิตอาสาพิเศษ</h5>
+                            <p style="margin:3px 0 0 0;font-size:0.8rem;color:var(--text-secondary);">ผู้ดำรงตำแหน่งนักเรียนปกครอง/แอดมิน/สารสนเทศ/ตัดต่อ/พยาบาลรุ่น</p>
                         </div>
                     </div>
                 </div>

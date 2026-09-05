@@ -21,6 +21,8 @@ data/private/
 exports/
 backups/
 records/
+ความดีปีการศึกษา 2568/
+ความดีปีการศึกษา 2569/
 frontend/photos/*
 !frontend/photos/chibi/
 !frontend/photos/chibi/*
