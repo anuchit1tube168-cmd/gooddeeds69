@@ -542,10 +542,10 @@
     <script src="data/teachers_data.js?v=3510"></script>
     <script src="data/students_data.js?v=3510"></script>
     <script src="data/deeds_data.js?v=3510"></script>
-    <script src="data/app_settings.js?v=3510"></script>
-    <script src="chibi3d.js?v=3510"></script>
-    <script src="app.js?v=3510"></script>
-    <script src="liff-sdk.js?v=3510"></script>
+    <script src="data/app_settings.js?v=3530"></script>
+    <script src="chibi3d.js?v=3530"></script>
+    <script src="app.js?v=3530"></script>
+    <script src="liff-sdk.js?v=3530"></script>
     <script>
         let currentUser = null;
         let selectedCategoryId = null;
@@ -897,6 +897,7 @@
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
             // Save images
+            const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
             const imageKeys = uploadedImages.map((img, i) => {
                 const key = `${currentUser.student_id}_${Date.now()}_${i}`;
                 App.saveImage(img, key);
@@ -909,10 +910,13 @@
                 description,
                 activityDate,
                 note,
+                location: note || 'วิทยาลัยพยาบาลทหารอากาศ',
                 approver: approverName,
                 signer: approverName,
                 approved_by: approverName,
-                imageUrls: imageKeys,
+                imageUrl: primaryImg || '',
+                imageData: primaryImg || '',
+                imageUrls: uploadedImages.length > 0 ? uploadedImages : imageKeys,
             });
 
             // Notify admin via Telegram + LINE (if configured)

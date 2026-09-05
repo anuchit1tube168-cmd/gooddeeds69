@@ -337,9 +337,9 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3520"></script>
-    <script src="data/deeds_data.js?v=3520"></script>
-    <script src="app.js?v=3520"></script>
+    <script src="data/students_data.js?v=3530"></script>
+    <script src="data/deeds_data.js?v=3530"></script>
+    <script src="app.js?v=3530"></script>
     <script>
         function findDeed(deedId, studentId) {
             function str(v) { return v ? String(v).trim() : ''; }
@@ -373,21 +373,61 @@
             return null;
         }
 
-        function loadSlipData() {
+        async function loadSlipData() {
             const params = new URLSearchParams(window.location.search);
             if (params.get('mode') === 'card' || params.get('card') === 'true') {
                 document.body.classList.add('card-mode');
             }
             const deedId = params.get('id');
             const studentId = params.get('studentId');
+            const urlName = params.get('name');
+            const urlCat = params.get('cat');
+            const urlCatName = params.get('catName');
+            const urlHours = params.get('hours');
+            const urlDate = params.get('date');
+            const urlDesc = params.get('desc');
+            const urlLoc = params.get('loc');
+            const urlAppr = params.get('appr');
+            const urlStatus = params.get('status') || '';
+            const urlImg = params.get('img');
 
             function str(v) { return v ? String(v).trim() : ''; }
 
-            let deed = findDeed(deedId, studentId);
-            let student = null;
+            // Ensure students loaded from cache/GAS
+            try {
+                if (typeof App !== 'undefined' && App.ensureStudentsLoaded) {
+                    await App.ensureStudentsLoaded();
+                }
+            } catch (e) {}
 
+            let deed = findDeed(deedId, studentId);
+            if (!deed && studentId) {
+                try {
+                    const fetched = await App.syncDeedsWithBackend(studentId);
+                    if (fetched) deed = findDeed(deedId, studentId);
+                } catch (e) {}
+            }
+
+            // Fallback from URL parameters
+            if (!deed && (urlDesc || urlHours || urlCat || urlName)) {
+                deed = {
+                    id: deedId || ('deed_' + Date.now()),
+                    studentId: studentId || '',
+                    categoryId: parseInt(urlCat) || 3,
+                    category_name: urlCatName || '',
+                    hours: parseFloat(urlHours) || 1.0,
+                    description: urlDesc || 'กิจกรรมจิตอาสา',
+                    activityDate: urlDate || new Date().toISOString().split('T')[0],
+                    location: urlLoc || 'วิทยาลัยพยาบาลทหารอากาศ',
+                    approver: urlAppr || 'ร.อ.อนุชิต ทำจะดี (Bird)',
+                    status: urlStatus || 'pending',
+                    imageUrl: urlImg || ''
+                };
+            }
+
+            let student = null;
             if (deed) {
-                const sid = deed.student_id || deed.studentId;
+                const sid = deed.student_id || deed.studentId || studentId;
                 student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
             } else if (studentId) {
                 student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
@@ -401,32 +441,36 @@
                 document.getElementById('doc-seq-student').textContent = student.student_id;
                 document.getElementById('doc-student-no').textContent = student.no || student.student_id.slice(-2) || '-';
                 document.getElementById('doc-academic-year').textContent = student.academic_year || '2569';
+            } else if (urlName) {
+                document.getElementById('doc-student-name').textContent = urlName;
+                document.getElementById('doc-seq-student').textContent = studentId || '-';
+                document.getElementById('doc-student-no').textContent = studentId ? studentId.slice(-2) : '-';
+                document.getElementById('doc-academic-year').textContent = '2569';
             }
 
             if (deed) {
-                // Strict Approval Guard: Only allow approved deeds to generate official PDF slip
+                // Notice banner if deed is pending
                 if (deed.status !== 'approved') {
-                    document.body.innerHTML = `
-                        <div style="text-align:center; padding:50px 20px; font-family:'Sarabun',sans-serif; color:#0f172a; max-width:500px; margin:40px auto; background:#fff; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.1);">
-                            <div style="font-size:3rem; margin-bottom:16px;">🔒</div>
-                            <h2 style="color:#0b2f64; margin-bottom:8px;">ยังไม่สามารถพิมพ์แบบบันทึกความดีได้</h2>
-                            <p style="color:#64748b; margin-bottom:24px;">รายการนี้อยู่ระหว่าง <b>รออาจารย์ผู้ตรวจประเมินอนุมัติและลงนาม</b> เมื่อได้รับการอนุมัติแล้วจึงจะสามารถพิมพ์/บันทึกเป็น PDF ได้ครับ</p>
-                            <a href="history.html" style="background:#0284c7; color:#fff; padding:10px 20px; border-radius:6px; text-decoration:none; font-weight:600;">← กลับหน้ารวมประวัติ</a>
-                        </div>
+                    const banner = document.createElement('div');
+                    banner.className = 'no-print';
+                    banner.style.cssText = 'background:#fffbeb; border:2px dashed #d97706; color:#92400e; padding:12px 20px; border-radius:8px; margin:15px auto 20px auto; max-width:800px; text-align:center; font-family:"Sarabun",sans-serif;';
+                    banner.innerHTML = `
+                        <span style="font-size:1.3rem;">⏳</span> <b>ฉบับร่างสำหรับตรวจสอบ (รออาจารย์ผู้ตรวจประเมินอนุมัติและลงนาม)</b><br>
+                        <span style="font-size:0.9rem; color:#b45309;">ข้อมูลและภาพถ่ายด้านล่างเป็นแบบร่างที่ส่งตรวจ หากต้องการอนุมัติกรุณากด <a href="approve_sign.html?${params.toString()}" style="color:#0284c7; font-weight:bold;">[✍️ ตรวจสอบ & ลงนามดิจิทัล]</a></span>
                     `;
-                    return;
+                    document.body.insertBefore(banner, document.body.firstChild);
                 }
 
                 const cat = App.getCategoryById(deed.categoryId || deed.category_id);
-                document.getElementById('doc-category-name').textContent = cat.name || 'ช่วยเหลืองานภายใน วพอ.';
-                document.getElementById('doc-activity-title').textContent = deed.description || deed.title || 'กิจกรรมจิตอาสา';
-                let loc = deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ';
+                document.getElementById('doc-category-name').textContent = deed.category_name || (cat && cat.name) || urlCatName || 'ช่วยเหลืองานภายใน วพอ.';
+                document.getElementById('doc-activity-title').textContent = deed.description || deed.title || urlDesc || 'กิจกรรมจิตอาสา';
+                let loc = deed.location || deed.note || urlLoc || 'วิทยาลัยพยาบาลทหารอากาศ';
                 if (!loc || loc.includes('.xlsx') || loc.includes('import') || loc.includes('Data 2568')) {
                     loc = 'วิทยาลัยพยาบาลทหารอากาศ';
                 }
                 document.getElementById('doc-activity-location').textContent = loc;
                 
-                const dt = deed.activityDate || deed.event_date;
+                const dt = deed.activityDate || deed.event_date || urlDate;
                 if (dt) {
                     const dObj = new Date(dt);
                     if (!isNaN(dObj.getTime())) {
@@ -436,12 +480,12 @@
                         document.getElementById('doc-activity-date').textContent = dt;
                     }
                 } else {
-                    document.getElementById('doc-activity-date').textContent = '20 ธันวาคม พ.ศ. 2568';
+                    document.getElementById('doc-activity-date').textContent = '-';
                 }
 
-                document.getElementById('doc-hours').textContent = deed.hours || '-';
+                document.getElementById('doc-hours').textContent = deed.hours || urlHours || '-';
                 
-                const approver = deed.approved_by || deed.approvedBy || deed.signer || 'อาจารย์ผู้รับรองการทำกิจกรรม';
+                const approver = deed.approved_by || deed.approvedBy || deed.signer || deed.approver || urlAppr || 'อาจารย์ผู้รับรองการทำกิจกรรม';
                 document.getElementById('doc-approver-name').textContent = approver;
 
                 const rankEl = document.getElementById('doc-approver-rank');
@@ -456,7 +500,7 @@
                 // Render Digital Signature if available
                 const sigKey = deed.signatureKey || deed.signature;
                 let sigSrc = sigKey ? (App.getImage(sigKey) || (sigKey.startsWith('data:image') ? sigKey : null)) : null;
-                if (!sigSrc && approver) {
+                if (!sigSrc && approver && deed.status === 'approved') {
                     sigSrc = Storage.get('teacher_sig_' + approver) || Storage.get('my_teacher_signature');
                 }
 
@@ -478,18 +522,20 @@
                     this.onerror = null;
                     this.src = '510903.jpg';
                 };
-                const imgKey = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]);
-                if (imgKey && !imgKey.startsWith('http')) {
-                    const localImg = App.getImage(imgKey);
-                    evidenceImg.src = localImg || (imgKey === '510903.jpg' ? '510903.jpg' : 'photos/' + imgKey);
-                } else if (imgKey && !imgKey.includes('googleusercontent')) {
-                    evidenceImg.src = imgKey;
+                const imgKey = deed.imageUrl || deed.imageData || (deed.imageUrls && deed.imageUrls[0]) || urlImg;
+                if (imgKey) {
+                    if (imgKey.startsWith('data:image') || imgKey.startsWith('http')) {
+                        evidenceImg.src = imgKey;
+                    } else {
+                        const localImg = App.getImage(imgKey);
+                        evidenceImg.src = localImg || (imgKey.startsWith('photos/') ? imgKey : 'photos/' + imgKey);
+                    }
                 } else {
                     evidenceImg.src = '510903.jpg';
                 }
             }
 
-            if (params.get('autoprint') === 'true') {
+            if (params.get('autoprint') === 'true' && deed && deed.status === 'approved') {
                 setTimeout(() => window.print(), 800);
             }
         }

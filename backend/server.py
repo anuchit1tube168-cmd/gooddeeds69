@@ -788,6 +788,32 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     print(f"⚠️ Deed submission rejected for {student_id}: {validation_msg}")
                     return
 
+                # Save evidence image to disk if base64 provided
+                img_data = deed_data.get('imageData') or deed_data.get('imageUrl')
+                if not img_data and isinstance(deed_data.get('imageUrls'), list) and len(deed_data['imageUrls']) > 0:
+                    first_img = deed_data['imageUrls'][0]
+                    if isinstance(first_img, str) and first_img.startswith('data:image'):
+                        img_data = first_img
+
+                if img_data and isinstance(img_data, str) and img_data.startswith('data:image'):
+                    try:
+                        import base64 as b64module
+                        _, b64_content = img_data.split('base64,', 1)
+                        img_bytes = b64module.b64decode(b64_content)
+                        evidence_dir = os.path.join(FRONTEND_DIR, 'photos', 'evidence')
+                        os.makedirs(evidence_dir, exist_ok=True)
+                        img_filename = f"{deed_id}.jpg"
+                        img_path = os.path.join(evidence_dir, img_filename)
+                        with open(img_path, 'wb') as img_f:
+                            img_f.write(img_bytes)
+                        rel_path = f"photos/evidence/{img_filename}"
+                        deed_data['imageUrl'] = rel_path
+                        deed_data['imageUrls'] = [rel_path]
+                        deed_data.pop('imageData', None)
+                        print(f"📸 Saved deed evidence photo: {rel_path} ({len(img_bytes)} bytes)")
+                    except Exception as img_err:
+                        print(f"⚠️ Error saving evidence photo: {img_err}")
+
                 save_or_update_deed_in_db(student_id, deed_data)
 
                 self.send_json_response(200, {

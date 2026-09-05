@@ -30,7 +30,7 @@ const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
     TELEGRAM_BOT_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
     TELEGRAM_CHAT_ID: '-4839151586',
-    SYSTEM_URL: 'https://the-salon-theoretical-northeast.trycloudflare.com',
+    SYSTEM_URL: 'https://comply-gray-perform-becomes.trycloudflare.com',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
@@ -795,19 +795,24 @@ const App = {
     async addDeed(deed) {
         const user = this.getCurrentUser();
         const studentId = deed.studentId || user.student_id;
-        const deeds = this.getDeeds(studentId);
         const newDeed = {
             id: 'deed_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
             studentId,
             categoryId: deed.categoryId,
             hours: parseFloat(deed.hours),
+            title: deed.title || deed.description || '',
             description: deed.description,
             activityDate: deed.activityDate,
-            imageUrls: deed.imageUrls || [],
+            location: deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ',
+            imageUrl: deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || '',
+            imageUrls: deed.imageUrls || (deed.imageUrl ? [deed.imageUrl] : []),
+            imageData: deed.imageData || deed.imageUrl || '',
             status: 'pending', // pending | approved | rejected
             submittedAt: new Date().toISOString(),
             approvedBy: null,
             approvedAt: null,
+            approver: deed.approver || deed.signer || deed.approved_by || 'ร.อ.อนุชิต ทำจะดี (Bird)',
+            approved_by: deed.approved_by || deed.approver || null,
             rejectReason: null,
             note: deed.note || '',
         };
@@ -1273,9 +1278,16 @@ const App = {
     async generateDeedFormSlipBlob(deed, student) {
         if (typeof document === 'undefined') return null;
         try {
+            // Check if there is an evidence image attached
+            let evidenceImgData = deed.imageUrl || deed.imageData || (deed.imageUrls && deed.imageUrls[0]);
+            if (evidenceImgData && typeof evidenceImgData === 'string' && !evidenceImgData.startsWith('data:image') && !evidenceImgData.startsWith('http')) {
+                evidenceImgData = this.getImage(evidenceImgData) || evidenceImgData;
+            }
+            const hasPhoto = !!(evidenceImgData && typeof evidenceImgData === 'string' && (evidenceImgData.startsWith('data:image') || evidenceImgData.startsWith('http') || evidenceImgData.startsWith('photos/')));
+
             const canvas = document.createElement('canvas');
             canvas.width = 1000;
-            canvas.height = 720;
+            canvas.height = hasPhoto ? 1080 : 720;
             const ctx = canvas.getContext('2d');
 
             // 1. Background
@@ -1285,10 +1297,10 @@ const App = {
             // 2. Outer Border (Official Navy & Gold)
             ctx.strokeStyle = '#1e3a8a';
             ctx.lineWidth = 4;
-            ctx.strokeRect(20, 20, 960, 680);
+            ctx.strokeRect(20, 20, 960, canvas.height - 40);
             ctx.strokeStyle = '#c9a227';
             ctx.lineWidth = 1.5;
-            ctx.strokeRect(26, 26, 948, 668);
+            ctx.strokeRect(26, 26, 948, canvas.height - 52);
 
             // 3. Dates & Header elements
             const now = new Date();
@@ -1428,7 +1440,7 @@ const App = {
             ctx.fillText('สถานที่ / สังกัด :', 70, 495);
             ctx.font = '19px "Sarabun", "TH Sarabun New", sans-serif';
             ctx.fillStyle = '#334155';
-            ctx.fillText(deed.note || 'วิทยาลัยพยาบาลทหารอากาศ', 215, 495);
+            ctx.fillText(deed.note || deed.location || 'วิทยาลัยพยาบาลทหารอากาศ', 215, 495);
             drawDottedLine(210, 502, 925);
 
             // Row 3: Description Details
@@ -1451,12 +1463,50 @@ const App = {
             ctx.fillText(deed.approver || 'อาจารย์ผู้ควบคุมกิจกรรมจิตอาสา', 245, 595);
             drawDottedLine(240, 602, 925);
 
-            // 8. Footer Timestamp
+            // 8. Section 3 Box: Evidence Photo (if attached)
+            if (hasPhoto) {
+                ctx.strokeStyle = '#0c1b33';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(50, 635, 900, 360);
+
+                ctx.fillStyle = '#0369a1';
+                ctx.fillRect(50, 635, 360, 32);
+                ctx.fillStyle = '#ffffff';
+                ctx.font = 'bold 18px "Sarabun", "TH Sarabun New", sans-serif';
+                ctx.fillText('ส่วนที่ ๓ : ภาพถ่ายหลักฐานการปฏิบัติงาน', 65, 657);
+
+                await new Promise((resolve) => {
+                    const actImg = new Image();
+                    actImg.crossOrigin = 'anonymous';
+                    actImg.onload = () => {
+                        try {
+                            const maxBoxW = 860;
+                            const maxBoxH = 300;
+                            const imgRatio = Math.min(maxBoxW / actImg.width, maxBoxH / actImg.height, 1);
+                            const drawW = actImg.width * imgRatio;
+                            const drawH = actImg.height * imgRatio;
+                            const drawX = 50 + (900 - drawW) / 2;
+                            const drawY = 675 + (310 - drawH) / 2;
+                            ctx.fillStyle = '#f1f5f9';
+                            ctx.fillRect(drawX - 5, drawY - 5, drawW + 10, drawH + 10);
+                            ctx.drawImage(actImg, drawX, drawY, drawW, drawH);
+                        } catch (e) {
+                            console.warn('Error drawing act photo on canvas:', e);
+                        }
+                        resolve();
+                    };
+                    actImg.onerror = () => resolve();
+                    actImg.src = evidenceImgData;
+                });
+            }
+
+            // 9. Footer Timestamp
             const submitTimeStr = now.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
             ctx.textAlign = 'right';
             ctx.fillStyle = '#64748b';
             ctx.font = '16px "Sarabun", "TH Sarabun New", sans-serif';
-            ctx.fillText(`บันทึกเมื่อ ${curDay} ${curMonth} ${curYear} เวลา ${submitTimeStr} น.`, 940, 655);
+            const footerY = hasPhoto ? 1035 : 655;
+            ctx.fillText(`บันทึกเมื่อ ${curDay} ${curMonth} ${curYear} เวลา ${submitTimeStr} น.`, 940, footerY);
             ctx.textAlign = 'left';
 
             return await new Promise((resolve) => {
@@ -1567,9 +1617,25 @@ const App = {
             `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
+        const studentName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
+        const qParams = new URLSearchParams({
+            id: deed.id,
+            studentId: student.student_id,
+            name: studentName,
+            year: yearName,
+            cat: deed.categoryId || 1,
+            catName: cat.name || '',
+            hours: deed.hours || 0,
+            date: deed.activityDate || '',
+            desc: deed.description || '',
+            loc: deed.location || 'วิทยาลัยพยาบาลทหารอากาศ',
+            appr: reqApprover,
+            status: deed.status || 'pending'
+        });
+
         const baseUrl = this.getBaseUrl();
-        const approveUrl = `${baseUrl}/approve_sign.html?id=${deed.id}&studentId=${student.student_id}`;
-        const slipPdfUrl = `${baseUrl}/deed_slip.html?id=${deed.id}&studentId=${student.student_id}`;
+        const approveUrl = `${baseUrl}/approve_sign.html?${qParams.toString()}`;
+        const slipPdfUrl = `${baseUrl}/deed_slip.html?${qParams.toString()}`;
 
         const replyMarkup = {
             inline_keyboard: [
