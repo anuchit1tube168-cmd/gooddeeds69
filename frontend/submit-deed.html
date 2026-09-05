@@ -290,7 +290,10 @@
                 <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
                 <a href="submit-deed.html" class="sidebar-item active"><span class="icon">✍️</span> บันทึกความดี</a>
                 <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="manual.html" class="sidebar-item"><span class="icon">📖</span> คู่มือ &amp; เกณฑ์ความดี</a>
+                <a href="qa-board.html" class="sidebar-item"><span class="icon">💬</span> กระดานถาม-ตอบ</a>
                 <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
                 <div class="divider" style="margin: 8px 16px;"></div>
                 <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
                 <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
@@ -489,13 +492,13 @@
     </div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/teachers_data.js?v=3404"></script>
-    <script src="data/students_data.js?v=3404"></script>
-    <script src="data/deeds_data.js?v=3404"></script>
-    <script src="data/app_settings.js?v=3404"></script>
-    <script src="chibi3d.js?v=3404"></script>
-    <script src="app.js?v=3404"></script>
-    <script src="liff-sdk.js?v=3404"></script>
+    <script src="data/teachers_data.js?v=3405"></script>
+    <script src="data/students_data.js?v=3405"></script>
+    <script src="data/deeds_data.js?v=3405"></script>
+    <script src="data/app_settings.js?v=3405"></script>
+    <script src="chibi3d.js?v=3405"></script>
+    <script src="app.js?v=3405"></script>
+    <script src="liff-sdk.js?v=3405"></script>
     <script>
         let currentUser = null;
         let selectedCategoryId = null;
@@ -513,13 +516,40 @@
 
             renderCategories();
 
-            // Set up hours listener
+            // Set up listeners
+            const dateEl = document.getElementById('activity-date');
+            if (dateEl) {
+                dateEl.addEventListener('change', () => {
+                    if (selectedCategoryId) selectCategory(selectedCategoryId);
+                });
+            }
+
             const hoursEl = document.getElementById('hours');
             if (hoursEl) {
                 hoursEl.addEventListener('input', calculateProjectedChibi);
                 hoursEl.addEventListener('change', calculateProjectedChibi);
             }
             calculateProjectedChibi();
+
+            // Check URL parameters for prefill or success display
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('prefill')) {
+                selectCategory(2);
+                document.getElementById('description').value = 'กิจกรรมจิตอาสาพัฒนาสิ่งแวดล้อม ปลูกต้นไม้และทำความสะอาดพื้นที่ วิทยาลัยพยาบาลทหารอากาศ';
+                document.getElementById('location').value = 'วิทยาลัยพยาบาลทหารอากาศ';
+                document.getElementById('hours').value = 5;
+                calculateProjectedChibi();
+            }
+            const successDeedId = urlParams.get('showSuccess');
+            if (successDeedId) {
+                const deed = (App.getDeeds(currentUser.student_id) || []).find(d => String(d.id) === String(successDeedId)) || {
+                    id: successDeedId,
+                    hours: 5,
+                    status: 'pending',
+                    description: 'กิจกรรมจิตอาสาพัฒนาสิ่งแวดล้อม ปลูกต้นไม้และทำความสะอาดพื้นที่ วิทยาลัยพยาบาลทหารอากาศ'
+                };
+                showSuccessModal(deed);
+            }
         }
 
         function renderCategories() {
@@ -542,12 +572,43 @@
 
             const cat = CATEGORIES.find(c => c.id === id);
             if (cat) {
-                // Show Rule Banner
+                // Show Rule Banner & Dynamic Quota Usage
                 const banner = document.getElementById('cat-rule-banner');
                 const ruleText = document.getElementById('cat-rule-text');
+                const targetDate = document.getElementById('activity-date') ? document.getElementById('activity-date').value : '';
+                const usage = (currentUser && App.getCategoryQuotaUsage) ? App.getCategoryQuotaUsage(currentUser.student_id, id, targetDate) : null;
+                
+                let quotaBadge = '';
+                if (usage) {
+                    if (id === 1) {
+                        const daysText = usage.lastDonationDate 
+                            ? `(ครั้งล่าสุด: ${usage.lastDonationDate} ผ่านมาแล้ว ${usage.daysSinceLastDonation || 0} วัน ${usage.daysSinceLastDonation >= 90 ? '✅ ครบ 90 วัน' : '⚠️ ยังไม่ครบ 90 วัน'})`
+                            : '(ยังไม่เคยมีประวัติบริจาคโลหิต)';
+                        quotaBadge = `<div style="margin-top:6px;padding:6px 10px;background:rgba(239,68,68,0.15);border-radius:6px;font-size:0.85rem;color:#fca5a5;">
+                            🩸 ปีการศึกษา ${usage.academicYear}: บันทึกแล้ว <strong>${usage.yearCount}/4 ครั้ง</strong> (${usage.yearHours} ชม.) ${daysText}
+                        </div>`;
+                    } else if (id === 6) {
+                        const rem = Math.max(0, 4 - usage.yearHours);
+                        quotaBadge = `<div style="margin-top:6px;padding:6px 10px;background:rgba(245,158,11,0.15);border-radius:6px;font-size:0.85rem;color:#fde68a;">
+                            🙏 ปีการศึกษา ${usage.academicYear}: สะสมแล้ว <strong>${usage.yearHours}/4 ชม.</strong> (โควตาคงเหลือ: <strong>${rem} ชม.</strong>)
+                        </div>`;
+                    } else if (id === 7) {
+                        const remSem = Math.max(0, 2 - usage.semHours);
+                        const remYear = Math.max(0, 4 - usage.yearHours);
+                        quotaBadge = `<div style="margin-top:6px;padding:6px 10px;background:rgba(201,162,39,0.15);border-radius:6px;font-size:0.85rem;color:#fef08a;">
+                            ⭐ เทอม ${usage.semester}: ใช้ไปแล้ว <strong>${usage.semHours}/2 ชม.</strong> (เหลือเทอมนี้: <strong>${remSem} ชม.</strong>) | ทั้งปี: <strong>${usage.yearHours}/4 ชม.</strong> (เหลือทั้งปี: <strong>${remYear} ชม.</strong>)
+                        </div>`;
+                    } else if (id === 8) {
+                        const remYear = Math.max(0, 8 - usage.yearHours);
+                        quotaBadge = `<div style="margin-top:6px;padding:6px 10px;background:rgba(236,72,153,0.15);border-radius:6px;font-size:0.85rem;color:#fbcfe8;">
+                            👑 ปีการศึกษา ${usage.academicYear}: สะสมแล้ว <strong>${usage.yearHours}/8 ชม.</strong> (โควตาคงเหลือ: <strong>${remYear} ชม.</strong>)
+                        </div>`;
+                    }
+                }
+
                 if (banner && ruleText) {
                     banner.style.display = 'block';
-                    ruleText.innerHTML = `${cat.ruleNote || 'บันทึกตามเวลาจริง'} <br><span style="color:var(--gold);font-weight:600">⚠️ เพดานสูงสุดของหมวดนี้: ${cat.maxHours} ชั่วโมงต่อครั้ง/วัน</span>`;
+                    ruleText.innerHTML = `${cat.ruleNote || 'บันทึกตามเวลาจริง'} <br><span style="color:var(--gold);font-weight:600">⚠️ เพดานสูงสุดของหมวดนี้: ${cat.maxHours} ชั่วโมงต่อครั้ง</span>${quotaBadge}`;
                 }
 
                 // Update Hours Input Max & Default
@@ -555,7 +616,7 @@
                 const hoursHint = document.getElementById('hours-limit-hint');
                 if (hoursInput) {
                     hoursInput.max = cat.maxHours;
-                    hoursInput.value = cat.defaultHours || Math.min(2, cat.maxHours);
+                    hoursInput.value = cat.defaultHours || Math.min(1, cat.maxHours);
                 }
                 if (hoursHint) {
                     hoursHint.innerHTML = `เกณฑ์: สูงสุดไม่เกิน <strong style="color:var(--gold)">${cat.maxHours} ชม.</strong> ตามระเบียบ`;
@@ -755,12 +816,29 @@
             const maxLimit = cat ? cat.maxHours : 8;
 
             if (!hours || hours <= 0) { showFormAlert('กรุณากรอกจำนวนชั่วโมงที่ถูกต้อง'); return; }
-            if (hours > maxLimit) {
-                showFormAlert(`⚠️ หมวดหมู่ "${cat.name}" กำหนดให้บันทึกได้ไม่เกิน ${maxLimit} ชม. ต่อครั้ง/วัน`);
-                return;
-            }
             if (!description) { showFormAlert('กรุณากรอกรายละเอียดกิจกรรม'); return; }
             if (!activityDate) { showFormAlert('กรุณาเลือกวันที่ทำกิจกรรม'); return; }
+
+            // Strict Validation against RTAFNC Category Limits & Duplicate Prevention
+            if (App.validateDeed) {
+                const validation = App.validateDeed({
+                    categoryId: selectedCategoryId,
+                    hours,
+                    description,
+                    activityDate,
+                    note
+                }, currentUser.student_id);
+
+                if (!validation.valid) {
+                    showFormAlert(validation.message);
+                    const alertEl = document.getElementById('form-alert');
+                    if (alertEl) alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+            } else if (hours > maxLimit) {
+                showFormAlert(`⚠️ หมวดหมู่ "${cat.name}" กำหนดให้บันทึกได้ไม่เกิน ${maxLimit} ชม. ต่อครั้ง`);
+                return;
+            }
 
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;

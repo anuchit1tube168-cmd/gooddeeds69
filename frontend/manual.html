@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือและระเบียบการบันทึกความดีจิตอาสา | วพอ. ๒๕๖๙</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Kanit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=3405">
+    <style>
+        .manual-hero {
+            background: linear-gradient(135deg, rgba(14, 31, 61, 0.95) 0%, rgba(10, 22, 40, 0.98) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.35);
+            border-radius: var(--radius-lg);
+            padding: 28px 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            position: relative;
+            overflow: hidden;
+        }
+        .manual-hero::after {
+            content: "RTAFNC 2569";
+            position: absolute;
+            right: 20px;
+            bottom: 10px;
+            font-size: 4rem;
+            font-family: "Kanit", sans-serif;
+            font-weight: 900;
+            color: rgba(201, 162, 39, 0.04);
+            pointer-events: none;
+            letter-spacing: 2px;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(201, 162, 39, 0.15);
+            border: 1px solid var(--gold);
+            color: var(--gold-light);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 999px;
+            margin-bottom: 12px;
+        }
+        .manual-hero h1 {
+            font-size: 1.6rem;
+            color: var(--text-primary);
+            margin: 0 0 8px 0;
+            font-family: "Kanit", sans-serif;
+        }
+        .manual-hero p {
+            color: var(--text-secondary);
+            font-size: 0.92rem;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* TABS */
+        .manual-tabs {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--navy-border);
+        }
+        .m-tab-btn {
+            background: rgba(14, 31, 61, 0.6);
+            border: 1px solid var(--navy-border);
+            color: var(--text-secondary);
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            font-family: "Sarabun", sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .m-tab-btn:hover {
+            border-color: var(--gold);
+            color: var(--text-primary);
+            background: rgba(201, 162, 39, 0.08);
+        }
+        .m-tab-btn.active {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(201, 162, 39, 0.05) 100%);
+            border-color: var(--gold);
+            color: var(--gold-light);
+            box-shadow: 0 2px 10px rgba(201, 162, 39, 0.2);
+        }
+
+        /* TAB CONTENT */
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* CRITERIA CARDS */
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .crit-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+        .crit-card:hover {
+            border-color: rgba(201, 162, 39, 0.5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+        }
+        .crit-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+            padding-bottom: 10px;
+        }
+        .crit-emoji {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+        .crit-title-wrap h3 {
+            margin: 0;
+            font-size: 1rem;
+            font-family: "Kanit", sans-serif;
+            color: var(--text-primary);
+        }
+        .crit-cat-num {
+            font-size: 0.72rem;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .crit-limits {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .limit-chip {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            color: var(--text-primary);
+        }
+        .limit-chip strong {
+            color: var(--gold);
+        }
+        .crit-rules {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.5;
+            margin-bottom: 10px;
+        }
+        .crit-alert {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.78rem;
+            color: #fca5a5;
+        }
+
+        /* STEP CARDS */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .step-num {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+            color: #0a1628;
+            font-weight: 800;
+            font-family: "Kanit", sans-serif;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(201, 162, 39, 0.4);
+        }
+        .step-body h4 {
+            margin: 0 0 6px 0;
+            font-size: 1.05rem;
+            font-family: "Kanit", sans-serif;
+            color: var(--gold-light);
+        }
+        .step-body p {
+            margin: 0 0 8px 0;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* FAQ ACCORDION */
+        .faq-item {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: var(--radius-md);
+            margin-bottom: 12px;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+        .faq-item:hover {
+            border-color: rgba(201, 162, 39, 0.4);
+        }
+        .faq-q {
+            padding: 16px 20px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faq-a {
+            padding: 0 20px 16px 20px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.6;
+            display: none;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 12px;
+        }
+        .faq-item.open .faq-a {
+            display: block;
+        }
+        .faq-item.open .faq-q {
+            color: var(--gold-light);
+        }
+
+        /* SOP PIPELINE */
+        .sop-pipeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .sop-pipeline-step {
+            background: linear-gradient(135deg, rgba(20, 42, 77, 0.8) 0%, rgba(10, 22, 40, 0.95) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            text-align: center;
+            position: relative;
+            transition: all 0.25s ease;
+        }
+        .sop-pipeline-step:hover {
+            border-color: var(--gold);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+        .sop-step-badge {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--gold);
+            color: var(--navy);
+            font-weight: 800;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .sop-pipeline-step h5 {
+            margin: 0 0 4px 0;
+            color: var(--gold-light);
+            font-family: "Kanit", sans-serif;
+            font-size: 0.95rem;
+        }
+        .sop-pipeline-step p {
+            margin: 0;
+            font-size: 0.78rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* RACI TABLE */
+        .raci-table-wrap {
+            overflow-x: auto;
+            margin-bottom: 24px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--navy-border);
+        }
+        .raci-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            text-align: center;
+        }
+        .raci-table th {
+            background: rgba(14, 31, 61, 0.9);
+            color: var(--gold-light);
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--navy-border);
+            font-family: "Kanit", sans-serif;
+            font-weight: 600;
+        }
+        .raci-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-primary);
+        }
+        .raci-table tr:hover td {
+            background: rgba(201, 162, 39, 0.04);
+        }
+        .raci-badge {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.75rem;
+        }
+        .raci-r { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .raci-a { background: rgba(201, 162, 39, 0.2); color: #fbbf24; border: 1px solid rgba(201, 162, 39, 0.5); }
+        .raci-c { background: rgba(59, 130, 246, 0.2); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .raci-i { background: rgba(156, 163, 175, 0.2); color: #9ca3af; border: 1px solid rgba(156, 163, 175, 0.3); }
+    </style>
+</head>
+<body>
+    <!-- TOP NAVBAR -->
+    <nav class="navbar">
+        <div class="navbar-left">
+            <button class="hamburger-btn" onclick="toggleSidebar()">☰</button>
+            <div class="navbar-brand">
+                <img src="510903.jpg" class="navbar-logo" alt="Logo">
+                <div class="navbar-titles">
+                    <span class="navbar-title">ระบบบันทึกความดีจิตอาสา</span>
+                    <span class="navbar-subtitle">วิทยาลัยพยาบาลทหารอากาศ ปีการศึกษา ๒๕๖๙</span>
+                </div>
+            </div>
+        </div>
+        <div class="navbar-right">
+            <div class="user-pill" id="nav-user-pill">
+                <div class="user-avatar" id="nav-avatar">น</div>
+                <span class="user-name" id="nav-name">นักเรียนพยาบาล</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR OVERLAY -->
+    <div class="sidebar-overlay" id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+    <div class="layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <img src="510903.jpg" alt="โลโก้">
+                    <div>
+                        <div class="brand-text">บันทึกความดี</div>
+                        <div class="brand-sub">วพอ.พอ. ปีการศึกษา 2569</div>
+                    </div>
+                </div>
+                <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
+            </div>
+            <div class="sidebar-menu">
+                <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
+                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
+                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="manual.html" class="sidebar-item active"><span class="icon">📖</span> คู่มือ &amp; เกณฑ์ความดี</a>
+                <a href="qa-board.html" class="sidebar-item"><span class="icon">💬</span> กระดานถาม-ตอบ</a>
+                <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
+                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
+                <div class="divider" style="margin: 8px 16px;"></div>
+                <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
+                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
+            </div>
+            <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+            <!-- HERO BANNER -->
+            <div class="manual-hero">
+                <div class="hero-badge">⭐ ปรับปรุงล่าสุด ปีการศึกษา ๒๕๖๙</div>
+                <h1>📖 คู่มือและเกณฑ์การบันทึกความดีจิตอาสา วพอ.</h1>
+                <p>
+                    ระเบียบข้อกำหนดการบันทึกชั่วโมงจิตอาสา ข้อจำกัดเพดานเวลาทั้ง ๙ หมวดหมู่ 
+                    ระบบเซ็นชื่อดิจิทัลรับรองผล และขั้นตอนการประเมินเพื่อสำเร็จการศึกษาของนักเรียนพยาบาลทหารอากาศ
+                </p>
+            </div>
+
+            <!-- TABS -->
+            <div class="manual-tabs">
+                <button class="m-tab-btn active" onclick="switchTab('criteria', this)">
+                    <span>📜</span> เกณฑ์ ๙ หมวดหมู่ &amp; โควตา
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('sop', this)">
+                    <span>📊</span> ขั้นตอนการปฏิบัติงาน (Flow &amp; SOP)
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('student', this)">
+                    <span>📱</span> คู่มือสำหรับ นพอ.
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('approver', this)">
+                    <span>✒️</span> การลงนามดิจิทัล &amp; ผู้รับรอง
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('rollover', this)">
+                    <span>🔄</span> การเลื่อนชั้นปี (Rollover)
+                </button>
+                <button class="m-tab-btn" onclick="switchTab('faq', this)">
+                    <span>❓</span> คำถามพบบ่อย (FAQ)
+                </button>
+            </div>
+
+            <!-- TAB 1: CRITERIA -->
+            <div class="tab-pane active" id="pane-criteria">
+                <div class="card mb-20" style="background:rgba(201, 162, 39, 0.08);border-color:var(--gold);">
+                    <div style="display:flex;align-items:center;gap:12px;">
+                        <span style="font-size:2rem;">🎯</span>
+                        <div>
+                            <h3 style="margin:0;color:var(--gold-light);font-family:Kanit,sans-serif;">เกณฑ์การประเมินประจำปี ๒๕๖๙</h3>
+                            <p style="margin:4px 0 0 0;font-size:0.88rem;color:var(--text-secondary);">
+                                นพอ. ทุกนาย ต้องบำเพ็ญกิจกรรมความดีจิตอาสา <strong>อย่างน้อย ๕๐ ชั่วโมงต่อปีการศึกษา</strong> (เฉลี่ย ๒๕ ชั่วโมงต่อภาคการศึกษา) 
+                                โดยระบบจะตรวจสอบเพดานเวลาและระยะห่างของแต่ละหมวดหมู่อัตโนมัติ
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="criteria-grid">
+                    <!-- CAT 1 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(239,68,68,0.15);color:#ef4444;">🩸</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๑</span>
+                                <h3>บริจาคโลหิต / เกล็ดเลือด / พลาสมา</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">ครั้งละ: <strong>๘ ชม.</strong></span>
+                            <span class="limit-chip">ปีละไม่เกิน: <strong>๔ ครั้ง (๓๒ ชม.)</strong></span>
+                            <span class="limit-chip">ระยะห่าง: <strong>อย่างน้อย ๙๐ วัน</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            บริจาคโลหิต ณ ศูนย์บริการโลหิตแห่งชาติ สภากาชาดไทย, รพ.ภูมิพลอดุลยเดช พอ. หรือโรงพยาบาลรัฐ ต้องแนบภาพถ่ายสมุดประจำตัวผู้บริจาคโลหิตหรือใบเสร็จรับรอง
+                        </div>
+                        <div class="crit-alert">
+                            ⚠️ ห้ามลงซ้ำ และต้องเว้นระยะห่างจากการบริจาคครั้งล่าสุดอย่างน้อย ๓ เดือน (๙๐ วัน)
+                        </div>
+                    </div>
+
+                    <!-- CAT 2 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(59,130,246,0.15);color:#3b82f6;">🌐</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๒</span>
+                                <h3>โครงการภายนอก (คำสั่ง วพอ.)</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">เพดาน: <strong>สูงสุด ๘ ชม./วัน</strong></span>
+                            <span class="limit-chip">หลักฐาน: <strong>คำสั่ง วพอ.</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            กิจกรรมหรือโครงการที่จัดโดยชมรมโรทาแรคท์, รักษ์สิ่งแวดล้อม, หัตถศิลป์ หรือกิจกรรมวันสำคัญภายนอกที่มีคำสั่งคัดเลือก นพอ. จาก วพอ. หรือกองทัพอากาศ
+                        </div>
+                    </div>
+
+                    <!-- CAT 3 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(139,92,246,0.15);color:#8b5cf6;">🏥</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๓</span>
+                                <h3>ช่วยเหลืองานภายใน วพอ.</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">เพดาน: <strong>สูงสุด ๘ ชม./วัน</strong></span>
+                            <span class="limit-chip">สถานที่: <strong>ภายในเขต วพอ.</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            งานที่อาจารย์ ข้าราชการ หรือเจ้าหน้าที่ วพอ. ขอความช่วยเหลือ รวมถึงกิจกรรม ๕ส ประจำสัปดาห์ เวรจิตอาสาดูแลห้องยา ตรวจเช็คอุปกรณ์ และงานสถานที่
+                        </div>
+                    </div>
+
+                    <!-- CAT 4 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(6,182,212,0.15);color:#06b6d4;">📚</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๔</span>
+                                <h3>เข้าอบรมที่ วพอ. จัดให้</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">เพดาน: <strong>สูงสุด ๔ ชม./วัน</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            การเข้าร่วมฟังบรรยาย สัมมนา อบรมวิชาการ หรือการอบรมคุณธรรมจริยธรรมที่ วพอ. หรือ รพ.ภูมิพลฯ ขอความร่วมมือให้เข้าร่วม (ยกเว้นตารางเรียนบังคับตามหลักสูตร)
+                        </div>
+                    </div>
+
+                    <!-- CAT 5 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(34,197,94,0.15);color:#22c55e;">🤝</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๕</span>
+                                <h3>ช่วยงานหน่วยงาน / ชุมชน / มูลนิธิ</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">เพดาน: <strong>สูงสุด ๔ ชม./วัน</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            กิจกรรมหรือโครงการจิตอาสาที่ชุมชน โรงเรียน สถานสงเคราะห์ หรือมูลนิธิต่างๆ จัดขึ้น โดย นพอ. เข้าร่วมบำเพ็ญประโยชน์ด้วยความสมัครใจ
+                        </div>
+                    </div>
+
+                    <!-- CAT 6 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(245,158,11,0.15);color:#f59e0b;">🙏</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๖</span>
+                                <h3>ทำนุบำรุงศาสนสถาน</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">ครั้งละ: <strong>ไม่เกิน ๑ ชม.</strong></span>
+                            <span class="limit-chip">สะสมทั้งปี: <strong>ไม่เกิน ๔ ชม./ปี</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            งานบำเพ็ญประโยชน์ต่อวัด ศาสนสถาน หรือคณะสงฆ์ เช่น กวาดลานวัด ล้างห้องน้ำวัด ซ่อมแซมทาสี หรือช่วยจัดเตรียมสถานที่ในวันสำคัญทางศาสนา
+                        </div>
+                        <div class="crit-alert">
+                            ⚠️ บันทึกได้ไม่เกิน ๑ ชม. ต่อครั้ง และสะสมรวมได้ไม่เกิน ๔ ชม. ต่อปีการศึกษา
+                        </div>
+                    </div>
+
+                    <!-- CAT 7 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(201,162,39,0.15);color:#c9a227;">⭐</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๗</span>
+                                <h3>งานฟรีทั่วไป / ช่วยงานผู้ปกครอง</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">ครั้งละ: <strong>ไม่เกิน ๑ ชม.</strong></span>
+                            <span class="limit-chip">ต่อเทอม: <strong>ไม่เกิน ๒ ชม.</strong></span>
+                            <span class="limit-chip">ต่อปี: <strong>ไม่เกิน ๔ ชม./ปี</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            การช่วยเหลือครอบครัว ดูแลผู้สูงอายุ/ผู้ป่วยในบ้าน ช่วยงานผู้ปกครอง หรืองานจิตอาสาทั่วไปที่ไม่มีคำสั่งทางการ
+                        </div>
+                        <div class="crit-alert">
+                            ⚠️ บันทึกได้ไม่เกิน ๑ ชม. ต่อครั้ง ไม่เกิน ๒ ชม. ต่อเทอม และไม่เกิน ๔ ชม. ต่อปีการศึกษา
+                        </div>
+                    </div>
+
+                    <!-- CAT 8 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(236,72,153,0.15);color:#ec4899;">👑</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๘</span>
+                                <h3>กิจกรรมจงรักภักดีต่อสถาบัน</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">เพดาน: <strong>สูงสุด ๔ ชม./ครั้ง</strong></span>
+                            <span class="limit-chip">ต่อปี: <strong>ไม่เกิน ๘ ชม./ปี</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            กิจกรรมจิตอาสาพระราชทาน ๙๐๔, กิจกรรมเฉลิมพระเกียรติ, พิธีลงนามถวายพระพรในวันสำคัญของชาติ และกิจกรรมเสริมสร้างความจงรักภักดีต่อสถาบันพระมหากษัตริย์
+                        </div>
+                    </div>
+
+                    <!-- CAT 9 -->
+                    <div class="crit-card">
+                        <div class="crit-header">
+                            <div class="crit-emoji" style="background:rgba(168,85,247,0.15);color:#a855f7;">🎖️</div>
+                            <div class="crit-title-wrap">
+                                <span class="crit-cat-num">หมวดหมู่ที่ ๙</span>
+                                <h3>ชม. ที่สมควรได้รับ (บทบาทพิเศษ)</h3>
+                            </div>
+                        </div>
+                        <div class="crit-limits">
+                            <span class="limit-chip">ต่อเทอม: <strong>ไม่เกิน ๒๐ ชม.</strong></span>
+                            <span class="limit-chip">ต่อปี: <strong>ไม่เกิน ๔๐ ชม./ปี</strong></span>
+                        </div>
+                        <div class="crit-rules">
+                            สำหรับนักเรียนที่มีตำแหน่งหน้าที่เพื่อส่วนรวม ได้แก่ นักเรียนปกครอง, แอดมินระบบ, น.สารสนเทศ, น.ตัดต่อสื่อ และ น.พยาบาลประจำรุ่น (หากมีมากกว่า ๑ ตำแหน่ง จะได้รับเพียงตำแหน่งเดียว)
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB: FLOW & SOP -->
+            <div class="tab-pane" id="pane-sop">
+                <!-- DOCUMENT CONTROL HEADER -->
+                <div class="card mb-20" style="background:rgba(20, 42, 77, 0.7);border:1px solid var(--gold);">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;">
+                        <div>
+                            <div style="font-size:0.8rem;color:var(--gold);font-weight:700;letter-spacing:1px;text-transform:uppercase;">
+                                STANDARD OPERATING PROCEDURE (SOP)
+                            </div>
+                            <h3 style="margin:4px 0;color:var(--gold-light);font-family:Kanit,sans-serif;">
+                                ระเบียบปฏิบัติประจำ: การบันทึก การรับรอง และการประเมินผลความดีจิตอาสา
+                            </h3>
+                            <div style="font-size:0.82rem;color:var(--text-secondary);">
+                                รหัสเอกสาร: <strong>SOP-RTAFNC-GD-2569</strong> | ฉบับที่ ๑.๐ | บังคับใช้: ๑ ก.ค. ๒๕๖๙ – ๓๐ มิ.ย. ๒๕๗๐
+                            </div>
+                        </div>
+                        <a href="../SOP_STANDARD_OPERATING_PROCEDURE_2569.md" target="_blank" class="btn btn-sm btn-outline" style="border-color:var(--gold);color:var(--gold-light);">
+                            📄 เอกสาร SOP ฉบับเต็ม
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 5-STAGE PROCESS PIPELINE -->
+                <h4 style="color:var(--gold);margin:0 0 12px 0;font-family:Kanit,sans-serif;">
+                    🗺️ แผนภาพกระบวนการทำงานแบบครบวงจร (End-to-End Workflow Pipeline)
+                </h4>
+                <div class="sop-pipeline">
+                    <div class="sop-pipeline-step">
+                        <div class="sop-step-badge">1</div>
+                        <h5>ปฏิบัติ &amp; บันทึก</h5>
+                        <p>นพอ. ทำกิจกรรม เลือกล็อกหมวด ๑-๙ แนบรูปถ่าย เช็คโควตา</p>
+                    </div>
+                    <div class="sop-pipeline-step">
+                        <div class="sop-step-badge">2</div>
+                        <h5>แชร์ลิงก์รับรอง</h5>
+                        <p>ระบบสร้าง Unique Sign Link ส่งผ่าน LINE / Telegram</p>
+                    </div>
+                    <div class="sop-pipeline-step">
+                        <div class="sop-step-badge">3</div>
+                        <h5>ลงนามสดบนจอ</h5>
+                        <p>ผู้รับรอง ๔ บทบาท เซ็นลายมือชื่อสดบน Digital Canvas</p>
+                    </div>
+                    <div class="sop-pipeline-step">
+                        <div class="sop-step-badge">4</div>
+                        <h5>อาจารย์อนุมัติ</h5>
+                        <p>ตรวจผ่าน Teacher Dashboard อนุมัติรายคนหรือทั้งกลุ่ม</p>
+                    </div>
+                    <div class="sop-pipeline-step">
+                        <div class="sop-step-badge">5</div>
+                        <h5>ใบบันทึก A4</h5>
+                        <p>ปลดล็อก Deed Slip A4 พร้อมตรา ทอ. สะสมชั่วโมงต่อเนื่อง</p>
+                    </div>
+                </div>
+
+                <!-- RACI RESPONSIBILITY MATRIX -->
+                <h4 style="color:var(--gold);margin:20px 0 12px 0;font-family:Kanit,sans-serif;">
+                    👥 เมทริกซ์บทบาทหน้าที่และความรับผิดชอบ (RACI Matrix)
+                </h4>
+                <div class="raci-table-wrap">
+                    <table class="raci-table">
+                        <thead>
+                            <tr>
+                                <th style="text-align:left;">ขั้นตอนการปฏิบัติงานตามมาตรฐาน</th>
+                                <th>นพอ.</th>
+                                <th>ผู้รับรองภายนอก / ผู้ปกครอง</th>
+                                <th>อาจารย์ประจำชั้น</th>
+                                <th>แอดมินระบบ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="text-align:left;">๑. บันทึกข้อมูลและแนบภาพถ่ายกิจกรรมในระบบ</td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-c">C</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">๒. ส่งลิงก์ขอรับรองลายมือชื่อดิจิทัลสด</td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">๓. ลงนามรับรองสดบนหน้าจอมือถือ (Digital Canvas)</td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                                <td><span class="raci-badge raci-c">C</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">๔. ตรวจสอบหลักฐานและอนุมัติความดีขั้นสุดท้าย</td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-a">A/R</span></td>
+                                <td><span class="raci-badge raci-c">C</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">๕. พิมพ์ใบบันทึกความดี A4 ทางการและแนบ Portfolio</td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                            </tr>
+                            <tr>
+                                <td style="text-align:left;">๖. สรุปผลรายภาค/ปี และยกยอดเลื่อนชั้นปี (๑ ก.ค.)</td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-i">I</span></td>
+                                <td><span class="raci-badge raci-a">A</span></td>
+                                <td><span class="raci-badge raci-r">R</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div style="font-size:0.78rem;color:var(--text-secondary);margin-top:-14px;margin-bottom:24px;display:flex;gap:16px;flex-wrap:wrap;">
+                    <span><strong style="color:#f87171;">R</strong> = ผู้ปฏิบัติงาน (Responsible)</span>
+                    <span><strong style="color:#fbbf24;">A</strong> = ผู้รับผิดชอบ/อนุมัติ (Accountable)</span>
+                    <span><strong style="color:#60a5fa;">C</strong> = ผู้ร่วมรับรอง/ปรึกษา (Consulted)</span>
+                    <span><strong style="color:#9ca3af;">I</strong> = ผู้รับทราบข้อมูล (Informed)</span>
+                </div>
+
+                <!-- DETAILED SOP PROCEDURES -->
+                <h4 style="color:var(--gold);margin:0 0 16px 0;font-family:Kanit,sans-serif;">
+                    📋 ระเบียบขั้นตอนการปฏิบัติงานมาตรฐาน (Standard Operating Procedures)
+                </h4>
+                <div class="step-list">
+                    <div class="step-card">
+                        <div class="step-num">S1</div>
+                        <div class="step-body">
+                            <h4>【SOP-GD-01】การยืนยันตัวตนและการเข้าสู่ระบบ (Authentication)</h4>
+                            <p>
+                                นพอ. เข้าสู่ระบบผ่านเมนู LINE OA (ระบบ LINE LIFF) หรือผ่านเว็บไซต์ด้วย <strong>รหัสนักเรียน ๗ หลัก</strong> 
+                                รหัสผ่านเริ่มต้นคือรหัสนักเรียน และต้องตั้งค่ารหัสผ่านใหม่ที่เมนู "โปรไฟล์" เพื่อความปลอดภัยของข้อมูลส่วนบุคคล (PDPA)
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">S2</div>
+                        <div class="step-body">
+                            <h4>【SOP-GD-02】การตรวจสอบเกณฑ์และบันทึกกิจกรรมความดี ๙ หมวดหมู่ (Deed Submission)</h4>
+                            <p>
+                                นพอ. เลือกหมวดหมู่ ๑ ถึง ๙ ระบบจะแสดงแถบโควตาคงเหลือและคำเตือนเพดานเวลาทันที:
+                                <br>• <strong>หมวด ๑ (บริจาคโลหิต):</strong> ๘ ชม./ครั้ง, ปีละไม่เกิน ๔ ครั้ง (๓๒ ชม.), ต้องเว้นระยะห่างอย่างน้อย ๙๐ วัน
+                                <br>• <strong>หมวด ๖ (ทำนุบำรุงศาสนสถาน):</strong> ไม่เกิน ๑ ชม./ครั้ง, สะสมไม่เกิน ๔ ชม./ปีการศึกษา
+                                <br>• <strong>หมวด ๗ (งานฟรีทั่วไป/ช่วยผู้ปกครอง):</strong> ไม่เกิน ๑ ชม./ครั้ง, ไม่เกิน ๒ ชม./เทอม, ไม่เกิน ๔ ชม./ปี
+                                <br>• <strong>ระบบป้องกันการลงซ้ำ (Duplicate Prevention):</strong> หากบันทึกหมวดเดียวกันในวันเดียวกัน ระบบจะปฏิเสธการส่งทันที
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">S3</div>
+                        <div class="step-body">
+                            <h4>【SOP-GD-03】การส่งขอรับรองและการลงนามดิจิทัลสด (Digital Canvas Signature)</h4>
+                            <p>
+                                เมื่อบันทึกสำเร็จ นพอ. ส่งลิงก์เฉพาะรายการให้ผู้รับรองผ่าน LINE หรือ Telegram 
+                                ผู้รับรองเปิดผ่านสมาร์ตโฟน ระบุชื่อ-สกุล และ <strong>ใช้ปลายนิ้วหรือสไตลัสเซ็นชื่อสดบนหน้าจอ (Digital Canvas)</strong> 
+                                ไม่ต้องล็อกอิน ระบบจะบันทึกภาพลายเซ็นโปร่งใสและเวลาที่ประทับแบบ Real-time
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">S4</div>
+                        <div class="step-body">
+                            <h4>【SOP-GD-04】การตรวจสอบและอนุมัติของอาจารย์ผู้ควบคุม (Teacher Review)</h4>
+                            <p>
+                                อาจารย์เข้าสู่ระบบผ่าน <code>teacher-dashboard.html</code> ตรวจสอบรูปภาพและลายเซ็นผู้รับรอง 
+                                สามารถกดอนุมัติรายคน หรืออนุมัติทั้งกลุ่ม (Batch Approve) ได้ทันที และกด Export Word (.docx) เป็นหนังสือราชการ ทอ. สรุปประจำเดือน
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">S5</div>
+                        <div class="step-body">
+                            <h4>【SOP-GD-05】การออกใบบันทึกความดี A4 และการยกยอดสะสมรอบปี (Annual Rollover)</h4>
+                            <p>
+                                • รายการที่อนุมัติแล้ว จะปลดล็อก <strong>ใบบันทึกความดีทางการ A4 (Official Deed Slip)</strong> พร้อมตราสัญลักษณ์ ทอ. สีทอง สามารถพิมพ์หรือแนบ Portfolio
+                                <br>• <strong>สถาปัตยกรรม Dual-Counter:</strong> วันที่ ๑ กรกฎาคมของทุกปี ข้อมูลประวัติเก่าของ นพอ. ทุกชั้นปี (๓,๐๔๐ รายการ) จะถูกเก็บรักษาไว้อย่างสมบูรณ์ ๑๐๐% พร้อมยกยอดสะสมต่อเนื่อง ๔ ปีเพื่อใช้สำเร็จการศึกษา
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXCEPTION TABLE -->
+                <div class="card" style="background:rgba(239, 68, 68, 0.05);border-color:rgba(239, 68, 68, 0.3);margin-top:20px;">
+                    <h4 style="color:#fca5a5;margin:0 0 8px 0;font-family:Kanit,sans-serif;">
+                        ⚠️ การจัดการกรณีเกิดข้อขัดข้องและข้อยกเว้น (Exception Handling)
+                    </h4>
+                    <ul style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;margin:0;padding-left:20px;">
+                        <li><strong>ระบบแจ้งเตือนโควตาเต็ม:</strong> ตรวจสอบชั่วโมงคงเหลือ และเปลี่ยนไปบันทึกในหมวดอื่นที่ยังมีโควตาว่าง</li>
+                        <li><strong>ระบบแจ้งเตือนบันทึกซ้ำ:</strong> ตรวจสอบว่าในวันนั้นมีรายการเดิมอยู่แล้วหรือไม่ ให้รวมยอดเป็นบันทึกเดียว</li>
+                        <li><strong>บริจาคโลหิตยังไม่ถึง ๙๐ วัน:</strong> ตามมาตรฐานแพทย์กาชาด ต้องเว้นระยะห่างให้ครบ ๙๐ วัน ระบบจึงจะอนุญาตให้ส่งครั้งถัดไป</li>
+                        <li><strong>อาจารย์ส่งคืน/ปฏิเสธ:</strong> อ่านเหตุผลที่แจ้งเตือน ปรับปรุงรูปถ่ายหรือรายละเอียดให้ถูกต้อง และกดส่งใหม่</li>
+                        <li><strong>ลืมรหัสผ่าน:</strong> ติดต่ออาจารย์ประจำรุ่นหรือแอดมิน เพื่อรีเซ็ตรหัสผ่านกลับเป็นรหัสนักเรียน ๗ หลัก</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- TAB 2: STUDENT -->
+            <div class="tab-pane" id="pane-student">
+                <div class="step-list">
+                    <div class="step-card">
+                        <div class="step-num">๑</div>
+                        <div class="step-body">
+                            <h4>เข้าสู่ระบบ (Login)</h4>
+                            <p>
+                                เข้าผ่านเมนูใน LINE OA หรือเปิดเว็บไซต์ กรอก <strong>รหัสนักเรียน ๗ หลัก</strong> 
+                                (รหัสผ่านเริ่มต้นคือ รหัสนักเรียน สามารถเปลี่ยนได้ที่เมนู "โปรไฟล์")
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๒</div>
+                        <div class="step-body">
+                            <h4>บันทึกความดีใหม่ (Submit Deed)</h4>
+                            <p>
+                                ไปที่เมนู <strong>"✍️ บันทึกความดี"</strong> เลือกหมวดหมู่ความดีทั้ง ๙ ประเภท ระบบจะแสดงแถบโควตาคงเหลือของคุณทันที 
+                                กรอกรายละเอียด วันที่ จำนวนชั่วโมง และแนบรูปภาพกิจกรรมอย่างน้อย ๑ รูป
+                            </p>
+                            <div style="background:rgba(201,162,39,0.1);padding:8px 12px;border-radius:6px;font-size:0.82rem;color:var(--gold-light);">
+                                💡 <strong>ระบบอัจฉริยะ:</strong> หากกรอกเกินเพดาน หรือลงซ้ำในวันเดียวกัน ระบบจะเตือนและป้องกันไม่ให้เกิดความผิดพลาดทันที
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๓</div>
+                        <div class="step-body">
+                            <h4>ส่งลิงก์เซ็นชื่อดิจิทัล (Digital Approval Link)</h4>
+                            <p>
+                                เมื่อบันทึกสำเร็จ หน้าจอจะแสดงป๊อปอัปพร้อมปุ่ม <strong>"แชร์ผ่าน LINE เพื่อเซ็นชื่อ"</strong> 
+                                สามารถคัดลอกลิงก์ส่งให้อาจารย์ประจำรุ่น, ผู้ปกครอง หรือหัวหน้าหน่วยงานภายนอก เพื่อลงนามรับรองความดีสดบนหน้าจอโทรศัพท์ได้ทันที
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๔</div>
+                        <div class="step-body">
+                            <h4>ดูใบบันทึกความดีทางการ A4 (Official Deed Slip)</h4>
+                            <p>
+                                เมื่อได้รับการอนุมัติแล้ว ใบบันทึกความดีจะปลดล็อกตราสัญลักษณ์กองทัพอากาศสีทอง พร้อมลายเซ็นดิจิทัลของผู้รับรอง 
+                                สามารถกดพิมพ์เป็นเอกสาร A4 หรือบันทึกเป็น PDF เพื่อแนบ Portfolio ได้ทันที
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๕</div>
+                        <div class="step-body">
+                            <h4>สะสมชั่วโมง เลื่อนบัตร Starbucks Pass &amp; Chibi Hero</h4>
+                            <p>
+                                ชั่วโมงที่ผ่านการอนุมัติจะบวกทบเข้าสู่ <strong>บัตร Starbucks Pass</strong> และวิวัฒนาการตัวละคร 
+                                <strong>Chibi Hero ทั้ง ๘ ระดับ</strong> ตั้งแต่นักเรียนฝึกหัด (Lv.1) จนถึงสุดยอดอัครเทวทูตสวรรค์ (Lv.8) เมื่อครบ ๕๐ ชั่วโมง
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: APPROVER -->
+            <div class="tab-pane" id="pane-approver">
+                <div class="card mb-20" style="background:rgba(59,130,246,0.08);border-color:var(--blue);">
+                    <h3 style="margin:0 0 8px 0;color:#93c5fd;font-family:Kanit,sans-serif;">ระบบรับรองความดี ๔ บทบาท (Multi-Role Approver)</h3>
+                    <p style="margin:0;font-size:0.9rem;color:var(--text-secondary);line-height:1.6;">
+                        ระบบรองรับการลงนามรับรองจาก ๔ กลุ่มบุคคล เพื่อความยืดหยุ่นและถูกต้องตามสถานที่บำเพ็ญประโยชน์จริง ได้แก่:
+                        <strong>๑. อาจารย์ วพอ.</strong> | <strong>๒. ผู้ปกครอง</strong> | <strong>๓. หน่วยงานภายนอก / มูลนิธิ / วัด</strong> | <strong>๔. บุคคลอื่น ๆ</strong>
+                    </p>
+                </div>
+
+                <div class="step-list">
+                    <div class="step-card">
+                        <div class="step-num">๑</div>
+                        <div class="step-body">
+                            <h4>การเซ็นชื่อดิจิทัลผ่านมือถือ (Instant Sign Link)</h4>
+                            <p>
+                                ผู้รับรองเปิดลิงก์ที่นักเรียนส่งให้ผ่าน LINE หรือ Telegram ไม่จำเป็นต้องมีบัญชีในระบบ 
+                                หน้าจอจะแสดงรายละเอียดกิจกรรม รูปถ่าย และข้อมูลนักเรียนอย่างชัดเจน
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๒</div>
+                        <div class="step-body">
+                            <h4>เลือกลักษณะความสัมพันธ์และลงลายมือชื่อ</h4>
+                            <p>
+                                ผู้รับรองเลือกประเภทตนเอง (อาจารย์ / ผู้ปกครอง / องค์กรภายนอก) พิมพ์ชื่อ-สกุล และใช้ปลายนิ้วหรือปากกาสไตลัส 
+                                <strong>เซ็นลายมือชื่อสดบนผืนผ้าใบหน้าจอ (Digital Canvas)</strong> จากนั้นกดปุ่ม "ยืนยันการลงนาม"
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="step-card">
+                        <div class="step-num">๓</div>
+                        <div class="step-body">
+                            <h4>การอนุมัติผ่าน Teacher Dashboard</h4>
+                            <p>
+                                อาจารย์ฝ่ายปกครองสามารถเข้าสู่ระบบผ่าน <code>teacher-dashboard.html</code> 
+                                เพื่อดูรายการรออนุมัติทั้งหมด ตรวจสอบสถิติรายชั้นปี และกดอนุมัติ/ปฏิเสธเป็นกลุ่ม (Batch Approve) ได้อย่างรวดเร็ว
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: ROLLOVER -->
+            <div class="tab-pane" id="pane-rollover">
+                <div class="card mb-20" style="background:rgba(34,197,94,0.08);border-color:var(--green);">
+                    <h3 style="margin:0 0 8px 0;color:#86efac;font-family:Kanit,sans-serif;">รอบปีการศึกษาและการย้ายฐานข้อมูลประจำปี (ทุก ๑ กรกฎาคม)</h3>
+                    <p style="margin:0;font-size:0.9rem;color:var(--text-secondary);line-height:1.6;">
+                        ปีการศึกษาของวิทยาลัยพยาบาลทหารอากาศ เริ่มต้นวันที่ <strong>๑ กรกฎาคม</strong> และสิ้นสุดวันที่ <strong>๓๐ มิถุนายน</strong> ของปีถัดไป 
+                        ระบบใช้สถาปัตยกรรมแบบ <strong>ยกยอดสะสมต่อเนื่อง (Cumulative Roll-Forward)</strong> ทำให้ชั่วโมงปีก่อนหน้าไม่สูญหาย
+                    </p>
+                </div>
+
+                <div class="criteria-grid">
+                    <div class="crit-card">
+                        <h4 style="color:var(--gold);margin:0 0 8px 0;font-family:Kanit,sans-serif;">๑. การเลื่อนชั้นปีนักเรียน (Roster Promotion)</h4>
+                        <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0;">
+                            • <strong>รุ่น ๖๖ (ปี ๔)</strong> ➔ ปรับสถานะเป็น จบการศึกษา / ศิษย์เก่า (Alumni)<br>
+                            • <strong>รุ่น ๖๗ (ปี ๓)</strong> ➔ เลื่อนเป็น ชั้นปีที่ ๔<br>
+                            • <strong>รุ่น ๖๘ (ปี ๒)</strong> ➔ เลื่อนเป็น ชั้นปีที่ ๓<br>
+                            • <strong>รุ่น ๖๙ (ปี ๑)</strong> ➔ เลื่อนเป็น ชั้นปีที่ ๒<br>
+                            • <strong>รุ่น ๗๐ (เข้าใหม่)</strong> ➔ บรรจุเข้าเป็น ชั้นปีที่ ๑
+                        </p>
+                    </div>
+
+                    <div class="crit-card">
+                        <h4 style="color:var(--gold);margin:0 0 8px 0;font-family:Kanit,sans-serif;">๒. ระบบ ๒ มาตรวัด (Dual-Counter)</h4>
+                        <p style="font-size:0.88rem;color:var(--text-secondary);line-height:1.6;margin:0;">
+                            • <strong>ยอดชั่วโมงประจำปี (๕๐ ชม./ปี):</strong> เริ่มต้นนับใหม่ทุก ๑ ก.ค. เพื่อวัดเกณฑ์ผ่านของปีการศึกษาปัจจุบัน<br>
+                            • <strong>ยอดสะสมตลอดหลักสูตร (๔ ปี):</strong> นำชั่วโมงทุกปีมารวมสะสมต่อเนื่อง ไม่สูญหาย เพื่อใช้ประดับเกียรติบัตรและยื่นจบการศึกษา
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: FAQ -->
+            <div class="tab-pane" id="pane-faq">
+                <div class="faq-item open">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>🩸 บริจาคโลหิตสามารถบันทึกได้บ่อยแค่ไหน?</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-a">
+                        ตามระเบียบทางการแพทย์และข้อกำหนดของ วพอ. การบริจาคโลหิตทั่วไปต้องเว้นระยะห่างอย่างน้อย <strong>๓ เดือน (๙๐ วัน)</strong> 
+                        และบันทึกได้ไม่เกิน <strong>๔ ครั้งต่อปีการศึกษา</strong> (ครั้งละ ๘ ชั่วโมง รวมสูงสุด ๓๒ ชั่วโมงต่อปี) 
+                        โดยระบบจะตรวจจับวันที่บริจาคครั้งล่าสุดให้อัตโนมัติ หากยังไม่ครบ ๙๐ วัน ระบบจะแจ้งเตือนและปฏิเสธการบันทึกครับ
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>⭐ กิจกรรมช่วยผู้ปกครองหรือช่วยงานที่บ้าน บันทึกได้กี่ชั่วโมง?</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-a">
+                        จัดอยู่ใน <strong>หมวดหมู่ที่ ๗ (งานฟรีทั่วไป / ช่วยงานผู้ปกครอง)</strong> กำหนดให้บันทึกได้ 
+                        <strong>ไม่เกิน ๑ ชั่วโมงต่อครั้ง, ไม่เกิน ๒ ชั่วโมงต่อภาคการศึกษา</strong> และรวมสะสมไม่เกิน 
+                        <strong>๔ ชั่วโมงต่อปีการศึกษา</strong> ครับ
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>🙏 งานทำนุบำรุงศาสนสถาน กวาดลานวัด บันทึกได้กี่ชั่วโมง?</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-a">
+                        จัดอยู่ใน <strong>หมวดหมู่ที่ ๖ (ทำนุบำรุงศาสนสถาน)</strong> กำหนดให้บันทึกได้ 
+                        <strong>ไม่เกิน ๑ ชั่วโมงต่อครั้ง</strong> และสะสมรวมได้ <strong>ไม่เกิน ๔ ชั่วโมงต่อปีการศึกษา</strong> ครับ
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>❓ ถ้าลงกิจกรรมซ้ำในวันเดียวกัน ระบบจะอนุญาตหรือไม่?</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-a">
+                        ระบบมีระบบ <strong>Duplicate Prevention</strong> ตรวจสอบประวัติความดีเดิม หากพบว่ามีรายการในหมวดเดียวกัน 
+                        และวันที่เดียวกันบันทึกอยู่แล้ว ระบบจะแจ้งเตือนว่าพบรายการซ้ำ และปฏิเสธไม่ให้บันทึกซ้ำเพื่อรักษาความถูกต้องของข้อมูลราชการครับ
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-q" onclick="toggleFaq(this)">
+                        <span>🔑 ลืมรหัสผ่านทำอย่างไร?</span>
+                        <span>▼</span>
+                    </div>
+                    <div class="faq-a">
+                        รหัสผ่านเริ่มต้นของนักเรียนทุกคนคือ <strong>รหัสนักเรียน ๗ หลัก</strong> หากนักเรียนเคยเปลี่ยนรหัสผ่านแล้วจำไม่ได้ 
+                        สามารถติดต่ออาจารย์ผู้ควบคุมประจำรุ่น หรือแอดมินระบบเพื่อทำการรีเซ็ตรหัสผ่านกลับเป็นรหัสนักเรียนได้ทันทีครับ
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="data/students_data.js?v=3415"></script>
+    <script src="data/deeds_data.js?v=3415"></script>
+    <script src="data/app_settings.js?v=3415"></script>
+    <script src="app.js?v=3415"></script>
+    <script>
+        function init() {
+            const user = App.getCurrentUser();
+            if (user) {
+                const nameEl = document.getElementById("nav-name");
+                const avEl = document.getElementById("nav-avatar");
+                if (nameEl) nameEl.textContent = (user.rank || "") + " " + (user.first_name || "นักเรียน");
+                if (avEl) avEl.textContent = (user.first_name || "?")[0];
+            }
+
+            const hash = (window.location.hash || "").replace("#", "");
+            if (hash) {
+                const btn = document.querySelector(`.m-tab-btn[onclick*="'${hash}'"]`);
+                if (btn) {
+                    switchTab(hash, btn);
+                }
+            }
+        }
+
+        function switchTab(tabId, btn) {
+            document.querySelectorAll(".m-tab-btn").forEach(b => b.classList.remove("active"));
+            document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+            
+            if (btn) btn.classList.add("active");
+            const targetPane = document.getElementById("pane-" + tabId);
+            if (targetPane) targetPane.classList.add("active");
+
+            if (history.replaceState) {
+                history.replaceState(null, null, "#" + tabId);
+            }
+        }
+
+        function toggleFaq(el) {
+            const item = el.parentElement;
+            item.classList.toggle("open");
+        }
+
+        function toggleSidebar() {
+            const sb = document.getElementById("sidebar");
+            const ov = document.getElementById("sidebar-overlay");
+            if (sb) sb.classList.toggle("open");
+            if (ov) ov.classList.toggle("show");
+        }
+
+        document.addEventListener("DOMContentLoaded", init);
+    </script>
+</body>
+</html>

@@ -30,7 +30,7 @@ const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
     TELEGRAM_BOT_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
     TELEGRAM_CHAT_ID: '-4839151586',
-    SYSTEM_URL: 'https://gaps-shift-illustrations-pci.trycloudflare.com',
+    SYSTEM_URL: 'https://approved-compromise-stamps-geological.trycloudflare.com',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
@@ -43,15 +43,15 @@ if (typeof globalThis !== 'undefined') globalThis.CONFIG = CONFIG;
 
 // ==================== CATEGORIES & RULES ====================
 const CATEGORIES = [
-    { id: 1, name: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', emoji: '🩸', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', maxHours: 16, defaultHours: 8, ruleNote: 'บันทึกครั้งละ 8 ชั่วโมง (สูงสุด 16 ชม. ทุก 3 เดือน หรือตามวงรอบ) โดยแนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิต' },
-    { id: 2, name: 'โครงการภายนอก (คำสั่ง วพอ.)', emoji: '🌐', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', maxHours: 8, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน (แนบคำสั่ง/ภาพถ่าย)' },
-    { id: 3, name: 'ช่วยเหลืองานภายใน วพอ.', emoji: '🏥', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', maxHours: 8, defaultHours: 2, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน' },
-    { id: 4, name: 'เข้าอบรมที่ วพอ. จัดให้', emoji: '📚', color: '#06b6d4', bg: 'rgba(6,182,212,0.1)', maxHours: 6, defaultHours: 3, ruleNote: 'บันทึกตามช่วงเวลาอบรม สูงสุดไม่เกิน 6 ชม./วัน' },
-    { id: 5, name: 'ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', emoji: '🤝', color: '#22c55e', bg: 'rgba(34,197,94,0.1)', maxHours: 8, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน' },
-    { id: 6, name: 'ทำนุบำรุงศาสนสถาน', emoji: '🙏', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', maxHours: 6, defaultHours: 3, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 6 ชม./วัน' },
-    { id: 7, name: 'งานฟรีทั่วไป', emoji: '⭐', color: '#c9a227', bg: 'rgba(201,162,39,0.1)', maxHours: 4, defaultHours: 2, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 4 ชม./วัน' },
-    { id: 8, name: 'กิจกรรมจงรักภักดีต่อสถาบัน', emoji: '👑', color: '#ec4899', bg: 'rgba(236,72,153,0.1)', maxHours: 8, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน' },
-    { id: 9, name: 'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', emoji: '🎖️', color: '#a855f7', bg: 'rgba(168,85,247,0.1)', maxHours: 10, defaultHours: 5, ruleNote: 'ตามที่ได้รับมอบหมายเป็นกรณีพิเศษจากอาจารย์/วิทยาลัย' },
+    { id: 1, name: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', emoji: '🩸', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', maxHours: 8, defaultHours: 8, maxTimesPerYear: 4, minDaysSpacing: 90, ruleNote: 'บันทึกครั้งละ 8 ชม., ปีละไม่เกิน 4 ครั้ง และแต่ละครั้งต้องห่างกันอย่างน้อย 3 เดือน (90 วัน)' },
+    { id: 2, name: 'โครงการภายนอก (คำสั่ง วพอ.)', emoji: '🌐', color: '#3b82f6', bg: 'rgba(59,130,246,0.1)', maxHours: 8, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน (มีคำสั่ง วพอ. อนุญาต)' },
+    { id: 3, name: 'ช่วยเหลืองานภายใน วพอ.', emoji: '🏥', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', maxHours: 8, defaultHours: 2, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 8 ชม./วัน (รวมกิจกรรม 5ส และเวรจิตอาสา)' },
+    { id: 4, name: 'เข้าอบรมที่ วพอ. จัดให้', emoji: '📚', color: '#06b6d4', bg: 'rgba(6,182,212,0.1)', maxHours: 4, defaultHours: 3, ruleNote: 'บันทึกตามช่วงเวลาอบรม สูงสุดไม่เกิน 4 ชม./วัน (ตามที่ วพอ. กำหนด)' },
+    { id: 5, name: 'ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', emoji: '🤝', color: '#22c55e', bg: 'rgba(34,197,94,0.1)', maxHours: 4, defaultHours: 4, ruleNote: 'บันทึกตามเวลาจริง สูงสุดไม่เกิน 4 ชม./วัน' },
+    { id: 6, name: 'ทำนุบำรุงศาสนสถาน', emoji: '🙏', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', maxHours: 1, defaultHours: 1, maxPerYear: 4, ruleNote: 'บันทึกได้ไม่เกิน 1 ชม./ครั้ง และสะสมรวมไม่เกิน 4 ชม./ปีการศึกษา' },
+    { id: 7, name: 'งานฟรีทั่วไป', emoji: '⭐', color: '#c9a227', bg: 'rgba(201,162,39,0.1)', maxHours: 1, defaultHours: 1, maxPerSemester: 2, maxPerYear: 4, ruleNote: 'งานฟรีทั่วไป/ช่วยผู้ปกครอง บันทึกได้ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 2 ชม./เทอม, ไม่เกิน 4 ชม./ปีการศึกษา' },
+    { id: 8, name: 'กิจกรรมจงรักภักดีต่อสถาบัน', emoji: '👑', color: '#ec4899', bg: 'rgba(236,72,153,0.1)', maxHours: 8, defaultHours: 4, maxPerYear: 8, ruleNote: 'กิจกรรมเฉลิมพระเกียรติ/จิตอาสาพระราชทาน สูงสุดไม่เกิน 8 ชม./ปีการศึกษา' },
+    { id: 9, name: 'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', emoji: '🎖️', color: '#a855f7', bg: 'rgba(168,85,247,0.1)', maxHours: 20, defaultHours: 20, maxPerSemester: 20, maxPerYear: 40, ruleNote: 'นักเรียนปกครอง/แอดมิน/สารสนเทศ/ตัดต่อ/พยาบาล เทอมละ 20 ชม. (ปีละ 40 ชม.)' },
 ];
 
 if (typeof window !== 'undefined') window.CATEGORIES = CATEGORIES;
@@ -392,6 +392,19 @@ const App = {
 
     getCurrentUser() {
         let user = Storage.get('session');
+        if (!user && typeof window !== 'undefined' && window.location) {
+            try {
+                const params = new URLSearchParams(window.location.search);
+                const autoSid = params.get('studentId') || params.get('sid') || params.get('autoLogin');
+                if (autoSid) {
+                    const s = this.findStudent(autoSid);
+                    if (s) {
+                        user = { ...s, role: 'student', loginAt: Date.now() };
+                        Storage.set('session', user);
+                    }
+                }
+            } catch (e) {}
+        }
         if (user && user.role === 'student' && user.student_id) {
             const fresh = this.getStudentById(user.student_id);
             if (fresh && fresh.first_name && fresh.first_name !== 'นักเรียน') {
@@ -422,10 +435,10 @@ const App = {
 
     isBackendMode() {
         if (typeof window === 'undefined' || !window.location) return false;
-        const { protocol, hostname, port } = window.location;
+        const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        const localHosts = ['localhost', '127.0.0.1', '::1'];
-        return localHosts.includes(hostname) && (port === '3000' || port === '');
+        if (hostname.includes('github.io')) return false;
+        return true;
     },
 
     canUseBackendApi() {
@@ -757,10 +770,13 @@ const App = {
         return newDeed;
     },
 
-    async updateDeedStatus(studentId, deedId, status, teacherName, rejectReason = '') {
+    async updateDeedStatus(studentId, deedId, status, teacherName, rejectReason = '', deedData = null) {
         const deeds = this.getDeeds(studentId);
-        const deed = deeds.find(d => String(d.id) === String(deedId));
-        if (!deed) return null;
+        let deed = deeds.find(d => String(d.id) === String(deedId));
+        if (!deed) {
+            deed = deedData || { id: deedId, studentId, student_id: studentId };
+            deeds.push(deed);
+        }
         deed.status = status;
         deed.approvedBy = teacherName;
         deed.approved_by = teacherName;
@@ -816,11 +832,186 @@ const App = {
         return true;
     },
 
-    deleteDeed(studentId, deedId) {
-        let deeds = this.getDeeds(studentId);
-        deeds = deeds.filter(d => d.id !== deedId);
-        this.saveDeeds(studentId, deeds);
-        return true;
+    // ---------- ACADEMIC TERM & QUOTA VALIDATION ----------
+    getAcademicTerm(dateStr) {
+        if (!dateStr) {
+            const now = new Date();
+            dateStr = now.toISOString().slice(0, 10);
+        }
+        const d = new Date(dateStr);
+        const fullYear = d.getFullYear();
+        const beYear = fullYear < 2400 ? fullYear + 543 : fullYear;
+        const month = d.getMonth() + 1; // 1-12
+        // วงรอบปีการศึกษาเริ่ม 1 กรกฎาคม: เดือน 7-12 อยู่ในปี พ.ศ. นั้น, เดือน 1-6 อยู่ในปี พ.ศ. ก่อนหน้า
+        const academicYear = month >= 7 ? beYear : beYear - 1;
+        // ภาคเรียนที่ 1: ก.ค. - พ.ย. (เดือน 7-11), ภาคเรียนที่ 2: ธ.ค. - มิ.ย. (เดือน 12, 1-6)
+        const semester = (month >= 7 && month <= 11) ? 1 : 2;
+        return { academicYear, semester };
+    },
+
+    getCategoryQuotaUsage(studentId, categoryId, targetDateStr) {
+        const cat = this.getCategoryById(categoryId);
+        const { academicYear, semester } = this.getAcademicTerm(targetDateStr);
+        const deeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected');
+        
+        // Filter deeds for this category and academic year
+        const catYearDeeds = deeds.filter(d => {
+            if (parseInt(d.categoryId) !== parseInt(categoryId)) return false;
+            const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
+            return term.academicYear === academicYear;
+        });
+        
+        const catSemDeeds = catYearDeeds.filter(d => {
+            const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
+            return term.semester === semester;
+        });
+        
+        const yearHours = catYearDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
+        const semHours = catSemDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
+        const yearCount = catYearDeeds.length;
+        
+        // สำหรับบริจาคโลหิต: ค้นหาวันที่บริจาคครั้งล่าสุด
+        let lastDonationDate = null;
+        let daysSinceLastDonation = null;
+        if (parseInt(categoryId) === 1) {
+            const bloodDeeds = deeds.filter(d => parseInt(d.categoryId) === 1 && d.activityDate)
+                .sort((a, b) => new Date(b.activityDate) - new Date(a.activityDate));
+            if (bloodDeeds.length > 0) {
+                lastDonationDate = bloodDeeds[0].activityDate;
+                const targetD = targetDateStr ? new Date(targetDateStr) : new Date();
+                const lastD = new Date(lastDonationDate);
+                daysSinceLastDonation = Math.round((targetD - lastD) / (1000 * 60 * 60 * 24));
+            }
+        }
+        
+        return {
+            cat,
+            academicYear,
+            semester,
+            yearHours,
+            semHours,
+            yearCount,
+            lastDonationDate,
+            daysSinceLastDonation
+        };
+    },
+
+    validateDeed(deed, studentId) {
+        const cat = this.getCategoryById(deed.categoryId);
+        if (!cat) return { valid: false, message: 'กรุณาเลือกหมวดหมู่ความดีที่ถูกต้อง' };
+        
+        const hours = parseFloat(deed.hours);
+        if (!hours || hours <= 0) return { valid: false, message: 'กรุณาระบุจำนวนชั่วโมงที่ถูกต้อง' };
+        if (!deed.activityDate) return { valid: false, message: 'กรุณาระบุวันที่ทำกิจกรรม' };
+        if (!deed.description || !deed.description.trim()) return { valid: false, message: 'กรุณากรอกรายละเอียดกิจกรรม' };
+        
+        const usage = this.getCategoryQuotaUsage(studentId, deed.categoryId, deed.activityDate);
+        
+        // 1. ตรวจชั่วโมงสูงสุดต่อครั้ง (Per-session limit)
+        if (cat.maxHours && hours > cat.maxHours) {
+            return {
+                valid: false,
+                message: `⚠️ หมวด "${cat.name}" กำหนดให้บันทึกได้ไม่เกิน ${cat.maxHours} ชม. ต่อครั้ง (คุณกรอก ${hours} ชม.)`
+            };
+        }
+        
+        // 2. หมวด 1: บริจาคโลหิต (ครั้งละ 8 ชม., ปีละไม่เกิน 4 ครั้ง, ห่างกันอย่างน้อย 90 วัน)
+        if (cat.id === 1) {
+            if (usage.yearCount >= (cat.maxTimesPerYear || 4)) {
+                return {
+                    valid: false,
+                    message: `⚠️ บริจาคโลหิตได้ไม่เกิน ${cat.maxTimesPerYear || 4} ครั้งต่อปีการศึกษา (ปีการศึกษา ${usage.academicYear} บันทึกครบแล้ว ${usage.yearCount} ครั้ง)`
+                };
+            }
+            const allBloodDeeds = this.getDeeds(studentId).filter(d => parseInt(d.categoryId) === 1 && d.status !== 'rejected' && d.id !== deed.id);
+            const targetTime = new Date(deed.activityDate).getTime();
+            for (const bDeed of allBloodDeeds) {
+                if (!bDeed.activityDate) continue;
+                const prevTime = new Date(bDeed.activityDate).getTime();
+                const diffDays = Math.abs(targetTime - prevTime) / (1000 * 60 * 60 * 24);
+                if (diffDays < (cat.minDaysSpacing || 90)) {
+                    return {
+                        valid: false,
+                        message: `⚠️ การบริจาคโลหิตต้องเว้นระยะห่างอย่างน้อย 3 เดือน (90 วัน) วันที่ระบุห่างจากการบริจาคเมื่อ ${bDeed.activityDate} เพียง ${Math.round(diffDays)} วัน`
+                    };
+                }
+            }
+        }
+        
+        // 3. หมวด 6: ทำนุบำรุงศาสนสถาน (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 4 ชม./ปีการศึกษา)
+        if (cat.id === 6) {
+            if (hours > 1) {
+                return { valid: false, message: '⚠️ งานทำนุบำรุงศาสนสถาน บันทึกได้ไม่เกิน 1 ชั่วโมงต่อครั้ง' };
+            }
+            if (usage.yearHours + hours > (cat.maxPerYear || 4)) {
+                const remaining = Math.max(0, (cat.maxPerYear || 4) - usage.yearHours);
+                return {
+                    valid: false,
+                    message: `⚠️ งานทำนุบำรุงศาสนสถาน สะสมได้ไม่เกิน ${cat.maxPerYear || 4} ชม. ต่อปีการศึกษา (ปีนี้ใช้ไปแล้ว ${usage.yearHours} ชม., เหลือโควตา ${remaining} ชม.)`
+                };
+            }
+        }
+        
+        // 4. หมวด 7: งานฟรีทั่วไป / ช่วยผู้ปกครอง (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 2 ชม./เทอม, ไม่เกิน 4 ชม./ปีการศึกษา)
+        if (cat.id === 7) {
+            if (hours > 1) {
+                return { valid: false, message: '⚠️ งานฟรีทั่วไป / ช่วยงานผู้ปกครอง บันทึกได้ไม่เกิน 1 ชั่วโมงต่อครั้ง' };
+            }
+            if (usage.semHours + hours > (cat.maxPerSemester || 2)) {
+                const remainingSem = Math.max(0, (cat.maxPerSemester || 2) - usage.semHours);
+                return {
+                    valid: false,
+                    message: `⚠️ งานฟรีทั่วไป / ช่วยงานผู้ปกครอง บันทึกได้ไม่เกิน ${cat.maxPerSemester || 2} ชม. ต่อภาคการศึกษา (เทอม ${usage.semester} ใช้ไปแล้ว ${usage.semHours} ชม., เหลือโควตา ${remainingSem} ชม.)`
+                };
+            }
+            if (usage.yearHours + hours > (cat.maxPerYear || 4)) {
+                const remainingYear = Math.max(0, (cat.maxPerYear || 4) - usage.yearHours);
+                return {
+                    valid: false,
+                    message: `⚠️ งานฟรีทั่วไป / ช่วยงานผู้ปกครอง สะสมได้ไม่เกิน ${cat.maxPerYear || 4} ชม. ต่อปีการศึกษา (ปีนี้ใช้ไปแล้ว ${usage.yearHours} ชม., เหลือโควตา ${remainingYear} ชม.)`
+                };
+            }
+        }
+        
+        // 5. หมวด 8: จงรักภักดี (ไม่เกิน 8 ชม./ปีการศึกษา)
+        if (cat.id === 8 && cat.maxPerYear) {
+            if (usage.yearHours + hours > cat.maxPerYear) {
+                const remaining = Math.max(0, cat.maxPerYear - usage.yearHours);
+                return {
+                    valid: false,
+                    message: `⚠️ กิจกรรมจงรักภักดีต่อสถาบัน สะสมได้ไม่เกิน ${cat.maxPerYear} ชม. ต่อปีการศึกษา (ปีนี้ใช้ไปแล้ว ${usage.yearHours} ชม., เหลือโควตา ${remaining} ชม.)`
+                };
+            }
+        }
+        
+        // 6. หมวด 9: บทบาทพิเศษ (ไม่เกิน 20 ชม./เทอม)
+        if (cat.id === 9) {
+            if (usage.semHours + hours > 20) {
+                return {
+                    valid: false,
+                    message: `⚠️ บทบาทพิเศษ บันทึกได้ไม่เกิน 20 ชม. ต่อภาคการศึกษา (เทอม ${usage.semester} บันทึกไปแล้ว ${usage.semHours} ชม.)`
+                };
+            }
+        }
+        
+        // 7. ตรวจสอบการลงซ้ำ (Duplicate check across all categories)
+        const existingDeeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected' && d.id !== deed.id);
+        const isDuplicate = existingDeeds.some(d => {
+            if (parseInt(d.categoryId) !== parseInt(deed.categoryId)) return false;
+            if (d.activityDate !== deed.activityDate) return false;
+            const descA = (d.description || '').trim().toLowerCase();
+            const descB = (deed.description || '').trim().toLowerCase();
+            return descA === descB || (Math.abs((parseFloat(d.hours) || 0) - hours) < 0.01 && descA.includes(descB));
+        });
+        
+        if (isDuplicate) {
+            return {
+                valid: false,
+                message: `⚠️ พบรายการความดีในหมวด "${cat.name}" ในวันที่ ${deed.activityDate} บันทึกอยู่แล้วในระบบ เพื่อป้องกันการบันทึกซ้ำ กรุณาตรวจสอบประวัติความดี`
+            };
+        }
+        
+        return { valid: true, term: { academicYear: usage.academicYear, semester: usage.semester } };
     },
 
     // ---------- SUMMARY ----------

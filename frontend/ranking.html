@@ -371,7 +371,10 @@
                 <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลัก</a>
                 <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
                 <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="manual.html" class="sidebar-item"><span class="icon">📖</span> คู่มือ &amp; เกณฑ์ความดี</a>
+                <a href="qa-board.html" class="sidebar-item"><span class="icon">💬</span> กระดานถาม-ตอบ</a>
                 <a href="ranking.html" class="sidebar-item active"><span class="icon">🏆</span> จัดอันดับ & สถิติ</a>
+                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
                 <div class="divider" style="margin: 8px 16px;"></div>
                 <div class="sidebar-section"><span class="sidebar-label">บัญชี</span></div>
                 <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
@@ -383,6 +386,7 @@
             document.getElementById('sidebar-menu').innerHTML = `
                 <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
                 <a href="teacher-dashboard.html" class="sidebar-item"><span class="icon">⬅️</span> กลับหน้าอาจารย์</a>
+                <a href="manual.html" class="sidebar-item"><span class="icon">📖</span> คู่มือ &amp; เกณฑ์ความดี</a>
                 <a href="ranking.html" class="sidebar-item active"><span class="icon">🏆</span> จัดอันดับ & สถิติ</a>
                 <div class="divider" style="margin: 8px 16px;"></div>
                 <a href="settings.html" class="sidebar-item" ${currentUser.role !== 'admin' ? 'style="display:none"' : ''}><span class="icon">⚙️</span> ตั้งค่าระบบ</a>

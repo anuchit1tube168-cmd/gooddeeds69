@@ -1,6 +1,4 @@
-// Auto-generated from Data & Main 2568.xlsx — DO NOT EDIT MANUALLY
-// All hours rounded to clean whole numbers (ไม่มีเศษ)
-
+// Auto-generated official deeds data
 const IMPORTED_DEEDS = {
   "6503721": [
     {
@@ -42390,25 +42388,6 @@ const IMPORTED_DEEDS = {
         "https://lh5.googleusercontent.com/d/1G30J6n0PYfdUk3lLxyzIRfiiUPUkSaQx"
       ],
       "pdfUrl": "https://drive.google.com/file/d/1nKm-reiVL-5P-PhGBXPCTgaCrbgYxFZs/view?usp=drivesdk",
-      "status": "approved",
-      "submittedAt": "2025-12-31T00:00:00.000Z",
-      "approvedBy": "น.ต.หญิงขวัญชนก พ่วงนาคพันธุ์",
-      "approvedAt": "2025-12-31T00:00:00.000Z",
-      "rejectReason": null,
-      "note": "นำเข้าจาก Data 2568.xlsx"
-    },
-    {
-      "id": "import_2568_1035_6603771",
-      "studentId": "6603771",
-      "categoryId": 2,
-      "academicYear": 2568,
-      "hours": 4,
-      "description": "ค่ายรัฐบุรุษ",
-      "activityDate": "2026-08-20",
-      "imageUrls": [
-        "https://lh5.googleusercontent.com/d/1z6nmxlxKiUWoChJ3MILt1cCkpftpgncR"
-      ],
-      "pdfUrl": "https://drive.google.com/file/d/1t0lSWd0VfNfM_q0MKL1dDnerAmvI2LxP/view?usp=drivesdk",
       "status": "approved",
       "submittedAt": "2025-12-31T00:00:00.000Z",
       "approvedBy": "น.ต.หญิงขวัญชนก พ่วงนาคพันธุ์",

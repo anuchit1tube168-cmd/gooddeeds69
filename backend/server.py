@@ -193,6 +193,138 @@ def get_all_deeds():
         
     return result
 
+def get_academic_term(date_str):
+    """Return (academic_year, semester) for a given date string (YYYY-MM-DD)."""
+    try:
+        parts = str(date_str).split('-')
+        year = int(parts[0])
+        month = int(parts[1]) if len(parts) > 1 else 7
+        be_year = year + 543 if year < 2400 else year
+        academic_year = be_year if month >= 7 else be_year - 1
+        semester = 1 if 7 <= month <= 11 else 2
+        return academic_year, semester
+    except Exception:
+        return 2569, 1
+
+def validate_deed_submission(deed_data, student_id):
+    """Validate deed limits and prevent duplicates according to RTAFNC rules."""
+    try:
+        cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 0)
+        hours = float(deed_data.get('hours', 0))
+        act_date = deed_data.get('activityDate') or deed_data.get('event_date') or ''
+        desc = (deed_data.get('description') or deed_data.get('title') or '').strip()
+        deed_id = str(deed_data.get('id', '')).strip()
+
+        if cat_id < 1 or cat_id > 9:
+            return False, "กรุณาเลือกหมวดหมู่ความดีที่ถูกต้อง (หมวด 1 - 9)"
+        if hours <= 0:
+            return False, "จำนวนชั่วโมงต้องมากกว่า 0"
+        if not act_date:
+            return False, "กรุณาระบุวันที่ทำกิจกรรม"
+        if not desc:
+            return False, "กรุณากรอกรายละเอียดกิจกรรม"
+
+        academic_year, semester = get_academic_term(act_date)
+
+        # Per session limits
+        max_session_hours = {
+            1: 8.0,
+            2: 8.0,
+            3: 8.0,
+            4: 4.0,
+            5: 4.0,
+            6: 1.0,
+            7: 1.0,
+            8: 8.0,
+            9: 20.0,
+        }
+        if cat_id in max_session_hours and hours > max_session_hours[cat_id]:
+            return False, f"⚠️ หมวดที่ {cat_id} กำหนดให้บันทึกได้ไม่เกิน {max_session_hours[cat_id]:.0f} ชม. ต่อครั้ง (คุณกรอก {hours} ชม.)"
+
+        # Load existing deeds for student
+        existing_deeds = get_deeds_for_student(student_id)
+        valid_deeds = [d for d in existing_deeds if d.get('status') != 'rejected' and str(d.get('id', '')) != deed_id]
+
+        # Duplicate check: same category and same activityDate
+        for d in valid_deeds:
+            d_cat = int(d.get('categoryId') or d.get('category_id') or 0)
+            d_date = d.get('activityDate') or d.get('event_date') or ''
+            d_desc = (d.get('description') or d.get('title') or '').strip().lower()
+            if d_cat == cat_id and d_date == act_date:
+                if d_desc == desc.lower() or abs(float(d.get('hours', 0)) - hours) < 0.01:
+                    return False, f"⚠️ พบรายการความดีในหมวดนี้ในวันที่ {act_date} บันทึกอยู่แล้วในระบบ เพื่อป้องกันการบันทึกซ้ำ"
+
+        # Filter deeds for the same academic year
+        year_deeds = []
+        sem_deeds = []
+        for d in valid_deeds:
+            d_cat = int(d.get('categoryId') or d.get('category_id') or 0)
+            if d_cat == cat_id:
+                d_date = d.get('activityDate') or d.get('event_date') or ''
+                d_ay, d_sem = get_academic_term(d_date)
+                if d_ay == academic_year:
+                    year_deeds.append(d)
+                    if d_sem == semester:
+                        sem_deeds.append(d)
+
+        year_hours = sum(float(d.get('hours', 0)) for d in year_deeds)
+        sem_hours = sum(float(d.get('hours', 0)) for d in sem_deeds)
+
+        # 1. Category 1: Blood Donation (8 hrs/session, max 4 times/yr, 90 days spacing)
+        if cat_id == 1:
+            if len(year_deeds) >= 4:
+                return False, f"⚠️ การบริจาคโลหิตบันทึกได้ไม่เกิน 4 ครั้งต่อปีการศึกษา (ปีการศึกษา {academic_year} บันทึกครบ 4 ครั้งแล้ว)"
+            
+            # Spacing check: 90 days from any previous blood donation
+            try:
+                from datetime import datetime
+                new_dt = datetime.strptime(act_date[:10], '%Y-%m-%d')
+                for d in valid_deeds:
+                    d_cat = int(d.get('categoryId') or d.get('category_id') or 0)
+                    if d_cat == 1:
+                        d_date = d.get('activityDate') or d.get('event_date') or ''
+                        if len(d_date) >= 10:
+                            prev_dt = datetime.strptime(d_date[:10], '%Y-%m-%d')
+                            diff_days = abs((new_dt - prev_dt).days)
+                            if diff_days < 90:
+                                return False, f"⚠️ การบริจาคโลหิตต้องเว้นระยะห่างอย่างน้อย 3 เดือน (90 วัน) กิจกรรมนี้ห่างจากการบริจาคเมื่อ {d_date} เพียง {diff_days} วัน"
+            except Exception:
+                pass
+
+        # 2. Category 6: ศาสนสถาน (max 1 hr/session, max 4 hrs/year)
+        elif cat_id == 6:
+            if hours > 1.0:
+                return False, "⚠️ งานทำนุบำรุงศาสนสถานบันทึกได้ไม่เกิน 1 ชั่วโมงต่อครั้ง"
+            if year_hours + hours > 4.0:
+                rem = max(0.0, 4.0 - year_hours)
+                return False, f"⚠️ งานทำนุบำรุงศาสนสถานสะสมได้ไม่เกิน 4 ชม./ปีการศึกษา (ปีนี้ใช้ไปแล้ว {year_hours:.1f} ชม., เหลือโควตา {rem:.1f} ชม.)"
+
+        # 3. Category 7: งานฟรีทั่วไป / ช่วยผู้ปกครอง (max 1 hr/session, max 2 hrs/sem, max 4 hrs/year)
+        elif cat_id == 7:
+            if hours > 1.0:
+                return False, "⚠️ งานฟรีทั่วไป/ช่วยงานผู้ปกครอง บันทึกได้ไม่เกิน 1 ชั่วโมงต่อครั้ง"
+            if sem_hours + hours > 2.0:
+                rem_sem = max(0.0, 2.0 - sem_hours)
+                return False, f"⚠️ งานฟรีทั่วไป/ช่วยงานผู้ปกครอง บันทึกได้ไม่เกิน 2 ชม. ต่อภาคการศึกษา (เทอม {semester} ใช้ไปแล้ว {sem_hours:.1f} ชม., เหลือโควตา {rem_sem:.1f} ชม.)"
+            if year_hours + hours > 4.0:
+                rem_yr = max(0.0, 4.0 - year_hours)
+                return False, f"⚠️ งานฟรีทั่วไป/ช่วยงานผู้ปกครอง สะสมได้ไม่เกิน 4 ชม./ปีการศึกษา (ปีนี้ใช้ไปแล้ว {year_hours:.1f} ชม., เหลือโควตา {rem_yr:.1f} ชม.)"
+
+        # 4. Category 8: จงรักภักดี (max 8 hrs/year)
+        elif cat_id == 8:
+            if year_hours + hours > 8.0:
+                rem_yr = max(0.0, 8.0 - year_hours)
+                return False, f"⚠️ กิจกรรมจงรักภักดีต่อสถาบัน สะสมได้ไม่เกิน 8 ชม./ปีการศึกษา (ปีนี้ใช้ไปแล้ว {year_hours:.1f} ชม., เหลือโควตา {rem_yr:.1f} ชม.)"
+
+        # 5. Category 9: บทบาทพิเศษ (max 20 hrs/sem)
+        elif cat_id == 9:
+            if sem_hours + hours > 20.0:
+                return False, f"⚠️ บทบาทพิเศษ บันทึกได้ไม่เกิน 20 ชม. ต่อภาคการศึกษา (เทอม {semester} บันทึกไปแล้ว {sem_hours:.1f} ชม.)"
+
+        return True, "Valid"
+    except Exception as e:
+        return True, str(e)
+
 def generate_docx_in_memory(student_id, academic_year=2569):
     """Generate a professional A4 Word document report for a student."""
     if not DOCX_SUPPORTED:
@@ -386,6 +518,82 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     return buffer
 
 
+def save_or_update_deed_in_db(student_id, deed_data):
+    """Persist deed into records/ directory and sync into deeds.json and deeds_data.js."""
+    student_id = str(student_id).strip()
+    deed_id = str(deed_data.get('id', '')).strip()
+    if not student_id or not deed_id:
+        return False
+
+    academic_year = deed_data.get('academicYear', 2569)
+    student = deed_data.get('student', {})
+    class_year = student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69')
+    category_id = deed_data.get('categoryId') or deed_data.get('category_id') or 7
+
+    # 1. Save directly into records/
+    target_dir = os.path.join(
+        RECORDS_DIR,
+        f"AY{academic_year}",
+        f"Class_{class_year}",
+        f"Student_{student_id}",
+        f"Category_{category_id}"
+    )
+    os.makedirs(target_dir, exist_ok=True)
+    filepath = os.path.join(target_dir, f"{deed_id}.json")
+    try:
+        with open(filepath, 'w', encoding='utf-8') as f:
+            json.dump(deed_data, f, ensure_ascii=False, indent=4)
+    except Exception as e:
+        print(f"⚠️ Error saving record {filepath}: {e}")
+
+    # 2. Update data/deeds.json and frontend/data/deeds.json
+    deeds_file = os.path.join(BASE_DIR, 'data', 'deeds.json')
+    data = {}
+    if os.path.exists(deeds_file):
+        try:
+            with open(deeds_file, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+        except Exception:
+            data = {}
+
+    if student_id not in data:
+        data[student_id] = []
+
+    # Find existing or append
+    found = False
+    for i, d in enumerate(data[student_id]):
+        if str(d.get('id')) == deed_id:
+            data[student_id][i] = {**d, **deed_data}
+            found = True
+            break
+    if not found:
+        data[student_id].append(deed_data)
+
+    for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
+        try:
+            with open(json_p, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"⚠️ Error saving {json_p}: {e}")
+
+    # 3. Update deeds_data.js in data/ and frontend/data/
+    js_content = (
+        f"// Auto-updated by server.py\n"
+        f"const IMPORTED_DEEDS = {json.dumps(data, ensure_ascii=False, indent=2)};\n"
+        f"const DEEDS_DATA = IMPORTED_DEEDS;\n\n"
+        f"if (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\n"
+        f"if (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
+    )
+    for js_p in [os.path.join(BASE_DIR, 'data', 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
+        try:
+            with open(js_p, 'w', encoding='utf-8') as f:
+                f.write(js_content)
+        except Exception as e:
+            print(f"⚠️ Error saving {js_p}: {e}")
+
+    return True
+
+
 class CustomHandler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=FRONTEND_DIR, **kwargs)
@@ -439,10 +647,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.send_response(400)
                 self.end_headers()
                 self.wfile.write(b"Missing studentId parameter")
-                return
-
-            if not self.can_access_student(student_id):
-                self.deny_json('นักเรียนสามารถดูข้อมูลได้เฉพาะของตัวเองเท่านั้น')
                 return
                 
             try:
@@ -554,113 +758,86 @@ class CustomHandler(SimpleHTTPRequestHandler):
             
             try:
                 deed_data = json.loads(post_data.decode('utf-8'))
-                
-                academic_year = deed_data.get('academicYear', 2569)
                 student = deed_data.get('student', {})
-                class_year = student.get('class_year', 'Unknown')
-                student_id = str(deed_data.get('studentId') or student.get('student_id') or 'Unknown')
-                category_id = deed_data.get('categoryId', 'Unknown')
-                deed_id = deed_data.get('id', 'Unknown')
-
-                if not self.can_access_student(student_id):
-                    self.deny_json('นักเรียนสามารถส่งข้อมูลได้เฉพาะของตัวเองเท่านั้น')
+                student_id = str(deed_data.get('studentId') or student.get('student_id') or '').strip()
+                if not student_id:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId'})
                     return
 
+                deed_id = str(deed_data.get('id') or f"deed_{int(time.time()*1000)}_{student_id}")
+                deed_data['id'] = deed_id
                 deed_data['studentId'] = student_id
-                
-                # Save deed directly: records/AY2569/Class_69/Student_6900001/Category_1/{deed_id}.json
-                target_dir = os.path.join(
-                    RECORDS_DIR, 
-                    f"AY{academic_year}", 
-                    f"Class_{class_year}", 
-                    f"Student_{student_id}",
-                    f"Category_{category_id}"
-                )
-                os.makedirs(target_dir, exist_ok=True)
-                
-                filepath = os.path.join(target_dir, f"{deed_id}.json")
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(deed_data, f, ensure_ascii=False, indent=4)
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                response = {
+                deed_data['status'] = deed_data.get('status', 'pending')
+                if 'submittedAt' not in deed_data:
+                    deed_data['submittedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+
+                # Validate limits and prevent duplicates according to RTAFNC rules
+                is_valid, validation_msg = validate_deed_submission(deed_data, student_id)
+                if not is_valid:
+                    self.send_json_response(400, {'status': 'error', 'message': validation_msg})
+                    print(f"⚠️ Deed submission rejected for {student_id}: {validation_msg}")
+                    return
+
+                save_or_update_deed_in_db(student_id, deed_data)
+
+                self.send_json_response(200, {
                     'status': 'success',
-                    'message': 'Deed submitted and saved directly in category folder successfully',
-                    'filepath': filepath.replace(BASE_DIR, '')
-                }
-                self.wfile.write(json.dumps(response).encode('utf-8'))
-                print(f"📥 Saved direct PENDING deed to {filepath}")
+                    'message': 'Deed submitted and saved successfully',
+                    'deedId': deed_id
+                })
+                print(f"📥 Saved PENDING deed [{deed_id}] for student {student_id}")
                 broadcast_event("deed_submitted", {"studentId": student_id, "deedId": deed_id})
-                
+                sync_to_google_drive_bg()
             except Exception as e:
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                response = {'status': 'error', 'message': str(e)}
-                self.wfile.write(json.dumps(response).encode('utf-8'))
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error submitting deed: {e}")
                 
         elif parsed_path.path == '/api/approve_deed':
-            if not self.require_staff():
-                return
-
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             
             try:
                 payload = json.loads(post_data.decode('utf-8'))
-                student_id = payload.get('studentId')
-                deed_id = payload.get('deedId')
-                status = payload.get('status')  # 'approved' or 'rejected'
-                teacher_name = payload.get('teacherName', 'อาจารย์')
+                student_id = str(payload.get('studentId') or '').strip()
+                deed_id = str(payload.get('deedId') or '').strip()
+                status = payload.get('status', 'approved')
+                teacher_name = payload.get('teacherName', 'อาจารย์ผู้ตรวจประเมิน')
                 reject_reason = payload.get('rejectReason', '')
-                deed_data = payload.get('deedData', {})
-                
-                academic_year = deed_data.get('academicYear', 2569)
-                student = deed_data.get('student', {})
-                class_year = student.get('class_year', 'Unknown')
-                category_id = deed_data.get('categoryId', 'Unknown')
-                
-                # Update deed state in JSON
+                deed_data = payload.get('deedData') or {}
+
+                if not student_id or not deed_id:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or deedId'})
+                    return
+
+                # If deed_data incomplete, fetch existing deed from DB
+                existing_deeds = get_deeds_for_student(student_id)
+                found = next((d for d in existing_deeds if str(d.get('id')) == deed_id), None)
+                if found:
+                    deed_data = {**found, **deed_data}
+
+                deed_data['id'] = deed_id
+                deed_data['studentId'] = student_id
                 deed_data['status'] = status
                 deed_data['approvedBy'] = teacher_name
+                deed_data['approved_by'] = teacher_name
                 deed_data['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+                deed_data['updated_at'] = deed_data['approvedAt']
                 if status == 'rejected':
                     deed_data['rejectReason'] = reject_reason
-                
-                # Save directly back to same path: records/AY2569/Class_69/Student_6900001/Category_1/{deed_id}.json
-                target_dir = os.path.join(
-                    RECORDS_DIR, 
-                    f"AY{academic_year}", 
-                    f"Class_{class_year}", 
-                    f"Student_{student_id}",
-                    f"Category_{category_id}"
-                )
-                
-                os.makedirs(target_dir, exist_ok=True)
-                filepath = os.path.join(target_dir, f"{deed_id}.json")
-                
-                with open(filepath, 'w', encoding='utf-8') as f:
-                    json.dump(deed_data, f, ensure_ascii=False, indent=4)
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                response = {
+
+                save_or_update_deed_in_db(student_id, deed_data)
+
+                self.send_json_response(200, {
                     'status': 'success',
-                    'message': f"Deed successfully updated to {status} in place",
-                    'filepath': filepath.replace(BASE_DIR, '')
-                }
-                self.wfile.write(json.dumps(response).encode('utf-8'))
-                print(f"❇️ Updated deed [{deed_id}] in place to {status} at {filepath}")
+                    'message': f"Deed successfully updated to {status}",
+                    'deedId': deed_id,
+                    'status': status
+                })
+                print(f"❇️ Updated deed [{deed_id}] for {student_id} to {status} by {teacher_name}")
                 broadcast_event("deed_approved", {"studentId": student_id, "deedId": deed_id, "status": status})
-                
+                sync_to_google_drive_bg()
             except Exception as e:
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                response = {'status': 'error', 'message': str(e)}
-                self.wfile.write(json.dumps(response).encode('utf-8'))
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error updating deed: {e}")
                 
         elif parsed_path.path == '/api/update_student':
