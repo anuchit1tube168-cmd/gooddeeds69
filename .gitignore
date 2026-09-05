@@ -31,6 +31,13 @@ data/photos.json
 data/students.json
 data/students_data.js
 data/students_photos.js
+frontend/data/students.json
+frontend/data/students_data.js
+frontend/data/students_photos.js
+frontend/data/deeds.json
+frontend/data/deeds_data.js
+frontend/data/line_mappings.json
+frontend/data/photos.json
 .local_backup_pdpa/
 *.xlsx
 *.xls
