@@ -337,9 +337,9 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3532"></script>
-    <script src="data/deeds_data.js?v=3532"></script>
-    <script src="app.js?v=3532"></script>
+    <script src="data/students_data.js?v=3535"></script>
+    <script src="data/deeds_data.js?v=3535"></script>
+    <script src="app.js?v=3535"></script>
     <script>
         function findDeed(deedId, studentId) {
             function str(v) { return v ? String(v).trim() : ''; }
@@ -426,25 +426,62 @@
             }
 
             let student = null;
-            if (deed) {
-                const sid = deed.student_id || deed.studentId || studentId;
+            const sid = (deed && (deed.student_id || deed.studentId)) || studentId || '';
+            if (sid) {
                 student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
-            } else if (studentId) {
-                student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
+            }
+
+            // Fallback 1: from deed itself (enriched)
+            if (!student && deed && (deed.student_name || deed.studentName)) {
+                student = {
+                    student_id: sid,
+                    rank: deed.student_rank || 'นพอ.',
+                    first_name: deed.student_first_name || '',
+                    last_name: deed.student_last_name || '',
+                    full_name: deed.student_name || deed.studentName,
+                    position: deed.student_position || '',
+                    class_year: deed.class_year || (sid ? sid.substring(0, 2) : '69')
+                };
+            }
+
+            // Fallback 2: Live fetch from server if needed
+            if (!student && sid) {
+                try {
+                    const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
+                    const endpoints = [`/api/get_student?studentId=${sid}`];
+                    if (sysUrl && !sysUrl.includes(window.location.host)) endpoints.push(`${sysUrl}/api/get_student?studentId=${sid}`);
+                    for (const ep of endpoints) {
+                        try {
+                            const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
+                            if (res.ok) {
+                                const sData = await res.json();
+                                if (sData && sData.full_name) {
+                                    student = sData;
+                                    break;
+                                }
+                            }
+                        } catch (e) {}
+                    }
+                } catch (e) {}
             }
 
             if (student) {
                 const rank = student.rank || 'นพอ.';
-                const fullName = rank + ' ' + (student.first_name || '') + ' ' + (student.last_name || '');
+                const fullName = student.full_name || (rank + ' ' + (student.first_name || '') + ' ' + (student.last_name || '')).trim();
                 const posSuffix = (student.position && student.position !== 'นักเรียนพยาบาล') ? ` [${student.position}]` : '';
                 document.getElementById('doc-student-name').textContent = fullName + posSuffix;
-                document.getElementById('doc-seq-student').textContent = student.student_id;
-                document.getElementById('doc-student-no').textContent = student.no || student.student_id.slice(-2) || '-';
+                document.getElementById('doc-seq-student').textContent = student.student_id || sid;
+                document.getElementById('doc-student-no').textContent = student.no || (sid ? sid.slice(-2) : '-');
                 document.getElementById('doc-academic-year').textContent = student.academic_year || '2569';
             } else if (urlName) {
                 document.getElementById('doc-student-name').textContent = urlName;
                 document.getElementById('doc-seq-student').textContent = studentId || '-';
                 document.getElementById('doc-student-no').textContent = studentId ? studentId.slice(-2) : '-';
+                document.getElementById('doc-academic-year').textContent = '2569';
+            } else if (sid) {
+                document.getElementById('doc-student-name').textContent = `นพอ. รหัส ${sid}`;
+                document.getElementById('doc-seq-student').textContent = sid;
+                document.getElementById('doc-student-no').textContent = sid.slice(-2);
                 document.getElementById('doc-academic-year').textContent = '2569';
             }
 

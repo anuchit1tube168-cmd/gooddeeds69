@@ -219,6 +219,25 @@ const App = {
             };
         }
 
+        // Check if any deed for this student has embedded student name
+        const deeds = this.getDeeds(clean);
+        const deedWithName = deeds.find(d => d.student_name || d.studentName);
+        if (deedWithName) {
+            const fullName = deedWithName.student_name || deedWithName.studentName;
+            return {
+                student_id: clean,
+                rank: deedWithName.student_rank || 'นพอ.',
+                first_name: deedWithName.student_first_name || fullName,
+                last_name: deedWithName.student_last_name || '',
+                full_name: fullName,
+                class_year: deedWithName.class_year || clean.substring(0, 2) || '69',
+                year_level: deedWithName.year_level || '1',
+                position: deedWithName.student_position || '',
+                role: 'student',
+                password: clean
+            };
+        }
+
         if (clean.length === 7) {
             const cy = clean.substring(0, 2);
             let yl = '1';
@@ -228,8 +247,8 @@ const App = {
             return {
                 student_id: clean,
                 rank: 'นพอ.',
-                first_name: 'นักเรียน',
-                last_name: clean,
+                first_name: 'รหัส ' + clean,
+                last_name: '',
                 full_name: 'นพอ. รหัส ' + clean,
                 class_year: cy,
                 year_level: yl,
@@ -1250,7 +1269,23 @@ const App = {
                 const sid = k.replace('gooddeeds_deeds_', '');
                 if (!checkedStudents.has(sid)) {
                     const deeds = Storage.get('deeds_' + sid) || [];
-                    const stu = this.getStudentById(sid) || { student_id: sid, rank: 'นพอ.', first_name: 'นักเรียน', last_name: sid, full_name: 'นพอ. ' + sid };
+                    let stu = this.getStudentById(sid);
+                    if (!stu || !stu.full_name || stu.full_name.includes('รหัส')) {
+                        const deedWithName = deeds.find(d => d.student_name || d.studentName);
+                        if (deedWithName) {
+                            stu = {
+                                student_id: sid,
+                                rank: deedWithName.student_rank || 'นพอ.',
+                                first_name: deedWithName.student_first_name || deedWithName.student_name,
+                                last_name: deedWithName.student_last_name || '',
+                                full_name: deedWithName.student_name || deedWithName.studentName,
+                                class_year: deedWithName.class_year || sid.substring(0, 2),
+                                position: deedWithName.student_position || ''
+                            };
+                        } else {
+                            stu = { student_id: sid, rank: 'นพอ.', first_name: 'รหัส ' + sid, last_name: '', full_name: 'นพอ. รหัส ' + sid };
+                        }
+                    }
                     deeds.filter(d => d.status === 'pending').forEach(d => {
                         pending.push({ ...d, student: stu });
                     });

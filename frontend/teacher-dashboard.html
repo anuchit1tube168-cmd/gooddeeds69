@@ -797,12 +797,12 @@
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
   <script src="data/teachers_data.js?v=3431"></script>
-  <script src="data/students_data.js?v=3431"></script>
-  <script src="data/students_photos.js?v=3431"></script>
-  <script src="data/deeds_data.js?v=3431"></script>
-  <script src="data/app_settings.js?v=3431"></script>
-  <script src="app.js?v=3431"></script>
-  <script src="liff-sdk.js?v=3431"></script>
+  <script src="data/students_data.js?v=3535"></script>
+  <script src="data/students_photos.js?v=3535"></script>
+  <script src="data/deeds_data.js?v=3535"></script>
+  <script src="data/app_settings.js?v=3535"></script>
+  <script src="app.js?v=3535"></script>
+  <script src="liff-sdk.js?v=3535"></script>
   <script>
     // ===== SIDEBAR TOGGLE =====
     function toggleSidebar() {
@@ -948,6 +948,26 @@
       c.innerHTML = list.map(d => {
         const cat = App.getCategoryById(d.categoryId);
         const s = d.student || {};
+        const sid = s.student_id || d.studentId || d.student_id;
+        const rawName = d.student_name || d.studentName || (s.first_name && s.first_name !== 'นักเรียน' ? `${s.rank || 'นพอ.'} ${s.first_name} ${s.last_name || ''}`.trim() : '');
+        const sFullName = rawName || (s.full_name && !s.full_name.includes('นักเรียน') ? s.full_name : `นพอ. รหัส ${sid}`);
+        const sYear = s.class_year || d.class_year || (sid ? String(sid).substring(0, 2) : '69');
+        const sPos = d.student_position || s.position || '';
+
+        const approveParams = new URLSearchParams({
+          id: d.id,
+          studentId: sid,
+          name: sFullName,
+          year: sYear,
+          cat: d.categoryId || 1,
+          catName: cat.name || '',
+          hours: d.hours || 0,
+          date: d.activityDate || '',
+          desc: d.description || '',
+          appr: d.approver || 'ร.อ.อนุชิต ทำจะดี (Bird)',
+          status: d.status || 'pending'
+        });
+
         const imgs = (d.imageUrls || []).map(key => {
           const src = App.getImage(key);
           return src ? `<img class="pcard-img" src="${src}" onclick="showLightbox('${key}')" alt="หลักฐาน">` : '';
@@ -955,9 +975,10 @@
         return `<div class="pcard" id="pc-${d.id}">
       <div class="pcard-top">
         <div class="pcard-info">
-          <div class="pcard-name">👤 ${s.rank || 'นพอ.'} ${s.first_name || ''} ${s.last_name || ''}
-            <span class="badge badge-blue" style="margin-left:6px">${s.class_year ? 'รุ่น ' + s.class_year : ''}</span>
-            <span class="badge badge-gold" style="margin-left:4px">รหัส ${s.student_id || ''}</span>
+          <div class="pcard-name">👤 ${sFullName}
+            <span class="badge badge-blue" style="margin-left:6px">${sYear ? 'รุ่น ' + sYear : ''}</span>
+            <span class="badge badge-gold" style="margin-left:4px">รหัส ${sid || ''}</span>
+            ${sPos ? `<span class="badge" style="background:rgba(201,162,39,0.15); color:#ffd700; border:1px solid rgba(201,162,39,0.3); margin-left:4px; font-size:0.75rem;">⭐ ${sPos}</span>` : ''}
           </div>
           <div class="pcard-cat">${cat.emoji} ${cat.name}</div>
           <div class="pcard-desc">${d.description || '-'}</div>
@@ -971,10 +992,10 @@
         <div class="pcard-hours"><div class="num">${d.hours}</div><div class="unit">ชม.</div></div>
       </div>
       <div class="pcard-actions">
-        <button class="btn btn-outline btn-sm" onclick="openStuModal('${s.student_id}')">👁️ ดูโปรไฟล์</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.4);" onclick="window.open('approve_sign.html?id=${d.id}&studentId=${s.student_id}','_blank')">✍️ ตรวจ & เซ็นชื่อ</button>
-        <button class="btn btn-danger btn-sm" onclick="openRejectModal('${s.student_id}','${d.id}')">❌ ปฏิเสธ</button>
-        <button class="btn btn-success btn-sm" onclick="quickApprove('${s.student_id}','${d.id}')">✅ อนุมัติด่วน</button>
+        <button class="btn btn-outline btn-sm" onclick="openStuModal('${sid}')">👁️ ดูโปรไฟล์</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.4);" onclick="window.open('approve_sign.html?${approveParams.toString()}','_blank')">✍️ ตรวจ & เซ็นชื่อ</button>
+        <button class="btn btn-danger btn-sm" onclick="openRejectModal('${sid}','${d.id}')">❌ ปฏิเสธ</button>
+        <button class="btn btn-success btn-sm" onclick="quickApprove('${sid}','${d.id}')">✅ อนุมัติด่วน</button>
       </div>
     </div>`;
       }).join('');

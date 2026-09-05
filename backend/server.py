@@ -518,6 +518,16 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     return buffer
 
 
+def load_students_map():
+    for p in [os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
+        if os.path.exists(p):
+            try:
+                with open(p, 'r', encoding='utf-8') as f:
+                    return {str(s['student_id']).strip(): s for s in json.load(f)}
+            except Exception:
+                pass
+    return {}
+
 def save_or_update_deed_in_db(student_id, deed_data):
     """Persist deed into records/ directory and sync into deeds.json and deeds_data.js."""
     student_id = str(student_id).strip()
@@ -529,6 +539,19 @@ def save_or_update_deed_in_db(student_id, deed_data):
     student = deed_data.get('student', {})
     class_year = student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69')
     category_id = deed_data.get('categoryId') or deed_data.get('category_id') or 7
+
+    # Ensure deed has real student identity info
+    if not deed_data.get('student_name'):
+        s_map = load_students_map()
+        s = s_map.get(student_id)
+        if s:
+            deed_data['student_name'] = f"{s.get('rank', 'นพอ.')} {s.get('first_name', '')} {s.get('last_name', '')}".strip()
+            deed_data['studentName'] = deed_data['student_name']
+            deed_data['student_rank'] = s.get('rank', 'นพอ.')
+            deed_data['student_first_name'] = s.get('first_name', '')
+            deed_data['student_last_name'] = s.get('last_name', '')
+            deed_data['class_year'] = str(s.get('class_year', class_year))
+            if s.get('position'): deed_data['student_position'] = s.get('position')
 
     # 1. Save directly into records/
     target_dir = os.path.join(
@@ -651,7 +674,49 @@ class CustomHandler(SimpleHTTPRequestHandler):
         if parsed_path.query:
             query_params = {k: v[0] for k, v in parse_qs(parsed_path.query).items()}
             
-        if parsed_path.path == '/api/get_deeds':
+        if parsed_path.path == '/api/get_student':
+            student_id = query_params.get('studentId')
+            if not student_id:
+                self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId'})
+                return
+            s_map = load_students_map()
+            s = s_map.get(str(student_id).strip())
+            if s:
+                safe_s = {
+                    'student_id': s.get('student_id'),
+                    'rank': s.get('rank', 'นพอ.'),
+                    'first_name': s.get('first_name', ''),
+                    'last_name': s.get('last_name', ''),
+                    'full_name': f"{s.get('rank', 'นพอ.')} {s.get('first_name', '')} {s.get('last_name', '')}".strip(),
+                    'class_year': s.get('class_year', ''),
+                    'year_level': s.get('year_level', ''),
+                    'position': s.get('position', ''),
+                    'role': s.get('role', 'student')
+                }
+                self.send_json_response(200, safe_s)
+            else:
+                self.send_json_response(404, {'status': 'error', 'message': 'Student not found'})
+            return
+
+        elif parsed_path.path == '/api/students':
+            s_map = load_students_map()
+            safe_list = []
+            for sid, s in s_map.items():
+                safe_list.append({
+                    'student_id': s.get('student_id'),
+                    'rank': s.get('rank', 'นพอ.'),
+                    'first_name': s.get('first_name', ''),
+                    'last_name': s.get('last_name', ''),
+                    'full_name': f"{s.get('rank', 'นพอ.')} {s.get('first_name', '')} {s.get('last_name', '')}".strip(),
+                    'class_year': s.get('class_year', ''),
+                    'year_level': s.get('year_level', ''),
+                    'position': s.get('position', ''),
+                    'role': s.get('role', 'student')
+                })
+            self.send_json_response(200, safe_list)
+            return
+
+        elif parsed_path.path == '/api/get_deeds':
             student_id = query_params.get('studentId')
             if not student_id:
                 self.send_response(400)

@@ -9,6 +9,7 @@ telegram_bot_listener.py
 4. พุชข้อมูลขึ้น GitHub Pages อัตโนมัติใน Background
 """
 import urllib.request
+import urllib.parse
 import json
 import os
 import time
@@ -226,7 +227,8 @@ def process_callback_query(cb):
         is_pass = total_hrs >= 50
 
         # STEP 3: SEND OFFICIAL TELEGRAM REPLY MESSAGE WITH LINE LIFF PDF SLIP LINK & BUTTON
-        pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={deed_id}&studentId={student_id}"
+        encoded_name = urllib.parse.quote(student_name)
+        pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={deed_id}&studentId={student_id}&name={encoded_name}"
         reply_html = f"""🎉 <b>อนุมัติความดีเรียบร้อยแล้ว!</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
 👤 <b>นักเรียน:</b> {student_name}

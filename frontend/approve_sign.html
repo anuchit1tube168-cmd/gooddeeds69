@@ -439,10 +439,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3532"></script>
-    <script src="data/students_data.js?v=3532"></script>
-    <script src="data/deeds_data.js?v=3532"></script>
-    <script src="app.js?v=3532"></script>
+    <script src="data/teachers_data.js?v=3535"></script>
+    <script src="data/students_data.js?v=3535"></script>
+    <script src="data/deeds_data.js?v=3535"></script>
+    <script src="app.js?v=3535"></script>
     <script>
         let canvas, ctx, isDrawing = false, hasSignature = false;
         let currentDeed = null, currentStudent = null;
@@ -715,27 +715,74 @@
                 };
             }
 
-            if (currentDeed) {
-                const sid = currentDeed.student_id || currentDeed.studentId || studentId;
+            const sid = (currentDeed && (currentDeed.student_id || currentDeed.studentId)) || studentId || '';
+            if (sid) {
                 currentStudent = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
-            } else if (studentId) {
-                currentStudent = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(studentId));
             }
 
-            if (!currentStudent && (studentId || urlName)) {
+            // Fallback 1: from deed itself (enriched deeds)
+            if (!currentStudent && currentDeed && (currentDeed.student_name || currentDeed.studentName)) {
                 currentStudent = {
-                    student_id: studentId || '',
-                    rank: '',
-                    first_name: urlName || (studentId ? `นพอ. (${studentId})` : '-'),
-                    last_name: ''
+                    student_id: sid,
+                    rank: currentDeed.student_rank || '',
+                    first_name: currentDeed.student_first_name || currentDeed.student_name || currentDeed.studentName,
+                    last_name: currentDeed.student_last_name || '',
+                    full_name: currentDeed.student_name || currentDeed.studentName,
+                    class_year: currentDeed.class_year || (sid ? sid.substring(0, 2) : ''),
+                    position: currentDeed.student_position || ''
                 };
             }
 
+            // Fallback 2: from URL params
+            if (!currentStudent && (urlName || sid)) {
+                currentStudent = {
+                    student_id: sid,
+                    rank: '',
+                    first_name: urlName || (sid ? `นพอ. รหัส ${sid}` : '-'),
+                    last_name: '',
+                    full_name: urlName || (sid ? `นพอ. รหัส ${sid}` : '-'),
+                    class_year: params.get('year') || (sid ? sid.substring(0, 2) : '')
+                };
+            }
+
+            // Fallback 3: Live API fetch from server.py (if available)
+            if ((!currentStudent || !currentStudent.full_name || currentStudent.full_name.includes('รหัส')) && sid) {
+                try {
+                    const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
+                    const endpoints = [`/api/get_student?studentId=${sid}`];
+                    if (sysUrl && !sysUrl.includes(window.location.host)) {
+                        endpoints.push(`${sysUrl}/api/get_student?studentId=${sid}`);
+                    }
+                    for (const ep of endpoints) {
+                        try {
+                            const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
+                            if (res.ok) {
+                                const sData = await res.json();
+                                if (sData && sData.full_name) {
+                                    currentStudent = sData;
+                                    break;
+                                }
+                            }
+                        } catch (e) {}
+                    }
+                } catch (e) {}
+            }
+
             if (currentStudent) {
-                const rank = currentStudent.rank || '';
-                const displayFullName = (rank ? rank + ' ' : '') + ((currentStudent.first_name || '') + ' ' + (currentStudent.last_name || '')).trim();
-                document.getElementById('stu-name').textContent = displayFullName || urlName || (studentId ? `นพอ. (${studentId})` : '-');
-                document.getElementById('stu-id').textContent = currentStudent.student_id || studentId || '-';
+                let display = currentStudent.full_name || '';
+                if (!display) {
+                    const r = currentStudent.rank || 'นพอ.';
+                    display = `${r} ${currentStudent.first_name || ''} ${currentStudent.last_name || ''}`.trim();
+                }
+                const yr = currentStudent.class_year || (sid ? sid.substring(0, 2) : '');
+                const pos = currentStudent.position || (currentDeed && currentDeed.student_position) || '';
+                let extra = [];
+                if (yr) extra.push(`ชั้นปีที่ ${yr === '66' ? '4' : yr === '67' ? '3' : yr === '68' ? '2' : '1'} รุ่น ${yr}`);
+                if (pos) extra.push(pos);
+
+                const finalDisplay = display + (extra.length ? ` (${extra.join(' • ')})` : '');
+                document.getElementById('stu-name').textContent = finalDisplay || urlName || (sid ? `นพอ. รหัส ${sid}` : '-');
+                document.getElementById('stu-id').textContent = currentStudent.student_id || sid || '-';
             }
 
             initSignaturePad();
