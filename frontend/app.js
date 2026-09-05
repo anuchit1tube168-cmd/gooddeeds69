@@ -812,11 +812,27 @@ const App = {
     },
 
     async addDeed(deed) {
-        const user = this.getCurrentUser();
+        const user = this.getCurrentUser() || {};
         const studentId = deed.studentId || user.student_id;
+        const deeds = this.getDeeds(studentId);
+        const sRank = user.rank || 'นพอ.';
+        const sFn = user.first_name || '';
+        const sLn = user.last_name || '';
+        const sName = user.full_name || `${sRank} ${sFn} ${sLn}`.trim();
+        const sCy = user.class_year || (studentId ? String(studentId).substring(0, 2) : '69');
+        const sPos = user.position || '';
+
         const newDeed = {
             id: 'deed_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
             studentId,
+            student_id: studentId,
+            student_name: sName,
+            studentName: sName,
+            student_rank: sRank,
+            student_first_name: sFn,
+            student_last_name: sLn,
+            class_year: sCy,
+            student_position: sPos,
             categoryId: deed.categoryId,
             hours: parseFloat(deed.hours),
             title: deed.title || deed.description || '',
