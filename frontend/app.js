@@ -413,6 +413,11 @@ const App = {
                     return;
                 }
 
+                try {
+                    localStorage.removeItem('gooddeeds_auto_login_disabled');
+                    localStorage.removeItem('gooddeeds_logged_out');
+                    sessionStorage.removeItem('gooddeeds_logged_out');
+                } catch(e) {}
                 const session = this.setSession('student', student);
                 if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
                     LiffHelper.bindCurrentStudentProfile();
@@ -443,9 +448,17 @@ const App = {
                     resolve({ success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
                     return;
                 }
+                try {
+                    localStorage.removeItem('gooddeeds_auto_login_disabled');
+                    localStorage.removeItem('gooddeeds_logged_out');
+                    sessionStorage.removeItem('gooddeeds_logged_out');
+                } catch(e) {}
                 const session = { ...teacher, loginAt: Date.now(), token: 'teacher_' + Math.random().toString(36).slice(2) };
                 Storage.set('session', session);
                 this.syncAuthContext(session);
+                if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
+                    LiffHelper.bindCurrentStudentProfile();
+                }
                 resolve({ success: true, user: session });
             }, 600);
         });
@@ -453,16 +466,16 @@ const App = {
 
     logout() {
         Storage.remove('session');
+        Storage.remove('gooddeeds_session');
         this.clearAuthContext();
         try {
+            // Delete LINE mappings completely to prevent auto-login lock into previous user
+            localStorage.removeItem('gooddeeds_line_mappings');
+            localStorage.setItem('gooddeeds_auto_login_disabled', 'true');
+            localStorage.setItem('gooddeeds_logged_out', 'true');
             sessionStorage.setItem('gooddeeds_logged_out', 'true');
-            if (typeof LiffHelper !== 'undefined' && LiffHelper.profile && LiffHelper.profile.userId) {
-                const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
-                delete mappings[LiffHelper.profile.userId];
-                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
-            }
         } catch (e) {}
-        window.location.href = 'index.html?logout=true';
+        window.location.href = 'index.html?logout=true&tab=teacher';
     },
 
     getCurrentUser() {

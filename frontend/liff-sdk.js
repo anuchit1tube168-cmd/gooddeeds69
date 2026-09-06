@@ -184,22 +184,45 @@ const LiffHelper = {
         // Suppress auto-login if user explicitly logged out or wants to switch accounts
         try {
             const urlParams = (typeof window !== 'undefined' && window.location) ? new URLSearchParams(window.location.search) : null;
-            if (urlParams && urlParams.get('logout') === 'true') {
-                console.log('ℹ️ User explicitly logged out (via URL parameter). Auto-login suppressed to allow switching accounts.');
-                return;
-            }
-            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true') {
-                console.log('ℹ️ User explicitly logged out (via sessionStorage). Auto-login suppressed to allow switching accounts.');
+            const isLogoutParam = urlParams && (urlParams.get('logout') === 'true' || urlParams.get('logout') === '1');
+            const isLoggedOutSession = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true';
+            const isLoggedOutLocal = typeof localStorage !== 'undefined' && (
+                localStorage.getItem('gooddeeds_logged_out') === 'true' || 
+                localStorage.getItem('gooddeeds_auto_login_disabled') === 'true'
+            );
+
+            if (isLogoutParam || isLoggedOutSession || isLoggedOutLocal) {
+                console.log('ℹ️ User explicitly logged out. Auto-login suppressed to allow switching accounts or admin login.');
                 return;
             }
         } catch (e) {}
 
         const lineUserId = this.profile.userId;
         const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
-        const studentId = mappings[lineUserId];
+        const userKey = mappings[lineUserId];
 
-        if (studentId && typeof App !== 'undefined') {
-            const student = App.getStudentById ? App.getStudentById(studentId) : null;
+        if (userKey && typeof App !== 'undefined') {
+            // 1. Check if mapped to staff (Teacher / Admin)
+            if (userKey === 'admin' || userKey === 'anuchit' || userKey === 'bird' || userKey === 'teacher') {
+                const staffAccounts = App.getStaffAccounts ? App.getStaffAccounts() : [];
+                const staff = staffAccounts.find(t => t.username === userKey) || {
+                    username: userKey,
+                    role: (userKey === 'teacher') ? 'teacher' : 'admin',
+                    name: (userKey === 'anuchit' || userKey === 'bird') ? 'ร.อ.อนุชิต ทำจะดี (Bird)' : 'ผู้ดูแลระบบ'
+                };
+                console.log('🚀 LIFF Auto-login for staff:', staff.username);
+                if (App.setSession) {
+                    App.setSession(staff.role, staff);
+                }
+                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
+                    const target = (window.location.pathname.indexOf('/frontend/') !== -1) ? 'teacher-dashboard.html' : 'frontend/teacher-dashboard.html';
+                    window.location.href = target;
+                    return;
+                }
+            }
+
+            // 2. Check if mapped to student
+            const student = App.getStudentById ? App.getStudentById(userKey) : (App.findStudent ? App.findStudent(userKey) : null);
             if (student) {
                 console.log('🚀 LIFF Auto-login for student:', student.student_id);
                 if (App.setSession) {

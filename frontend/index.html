@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3550">
+    <link rel="stylesheet" href="style.css?v=3560">
     <style>
         body {
             display: flex;
@@ -265,6 +265,12 @@
             color: #86efac;
         }
 
+        .alert-info {
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.35);
+            color: #93c5fd;
+        }
+
         /* Teacher info box */
         .info-box {
             background: rgba(59, 130, 246, 0.08);
@@ -313,7 +319,7 @@
                     👨‍⚕️ นักเรียน
                 </button>
                 <button class="tab-btn" id="tab-teacher" onclick="switchTab('teacher')">
-                    👩‍🏫 อาจารย์
+                    👩‍🏫 อาจารย์ / แอดมิน
                 </button>
             </div>
 
@@ -374,25 +380,35 @@
                         <span>🔓</span> เข้าสู่ระบบ
                     </button>
                 </form>
+
+                <div style="margin-top: 18px; text-align: center; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.1);">
+                    <a href="javascript:void(0)" onclick="switchTab('teacher')" style="color: var(--gold); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500;">
+                        <span>🔐</span> <strong>เข้าสู่ระบบอาจารย์ / ผู้ดูแลระบบ (Admin) คลิกที่นี่ &rarr;</strong>
+                    </a>
+                </div>
             </div>
 
             <!-- Teacher Login -->
             <div class="login-form-section" id="section-teacher">
                 <div class="info-box">
-                    ℹ️ สำหรับอาจารย์และเจ้าหน้าที่ที่ได้รับมอบหมาย บัญชีจะได้รับจากผู้ดูแลระบบ
+                    ℹ️ สำหรับอาจารย์และผู้ดูแลระบบ บัญชีจะได้รับจากผู้ดูแลระบบ
                 </div>
 
                 <div style="margin-bottom: 16px; padding: 12px 14px; background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.3); border-radius: 12px;">
-                    <div style="font-size: 0.82rem; color: var(--gold-light); margin-bottom: 8px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
-                        <span>⭐ บัญชีอาจารย์ &amp; แอดมินหลัก:</span>
+                    <div style="font-size: 0.82rem; color: var(--gold-light); margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
+                        <span>⭐ บัญชีหลัก (คลิกเพื่อกรอกอัตโนมัติ):</span>
                         <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">Dual Role</span>
                     </div>
-                    <button type="button" class="btn btn-sm" style="width: 100%; background: linear-gradient(135deg, #1e3a8a, #0b2f64); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.88rem; padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAnuchit()">
-                        <span style="display:flex; align-items:center; gap:8px;">
-                            <span>👨‍✈️</span> <strong>ร.อ.อนุชิต ทำจะดี (Bird)</strong>
-                        </span>
-                        <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 2px 8px; border-radius: 4px; font-size: 0.72rem; font-weight: 600;">คลิกเพื่อกรอก</span>
-                    </button>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                        <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #1e3a8a, #0b2f64); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.82rem; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAnuchit()">
+                            <span style="font-weight: 700; white-space: nowrap;">👨‍✈️ ร.อ.อนุชิต (Bird)</span>
+                            <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 1px 6px; border-radius: 4px; font-size: 0.68rem; white-space: nowrap;">อาจารย์ &amp; แอดมิน</span>
+                        </button>
+                        <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #374151, #1f2937); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.82rem; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAdmin()">
+                            <span style="font-weight: 700; white-space: nowrap;">🛡️ Super Admin</span>
+                            <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 1px 6px; border-radius: 4px; font-size: 0.68rem; white-space: nowrap;">ผู้ดูแลระบบ</span>
+                        </button>
+                    </div>
                 </div>
 
                 <form id="form-teacher" onsubmit="handleLogin(event,'teacher')">
@@ -421,6 +437,12 @@
                         <span>🔐</span> เข้าสู่ระบบ (อาจารย์ / แอดมิน)
                     </button>
                 </form>
+
+                <div style="margin-top: 18px; text-align: center; padding-top: 14px; border-top: 1px dashed rgba(255,255,255,0.1);">
+                    <a href="javascript:void(0)" onclick="switchTab('student')" style="color: var(--gold); font-size: 0.82rem; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; font-weight: 500;">
+                        <span>👨‍⚕️</span> <strong>เข้าสู่ระบบนักเรียน (นพอ.) คลิกที่นี่ &rarr;</strong>
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -433,11 +455,11 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3550"></script>
-    <script src="data/deeds_data.js?v=3550"></script>
-    <script src="data/app_settings.js?v=3550"></script>
-    <script src="app.js?v=3550"></script>
-    <script src="liff-sdk.js?v=3550"></script>
+    <script src="data/students_data.js?v=3560"></script>
+    <script src="data/deeds_data.js?v=3560"></script>
+    <script src="data/app_settings.js?v=3560"></script>
+    <script src="app.js?v=3560"></script>
+    <script src="liff-sdk.js?v=3560"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -472,6 +494,14 @@
             if (btn) btn.focus();
         }
 
+        function quickLoginAdmin() {
+            document.getElementById('teacher-username').value = 'admin';
+            document.getElementById('teacher-password').value = 'admin69';
+            showToast('เลือกบัญชี ผู้ดูแลระบบ (Super Admin) เรียบร้อย', 'info');
+            const btn = document.getElementById('btn-teacher-login');
+            if (btn) btn.focus();
+        }
+
         async function handleLogin(e, role) {
             e.preventDefault();
             hideAlert();
@@ -490,7 +520,11 @@
                 try {
                     const result = await App.loginStudent(sid, pwd);
                     if (result.success) {
-                        try { sessionStorage.removeItem('gooddeeds_logged_out'); } catch(e) {}
+                        try {
+                            sessionStorage.removeItem('gooddeeds_logged_out');
+                            localStorage.removeItem('gooddeeds_logged_out');
+                            localStorage.removeItem('gooddeeds_auto_login_disabled');
+                        } catch(e) {}
                         // Immediately bind LINE LIFF profile if LIFF profile is loaded
                         if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
                             LiffHelper.bindCurrentStudentProfile();
@@ -521,7 +555,11 @@
                 try {
                     const result = await App.loginTeacher(user, pwd);
                     if (result.success) {
-                        try { sessionStorage.removeItem('gooddeeds_logged_out'); } catch(e) {}
+                        try {
+                            sessionStorage.removeItem('gooddeeds_logged_out');
+                            localStorage.removeItem('gooddeeds_logged_out');
+                            localStorage.removeItem('gooddeeds_auto_login_disabled');
+                        } catch(e) {}
                         // Immediately bind LINE LIFF profile if LIFF profile is loaded
                         if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
                             LiffHelper.bindCurrentStudentProfile();
@@ -531,12 +569,12 @@
                     } else {
                         showAlert(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
-                        btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์)';
+                        btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์ / แอดมิน)';
                     }
                 } catch (err) {
                     showAlert('เกิดข้อผิดพลาด: ' + err.message);
                     btn.disabled = false;
-                    btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์)';
+                    btn.innerHTML = '<span>🔐</span> เข้าสู่ระบบ (อาจารย์ / แอดมิน)';
                 }
             }
         }
@@ -544,10 +582,12 @@
         // Check if already logged in
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
-            const isLogout = urlParams.get('logout') === 'true' || (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true');
+            const isLogout = urlParams.get('logout') === 'true' || 
+                             (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true') ||
+                             (typeof localStorage !== 'undefined' && localStorage.getItem('gooddeeds_logged_out') === 'true');
             
             if (isLogout) {
-                showAlert('ออกจากระบบเรียบร้อยแล้ว ท่านสามารถเข้าสู่ระบบด้วยบัญชีอื่นที่ต้องการได้ทันที', 'info');
+                showAlert('🚪 ออกจากระบบเรียบร้อยแล้ว ท่านสามารถเข้าสู่ระบบในฐานะอาจารย์ / ผู้ดูแลระบบ (Admin) หรือเข้าด้วยบัญชีนักเรียนอื่นได้ทันที', 'info');
             }
 
             const user = !isLogout ? App.getCurrentUser() : null;
@@ -568,7 +608,10 @@
                     if (teacherPwdInput) teacherPwdInput.value = 'anuchit2569';
                 } else if (roleParam === 'admin') {
                     if (teacherUserInput && !teacherUserInput.value) teacherUserInput.value = 'admin';
+                    if (teacherPwdInput && !teacherPwdInput.value) teacherPwdInput.value = 'admin69';
                 }
+            } else if (roleParam === 'student') {
+                switchTab('student');
             }
 
             // Dynamic look-up for Student ID
