@@ -1030,7 +1030,60 @@ const App = {
             }).then(() => console.log('☁️ Synced status update to Google Apps Script'))
               .catch(err => console.warn('⚠️ GAS Status Update Sync Error:', err));
         }
-        
+
+        // Notify Telegram group of approval or rejection
+        try {
+            const settings = this.getSettings ? this.getSettings() : {};
+            const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
+                ? settings.telegramToken 
+                : '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s';
+            const tgChat = settings.adminChatId || '-4839151586';
+
+            const student = (this.findStudent ? this.findStudent(studentId) : null) || (deedData ? deedData.student : null) || {};
+            const studentName = student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}` : `นพอ. รหัส ${studentId}`;
+            const cy = student.class_year || '69';
+            const deedDesc = deed.title || deed.description || 'กิจกรรมจิตอาสา';
+            const deedHrs = deed.hours || 1;
+            const totalSummary = (this.getStudentSummary ? this.getStudentSummary(studentId) : null) || {};
+            const totalHrs = totalSummary.totalHours || deedHrs;
+            const passBadge = totalHrs >= 50 ? '✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม.' : '⏳ กำลังสะสมความดี';
+
+            const encodedName = encodeURIComponent(studentName);
+            const pdfSlipUrl = `https://liff.line.me/2010948179-Ympqt2bT?page=slip&id=${deedId}&studentId=${studentId}&name=${encodedName}`;
+
+            if (status === 'approved') {
+                const tgMsg = `🎉 <b>แจ้งเตือนการอนุมัติความดี (ผ่านระบบออนไลน์) ✅</b>\n` +
+                    `━━━━━━━━━━━━━━━━━━\n` +
+                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
+                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code> (รุ่น ${cy})\n` +
+                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
+                    `⏱ <b>ชั่วโมงที่อนุมัติ:</b> <b>${deedHrs} ชม.</b>\n` +
+                    `📊 <b>ชั่วโมงสะสมรวม:</b> <b>${Number(totalHrs).toFixed(1)} / 400 ชม.</b> (${passBadge})\n` +
+                    `👩‍🏫 <b>ผู้อนุมัติ:</b> ${teacherName}\n` +
+                    `✅ <i>อนุมัติและบันทึกลงระบบเรียบร้อยแล้ว</i>`;
+
+                this.sendTelegram(tgChat, tgMsg, {
+                    inline_keyboard: [
+                        [
+                            { text: '📄 พิมพ์ใบบันทึกความดี (PDF Slip) ↗️', url: pdfSlipUrl }
+                        ]
+                    ]
+                });
+            } else if (status === 'rejected') {
+                const tgMsg = `❌ <b>แจ้งเตือนการปฏิเสธความดี</b>\n` +
+                    `━━━━━━━━━━━━━━━━━━\n` +
+                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
+                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code>\n` +
+                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
+                    `👩‍🏫 <b>ผู้ปฏิเสธ:</b> ${teacherName}\n` +
+                    `📝 <b>เหตุผล:</b> ${rejectReason || 'กรุณาตรวจสอบหลักฐานและส่งใหม่'}`;
+
+                this.sendTelegram(tgChat, tgMsg);
+            }
+        } catch (tge) {
+            console.warn('⚠️ Telegram notify on status update error:', tge);
+        }
+
         return deed;
     },
 
