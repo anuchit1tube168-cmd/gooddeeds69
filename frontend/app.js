@@ -454,7 +454,15 @@ const App = {
     logout() {
         Storage.remove('session');
         this.clearAuthContext();
-        window.location.href = 'index.html';
+        try {
+            sessionStorage.setItem('gooddeeds_logged_out', 'true');
+            if (typeof LiffHelper !== 'undefined' && LiffHelper.profile && LiffHelper.profile.userId) {
+                const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
+                delete mappings[LiffHelper.profile.userId];
+                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
+            }
+        } catch (e) {}
+        window.location.href = 'index.html?logout=true';
     },
 
     getCurrentUser() {
@@ -1688,7 +1696,9 @@ const App = {
     // ---------- TELEGRAM NOTIFY (TEXT & PHOTO) ----------
     async sendTelegram(chatId, message, replyMarkup = null) {
         const settings = this.getSettings();
-        const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
+        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
+            ? settings.telegramToken 
+            : CONFIG.TELEGRAM_BOT_TOKEN;
         const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
         if (!token || !targetChatId) return false;
         try {
@@ -1699,13 +1709,22 @@ const App = {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(bodyObj)
             });
+            if (!res.ok) {
+                const errText = await res.text().catch(() => '');
+                console.warn('⚠️ Telegram sendMessage warning:', res.status, errText);
+            }
             return res.ok;
-        } catch { return false; }
+        } catch (err) {
+            console.warn('⚠️ Telegram sendMessage error:', err);
+            return false;
+        }
     },
 
     async sendTelegramPhoto(chatId, photoBlob, caption, replyMarkup = null) {
         const settings = this.getSettings();
-        const token = settings.telegramToken || CONFIG.TELEGRAM_BOT_TOKEN;
+        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
+            ? settings.telegramToken 
+            : CONFIG.TELEGRAM_BOT_TOKEN;
         const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
         if (!token || !targetChatId || !photoBlob) return false;
         try {
@@ -1713,7 +1732,7 @@ const App = {
             formData.append('chat_id', targetChatId);
             formData.append('photo', photoBlob, 'deed_form.png');
             if (caption) {
-                formData.append('caption', caption);
+                formData.append('caption', caption.length > 1024 ? caption.substring(0, 1020) + '...' : caption);
                 formData.append('parse_mode', 'HTML');
             }
             if (replyMarkup) {
@@ -1723,6 +1742,10 @@ const App = {
                 method: 'POST',
                 body: formData
             });
+            if (!res.ok) {
+                const errText = await res.text().catch(() => '');
+                console.warn('⚠️ Telegram sendPhoto warning:', res.status, errText);
+            }
             return res.ok;
         } catch (err) {
             console.warn('Telegram photo send error:', err);
@@ -1802,7 +1825,7 @@ const App = {
 
         const rawImg = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || deed.imageData || '';
         const resolvedImg = this.resolveImageUrl(rawImg);
-        if (resolvedImg && resolvedImg !== '510903.jpg') {
+        if (resolvedImg && resolvedImg !== '510903.jpg' && !resolvedImg.startsWith('data:') && !resolvedImg.startsWith('blob:') && resolvedImg.length < 500) {
             qParams.set('img', resolvedImg);
         }
 

@@ -124,7 +124,9 @@ const LiffHelper = {
                     }
 
                     const settings = App.getSettings();
-                    const tgToken = settings.telegramToken || '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k';
+                    const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
+                        ? settings.telegramToken 
+                        : '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s';
                     const tgChat = settings.adminChatId || '-4839151586';
 
                     if (tgToken && tgChat) {
@@ -179,6 +181,19 @@ const LiffHelper = {
 
     handleAutoLogin() {
         if (!this.profile) return;
+        // Suppress auto-login if user explicitly logged out or wants to switch accounts
+        try {
+            const urlParams = (typeof window !== 'undefined' && window.location) ? new URLSearchParams(window.location.search) : null;
+            if (urlParams && urlParams.get('logout') === 'true') {
+                console.log('ℹ️ User explicitly logged out (via URL parameter). Auto-login suppressed to allow switching accounts.');
+                return;
+            }
+            if (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true') {
+                console.log('ℹ️ User explicitly logged out (via sessionStorage). Auto-login suppressed to allow switching accounts.');
+                return;
+            }
+        } catch (e) {}
+
         const lineUserId = this.profile.userId;
         const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
         const studentId = mappings[lineUserId];

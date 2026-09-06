@@ -31,7 +31,12 @@ FORBIDDEN_TRACKED_PATTERNS = [
     'backups/',
     'exports/',
     '.xlsx',
-    '.xls'
+    '.xls',
+    'summary_',
+    'ความดีปีการศึกษา',
+    'auto_login',
+    'bonus_merge',
+    '.log'
 ]
 
 REQUIRED_GITIGNORE_ENTRIES = [

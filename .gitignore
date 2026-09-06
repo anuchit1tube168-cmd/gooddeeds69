@@ -55,3 +55,11 @@ frontend/data/photos.json
 *.sql
 *.parquet
 *.avro
+*.log
+data/*.log
+data/summary_*.json
+bonus_merge_audit.txt
+auto_login.html
+frontend/auto_login.html
+*.DS_Store
+*/.DS_Store

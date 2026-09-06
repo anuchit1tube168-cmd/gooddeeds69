@@ -12,7 +12,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3300">
+    <link rel="stylesheet" href="style.css?v=3550">
     <style>
         body {
             display: flex;
@@ -433,11 +433,11 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3541"></script>
-    <script src="data/deeds_data.js?v=3541"></script>
-    <script src="data/app_settings.js?v=3541"></script>
-    <script src="app.js?v=3541"></script>
-    <script src="liff-sdk.js?v=3541"></script>
+    <script src="data/students_data.js?v=3550"></script>
+    <script src="data/deeds_data.js?v=3550"></script>
+    <script src="data/app_settings.js?v=3550"></script>
+    <script src="app.js?v=3550"></script>
+    <script src="liff-sdk.js?v=3550"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -490,6 +490,7 @@
                 try {
                     const result = await App.loginStudent(sid, pwd);
                     if (result.success) {
+                        try { sessionStorage.removeItem('gooddeeds_logged_out'); } catch(e) {}
                         // Immediately bind LINE LIFF profile if LIFF profile is loaded
                         if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
                             LiffHelper.bindCurrentStudentProfile();
@@ -520,6 +521,7 @@
                 try {
                     const result = await App.loginTeacher(user, pwd);
                     if (result.success) {
+                        try { sessionStorage.removeItem('gooddeeds_logged_out'); } catch(e) {}
                         // Immediately bind LINE LIFF profile if LIFF profile is loaded
                         if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
                             LiffHelper.bindCurrentStudentProfile();
@@ -541,7 +543,14 @@
 
         // Check if already logged in
         window.addEventListener('load', () => {
-            const user = App.getCurrentUser();
+            const urlParams = new URLSearchParams(window.location.search);
+            const isLogout = urlParams.get('logout') === 'true' || (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true');
+            
+            if (isLogout) {
+                showAlert('ออกจากระบบเรียบร้อยแล้ว ท่านสามารถเข้าสู่ระบบด้วยบัญชีอื่นที่ต้องการได้ทันที', 'info');
+            }
+
+            const user = !isLogout ? App.getCurrentUser() : null;
             if (user) {
                 if (user.role === 'student') window.location.href = 'student-dashboard.html';
                 else window.location.href = 'teacher-dashboard.html';
@@ -549,7 +558,6 @@
             }
 
             // Auto-switch to teacher/admin tab if requested in URL
-            const urlParams = new URLSearchParams(window.location.search);
             const roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
             if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff' || roleParam === 'bird' || roleParam === 'anuchit') {
                 switchTab('teacher');
