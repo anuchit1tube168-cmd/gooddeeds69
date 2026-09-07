@@ -74,23 +74,20 @@ function doGet(e) {
         time: new Date().toISOString()
       });
     }
-    if (action === 'getStudents') return jsonResponse(getStudents());
-    if (action === 'getStudent') return jsonResponse(getStudent(param.studentId));
-    if (action === 'getDeeds') return jsonResponse(getDeeds(param.studentId));
     if (action === 'getSettings') return jsonResponse(getSettings());
-    if (action === 'setupFolders') return jsonResponse(setupAllStudentFolders());
-
-    return jsonResponse({
-      status: 'success',
-      message: 'GoodDeeds 69 Cloud Engine Active 🟢',
-      time: new Date().toISOString()
-    });
+    return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   } catch (err) {
     return jsonResponse({ status: 'error', error: err.toString() });
   }
 }
 
 function doPost(e) {
+  if (e && e.parameter && /^cloudflare/.test(String(e.parameter.action || ''))) {
+    if (typeof cloudflareLegacyReadHandle_ !== 'function') {
+      return jsonResponse({ ok: false, error: 'ADAPTER_NOT_INSTALLED' });
+    }
+    return cloudflareLegacyReadHandle_(e);
+  }
   if (!e || !e.postData || !e.postData.contents) {
     return jsonResponse({ status: 'error', message: 'No post data received' });
   }
@@ -107,19 +104,9 @@ function doPost(e) {
     return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));
   }
 
-  const action = data.action || '';
-  try {
-    if (action === 'submit_deed' || action === 'addDeed') return jsonResponse(addDeed(data));
-    if (action === 'approveDeed' || action === 'updateDeedStatus') return jsonResponse(approveDeed(data));
-    if (action === 'rejectDeed') return jsonResponse(rejectDeed(data));
-    if (action === 'uploadImage' || data.base64) return jsonResponse(uploadImage(data));
-    if (action === 'init_all_students') return jsonResponse(initAllStudents(data.students || []));
-    if (action === 'bind_line') return jsonResponse(bindLineAccount(data));
-
-    return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
-  } catch (err) {
-    return jsonResponse({ status: 'error', error: err.toString() });
-  }
+  // Retired public legacy transport. Internal functions remain for controlled
+  // migration and the authenticated Telegram path; browser roles are not auth.
+  return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
 }
 
 // ==================== DEED LOGIC ====================

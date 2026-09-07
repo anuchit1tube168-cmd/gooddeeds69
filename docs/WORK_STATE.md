@@ -27,7 +27,7 @@ State: DRAFT; production write/deploy/cutover not performed.
 
 | Priority | Finding / required work |
 | --- | --- |
-| P0 | Legacy doGet/doPost still expose unauthenticated data/write routes. Callback hardening alone is NOT end-to-end authorization. Must retire/protect raw routes and browser roster/password fallback through the verified gateway. |
+| P0 | Raw legacy doGet/doPost data/write actions are now denied in this draft. Production still runs its old deployment. Browser roster/password fallback must be replaced before coordinated rollout; do not deploy this backend alone. |
 | P0 | Exposed token must be revoked/rotated, including other files/settings/history. This patch only removes literals in edited files; it does not make old values safe. |
 | P0 | Actual Apps Script version, private data backup, Cloudflare settings and LINE binding cannot be inferred from source. Need authorized runtime inspection and controlled staging identities. |
 | P1 | Teacher scope must be enforced by assigned cohort/student; broad teacher role access is insufficient. |
@@ -40,10 +40,10 @@ State: DRAFT; production write/deploy/cutover not performed.
 
 ```sh
 node scripts/check-syntax.cjs
-node --test tests/regression.test.cjs
+node --test tests/*.test.cjs
 ```
 
-Result before final packaging: 12/12 synthetic regression cases pass, syntax passes, skill frontmatter validator passes. See PR for final verification status. These tests cover mocked functions, not actual distributed transactions or production uptime.
+Result before final packaging: 18/18 synthetic regression cases pass, syntax passes, skill frontmatter validator passes. See PR for final verification status. These tests cover mocked functions, not actual distributed transactions or production uptime.
 
 ## Next exact task
 
@@ -56,3 +56,11 @@ Read AGENTS → this checkpoint → git status/log. Preserve uncommitted work. S
 ## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
 
 Preserve existing data and 2568 carry-forward; clean means archive, not delete; canonical seven-digit Student Master; server-side LINE verification and scoped RBAC; private health/data/evidence boundaries; Drive/Apps Script authoritative business storage; reversible releases; staging and verified rollback before explicit production cutover approval. See AGENTS.md for full contract.
+
+## Continuation — signed staging reads
+
+Added backend/CloudflareReadAdapter.gs using the existing gateway v2 canonical HMAC contract. Only cloudflareListSelf is allowed, only with APP_ENV=staging and CLOUDFLARE_CARD_ADAPTER_SECRET configured. Signed subject determines scope; request body cannot override identity. Timestamp, body hash/signature, limit, nonce replay and unique master identity are checked. No setup or writes occur on this path. Cache replay protection is best-effort (Apps Script cache can evict); this read-only adapter must not be reused for writes without durable replay/idempotency storage.
+
+Raw getStudents/getStudent/getDeeds/setupFolders and raw POST mutations return AUTHENTICATED_GATEWAY_REQUIRED. Ping/settings remain public. Authenticated legacy Telegram callback remains separate. This deliberately breaks the old unauthenticated frontend transport in the draft; coordinate frontend/gateway replacement before any deployment. cloudflareCardSelf, submission, evidence, activation and review remain disabled in this new adapter. No complete dashboard or write flow is claimed.
+
+18 mocked tests pass including six new transport/HMAC tests; actual Cloudflare→GAS integration is unverified. Next task: finish official card response and authenticated frontend/gateway integration with controlled staging data, then scoped write/review adapters and durable audit/outbox.

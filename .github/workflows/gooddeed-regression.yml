@@ -13,4 +13,4 @@ jobs:
         with:
           persist-credentials: false
       - run: node scripts/check-syntax.cjs
-      - run: node --test tests/regression.test.cjs
+      - run: node --test tests/*.test.cjs

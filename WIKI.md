@@ -32,7 +32,7 @@
 
 ```sh
 node scripts/check-syntax.cjs
-node --test tests/regression.test.cjs
+node --test tests/*.test.cjs
 ```
 
 เทสต์ใช้ข้อมูลสมมติและจำลอง Sheets/Telegram ไม่มีการส่งข้อความหรือเขียนข้อมูลนักเรียนจริง ไม่พิสูจน์การเชื่อม Apps Script deployment จริง
@@ -60,7 +60,7 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 
 1. ระบุ Apps Script project/deployment/version ที่รับงานปัจจุบัน และ Cloudflare deployment ให้ตรง Git commit
 2. หมุน token ที่เคยเผย และเก็บค่าหลังบ้าน ตรวจสำเนา/ไฟล์ settings ที่อาจยังมี token; อย่าแก้ Git history โดยไม่มีแผนแยก
-3. ปิดทางเรียก legacy API โดยไม่มี session: roster, bind_line, submit, approve, evidence. การแก้ callback ไม่ได้ปิดช่อง raw `approveDeed` ใน doPost
+3. ปิดทางเรียก legacy API โดยไม่มี session: roster, bind_line, submit, approve, evidence. ชุดต่อเนื่องปิด raw API แล้วใน draft แต่ต้องปรับ frontend/gateway ก่อน deploy พร้อมกัน
 4. ใช้ gateway ที่ตรวจ LINE/RBAC ฝั่งเซิร์ฟเวอร์ รวมสิทธิ์อาจารย์เฉพาะกลุ่ม และ signed Apps Script adapter โดยรักษาหน้าเข้า LIFF เดิม
 5. ตรวจ schema v2 เทียบ `Main_2569` / `Deeds_2569`, เกณฑ์ทั้ง 9 หมวดและภาคเรียน, ยอดยกมา 2568, รายการสะสม/ซ้ำ ก่อนใช้ยอดเป็นทางการ
 6. สร้าง notification outbox ที่เก็บผลส่งและ retry ตาม event ID พร้อม audit ที่ไม่เผยข้อมูลเกินจำเป็น
@@ -81,3 +81,7 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 ## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
 
 รักษาข้อมูลและระบบเดิม; clean คือแยกเก็บไม่ลบ; Student Master กลางรหัส 7 หลัก; LINE/LIFF verification และ RBAC ฝั่งเซิร์ฟเวอร์; ข้อมูลสุขภาพแยกตามสิทธิ์; ข้อมูลหลักอยู่ private Drive/Sheets ผ่าน Apps Script; GitHub เก็บโค้ด; ทุกการเปลี่ยนต้องย้อนกลับได้. รายละเอียดอ้าง `AGENTS.md`.
+
+## ตัวอ่าน Cloudflare ที่เพิ่มในชุดต่อเนื่อง
+
+ติดตั้ง CloudflareReadAdapter.gs คู่กับ Code.gs เฉพาะสำเนา staging เพิ่ม Script Properties APP_ENV=staging และ CLOUDFLARE_CARD_ADAPTER_SECRET ให้ตรงกับ GOODDEED_CARD_ADAPTER_SECRET ของ gateway. คำขอใช้ HMAC v2 ตามตัวเชื่อมเดิม รองรับเฉพาะ cloudflareListSelf; ยังไม่รองรับ card/ส่งงาน/อนุมัติ/หลักฐาน. การกดหน้าเดิมจะถูกปฏิเสธเมื่อเรียก raw API จึงห้าม deploy backend ชุดนี้เดี่ยว ๆ. เทสต์ลายเซ็นใช้ crypto จริงกับ storage จำลอง ไม่ใช่ผลเชื่อมบริการจริง.

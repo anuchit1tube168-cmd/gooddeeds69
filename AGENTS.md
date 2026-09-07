@@ -78,7 +78,7 @@ Preserve real crest, navy/blue/white with restrained gold. Use Sarabun for reada
 
 ## Verification / completion
 
-Run `node scripts/check-syntax.cjs` and `node --test tests/regression.test.cjs`. Use the existing PII guard before commit. A test pass proves its stated local behavior only.
+Run `node scripts/check-syntax.cjs` and `node --test tests/*.test.cjs`. Use the existing PII guard before commit. A test pass proves its stated local behavior only.
 Production readiness additionally requires controlled staging E2E: LINE login/link, self-only reads, scoped teacher queue, submission + private evidence, persistence after refresh, approve/reject, duplicate callback, failed delivery, official totals/carry-forward reconciliation, audit and rollback. Record pass/fail/blocked and deployment version. No production cutover without evidence and explicit owner approval.
 
 See `WIKI.md` for operator steps and `docs/WORK_STATE.md` for the current blockers. This file adds project guidance; it cannot grant access or override the user's instructions.
