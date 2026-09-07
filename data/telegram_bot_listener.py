@@ -337,9 +337,11 @@ def start_listener_loop():
                     if 'callback_query' in update:
                         print(f"📩 Processing Callback Query ID: {update['callback_query']['id']}")
                         process_callback_query(update['callback_query'])
+            elif not res.get('ok'):
+                time.sleep(10)
         except Exception as e:
             print(f"⚠️ Listener Loop Error: {e}")
-            time.sleep(5)
+            time.sleep(10)
         time.sleep(1)
 
 if __name__ == '__main__':

@@ -673,6 +673,15 @@ class CustomHandler(SimpleHTTPRequestHandler):
         query_params = {}
         if parsed_path.query:
             query_params = {k: v[0] for k, v in parse_qs(parsed_path.query).items()}
+
+        if parsed_path.path == '/api/health':
+            self.send_json_response(200, {
+                'status': 'ok',
+                'service': 'rtafnc-gooddeeds-server',
+                'academic_year': 2569,
+                'timestamp': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+            })
+            return
             
         if parsed_path.path == '/api/get_student':
             student_id = query_params.get('studentId')
