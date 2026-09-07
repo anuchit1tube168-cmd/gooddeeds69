@@ -16,9 +16,9 @@ const CONFIG = {
   MIN_HOURS_YEAR: 50,
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
-  DEFAULT_DRIVE_FOLDER_ID: '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx',
-  TELEGRAM_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
-  TELEGRAM_CHAT_ID: '-4839151586',
+  get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
+  get TELEGRAM_TOKEN() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || ''; },
+  get TELEGRAM_CHAT_ID() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 
@@ -104,7 +104,7 @@ function doPost(e) {
 
   // Handle Telegram Interactive Inline Callback Buttons
   if (data.callback_query) {
-    return jsonResponse(handleTelegramCallback(data.callback_query));
+    return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));
   }
 
   const action = data.action || '';
@@ -200,29 +200,47 @@ function addDeed(payload) {
 
 function approveDeed(data) {
   const deedId = String(data.deedId || data.id || '');
-  const studentId = String(data.studentId || '');
-  const approverName = data.approvedBy || data.teacherName || 'ร.อ.อนุชิต ทำจะดี';
   const status = data.status || 'approved';
-  const rejectReason = data.rejectReason || '';
-
-  const sheet = getOrCreateSheet(SHEETS.DEEDS);
-  if (sheet) {
+  if (!deedId || !['approved', 'rejected'].includes(status)) {
+    return { status: 'error', code: 'invalid_review' };
+  }
+  const lock = LockService.getScriptLock();
+  lock.waitLock(20000);
+  try {
+    const ss = getSS();
+    const sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
+    if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
     const values = sheet.getDataRange().getValues();
-    for (let i = 1; i < values.length; i++) {
-      if (String(values[i][0]) === deedId) {
-        sheet.getRange(i + 1, 10).setValue(status); // Status Col
-        sheet.getRange(i + 1, 9).setValue(approverName); // Approver Col
-        break;
-      }
+    const index = values.findIndex((row, i) => i > 0 && String(row[0]) === deedId);
+    if (index < 0) return { status: 'error', code: 'deed_not_found' };
+    const row = values[index];
+    const studentId = String(row[1]);
+    if (data.studentId && String(data.studentId) !== studentId) return { status: 'error', code: 'student_mismatch' };
+    if (row[9] === status) return { status: 'success', deedId, newStatus: status, duplicate: true };
+    // 'approving' marks an uncertain cross-sheet write. Never auto-retry its hours.
+    if (row[9] !== 'pending') return { status: 'error', code: 'review_conflict' };
+    const category = Number(row[2]);
+    const hours = Number(row[3]);
+    if (!Number.isInteger(category) || category < 1 || category > 9 || !Number.isFinite(hours) || hours <= 0 || hours > 24) {
+      return { status: 'error', code: 'invalid_stored_deed' };
     }
+    const master = ss.getSheetByName(SHEETS.STUDENTS);
+    if (status === 'approved' && (!master || !master.getDataRange().getValues().some((r, i) => i > 0 && String(r[1]) === studentId))) {
+      return { status: 'error', code: 'student_not_found' };
+    }
+    if (status === 'approved') {
+      sheet.getRange(index + 1, 10).setValue('approving');
+      SpreadsheetApp.flush();
+      updateMasterStudentHours(studentId, category, hours);
+      SpreadsheetApp.flush();
+    }
+    sheet.getRange(index + 1, 9).setValue(String(data.approvedBy || 'ผู้ตรวจ').slice(0, 120));
+    sheet.getRange(index + 1, 10).setValue(status);
+    SpreadsheetApp.flush();
+    return { status: 'success', deedId, newStatus: status };
+  } finally {
+    lock.releaseLock();
   }
-
-  // Update Master Student Hours if approved
-  if (status === 'approved' && data.categoryId && data.hours) {
-    updateMasterStudentHours(studentId, parseInt(data.categoryId), parseFloat(data.hours));
-  }
-
-  return { status: 'success', deedId: deedId, newStatus: status };
 }
 
 function rejectDeed(data) {
@@ -325,12 +343,16 @@ function updateMasterStudentHours(studentId, catId, addedHours) {
   for (let i = 1; i < data.length; i++) {
     if (String(data[i][1]) === String(studentId)) {
       const currentCatHours = parseFloat(data[i][catCol - 1] || 0);
+      const totalCell = sheet.getRange(i + 1, 16);
+      const totalFormula = totalCell.getFormula();
+      const storedTotal = data[i][15];
+      if (!totalFormula && (storedTotal === '' || storedTotal === null || !Number.isFinite(Number(storedTotal)))) {
+        throw new Error('master_total_requires_reconciliation');
+      }
       sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
-
-      const row = i + 1;
-      sheet.getRange(row, 16).setFormula('=SUM(G' + row + ':O' + row + ')');
-      sheet.getRange(row, 17).setValue('50 ชม./ปี');
-      sheet.getRange(row, 18).setFormula('=IF(P' + row + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")');
+      // Preserve an existing formula and all policy/result columns. A numeric
+      // total may include historical carry-forward, so increment, never rebuild.
+      if (!totalFormula) totalCell.setValue(Number(storedTotal) + addedHours);
       break;
     }
   }
@@ -363,8 +385,8 @@ function uploadImage(data) {
   }
 
   const file = targetFolder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  const fileUrl = 'https://lh3.googleusercontent.com/d/' + file.getId();
+  file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+  const fileUrl = file.getUrl(); // Access remains private; secure evidence API is required for students.
   return { status: 'success', fileId: file.getId(), url: fileUrl };
 }
 
@@ -400,57 +422,36 @@ function notifyTelegramNewDeed(d) {
   });
 }
 
-function handleTelegramCallback(cb) {
-  const cbId = cb.id;
-  const data = cb.data || '';
-  const message = cb.message;
-  const isApprove = data.startsWith('approve_');
-  const isReject = data.startsWith('reject_');
-
-  if (!isApprove && !isReject) return { status: 'ignored' };
-
-  const parts = data.split('_');
-  const deedId = parts[1] || '';
-  const studentId = parts[2] || '';
-  const approver = cb.from ? `${cb.from.first_name} ${cb.from.last_name || ''}`.trim() : 'อาจารย์ใน Telegram';
-
-  // 1. Answer Telegram Alert
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/answerCallbackQuery`, {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({
-      callback_query_id: cbId,
-      text: isApprove ? '✅ อนุมัติบันทึกความดีเรียบร้อยแล้ว!' : '❌ ปฏิเสธบันทึกความดีเรียบร้อยแล้ว!',
-      show_alert: true
-    })
-  });
-
-  // 2. Update DB
-  approveDeed({
-    deedId: deedId,
-    studentId: studentId,
-    status: isApprove ? 'approved' : 'rejected',
-    approvedBy: approver
-  });
-
-  // 3. Edit Telegram Buttons
-  if (message) {
-    const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${deedId}&studentId=${studentId}`;
-    UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/editMessageReplyMarkup`, {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({
-        chat_id: message.chat.id,
-        message_id: message.message_id,
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: isApprove ? `✅ อนุมัติแล้ว (${approver})` : '❌ ปฏิเสธแล้ว', callback_data: `done_${deedId}` }],
-            [{ text: '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', url: slipUrl }]
-          ]
-        }
-      })
-    });
+// Apps Script cannot inspect Telegram's secret header. A high-entropy query
+// key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
+function handleTelegramCallback(cb, suppliedKey) {
+  const props = PropertiesService.getScriptProperties();
+  const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
+  if (expected.length < 32 || String(suppliedKey || '') !== expected) return { status: 'error', code: 'webhook_unauthorized' };
+  const allowed = (props.getProperty('TELEGRAM_APPROVER_IDS') || '').split(',').map(x => x.trim()).filter(Boolean);
+  if (!cb || !cb.from || !allowed.includes(String(cb.from.id)) || !cb.message || String(cb.message.chat.id) !== String(props.getProperty('TELEGRAM_CHAT_ID') || '')) {
+    return { status: 'error', code: 'reviewer_forbidden' };
   }
-
-  return { status: 'success' };
+  // Greedy middle group preserves deed IDs such as deed_123_abcd.
+  const match = /^(approve|reject)_(.+)_(\d{7})$/.exec(String(cb.data || ''));
+  if (!match) return { status: 'ignored' };
+  let result;
+  try {
+    result = approveDeed({ deedId: match[2], studentId: match[3], status: match[1] === 'approve' ? 'approved' : 'rejected', approvedBy: 'telegram:' + cb.from.id });
+  } catch (error) {
+    result = { status: 'error', code: 'review_write_failed' };
+  }
+  const saved = result.status === 'success';
+  // A notification failure never rolls back or repeats the persisted approval.
+  try {
+    UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/answerCallbackQuery', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ callback_query_id: cb.id, text: saved ? 'บันทึกผลการตรวจแล้ว' : 'ยังบันทึกผลไม่ได้ กรุณาให้ผู้ดูแลตรวจสอบ', show_alert: true })
+    });
+    if (saved) UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/editMessageReplyMarkup', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ chat_id: cb.message.chat.id, message_id: cb.message.message_id, reply_markup: { inline_keyboard: [] } })
+    });
+  } catch (error) { console.warn('Telegram delivery failed after review; inspect backend state.'); }
+  return result;
 }
