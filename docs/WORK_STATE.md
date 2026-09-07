@@ -43,7 +43,7 @@ node scripts/check-syntax.cjs
 node --test tests/*.test.cjs
 ```
 
-Result before final packaging: 18/18 synthetic regression cases pass, syntax passes, skill frontmatter validator passes. See PR for final verification status. These tests cover mocked functions, not actual distributed transactions or production uptime.
+Result before final packaging: 24/24 synthetic regression cases pass, syntax passes, skill frontmatter validator passes. See PR for final verification status. These tests cover mocked functions, not actual distributed transactions or production uptime.
 
 ## Next exact task
 
@@ -59,8 +59,12 @@ Preserve existing data and 2568 carry-forward; clean means archive, not delete; 
 
 ## Continuation — signed staging reads
 
-Added backend/CloudflareReadAdapter.gs using the existing gateway v2 canonical HMAC contract. Only cloudflareListSelf is allowed, only with APP_ENV=staging and CLOUDFLARE_CARD_ADAPTER_SECRET configured. Signed subject determines scope; request body cannot override identity. Timestamp, body hash/signature, limit, nonce replay and unique master identity are checked. No setup or writes occur on this path. Cache replay protection is best-effort (Apps Script cache can evict); this read-only adapter must not be reused for writes without durable replay/idempotency storage.
+Added backend/CloudflareReadAdapter.gs using the existing gateway v2 canonical HMAC contract. Only cloudflareListSelf and cloudflareCardSelf are allowed, only with APP_ENV=staging and CLOUDFLARE_CARD_ADAPTER_SECRET configured. Signed subject determines scope; request body cannot override identity. Timestamp, body hash/signature, limit, nonce replay and unique master identity are checked. No setup or writes occur on this path. Cache replay protection is best-effort (Apps Script cache can evict); this read-only adapter must not be reused for writes without durable replay/idempotency storage.
 
-Raw getStudents/getStudent/getDeeds/setupFolders and raw POST mutations return AUTHENTICATED_GATEWAY_REQUIRED. Ping/settings remain public. Authenticated legacy Telegram callback remains separate. This deliberately breaks the old unauthenticated frontend transport in the draft; coordinate frontend/gateway replacement before any deployment. cloudflareCardSelf, submission, evidence, activation and review remain disabled in this new adapter. No complete dashboard or write flow is claimed.
+Raw getStudents/getStudent/getDeeds/setupFolders and raw POST mutations return AUTHENTICATED_GATEWAY_REQUIRED. Ping/settings remain public. Authenticated legacy Telegram callback remains separate. This deliberately breaks the old unauthenticated frontend transport in the draft; coordinate frontend/gateway replacement before any deployment. Submission, evidence, activation and review remain disabled in this new adapter. No complete dashboard or write flow is claimed.
 
-18 mocked tests pass including six new transport/HMAC tests; actual Cloudflare→GAS integration is unverified. Next task: finish official card response and authenticated frontend/gateway integration with controlled staging data, then scoped write/review adapters and durable audit/outbox.
+18 mocked tests pass including six new transport/HMAC tests; actual Cloudflare→GAS integration is unverified. Next task: verify official master header mapping and authenticated frontend/gateway integration with controlled staging data, then scoped write/review adapters and durable audit/outbox.
+
+## Continuation — official card totals
+
+Added signed cloudflareCardSelf with explicit GOODDEED_MASTER_COLUMN_MAP. Total hours, level and pass status come from the mapped official master cells, never inferred from the loaded ledger. Missing/duplicate headers, blank totals, invalid levels and ambiguous pass status fail closed. Counts are scoped to the signed student. 24/24 synthetic tests and syntax checks pass. Actual master headers and staging integration are still unverified; no deployment or production changes.

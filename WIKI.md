@@ -84,4 +84,10 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 
 ## ตัวอ่าน Cloudflare ที่เพิ่มในชุดต่อเนื่อง
 
-ติดตั้ง CloudflareReadAdapter.gs คู่กับ Code.gs เฉพาะสำเนา staging เพิ่ม Script Properties APP_ENV=staging และ CLOUDFLARE_CARD_ADAPTER_SECRET ให้ตรงกับ GOODDEED_CARD_ADAPTER_SECRET ของ gateway. คำขอใช้ HMAC v2 ตามตัวเชื่อมเดิม รองรับเฉพาะ cloudflareListSelf; ยังไม่รองรับ card/ส่งงาน/อนุมัติ/หลักฐาน. การกดหน้าเดิมจะถูกปฏิเสธเมื่อเรียก raw API จึงห้าม deploy backend ชุดนี้เดี่ยว ๆ. เทสต์ลายเซ็นใช้ crypto จริงกับ storage จำลอง ไม่ใช่ผลเชื่อมบริการจริง.
+ติดตั้ง CloudflareReadAdapter.gs คู่กับ Code.gs เฉพาะสำเนา staging เพิ่ม Script Properties APP_ENV=staging และ CLOUDFLARE_CARD_ADAPTER_SECRET ให้ตรงกับ GOODDEED_CARD_ADAPTER_SECRET ของ gateway. คำขอใช้ HMAC v2 ตามตัวเชื่อมเดิม รองรับ cloudflareListSelf และ cloudflareCardSelf; ยังไม่รองรับส่งงาน/อนุมัติ/หลักฐาน. การกดหน้าเดิมจะถูกปฏิเสธเมื่อเรียก raw API จึงห้าม deploy backend ชุดนี้เดี่ยว ๆ. เทสต์ลายเซ็นใช้ crypto จริงกับ storage จำลอง ไม่ใช่ผลเชื่อมบริการจริง.
+
+### การจับคู่ยอดทางการสำหรับ card
+
+ตั้ง GOODDEED_MASTER_COLUMN_MAP เป็น JSON object ที่มี key: studentId, displayName, cohortLabel, totalHours, levelNumber, levelLabel, passed โดยแต่ละ value เป็นชื่อหัวคอลัมน์จริงที่ตรวจแล้วและไม่ซ้ำใน Student Master ของ staging ห้ามคัดลอกชื่อสมมติไปใช้จริงหรือสร้างระดับจากยอดเอง displayName/cohortLabel/levelLabel ต้องเป็นข้อความไม่ว่าง; levelNumber เป็นจำนวนเต็ม 1–10; totalHours เป็นตัวเลข 0–10000; passed รับ boolean หรือข้อความ ผ่านเกณฑ์ ✅ / ยังไม่ผ่าน ❌ ที่ตรงทุกตัวอักษร หาก schema จริงต่างจากนี้ให้ตรวจและปรับตัวแปลงพร้อมเทสต์ก่อนเปิดใช้งาน ไม่แก้ข้อมูลต้นทางอัตโนมัติ
+
+ยอด card อ่านจาก master เพื่อรักษายอดยกมา ส่วน approvedCount/pendingCount นับเฉพาะรายการของผู้ใช้ที่ลงลายเซ็น ไม่ใช่ผลรับรองเกณฑ์รายปี ทดสอบจำลองรวม 24 เคสผ่าน; ยังไม่ได้ทดสอบเชื่อมบริการจริง

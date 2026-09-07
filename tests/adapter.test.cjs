@@ -14,3 +14,18 @@ test('tampered signature/body and expired request never read storage',()=>{for(c
 test('replay is rejected after first accepted request',()=>{const s=setup(),e=s.signed();assert.equal(s.context.doPost(e).ok,true);assert.equal(s.context.doPost(e).error,'ADAPTER_REPLAY_BLOCKED');});
 test('non-staging, write action and subject overrides fail closed',()=>{let s=setup();s.props.APP_ENV='production';assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_STAGING_REQUIRED');s=setup();assert.equal(s.context.doPost(s.signed({action:'cloudflareSubmitSelf'})).error,'ADAPTER_ACTION_DISABLED');assert.equal(s.context.doPost(s.signed({body:'{"studentId":"other"}'})).error,'ADAPTER_BODY_INVALID');assert.equal(s.reads(),0);});
 test('duplicate master identity requires reconciliation',()=>{const s=setup();s.tables.Main_2569.push(s.tables.Main_2569[1]);assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_IDENTITY_AMBIGUOUS');});
+function cardSetup(){
+ const s=setup(),sid=s.tables.Main_2569[1][1];
+ const keys=['displayName','studentId','cohortLabel','totalHours','levelNumber','levelLabel','passed'];
+ s.props.GOODDEED_MASTER_COLUMN_MAP=JSON.stringify(Object.fromEntries(keys.map(k=>[k,k])));
+ s.tables.Main_2569=[keys,['Synthetic Student',sid,'Synthetic cohort',105,3,'Official level',false]];
+ s.card=()=>s.context.doPost(s.signed({action:'cloudflareCardSelf'}));return s;
+}
+test('card preserves official carry-forward total and pass status, counts only self',()=>{
+ const s=cardSetup(),r=s.card();assert.equal(r.ok,true);assert.equal(r.data.card.totalHours,105);assert.equal(r.data.card.passed,false);assert.equal(r.data.card.levelNumber,3);assert.equal(r.data.card.pendingCount,1);assert.equal(r.data.card.approvedCount,0);
+});
+test('card requires explicit official column mapping',()=>{const s=cardSetup();delete s.props.GOODDEED_MASTER_COLUMN_MAP;assert.equal(s.card().error,'ADAPTER_MASTER_MAPPING_REQUIRED');});
+test('missing or duplicate official headers are rejected',()=>{for(const duplicate of [false,true]){const s=cardSetup();if(duplicate)s.tables.Main_2569[0].push('totalHours');else s.tables.Main_2569[0][3]='unexpected';assert.equal(s.card().error,'ADAPTER_MASTER_HEADER_INVALID');}});
+test('blank totals, invalid levels and ambiguous pass status are rejected',()=>{for(const [index,value] of [[3,''],[3,'   '],[4,0],[4,2.5],[4,11],[6,'unknown']]){const s=cardSetup();s.tables.Main_2569[1][index]=value;assert.equal(s.card().error,'ADAPTER_MASTER_VALUE_INVALID');}});
+test('zero official total is valid and never replaced by ledger sum',()=>{const s=cardSetup();s.tables.Main_2569[1][3]=0;assert.equal(s.card().data.card.totalHours,0);});
+test('card rejects unsupported ledger status and body overrides',()=>{let s=cardSetup();s.tables.Deeds_2569[1][9]='unknown';assert.equal(s.card().error,'ADAPTER_LEDGER_REQUIRES_RECONCILIATION');s=cardSetup();assert.equal(s.context.doPost(s.signed({action:'cloudflareCardSelf',body:'{"limit":1}'})).error,'ADAPTER_BODY_INVALID');assert.equal(s.reads(),0);});
