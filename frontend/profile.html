@@ -302,17 +302,20 @@
 
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="data/students_data.js?v=3520"></script>
-  <script src="data/deeds_data.js?v=3520"></script>
-  <script src="data/app_settings.js?v=3520"></script>
-  <script src="app.js?v=3520"></script>
-  <script src="liff-sdk.js?v=3520"></script>
+  <script src="data/students_data.js?v=3570"></script>
+  <script src="data/deeds_data.js?v=3570"></script>
+  <script src="data/app_settings.js?v=3570"></script>
+  <script src="app.js?v=3570"></script>
+  <script src="liff-sdk.js?v=3570"></script>
   <script>
     let currentUser;
 
     function init() {
       currentUser = App.requireAuth(['student']);
       if (!currentUser) return;
+      if (typeof LiffHelper !== 'undefined' && LiffHelper.updateProfileUI) {
+        LiffHelper.updateProfileUI();
+      }
       const initials = (currentUser.first_name || '?')[0];
       document.getElementById('profile-initials').textContent = initials;
       document.getElementById('profile-fullname').textContent = `${currentUser.rank} ${currentUser.first_name} ${currentUser.last_name}`;

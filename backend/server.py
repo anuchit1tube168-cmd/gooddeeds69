@@ -42,6 +42,19 @@ FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 GDRIVE_DEST = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from line_notifier import (
+        save_student_line_binding,
+        get_student_line,
+        find_user_by_line_id,
+        get_all_line_mappings,
+        notify_deed_status_line,
+        notify_deed_submission_line
+    )
+except Exception as _e:
+    print(f"⚠️ line_notifier import note: {_e}")
+
 def sync_to_google_drive_bg():
     """Sync data folder to Google Drive in background thread."""
     def run_sync():
@@ -700,7 +713,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'class_year': s.get('class_year', ''),
                     'year_level': s.get('year_level', ''),
                     'position': s.get('position', ''),
-                    'role': s.get('role', 'student')
+                    'role': s.get('role', 'student'),
+                    'line_user_id': s.get('line_user_id', ''),
+                    'line_display_name': s.get('line_display_name', '')
                 }
                 self.send_json_response(200, safe_s)
             else:
@@ -728,9 +743,24 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'year_level': s.get('year_level', ''),
                     'position': s.get('position', ''),
                     'role': s.get('role', 'student'),
+                    'line_user_id': s.get('line_user_id', ''),
+                    'line_display_name': s.get('line_display_name', ''),
                     'total_hours': hours_map.get(sid_str, 0)
                 })
             self.send_json_response(200, safe_list)
+            return
+
+        elif parsed_path.path == '/api/line_mappings':
+            self.send_json_response(200, get_all_line_mappings())
+            return
+
+        elif parsed_path.path == '/api/get_line_user':
+            line_uid = query_params.get('lineUserId', '')
+            res = find_user_by_line_id(line_uid)
+            if res:
+                self.send_json_response(200, {'status': 'found', **res})
+            else:
+                self.send_json_response(200, {'status': 'not_found'})
             return
 
         elif parsed_path.path == '/api/get_deeds':
@@ -906,6 +936,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 print(f"📥 Saved PENDING deed [{deed_id}] for student {student_id}")
                 broadcast_event("deed_submitted", {"studentId": student_id, "deedId": deed_id})
                 sync_to_google_drive_bg()
+                try:
+                    notify_deed_submission_line(student_id, deed_data)
+                except Exception as _ne:
+                    pass
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error submitting deed: {e}")
@@ -958,6 +992,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 print(f"❇️ Updated deed [{deed_id}] for {student_id} to {status} by {teacher_name}")
                 broadcast_event("deed_approved", {"studentId": student_id, "deedId": deed_id, "status": status})
                 sync_to_google_drive_bg()
+                try:
+                    notify_deed_status_line(student_id, deed_data, status, teacher_name)
+                except Exception as _ne:
+                    pass
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error updating deed: {e}")
@@ -1080,39 +1118,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 line_pic = payload.get('linePictureUrl', '')
                 
                 if student_id and line_user_id:
-                    # 1. Store strictly in private backend storage (never in git or public frontend)
-                    private_map_path = os.path.join(BASE_DIR, 'data', 'private', 'line_mappings.json')
-                    mappings = {}
-                    if os.path.exists(private_map_path):
-                        try:
-                            with open(private_map_path, 'r', encoding='utf-8') as f:
-                                mappings = json.load(f)
-                        except Exception:
-                            mappings = {}
-                    
-                    mappings[str(student_id)] = {
-                        'student_id': str(student_id),
-                        'line_user_id': line_user_id,
-                        'line_display_name': line_name,
-                        'line_picture_url': line_pic,
-                        'updated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-                    }
-                    
-                    with open(private_map_path, 'w', encoding='utf-8') as f:
-                        json.dump(mappings, f, ensure_ascii=False, indent=2)
-
-                    print(f"🔒 Bound LINE ID safely in private backend ({line_user_id[:8]}... - {line_name}) for student {student_id}")
+                    res = save_student_line_binding(student_id, line_user_id, line_name, line_pic)
+                    broadcast_event("student_updated", {"studentId": student_id, "lineUserId": line_user_id})
                     sync_to_google_drive_bg()
-
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
+                    self.send_json_response(200, res)
+                else:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or lineUserId'})
             except Exception as e:
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({'status': 'error', 'message': str(e)}).encode('utf-8'))
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
         else:
             self.send_response(404)
             self.end_headers()

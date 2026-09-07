@@ -52,7 +52,7 @@ const LiffHelper = {
                     this.profile = await liff.getProfile();
                     console.log('👤 LINE Profile Loaded:', this.profile);
                     this.bindCurrentStudentProfile();
-                    this.handleAutoLogin();
+                    await this.handleAutoLogin();
                 } catch (pe) {
                     console.warn('⚠️ Could not get LINE profile:', pe);
                 }
@@ -179,7 +179,7 @@ const LiffHelper = {
         }
     },
 
-    handleAutoLogin() {
+    async handleAutoLogin() {
         if (!this.profile) return;
         // Suppress auto-login if user explicitly logged out or wants to switch accounts
         try {
@@ -199,7 +199,34 @@ const LiffHelper = {
 
         const lineUserId = this.profile.userId;
         const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
-        const userKey = mappings[lineUserId];
+        let userKey = mappings[lineUserId];
+
+        // 1. If not found in localStorage, scan global STUDENTS_DATA ("ถ้ามีแล้วไม่ต้องรายคน")
+        if (!userKey && typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+            const matched = STUDENTS_DATA.find(s => s.line_user_id === lineUserId);
+            if (matched) {
+                userKey = String(matched.student_id);
+                mappings[lineUserId] = userKey;
+                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
+                console.log('🎯 Found student from central database:', userKey, matched.full_name);
+            }
+        }
+
+        // 2. If still not found, check backend endpoint
+        if (!userKey && typeof App !== 'undefined' && App.canUseBackendApi && App.canUseBackendApi()) {
+            try {
+                const resp = await fetch(`/api/get_line_user?lineUserId=${encodeURIComponent(lineUserId)}`);
+                if (resp.ok) {
+                    const resData = await resp.json();
+                    if (resData.status === 'found') {
+                        userKey = resData.student_id || resData.username;
+                        mappings[lineUserId] = userKey;
+                        localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
+                        console.log('☁️ Recognized user from server line mapping:', userKey);
+                    }
+                }
+            } catch (fe) {}
+        }
 
         if (userKey && typeof App !== 'undefined') {
             // 1. Check if mapped to staff (Teacher / Admin)
@@ -248,10 +275,38 @@ const LiffHelper = {
 
         if (!titleEl || !detailEl) return;
 
+        // Check if current user already has line_user_id in DB ("ถ้ามีแล้วไม่ต้องรายคน")
+        let existingLineId = '';
+        let existingLineName = '';
+        if (typeof App !== 'undefined' && App.getCurrentUser) {
+            const u = App.getCurrentUser();
+            if (u) {
+                existingLineId = u.line_user_id || u.lineUserId || '';
+                existingLineName = u.line_display_name || u.lineDisplayName || '';
+                if (!existingLineId && typeof STUDENTS_DATA !== 'undefined' && u.student_id) {
+                    const st = STUDENTS_DATA.find(s => String(s.student_id) === String(u.student_id));
+                    if (st && st.line_user_id) {
+                        existingLineId = st.line_user_id;
+                        existingLineName = st.line_display_name || '';
+                    }
+                }
+            }
+        }
+
         if (this.profile) {
             titleEl.textContent = `🟢 เชื่อมต่อบัญชี LINE: ${this.profile.displayName}`;
             titleEl.style.color = '#4ade80';
-            detailEl.textContent = `LINE User ID: ${this.profile.userId.slice(0, 10)}... (เชื่อมต่อข้อมูลเรียบร้อย)`;
+            detailEl.textContent = `LINE User ID: ${this.profile.userId.slice(0, 10)}... (เชื่อมต่อระบบกลางแล้ว พร้อมรับแจ้งเตือนทุกครั้ง)`;
+            if (btnEl) {
+                btnEl.textContent = '✅ เชื่อมต่อแล้ว';
+                btnEl.style.background = 'rgba(74, 222, 128, 0.2)';
+                btnEl.style.color = '#4ade80';
+                btnEl.style.border = '1px solid rgba(74, 222, 128, 0.4)';
+            }
+        } else if (existingLineId) {
+            titleEl.textContent = `🟢 เชื่อมต่อบัญชี LINE แล้ว${existingLineName ? ': ' + existingLineName : ''}`;
+            titleEl.style.color = '#4ade80';
+            detailEl.textContent = `LINE User ID: ${existingLineId.slice(0, 10)}... (บันทึกในระบบกลางแล้ว พร้อมรับแจ้งเตือนทุกครั้ง)`;
             if (btnEl) {
                 btnEl.textContent = '✅ เชื่อมต่อแล้ว';
                 btnEl.style.background = 'rgba(74, 222, 128, 0.2)';
@@ -263,7 +318,7 @@ const LiffHelper = {
             detailEl.textContent = 'กดปุ่มเพื่อดึงข้อมูลโปรไฟล์ LINE';
         } else {
             titleEl.textContent = '📱 เชื่อมต่อบัญชี LINE Official Account';
-            detailEl.textContent = 'กดปุ่มเพื่อล็อกอินและรับแจ้งเตือนผ่าน LINE';
+            detailEl.textContent = 'กดปุ่มเพื่อเชื่อมต่อและรับแจ้งเตือนผลความดีทุกครั้ง';
         }
     },
 
@@ -480,6 +535,13 @@ window.addEventListener('load', () => {
     if (isLanding && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
         try {
             LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
+        } catch(e) {}
+    } else {
+        // Automatically check and update LINE connection status card if on profile or dashboard
+        try {
+            if (typeof LiffHelper !== 'undefined' && LiffHelper.updateProfileUI) {
+                LiffHelper.updateProfileUI();
+            }
         } catch(e) {}
     }
 });

@@ -20,6 +20,13 @@ import ssl
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
+import sys
+sys.path.insert(0, os.path.join(BASE_DIR, 'backend'))
+try:
+    from line_notifier import notify_deed_status_line
+except Exception as _ne:
+    notify_deed_status_line = None
+
 def get_env_config(key, default=''):
     val = os.environ.get(key)
     if val: return val
@@ -164,6 +171,13 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
 
         # Trigger background git push
         push_updates_to_github_bg(f"อนุมัติความดี {student_id} โดย {approver_name}")
+
+        # Send LINE notification to student if student has line_user_id
+        if notify_deed_status_line and target_deed:
+            try:
+                notify_deed_status_line(student_id, target_deed, new_status, approver_name)
+            except Exception as _le:
+                print(f"⚠️ Error pushing LINE notification: {_le}")
         
     return target_deed
 
