@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================== CONFIG ====================
 const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
-    TELEGRAM_BOT_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
-    TELEGRAM_CHAT_ID: '-4839151586',
-    SYSTEM_URL: 'https://guided-ate-sponsors-algorithm.trycloudflare.com',
+    TELEGRAM_BOT_TOKEN: '',
+    TELEGRAM_CHAT_ID: '',
+    SYSTEM_URL: '',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
@@ -380,7 +380,7 @@ const App = {
 
                 // Build comprehensive set of valid passwords for seamless student access
                 const validPasswords = new Set([
-                    cleanId,                                   // 7-digit ID (e.g. 6603773)
+                    cleanId,                                   // 7-digit ID (e.g. XXXXXXX)
                     student.password,                          // student.password from database
                     localPwd,                                  // custom changed password
                     profilePwd,                                // profile password
@@ -538,9 +538,9 @@ const App = {
         if (typeof window === 'undefined' || !window.location) return false;
         const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('trycloudflare.com')) return true;
-        if (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) return true;
-        return true;
+        // Only the local Python server implements these legacy /api routes.
+        // Cloudflare/GAS integration must use its own authenticated adapter.
+        return hostname === 'localhost' || hostname === '127.0.0.1';
     },
 
     canUseBackendApi() {
@@ -1036,8 +1036,8 @@ const App = {
             const settings = this.getSettings ? this.getSettings() : {};
             const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
                 ? settings.telegramToken 
-                : '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s';
-            const tgChat = settings.adminChatId || '-4839151586';
+                : '';
+            const tgChat = settings.adminChatId || '';
 
             const student = (this.findStudent ? this.findStudent(studentId) : null) || (deedData ? deedData.student : null) || {};
             const studentName = student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}` : `นพอ. รหัส ${studentId}`;
@@ -1760,63 +1760,14 @@ const App = {
     },
 
     // ---------- TELEGRAM NOTIFY (TEXT & PHOTO) ----------
-    async sendTelegram(chatId, message, replyMarkup = null) {
-        const settings = this.getSettings();
-        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
-            ? settings.telegramToken 
-            : CONFIG.TELEGRAM_BOT_TOKEN;
-        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
-        if (!token || !targetChatId) return false;
-        try {
-            const bodyObj = { chat_id: targetChatId, text: message, parse_mode: 'HTML' };
-            if (replyMarkup) bodyObj.reply_markup = replyMarkup;
-            const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyObj)
-            });
-            if (!res.ok) {
-                const errText = await res.text().catch(() => '');
-                console.warn('⚠️ Telegram sendMessage warning:', res.status, errText);
-            }
-            return res.ok;
-        } catch (err) {
-            console.warn('⚠️ Telegram sendMessage error:', err);
-            return false;
-        }
+    async sendTelegram() {
+        // Notifications belong to the backend after durable persistence.
+        // Never use previously cached browser tokens, even when present.
+        return false;
     },
 
-    async sendTelegramPhoto(chatId, photoBlob, caption, replyMarkup = null) {
-        const settings = this.getSettings();
-        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
-            ? settings.telegramToken 
-            : CONFIG.TELEGRAM_BOT_TOKEN;
-        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
-        if (!token || !targetChatId || !photoBlob) return false;
-        try {
-            const formData = new FormData();
-            formData.append('chat_id', targetChatId);
-            formData.append('photo', photoBlob, 'deed_form.png');
-            if (caption) {
-                formData.append('caption', caption.length > 1024 ? caption.substring(0, 1020) + '...' : caption);
-                formData.append('parse_mode', 'HTML');
-            }
-            if (replyMarkup) {
-                formData.append('reply_markup', JSON.stringify(replyMarkup));
-            }
-            const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            });
-            if (!res.ok) {
-                const errText = await res.text().catch(() => '');
-                console.warn('⚠️ Telegram sendPhoto warning:', res.status, errText);
-            }
-            return res.ok;
-        } catch (err) {
-            console.warn('Telegram photo send error:', err);
-            return false;
-        }
+    async sendTelegramPhoto() {
+        return false;
     },
 
     // ---------- LINE NOTIFY ----------
@@ -2188,8 +2139,11 @@ function printStudentReport(studentId) {
 function startRealtimeUpdates() {
     if (typeof window === 'undefined' || typeof EventSource === 'undefined') return;
     if (!App.canUseBackendApi()) return;
+    if (startRealtimeUpdates.source || (startRealtimeUpdates.failures || 0) >= 3) return;
 
     const eventSource = new EventSource('/api/events');
+    startRealtimeUpdates.source = eventSource;
+    eventSource.onopen = () => { startRealtimeUpdates.failures = 0; };
     
     eventSource.addEventListener('deed_submitted', async (e) => {
         try {
@@ -2249,9 +2203,14 @@ function startRealtimeUpdates() {
     });
     
     eventSource.onerror = (err) => {
-        console.warn("EventSource disconnected, reconnecting in 3s...", err);
         eventSource.close();
-        setTimeout(startRealtimeUpdates, 3000);
+        startRealtimeUpdates.source = null;
+        startRealtimeUpdates.failures = (startRealtimeUpdates.failures || 0) + 1;
+        if (startRealtimeUpdates.failures < 3) {
+            setTimeout(startRealtimeUpdates, 3000 * startRealtimeUpdates.failures);
+        } else {
+            console.warn('Live updates unavailable; refresh to reconnect.');
+        }
     };
 }
 
@@ -2266,3 +2225,4 @@ if (typeof document !== 'undefined') {
 
 // ========== EXPORT ============
 if (typeof module !== 'undefined') module.exports = { App, CATEGORIES, CONFIG };
+

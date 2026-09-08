@@ -251,7 +251,7 @@ function submitDeed_(session, payload, requestId) {
   const activityDate = clean_(payload.activityDate, 20);
   const hours = Number(payload.hours);
   const description = clean_(payload.description, 1200);
-  if (!studentId || !category || !/^\d{4}-\d{2}-\d{2}$/.test(activityDate) || !(hours >= 0.5 && hours <= 24) || description.length < 5) {
+  if (!/^\d{7}$/.test(studentId) || !category || !/^\d{4}-\d{2}-\d{2}$/.test(activityDate) || !Number.isFinite(hours) || !(hours >= 0.5 && hours <= 24) || !Number.isInteger(hours * 2) || description.length < 5) {
     throw new Error('ข้อมูลกิจกรรมไม่ครบหรือไม่ถูกต้อง');
   }
   if (session.role === 'student' && session.studentId && studentId !== session.studentId) throw new Error('รหัสนักเรียนไม่ตรงกับบัญชี');
@@ -259,7 +259,7 @@ function submitDeed_(session, payload, requestId) {
   const lock = LockService.getScriptLock();
   lock.waitLock(20000);
   try {
-    const duplicate = findRecord_(function(row) { return String(row.requestId) === requestId; });
+    const duplicate = findRecord_(function(row) { return String(row.requestId) === requestId && String(row.memberId) === String(session.memberId); });
     if (duplicate) return { deed: publicDeed_(duplicate, session), duplicate: true };
     const evidence = saveEvidence_(payload.evidence, session, requestId);
     const now = new Date().toISOString();
@@ -295,7 +295,8 @@ function reviewDeed_(session, payload, requestId) {
     const index = table.rows.findIndex(function(row) { return String(row.recordId) === recordId; });
     if (index < 0) throw new Error('ไม่พบรายการ');
     const record = table.rows[index];
-    if (record.status !== 'pending' && session.role !== 'admin') throw new Error('รายการนี้ได้รับการตรวจแล้ว');
+    if (record.status === decision) return { deed: publicDeed_(record, session), duplicate: true };
+    if (record.status !== 'pending') throw new Error('รายการนี้ได้รับการตรวจแล้ว ต้องใช้กระบวนการแก้ไขพร้อมเหตุผลแยกต่างหาก');
     const before = record.status;
     const now = new Date().toISOString();
     updateRow_(table.sheet, table.headers, index + 2, {
@@ -761,3 +762,4 @@ function safeError_(error) { const message=error&&error.message?String(error.mes
 function allowedOrigin_(origin) { const configured=PropertiesService.getScriptProperties().getProperty('ALLOWED_ORIGIN')||GD.DEFAULT_ORIGIN; return String(origin||'')===configured?configured:configured; }
 function bridge_(message,origin) { const json=JSON.stringify(message).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026'); const html='<!doctype html><meta charset="utf-8"><script>parent.postMessage('+json+','+JSON.stringify(origin)+');<\/script>'; return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL); }
 function json_(object) { return ContentService.createTextOutput(JSON.stringify(object)).setMimeType(ContentService.MimeType.JSON); }
+
