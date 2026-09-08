@@ -1,3 +1,20 @@
+# Current checkpoint — 2026-09-08 integration review
+
+State: DRAFT / STAGING ONLY / PRODUCTION WRITE = FALSE.
+Based on owner updates through remote `7ef7ffb788a31ec091aa334df00a0e91cd2d469f`; preserve those changes.
+
+- Current review: `docs/RELEASE_REVIEW_20260908.md`. Read it before any deployment. Older PASS/complete claims below are historical reports, not verification from this review.
+- Implemented: closed Python unauthenticated API/static PII paths; retired unverified LINE binding; TLS/environment-only notification transport; existing Cloudflare session client; authenticated pilot read view and honest states; mapped eight-column staging reader; duplicate/number/formula approval guards.
+- Live staging schema verified read-only: master has split names and combined Lv.N level text; ledger has eight columns (status G, submitted H). Schema example is in `docs/staging-columns.example.json` and contains no student data.
+- Local results: 54 JavaScript + 11 Python tests passed; syntax checks passed. Four newly added approval regressions failed before fixing. Updated UI has VM state/escaping/filter tests, but no successful visual browser capture.
+- Publication checkpoint: local regression 65/65 and unchanged PII rules passed across all 52 PR-touched files (including owner changes); await CI on the new remote commit before treating GitHub checks as passed.
+- Final cleanup: exact owner/deed document lookup; no fabricated URL record; source roster and old QA seeds preserved in owner-only Drive archive; bot literals removed; unsafe public exporters and destructive settings reset suspended. Four document cases failed before the fix.
+- Live main still served old v3560 assets and repeated SSE warnings. Draft branch work has not been deployed.
+- Next exact task: identify the owned Apps Script editor/deployment and Cloudflare staging version, configure explicit master/ledger maps and gateway origin, then test self reads with a controlled staging identity. Do not use the positional legacy approval writer on the eight-column ledger. Do not deploy this backend alone.
+- Still blocked: runtime deployment/version/secret rotation, mapped writes/scoped review/evidence/activation, durable outbox, real end-to-end and mobile visual QA. No source-only claim can close these gates.
+
+## Historical checkpoint supplied by earlier work
+
 # RTAFNC Good Deeds 2569 — Work State Tracker 📋
 
 **Current Branch:** `codex/fable-gooddeed-hardening-20260907`  
@@ -36,10 +53,10 @@
 
 - **Backend Server**: Port 3000 (`python3 backend/server.py 3000`)
 - **Telegram Bot Listener**: Background continuous poller (`python3 data/telegram_bot_listener.py`)
-- **Cloudflare Tunnel (Staging URL)**: `https://guided-ate-sponsors-algorithm.trycloudflare.com`
+- **Cloudflare Tunnel (Staging URL)**: `[temporary staging tunnel — verify privately]`
 - **LINE LIFF ID**: `2010948179-Ympqt2bT`
 - **LINE OA Bot**: ฟ้าใส (`@409gzbav`)
-- **Telegram Group ID**: `-4839151586`
+- **Telegram Group ID**: configured privately
 
 ---
 

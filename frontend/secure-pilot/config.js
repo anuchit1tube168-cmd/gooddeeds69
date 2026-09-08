@@ -1,4 +1,6 @@
 window.GOOD_DEED_CONFIG = Object.freeze({
+  TRANSPORT: "gateway",
+  GATEWAY_ORIGIN: "", // Owned staging HTTPS origin, verified before enabling.
   APP_NAME: "ระบบบันทึกความดี วพอ. 2569",
   LIFF_ID: "2010948179-Ympqt2bT",
   LIFF_ENDPOINT_PATH: "/gooddeeds69/frontend/index.html",
@@ -10,3 +12,4 @@ window.GOOD_DEED_CONFIG = Object.freeze({
     "https://script.googleusercontent.com"
   ]
 });
+

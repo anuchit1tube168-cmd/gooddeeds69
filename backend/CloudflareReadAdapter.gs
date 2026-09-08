@@ -45,17 +45,15 @@ function cloudflareLegacyReadHandle_(e) {
     const ledger=ss && ss.getSheetByName(SHEETS.DEEDS);
     if(!master||!ledger) throw new Error('ADAPTER_STORAGE_UNAVAILABLE');
     const masterValues=master.getDataRange().getValues();
-    const matches=masterValues.slice(1).filter(r=>String(r[1])===subject);
+    const masterMap=readAdapterMap_(props,'GOODDEED_MASTER_COLUMN_MAP','MASTER');
+    const studentColumn=readAdapterIndex_(masterValues[0],masterMap.studentId,'MASTER');
+    const matches=masterValues.slice(1).filter(r=>String(r[studentColumn])===subject);
     if(matches.length!==1) throw new Error('ADAPTER_IDENTITY_AMBIGUOUS');
-    const rows=ledger.getDataRange().getValues().slice(1).filter(r=>String(r[1])===subject);
+    const rows=readAdapterLedger_(props,ledger.getDataRange().getValues(),subject);
     if(action==='cloudflareCardSelf') {
       return jsonResponse({ok:true,requestId,data:{card:readAdapterOfficialCard_(props,masterValues[0],matches[0],rows,subject)}});
     }
-    const items=rows.map(r=>{
-      const hours=readAdapterDecimal_(r[3]), categoryId=readAdapterDecimal_(r[2]), status=String(r[9]);
-      if(!Number.isFinite(hours)||hours<0.5||hours>24||!Number.isInteger(hours*2)||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
-      return {deedId:String(r[0]),categoryId,hours,activityDate:readAdapterDate_(r[4]),description:String(r[5]||''),status,submittedAt:readAdapterDate_(r[10]),hasEvidence:Boolean(r[7])};
-    }).sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)).slice(0,limit);
+    const items=rows.sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)).slice(0,limit);
     return jsonResponse({ok:true,requestId,data:{items}});
   } catch(error) {
     const message=String(error.message||'');
@@ -69,17 +67,8 @@ function readAdapterDate_(v){return v instanceof Date?v.toISOString():String(v||
 // Exact headers must be mapped from the verified staging sheet. Never infer
 // levels, annual pass status or carry-forward from a partial list of deeds.
 function readAdapterOfficialCard_(props,headers,row,rows,subject) {
-  let map;
-  try { map=JSON.parse(props.getProperty('GOODDEED_MASTER_COLUMN_MAP')||''); }
-  catch (_) { throw new Error('ADAPTER_MASTER_MAPPING_REQUIRED'); }
-  if(!map||typeof map!=='object'||Array.isArray(map)) throw new Error('ADAPTER_MASTER_MAPPING_REQUIRED');
-  function cell(key) {
-    const name=map[key];
-    if(typeof name!=='string'||!name.trim()) throw new Error('ADAPTER_MASTER_MAPPING_REQUIRED');
-    const indices=headers.map((h,i)=>String(h)===name?i:-1).filter(i=>i>=0);
-    if(indices.length!==1) throw new Error('ADAPTER_MASTER_HEADER_INVALID');
-    return row[indices[0]];
-  }
+  const map=readAdapterMap_(props,'GOODDEED_MASTER_COLUMN_MAP','MASTER');
+  function cell(key) { return row[readAdapterIndex_(headers,map[key],'MASTER')]; }
   function text(key,max) {
     const value=cell(key);
     if(typeof value!=='string'||!value.trim()||value.length>max) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
@@ -92,18 +81,36 @@ function readAdapterOfficialCard_(props,headers,row,rows,subject) {
     return parsed;
   }
   if(String(cell('studentId'))!==subject) throw new Error('ADAPTER_IDENTITY_AMBIGUOUS');
-  const level=number('levelNumber',10);
+  let level, levelLabel;
+  if(map.level !== undefined) {
+    // Observed official format, e.g. Lv.1 Cadet Novice. Parse the stored label,
+    // never infer a level from hours. Any other format needs a reviewed mapping.
+    const match=/^Lv\.([1-9]|10) (\S.{0,178})$/.exec(text('level',185));
+    if(!match) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
+    level=Number(match[1]); levelLabel=match[2];
+  } else { level=number('levelNumber',10); levelLabel=text('levelLabel',180); }
   if(!Number.isInteger(level)||level<1) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
+  let displayName;
+  if(Array.isArray(map.displayName)) {
+    if(!map.displayName.length||map.displayName.length>4) throw new Error('ADAPTER_MASTER_MAPPING_REQUIRED');
+    displayName=map.displayName.map(name=>{
+      const value=row[readAdapterIndex_(headers,name,'MASTER')];
+      if(typeof value!=='string'||!value.trim()) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
+      return value.trim();
+    }).join(' ');
+    if(displayName.length>120) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
+  } else displayName=text('displayName',120);
+  const cohort=cell('cohortLabel');
+  if((typeof cohort!=='string' && !(typeof cohort==='number' && Number.isInteger(cohort))) || !String(cohort).trim() || String(cohort).length>80) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
   const passValue=cell('passed');
   const passed=passValue===true||passValue==='ผ่านเกณฑ์ ✅';
   if(!passed&&passValue!==false&&passValue!=='ยังไม่ผ่าน ❌') throw new Error('ADAPTER_MASTER_VALUE_INVALID');
-  if(rows.some(r=>!['pending','approving','approved','rejected'].includes(String(r[9])))) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
   return {
-    studentId:subject,displayName:text('displayName',120),cohortLabel:text('cohortLabel',80),
+    studentId:subject,displayName,cohortLabel:String(cohort).trim(),
     positionLabel:'นักเรียนพยาบาล',totalHours:number('totalHours',10000),
-    levelNumber:level,levelLabel:text('levelLabel',180),passed,
-    approvedCount:rows.filter(r=>r[9]==='approved').length,
-    pendingCount:rows.filter(r=>r[9]==='pending'||r[9]==='approving').length
+    levelNumber:level,levelLabel,passed,
+    approvedCount:rows.filter(r=>r.status==='approved').length,
+    pendingCount:rows.filter(r=>r.status==='pending'||r.status==='approving').length
   };
 }
 
@@ -112,4 +119,29 @@ function readAdapterDecimal_(value) {
   if(typeof value==='number') return value;
   if(typeof value==='string' && /^\d+(?:\.\d+)?$/.test(value.trim())) return Number(value.trim());
   return NaN;
+}
+
+function readAdapterMap_(props,key,kind) {
+  let map;
+  try { map=JSON.parse(props.getProperty(key)||''); } catch (_) { throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED'); }
+  if(!map||typeof map!=='object'||Array.isArray(map)) throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED');
+  return map;
+}
+function readAdapterIndex_(headers,name,kind) {
+  if(typeof name!=='string'||!name.trim()) throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED');
+  const indices=(headers||[]).map((header,i)=>String(header)===name?i:-1).filter(i=>i>=0);
+  if(indices.length!==1) throw new Error('ADAPTER_'+kind+'_HEADER_INVALID');
+  return indices[0];
+}
+function readAdapterLedger_(props,values,subject) {
+  const map=readAdapterMap_(props,'GOODDEED_LEDGER_COLUMN_MAP','LEDGER'), columns={};
+  ['deedId','studentId','categoryId','hours','activityDate','description','status','submittedAt'].forEach(key=>{columns[key]=readAdapterIndex_(values[0],map[key],'LEDGER');});
+  if(map.evidenceUrl!==undefined) columns.evidenceUrl=readAdapterIndex_(values[0],map.evidenceUrl,'LEDGER');
+  const seen=new Set();
+  return values.slice(1).filter(row=>String(row[columns.studentId])===subject).map(row=>{
+    const id=String(row[columns.deedId]||''),hours=readAdapterDecimal_(row[columns.hours]), categoryId=readAdapterDecimal_(row[columns.categoryId]), status=String(row[columns.status]);
+    if(!id||id.length>120||seen.has(id)||!Number.isFinite(hours)||hours<0.5||hours>24||!Number.isInteger(hours*2)||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
+    seen.add(id);
+    return {deedId:id,categoryId,hours,activityDate:readAdapterDate_(row[columns.activityDate]),description:String(row[columns.description]||'').slice(0,1200),status,submittedAt:readAdapterDate_(row[columns.submittedAt]),hasEvidence:columns.evidenceUrl!==undefined && Boolean(row[columns.evidenceUrl])};
+  });
 }

@@ -11,7 +11,7 @@ function backend() {
   const master = [Array(18).fill('header'), ['', '9900001', '', '', '', '', 0,0,0,0,0,5,0,0,0,5,'','']];
   const writes = [], messages = [];
   let failMaster = false;
-  const sheet = (rows, type) => ({getDataRange:()=>({getValues:()=>rows.map(r=>[...r])}),getRange:(r,c)=>({getFormula:()=>String(rows[r-1][c-1]).startsWith('=')?rows[r-1][c-1]:'',setValue:v=>{if(type==='master' && failMaster) throw Error('storage unavailable'); rows[r-1][c-1]=v;writes.push([type,c,v]);},setFormula:v=>{rows[r-1][c-1]=v;}})});
+  const sheet = (rows, type) => ({getDataRange:()=>({getValues:()=>rows.map(r=>r.map(v=>typeof v==='string'&&v.startsWith('=')?5:v))}),getRange:(r,c)=>({getFormula:()=>String(rows[r-1][c-1]).startsWith('=')?rows[r-1][c-1]:'',setValue:v=>{if(type==='master' && failMaster) throw Error('storage unavailable'); rows[r-1][c-1]=v;writes.push([type,c,v]);},setFormula:v=>{rows[r-1][c-1]=v;}})});
   const sheets = {Deeds_2569:sheet(ledger,'ledger'),Main_2569:sheet(master,'master')};
   const props = {TELEGRAM_WEBHOOK_KEY:'x'.repeat(32),TELEGRAM_APPROVER_IDS:'123',TELEGRAM_CHAT_ID:'-456',TELEGRAM_BOT_TOKEN:'synthetic'};
   const context = vm.createContext({console,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]||''})},SpreadsheetApp:{getActiveSpreadsheet:()=>({getSheetByName:n=>sheets[n]}),flush:()=>{}},LockService:{getScriptLock:()=>({waitLock:()=>{},releaseLock:()=>{}})},UrlFetchApp:{fetch:(url,opts)=>{messages.push(JSON.parse(opts.payload));return {getResponseCode:()=>200}}}});
@@ -70,4 +70,18 @@ test('frontend notification functions never use browser tokens',async()=>{
 test('v2 rejects quarter-hour increments before any storage call',()=>{
   const context=vm.createContext({console});vm.runInContext(source('backend/CodeV2.gs'),context);
   assert.throws(()=>context.submitDeed_({role:'student',studentId:TEST_STUDENT,memberId:'synthetic'}, {studentId:TEST_STUDENT,category:'6',activityDate:'2026-09-06',hours:0.75,description:'Synthetic activity'},'test'),/ข้อมูลกิจกรรม/);
+});
+
+test('duplicate ledger or master identities never approve an arbitrary row',()=>{
+  for(const kind of ['ledger','master']){const b=backend();b[kind].push([...b[kind][1]]);assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).status,'error');assert.equal(b.writes.length,0);}
+});
+test('invalid stored half-hour values do not transition the ledger',()=>{
+  for(const value of [true,'1e1','0x10',0.25,0.75]){const b=backend();b.ledger[1][3]=value;assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'invalid_stored_deed');assert.equal(b.writes.length,0);}
+});
+test('invalid master category or total fails before an approving marker is written',()=>{
+  for(const [column,value] of [[11,'not-a-number'],[11,-1],[15,true],[15,'  '],[15,'1e2']]){const b=backend();b.master[1][column]=value;assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'master_requires_reconciliation');assert.equal(b.writes.length,0);}
+});
+test('existing category and total formulas survive approval',()=>{
+  const b=backend();b.master[1][11]='=SUMIF(Deeds!A:A,B2,Deeds!D:D)';b.master[1][15]='=SUM(G2:O2)+100';const original=[...b.master[1]];
+  assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).status,'success');assert.equal(b.master[1][11],original[11]);assert.equal(b.master[1][15],original[15]);
 });

@@ -1,8 +1,8 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
-const files = ['frontend/app.js','frontend/secure-pilot/app.js','backend/Code.gs','backend/CodeV2.gs','backend/CloudflareReadAdapter.gs'];
+const files = ['frontend/app.js','frontend/secure-pilot/app.js','backend/Code.gs','backend/CodeV2.gs','backend/CloudflareReadAdapter.gs','frontend/liff-sdk.js','frontend/gateway-config.js','frontend/gateway-client.js','frontend/secure-pilot/gateway-view.js'];
 for (const file of files) new vm.Script(fs.readFileSync(file,'utf8'),{filename:file});
-for (const file of ['frontend/index.html','frontend/secure-pilot/index.html']) {
+for (const file of ['frontend/index.html','frontend/profile.html','frontend/student-dashboard.html','frontend/submit-deed.html','frontend/teacher-dashboard.html','frontend/secure-pilot/index.html','frontend/approve_sign.html','frontend/deed_slip.html','frontend/qa-board.html']) {
   const html=fs.readFileSync(file,'utf8'); let i=0;
   for(const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
     if (/\bsrc\s*=/.test(match[1]) || /application\/ld\+json/.test(match[1])) continue;
@@ -10,3 +10,6 @@ for (const file of ['frontend/index.html','frontend/secure-pilot/index.html']) {
   }
 }
 console.log('JavaScript, Apps Script and inline HTML script syntax passed.');
+
+require('node:child_process').execFileSync('python3',['-c', "import ast,pathlib; [ast.parse(pathlib.Path(p).read_text(),filename=p) for p in ['backend/server.py','backend/line_notifier.py','data/build_photos.py','data/sync_all_students.py','data/embed_settings_to_excel.py','data/line_webhook_bot.py']]"],{stdio:'inherit'});
+console.log('Python source syntax passed.');

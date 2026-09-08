@@ -1,3 +1,5 @@
+> Current integration instructions (2026-09-08): see [Release review](docs/RELEASE_REVIEW_20260908.md). Python now serves static previews only. The gateway pilot requires a verified origin and explicit master/ledger header maps. The inspected eight-column staging ledger must never be written by the positional legacy approval handler. Earlier pilot instructions below do not waive these gates.
+
 # คู่มือระบบความดี วพอ. — ชุดปรับปรุงและส่งต่องาน
 
 วันที่ 7 กันยายน 2569 • สถานะ: Draft สำหรับตรวจและทดสอบ ยังไม่ใช่รุ่นเปิดใช้งานจริง
@@ -91,3 +93,13 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 ตั้ง GOODDEED_MASTER_COLUMN_MAP เป็น JSON object ที่มี key: studentId, displayName, cohortLabel, totalHours, levelNumber, levelLabel, passed โดยแต่ละ value เป็นชื่อหัวคอลัมน์จริงที่ตรวจแล้วและไม่ซ้ำใน Student Master ของ staging ห้ามคัดลอกชื่อสมมติไปใช้จริงหรือสร้างระดับจากยอดเอง displayName/cohortLabel/levelLabel ต้องเป็นข้อความไม่ว่าง; levelNumber เป็นจำนวนเต็ม 1–10; totalHours เป็นตัวเลข 0–10000; passed รับ boolean หรือข้อความ ผ่านเกณฑ์ ✅ / ยังไม่ผ่าน ❌ ที่ตรงทุกตัวอักษร หาก schema จริงต่างจากนี้ให้ตรวจและปรับตัวแปลงพร้อมเทสต์ก่อนเปิดใช้งาน ไม่แก้ข้อมูลต้นทางอัตโนมัติ
 
 ยอด card อ่านจาก master เพื่อรักษายอดยกมา ส่วน approvedCount/pendingCount นับเฉพาะรายการของผู้ใช้ที่ลงลายเซ็น ไม่ใช่ผลรับรองเกณฑ์รายปี ทดสอบจำลองรวม 24 เคสผ่าน; ยังไม่ได้ทดสอบเชื่อมบริการจริง
+
+## Gateway pilot ที่เพิ่มในชุดล่าสุด
+
+เปิด `frontend/secure-pilot/index.html` หลังตั้ง `GATEWAY_ORIGIN` ใน config.js ให้ตรงกับ Cloudflare staging ที่ตรวจแล้ว ส่วนหน้าเดิมใช้ `frontend/gateway-config.js` การตั้งว่างจะแสดงว่ายังไม่พร้อมและไม่ส่ง token ไปที่อื่น ห้ามตั้งจาก query string หรือ localStorage
+
+ลำดับ: LINE ID token → gateway ตรวจ token → cookie session → ผูก Student Master ที่ยืนยันแล้ว → อ่าน card/list เฉพาะตนเอง ยอดรวมใช้ master ไม่รวมจากรายการบางส่วน เมื่อเซสชันหมดอายุให้ซ่อนข้อมูล; เมื่อ refresh ล้มเหลวให้แจ้งว่าอาจไม่เป็นปัจจุบัน
+
+ตัวอย่าง schema อยู่ใน `docs/staging-columns.example.json`: serialize object แต่ละอันเป็นค่า Script Properties `GOODDEED_MASTER_COLUMN_MAP` และ `GOODDEED_LEDGER_COLUMN_MAP` ก่อนใช้ตรวจหัวคอลัมน์กับ staging อีกครั้ง รองรับชื่อแยกหลายช่องและระดับที่มีรูปแบบ `Lv.N label` จากต้นทาง ไม่คำนวณระดับเอง ถ้ารูปแบบไม่ตรงให้หยุดและตรวจข้อมูล
+
+ทดสอบ: `node scripts/check-syntax.cjs`, `node --test tests/*.test.cjs`, `python3 -m unittest discover -s tests -p 'test_*.py' -v` ชุดล่าสุดผ่าน 60 เคสในเครื่อง ไม่ใช่ผลทดสอบบริการจริง

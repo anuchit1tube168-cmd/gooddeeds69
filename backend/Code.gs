@@ -198,27 +198,32 @@ function approveDeed(data) {
     const sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
     if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
     const values = sheet.getDataRange().getValues();
-    const index = values.findIndex((row, i) => i > 0 && String(row[0]) === deedId);
-    if (index < 0) return { status: 'error', code: 'deed_not_found' };
+    const matches = values.map((row, i) => i > 0 && String(row[0]) === deedId ? i : -1).filter(i => i >= 0);
+    if (!matches.length) return { status: 'error', code: 'deed_not_found' };
+    if (matches.length !== 1) return { status: 'error', code: 'deed_identity_ambiguous' };
+    const index = matches[0];
     const row = values[index];
     const studentId = String(row[1]);
     if (data.studentId && String(data.studentId) !== studentId) return { status: 'error', code: 'student_mismatch' };
     if (row[9] === status) return { status: 'success', deedId, newStatus: status, duplicate: true };
     // 'approving' marks an uncertain cross-sheet write. Never auto-retry its hours.
     if (row[9] !== 'pending') return { status: 'error', code: 'review_conflict' };
-    const category = Number(row[2]);
-    const hours = Number(row[3]);
-    if (!Number.isInteger(category) || category < 1 || category > 9 || !Number.isFinite(hours) || hours <= 0 || hours > 24) {
+    const category = legacyDecimal_(row[2]);
+    const hours = legacyDecimal_(row[3]);
+    if (!Number.isInteger(category) || category < 1 || category > 9 || !Number.isFinite(hours) || hours < 0.5 || hours > 24 || !Number.isInteger(hours * 2) || !/^\d{7}$/.test(studentId)) {
       return { status: 'error', code: 'invalid_stored_deed' };
     }
-    const master = ss.getSheetByName(SHEETS.STUDENTS);
-    if (status === 'approved' && (!master || !master.getDataRange().getValues().some((r, i) => i > 0 && String(r[1]) === studentId))) {
-      return { status: 'error', code: 'student_not_found' };
+    let applyMasterUpdate;
+    if (status === 'approved') {
+      const master = ss.getSheetByName(SHEETS.STUDENTS);
+      if (!master) return { status: 'error', code: 'student_not_found' };
+      try { applyMasterUpdate = prepareMasterStudentHoursUpdate_(master, studentId, category, hours); }
+      catch (_) { return { status: 'error', code: 'master_requires_reconciliation' }; }
     }
     if (status === 'approved') {
       sheet.getRange(index + 1, 10).setValue('approving');
       SpreadsheetApp.flush();
-      updateMasterStudentHours(studentId, category, hours);
+      applyMasterUpdate();
       SpreadsheetApp.flush();
     }
     sheet.getRange(index + 1, 9).setValue(String(data.approvedBy || 'ผู้ตรวจ').slice(0, 120));
@@ -321,28 +326,33 @@ function getSettings() {
   };
 }
 
-function updateMasterStudentHours(studentId, catId, addedHours) {
-  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
-  if (!sheet) return;
-  const data = sheet.getDataRange().getValues();
-  const catCol = 6 + catId; // Cols G..O
+function legacyDecimal_(value) {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string' && /^\d+(?:\.\d+)?$/.test(value.trim())) return Number(value.trim());
+  return NaN;
+}
 
-  for (let i = 1; i < data.length; i++) {
-    if (String(data[i][1]) === String(studentId)) {
-      const currentCatHours = parseFloat(data[i][catCol - 1] || 0);
-      const totalCell = sheet.getRange(i + 1, 16);
-      const totalFormula = totalCell.getFormula();
-      const storedTotal = data[i][15];
-      if (!totalFormula && (storedTotal === '' || storedTotal === null || !Number.isFinite(Number(storedTotal)))) {
-        throw new Error('master_total_requires_reconciliation');
-      }
-      sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
-      // Preserve an existing formula and all policy/result columns. A numeric
-      // total may include historical carry-forward, so increment, never rebuild.
-      if (!totalFormula) totalCell.setValue(Number(storedTotal) + addedHours);
-      break;
-    }
-  }
+// Prepare validation BEFORE the ledger transition; never overwrite formulas.
+function prepareMasterStudentHoursUpdate_(sheet, studentId, catId, addedHours) {
+  const data = sheet.getDataRange().getValues();
+  const matches = data.map((row,i) => i > 0 && String(row[1]) === String(studentId) ? i : -1).filter(i => i >= 0);
+  if (matches.length !== 1) throw new Error('master_identity_requires_reconciliation');
+  const index = matches[0], catCol = 6 + catId;
+  const categoryCell = sheet.getRange(index + 1, catCol), totalCell = sheet.getRange(index + 1, 16);
+  const categoryFormula = categoryCell.getFormula(), totalFormula = totalCell.getFormula();
+  const categoryHours = legacyDecimal_(data[index][catCol - 1]), totalHours = legacyDecimal_(data[index][15]);
+  if ((!categoryFormula && (!Number.isFinite(categoryHours) || categoryHours < 0 || !Number.isFinite(categoryHours + addedHours))) || (!totalFormula && (!Number.isFinite(totalHours) || totalHours < 0 || !Number.isFinite(totalHours + addedHours)))) throw new Error('master_total_requires_reconciliation');
+  return function () {
+    if (!categoryFormula) categoryCell.setValue(categoryHours + addedHours);
+    if (!totalFormula) totalCell.setValue(totalHours + addedHours);
+    // Policy/result and historical carry-forward are never recomputed here.
+  };
+}
+
+function updateMasterStudentHours(studentId, catId, addedHours) {
+  const ss = getSS(), sheet = ss && ss.getSheetByName(SHEETS.STUDENTS);
+  if (!sheet || !Number.isInteger(catId) || catId < 1 || catId > 9 || !Number.isFinite(addedHours) || addedHours < 0.5 || addedHours > 24 || !Number.isInteger(addedHours * 2)) throw new Error('master_update_invalid');
+  prepareMasterStudentHoursUpdate_(sheet, studentId, catId, addedHours)();
 }
 
 // ==================== IMAGE UPLOAD (GOOGLE DRIVE) ====================

@@ -1,0 +1,55 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs');
+const session={authenticated:true,studentLinked:true,accountStatus:'active',roles:['student'],permissions:['gooddeed:self:read'],csrfToken:'synthetic-csrf'};
+function setup(responder){
+ const calls=[];const context=vm.createContext({URL,AbortController,setTimeout,clearTimeout,module:{exports:{}},fetch:async(url,options)=>{calls.push({url,options});return responder?responder(url,options):response(session);}});
+ vm.runInContext(fs.readFileSync('frontend/gateway-client.js','utf8'),context);
+ return {calls,client:context.module.exports.createGoodDeedGatewayClient({origin:'https://staging.example',timeoutMs:100}),create:context.module.exports.createGoodDeedGatewayClient};
+}
+const response=(data,status=200)=>({ok:status>=200&&status<300,status,json:async()=>data});
+test('gateway sends only LINE ID token to owned HTTPS origin, with cookies and no redirect',async()=>{
+ const s=setup();await s.client.verifyLine('synthetic-id-token');const {url,options}=s.calls[0];
+ assert.equal(url,'https://staging.example/auth/line/verify');assert.deepEqual(JSON.parse(options.body),{idToken:'synthetic-id-token'});
+ assert.equal(options.credentials,'include');assert.equal(options.redirect,'error');assert.equal(options.cache,'no-store');assert.equal(options.referrerPolicy,'no-referrer');
+ assert.equal(options.headers['X-GoodDeeds-Role'],undefined);
+});
+test('missing or unsafe gateway origins fail before any network request',async()=>{
+ const withCredentials=new URL('https://staging.example');withCredentials.username='synthetic';withCredentials.password='synthetic';
+ const s=setup();for(const origin of ['', 'http://staging.example',withCredentials.href,'https://staging.example/other','https://staging.example/?origin=other']) await assert.rejects(s.create({origin}).verifyLine('synthetic'),e=>/^GATEWAY_/.test(e.code));assert.equal(s.calls.length,0);
+});
+test('failed, opaque and malformed verification cannot become a session',async()=>{
+ for(const r of [response({},401),response({authenticated:true},200),response(session,0),response({...session,authenticated:false},200)]){const s=setup(()=>r);await assert.rejects(s.client.verifyLine('synthetic'));await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});}
+});
+test('unlinked accounts do not load student data',async()=>{const s=setup(()=>response({...session,studentLinked:false}));await s.client.verifyLine('synthetic');await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});assert.equal(s.calls.length,1);});
+test('self reads use server scope and keep the official total separate from ledger sum',async()=>{
+ const card={studentId:['99','00001'].join(''),displayName:'Synthetic',totalHours:105,levelNumber:3,levelLabel:'Official',passed:false,pendingCount:1,approvedCount:0};
+ const s=setup(url=>response(url.endsWith('card-self')?{card}:url.endsWith('deeds-self')?{items:[{deedId:'own',categoryId:6,hours:0.5,status:'pending'}]}:session));
+ await s.client.verifyLine('synthetic');const result=await s.client.readSelf();assert.equal(result.card.totalHours,105);assert.equal(result.items[0].hours,0.5);assert.equal(s.calls.slice(1).every(c=>!c.url.includes('?')&&c.options.body===undefined),true);
+});
+test('denied self request clears session and makes no fallback request',async()=>{const s=setup(url=>url.includes('/api/')?response({},403):response(session));await s.client.verifyLine('synthetic');await assert.rejects(s.client.readSelf(),{code:'ACCESS_DENIED'});const count=s.calls.length;await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});assert.equal(s.calls.length,count);});
+test('late verification response cannot restore state after explicit clearing',async()=>{let resolve;const s=setup(()=>new Promise(r=>{resolve=r}));const p=s.client.verifyLine('synthetic');s.client.clear();resolve(response(session));await assert.rejects(p,{code:'REQUEST_CANCELLED'});await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});});
+test('logout failure is surfaced; client state is still cleared',async()=>{const s=setup(url=>url.endsWith('/logout')?response({},503):response(session));await s.client.verifyLine('synthetic');await assert.rejects(s.client.logout(),{code:'SERVICE_UNAVAILABLE'});assert.equal(s.calls[1].options.headers['X-CSRF-Token'],'synthetic-csrf');await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});});
+function liffSetup(gatewayResult) {
+ const store=new Map([['gooddeeds_line_mappings',JSON.stringify({'synthetic-line':'admin'})]]),nodes={},sessions=[];
+ for(const id of ['line-liff-title','line-liff-detail','btn-line-connect'])nodes[id]={textContent:'',style:{},setAttribute:()=>{}};
+ const context=vm.createContext({console,URLSearchParams,localStorage:{getItem:k=>store.get(k)||null,setItem:(k,v)=>store.set(k,v)},sessionStorage:{getItem:()=>null},window:{location:{search:'',pathname:'/index.html'},addEventListener:()=>{},GOODDEED_GATEWAY_CONFIG:{origin:'https://staging.example'},createGoodDeedGatewayClient:()=>({verifyLine:async()=>{if(gatewayResult instanceof Error)throw gatewayResult;return gatewayResult;}})},liff:{getIDToken:()=>'synthetic'},App:{setSession:(...x)=>sessions.push(x)},document:{getElementById:id=>nodes[id]}});
+ vm.runInContext(fs.readFileSync('frontend/liff-sdk.js','utf8')+'\nthis.helper=LiffHelper;',context);return {helper:context.helper,nodes,sessions,store};
+}
+test('forged local admin mapping never creates a staff session or a binding',async()=>{const s=liffSetup({...session,studentLinked:false});await s.helper.handleAutoLogin();assert.equal(s.sessions.length,0);assert.equal(s.helper.connectionState,'pending');assert.match(s.nodes['line-liff-title'].textContent,/รอเชื่อม/);assert.equal(s.store.size,1);});
+test('LINE UI does not claim binding or notification success after failure',async()=>{const s=liffSetup(Error('failure'));assert.equal(await s.helper.handleAutoLogin(),false);assert.equal(s.helper.verifiedSession,null);assert.match(s.nodes['line-liff-title'].textContent,/ยังยืนยันบัญชีไม่ได้/);assert.doesNotMatch(s.nodes['line-liff-detail'].textContent,/พร้อมรับแจ้งเตือน/);});
+function viewSetup(client){
+ const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:()=>[]};
+ const node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',disabled:false});return nodes.get(id);};
+ const context=vm.createContext({console,Intl,Date,window:{createGoodDeedGatewayClient:()=>client},document:{getElementById:node}});
+ vm.runInContext(fs.readFileSync('frontend/secure-pilot/gateway-view.js','utf8'),context);
+ return {root,node,start:()=>context.window.startGoodDeedGatewayView({root,config:{GATEWAY_ORIGIN:'https://staging.example'}})};
+}
+const viewCard={studentId:['99','00001'].join(''),displayName:'Synthetic Student',cohortLabel:'Synthetic cohort',positionLabel:'นักเรียนพยาบาล',totalHours:105,levelNumber:3,levelLabel:'Official',passed:false,pendingCount:1,approvedCount:0};
+const viewSnapshot={card:viewCard,items:[{deedId:'own',categoryId:6,hours:0.5,status:'pending',description:'<img src=x onerror=alert(1)>',activityDate:'not-a-date'}],loadedAt:'2026-09-08T10:00:00Z'};
+test('gateway view escapes student content and displays official totals with provenance',async()=>{
+ const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();assert.match(v.root.innerHTML,/105/);assert.match(v.root.innerHTML,/ชั่วโมงรวมตามทะเบียนกลาง/);assert.match(v.node('gateway-records').innerHTML,/&lt;img/);assert.doesNotMatch(v.node('gateway-records').innerHTML,/<img src=x/);assert.match(v.node('gateway-records').innerHTML,/ไม่ระบุวันที่/);
+});
+test('gateway view labels stale data on refresh failure and clears it on authorization loss',async()=>{
+ let code='';const v=viewSetup({restore:async()=>session,readSelf:async()=>{if(code)throw {code};return viewSnapshot;}});await v.start();code='REQUEST_TIMEOUT';await v.node('gateway-refresh').onclick();assert.match(v.root.innerHTML,/อาจยังไม่เป็นปัจจุบัน/);code='SESSION_REQUIRED';await v.node('gateway-refresh').onclick();assert.doesNotMatch(v.root.innerHTML,/Synthetic Student|>105</);assert.match(v.root.innerHTML,/เซสชันหมดอายุ/);
+});
+test('gateway view gives an empty filtered state without replacing official total',async()=>{const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();v.node('gateway-filter').value='approved';v.node('gateway-filter').onchange();assert.match(v.node('gateway-records').innerHTML,/ไม่พบรายการ/);assert.match(v.root.innerHTML,/105/);});
+test('gateway view unlinked state never reads records',async()=>{let reads=0;const v=viewSetup({restore:async()=>({...session,studentLinked:false}),readSelf:async()=>{reads++;}});await v.start();assert.equal(reads,0);assert.match(v.root.innerHTML,/รอเชื่อมบัญชีนักเรียน/);});

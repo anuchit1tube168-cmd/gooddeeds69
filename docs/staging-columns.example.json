@@ -1,0 +1,20 @@
+{
+  "masterColumnMap": {
+    "studentId": "รหัสประจำตัว",
+    "displayName": ["ยศ", "ชื่อ", "นามสกุล"],
+    "cohortLabel": "ชั้นปี (รุ่น)",
+    "totalHours": "รวมชั่วโมงสะสม",
+    "level": "ระดับความดี (Level)",
+    "passed": "ผลการประเมิน (Grade)"
+  },
+  "ledgerColumnMap": {
+    "deedId": "Deed ID",
+    "studentId": "รหัสนักเรียน",
+    "categoryId": "หมวดหมู่ ID",
+    "hours": "จำนวนชั่วโมง",
+    "activityDate": "วันที่ทำกิจกรรม",
+    "description": "รายละเอียด",
+    "status": "สถานะ",
+    "submittedAt": "วันที่ส่งเรื่อง"
+  }
+}

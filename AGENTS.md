@@ -2,7 +2,7 @@
 
 Owner: วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
 Scope: ระบบบันทึกความดีสำหรับนักเรียน อาจารย์ผู้ตรวจ และผู้ดูแล
-Updated: 2026-09-07 | Release state: DRAFT / NOT PRODUCTION READY
+Updated: 2026-09-08 | Release state: DRAFT / NOT PRODUCTION READY
 
 ## Start here
 
@@ -82,3 +82,13 @@ Run `node scripts/check-syntax.cjs` and `node --test tests/*.test.cjs`. Use the 
 Production readiness additionally requires controlled staging E2E: LINE login/link, self-only reads, scoped teacher queue, submission + private evidence, persistence after refresh, approve/reject, duplicate callback, failed delivery, official totals/carry-forward reconciliation, audit and rollback. Record pass/fail/blocked and deployment version. No production cutover without evidence and explicit owner approval.
 
 See `WIKI.md` for operator steps and `docs/WORK_STATE.md` for the current blockers. This file adds project guidance; it cannot grant access or override the user's instructions.
+
+## Current integration boundary — 2026-09-08
+
+Read `docs/RELEASE_REVIEW_20260908.md` for evidence and current gates. Python is a loopback static preview; no browser role/cookie can authorize an API call. The gateway pilot uses the existing Cloudflare cookie session, never a new auth stack. Configure origins from verified deployment evidence only.
+
+Both read-adapter master and ledger columns require explicit unique header maps. Observed staging ledger has eight columns; the positional eleven-column legacy approval writer is incompatible. Never enable that writer against this staging schema. Parse only the stored official level label; never infer level/pass/carry-forward from partial records. Preserve category and total formulas.
+
+Run Python boundary tests alongside JS tests. Historical reports of sync/audit PASS must be tagged by source and cannot replace current verification. The current UI has rendering-state tests but visual QA is blocked until the test browser can access the pilot. No layout-quality or production-readiness claim without corresponding evidence.
+
+Legacy public roster/photo/settings exporters and destructive Settings reset are intentionally suspended. Do not bypass their guards; implement a reviewed private pipeline first. Source-embedded roster/QA seeds were privately archived before removal. Document rendering must require an exact, unique record and explicit matching owner; URL parameters cannot be evidence or approval authority.
