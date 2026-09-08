@@ -68,3 +68,9 @@ Raw getStudents/getStudent/getDeeds/setupFolders and raw POST mutations return A
 ## Continuation — official card totals
 
 Added signed cloudflareCardSelf with explicit GOODDEED_MASTER_COLUMN_MAP. Total hours, level and pass status come from the mapped official master cells, never inferred from the loaded ledger. Missing/duplicate headers, blank totals, invalid levels and ambiguous pass status fail closed. Counts are scoped to the signed student. 24/24 synthetic tests and syntax checks pass. Actual master headers and staging integration are still unverified; no deployment or production changes.
+
+## 2026-09-08 — numeric data validation and access blockers
+
+Verified GitHub regression and pii-guard success on remote commit 8524d22bd2988293cc9daf7014d2a6cca2ef19c1. Reproduced two failures: list accepted blank hours via Number coercion; card accepted arrays/nondecimal strings as numeric values. Fixed explicit decimal parsing and list half-hour range validation; no stored data changed. 27 synthetic tests pass after the fix (two newly added cases failed before it), plus syntax and changed-file PII checks.
+
+Pilot config still points directly to GAS, so it does not exercise the signed Cloudflare path. No callable Apps Script project/deployment administration or external Cloudflare account tool was found in this session. Existing deployment URL alone does not identify the editor project/version or establish staging ownership. Need the actual Apps Script editor project link and staging deployment/schema evidence to verify runtime integration. UI, write flow, notifications and production remain unverified. Next: inspect that project read-only, map actual headers, then test signed gateway reads with a controlled staging identity; do not deploy this draft backend alone.

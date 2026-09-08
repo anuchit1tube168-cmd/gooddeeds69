@@ -52,8 +52,8 @@ function cloudflareLegacyReadHandle_(e) {
       return jsonResponse({ok:true,requestId,data:{card:readAdapterOfficialCard_(props,masterValues[0],matches[0],rows,subject)}});
     }
     const items=rows.map(r=>{
-      const hours=Number(r[3]), categoryId=Number(r[2]), status=String(r[9]);
-      if(!Number.isFinite(hours)||hours<0||hours>24||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
+      const hours=readAdapterDecimal_(r[3]), categoryId=readAdapterDecimal_(r[2]), status=String(r[9]);
+      if(!Number.isFinite(hours)||hours<0.5||hours>24||!Number.isInteger(hours*2)||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
       return {deedId:String(r[0]),categoryId,hours,activityDate:readAdapterDate_(r[4]),description:String(r[5]||''),status,submittedAt:readAdapterDate_(r[10]),hasEvidence:Boolean(r[7])};
     }).sort((a,b)=>b.submittedAt.localeCompare(a.submittedAt)).slice(0,limit);
     return jsonResponse({ok:true,requestId,data:{items}});
@@ -87,8 +87,9 @@ function readAdapterOfficialCard_(props,headers,row,rows,subject) {
   }
   function number(key,max) {
     const value=cell(key);
-    if((typeof value==='string'&&!value.trim())||value===null||value===undefined||typeof value==='boolean'||!Number.isFinite(Number(value))||Number(value)<0||Number(value)>max) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
-    return Number(value);
+    const parsed=readAdapterDecimal_(value);
+    if(!Number.isFinite(parsed)||parsed<0||parsed>max) throw new Error('ADAPTER_MASTER_VALUE_INVALID');
+    return parsed;
   }
   if(String(cell('studentId'))!==subject) throw new Error('ADAPTER_IDENTITY_AMBIGUOUS');
   const level=number('levelNumber',10);
@@ -104,4 +105,11 @@ function readAdapterOfficialCard_(props,headers,row,rows,subject) {
     approvedCount:rows.filter(r=>r[9]==='approved').length,
     pendingCount:rows.filter(r=>r[9]==='pending'||r[9]==='approving').length
   };
+}
+
+// Sheets numbers or explicit decimal text only; never coerce blanks/booleans.
+function readAdapterDecimal_(value) {
+  if(typeof value==='number') return value;
+  if(typeof value==='string' && /^\d+(?:\.\d+)?$/.test(value.trim())) return Number(value.trim());
+  return NaN;
 }
