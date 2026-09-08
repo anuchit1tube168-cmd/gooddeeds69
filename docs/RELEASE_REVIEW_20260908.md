@@ -53,6 +53,8 @@ Important schema boundary: the eight-column staging ledger is **not compatible w
 
 ## Verification and evidence limits
 
+Implementation commit: `21e002583acc6ab0475fa322c1870a293fefd2dc`, published to existing draft PR #4. GitHub [regression](https://github.com/anuchit1tube168-cmd/gooddeeds69/actions/runs/34291274328) and [PII guard](https://github.com/anuchit1tube168-cmd/gooddeeds69/actions/runs/34291274335) completed successfully. Owner changes through `7ef7ffb` remain in history.
+
 - Local: 54 JavaScript tests + 11 Python tests pass. Python tests use an actual ephemeral HTTP server with synthetic private files. JavaScript tests use mock provider responses and Apps Script storage; they do not prove deployed Cloudflare/D1/GAS behavior.
 - Four new approval cases failed before the fix: ambiguous records, malformed hours, invalid master values and category-formula overwrites.
 - Syntax: edited JS, inline HTML, Apps Script and Python pass. CI now includes Python boundary tests, and the secret guard detects long embedded LINE channel tokens.
