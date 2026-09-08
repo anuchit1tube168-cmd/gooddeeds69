@@ -255,84 +255,17 @@ def read_students():
 
     students.extend(class69_students)
     
-    # Missing historical students from Main 2568.xlsx who are not in the new rosters
-    missing_historical_students = [
-        {
-            "student_id": "6503719",
-            "rank": "นพอ.",
-            "first_name": "นันท์นภัส",
-            "last_name": "เภสัชชา",
-            "full_name": "นันท์นภัส เภสัชชา",
-            "class_year": 65,
-            "year_level": 5,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6503719",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 991
-        },
-        {
-            "student_id": "6603775",
-            "rank": "นพอ.",
-            "first_name": "ธิดารัตน์",
-            "last_name": "นิลสังข์",
-            "full_name": "ธิดารัตน์ นิลสังข์",
-            "class_year": 66,
-            "year_level": 4,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6603775",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 992
-        },
-        {
-            "student_id": "6703840",
-            "rank": "นพอ.",
-            "first_name": "ดลภัค",
-            "last_name": "แก้วเอก",
-            "full_name": "ดลภัค แก้วเอก",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703840",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 993
-        },
-        {
-            "student_id": "6703850",
-            "rank": "นพอ.",
-            "first_name": "ประริชญา",
-            "last_name": "ประสิทธิ์พรม",
-            "full_name": "ประริชญา ประสิทธิ์พรม",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703850",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 994
-        },
-        {
-            "student_id": "6703871",
-            "rank": "นพอ.",
-            "first_name": "วีรภัทร",
-            "last_name": "นกดำ",
-            "full_name": "วีรภัทร นกดำ",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703871",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 995
-        }
-    ]
+    # Missing historical students loaded securely from private storage (PDPA Zero-Leak)
+    missing_historical_students = []
+    missing_json_path = os.path.join(DATA_DIR, "private", "missing_historical_students.json")
+    if os.path.exists(missing_json_path):
+        try:
+            with open(missing_json_path, "r", encoding="utf-8") as f:
+                missing_historical_students = json.load(f)
+                for idx, s in enumerate(missing_historical_students):
+                    s['_row_num'] = 991 + idx
+        except Exception as _e:
+            print(f"⚠️ Note: Could not load missing_historical_students.json: {_e}")
     
     # Merge existing modifications for missing historical students
     for s in missing_historical_students:

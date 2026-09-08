@@ -116,7 +116,7 @@ def main():
         "admin": {"username": "admin", "password": "admin69", "role": "admin", "name": "ผู้ดูแลระบบ"},
         "teacher": {"username": "teacher", "password": "teacher69", "role": "teacher", "name": "อาจารย์"},
         "telegram": {
-            "bot_token": "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k",
+            "bot_token": "8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s",
             "chat_id": "-4839151586"
         },
         "config": {

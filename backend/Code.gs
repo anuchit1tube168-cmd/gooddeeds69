@@ -352,7 +352,12 @@ function uploadImage(data) {
 
   if (studentId) {
     const classYear = studentId.substring(0, 2);
-    const genFolderName = '0' + (5 - (70 - parseInt(classYear))) + '_ชั้นปี (รุ่น ' + classYear + ')';
+    const genYearLevel = 70 - parseInt(classYear);
+    let genFolderName = '0' + genYearLevel + '_ชั้นปีที่ ' + genYearLevel + ' (รุ่น ' + classYear + ')';
+    if (genYearLevel === 5) genFolderName = '05_ศิษย์เก่า (รุ่น 65)';
+    else if (genYearLevel === 6) genFolderName = '06_ศิษย์เก่า (รุ่น 64)';
+    else if (genYearLevel < 1 || genYearLevel > 6) genFolderName = '0' + genYearLevel + '_รุ่น ' + classYear;
+
     const genFolders = targetFolder.getFoldersByName(genFolderName);
     targetFolder = genFolders.hasNext() ? genFolders.next() : targetFolder.createFolder(genFolderName);
 
@@ -454,3 +459,139 @@ function handleTelegramCallback(cb) {
 
   return { status: 'success' };
 }
+
+// ==================== BIND LINE & CLOUD SYNC ====================
+function bindLineAccount(data) {
+  const studentId = String(data.studentId || data.student_id || '').trim();
+  const lineUserId = String(data.lineUserId || data.line_user_id || '').trim();
+  const lineDisplayName = String(data.lineDisplayName || data.line_display_name || '').trim();
+  const linePictureUrl = String(data.linePictureUrl || data.line_picture_url || '').trim();
+
+  if (!studentId || !lineUserId) {
+    return { status: 'error', message: 'Missing studentId or lineUserId' };
+  }
+
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+
+  const values = sheet.getDataRange().getValues();
+  let found = false;
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][1]).trim() === studentId) {
+      sheet.getRange(i + 1, 20).setValue(lineUserId);
+      sheet.getRange(i + 1, 21).setValue(lineDisplayName);
+      sheet.getRange(i + 1, 22).setValue(new Date());
+      found = true;
+      break;
+    }
+  }
+
+  return {
+    status: 'success',
+    studentId: studentId,
+    lineUserId: lineUserId,
+    foundInSheet: found,
+    message: 'LINE account bound successfully'
+  };
+}
+
+function initAllStudents(studentList) {
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS, [
+    'ลำดับ', 'รหัสประจำตัว', 'ยศ', 'ชื่อ', 'นามสกุล', 'ชั้นปี (รุ่น)',
+    'หมวด 1 บริจาคโลหิต', 'หมวด 2 โครงการภายนอก', 'หมวด 3 ช่วยงานภายใน', 'หมวด 4 อบรม',
+    'หมวด 5 ช่วยชุมชน/มูลนิธิ', 'หมวด 6 ศาสนสถาน', 'หมวด 7 งานฟรีทั่วไป', 'หมวด 8 จงรักภักดี',
+    'หมวด 9 บทบาทพิเศษ', 'รวมชั่วโมงสะสม', 'เกณฑ์ขั้นต่ำ (50 ชม.)', 'สถานะการประเมิน (Grade)',
+    'ระดับความดี (Level)', 'LINE User ID', 'ชื่อ LINE', 'อัปเดตล่าสุด'
+  ]);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+
+  if (studentList && studentList.length > 0) {
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
+    }
+    const rowsToAppend = [];
+    for (let sIdx = 0; sIdx < studentList.length; sIdx++) {
+      const st = studentList[sIdx];
+      const sId = String(st.student_id || '').trim();
+      const rowNum = sIdx + 2;
+      const cat = st.categories || [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      rowsToAppend.push([
+        sIdx + 1,
+        sId,
+        st.rank || 'นพอ.',
+        st.first_name || '',
+        st.last_name || '',
+        'รุ่น ' + (st.class_year || '69'),
+        cat[0] || 0,
+        cat[1] || 0,
+        cat[2] || 0,
+        cat[3] || 0,
+        cat[4] || 0,
+        cat[5] || 0,
+        cat[6] || 0,
+        cat[7] || 0,
+        cat[8] || 0,
+        '=SUM(G' + rowNum + ':O' + rowNum + ')',
+        '50 ชม./ปี',
+        '=IF(P' + rowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
+        st.level_title || 'Lv.1 ปีกทองฝึกหัด',
+        st.line_user_id || '',
+        st.line_display_name || '',
+        new Date()
+      ]);
+    }
+    if (rowsToAppend.length > 0) {
+      sheet.getRange(2, 1, rowsToAppend.length, rowsToAppend[0].length).setValues(rowsToAppend);
+    }
+    return { status: 'success', message: 'Populated ' + rowsToAppend.length + ' students with complete history' };
+  }
+  return { status: 'error', message: 'No students provided' };
+}
+
+// ==================== GOOGLE DRIVE FOLDER SETUP ====================
+function getOrCreateSubFolder(parent, name) {
+  const folders = parent.getFoldersByName(name);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return parent.createFolder(name);
+}
+
+function setupAllStudentFolders() {
+  const root = DriveApp.getFolderById(CONFIG.DEFAULT_DRIVE_FOLDER_ID);
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+  const data = sheet.getDataRange().getValues();
+
+  const yearFolders = {
+    'รุ่น 69': getOrCreateSubFolder(root, '01_ชั้นปีที่ 1 (รุ่น 69)'),
+    'รุ่น 68': getOrCreateSubFolder(root, '02_ชั้นปีที่ 2 (รุ่น 68)'),
+    'รุ่น 67': getOrCreateSubFolder(root, '03_ชั้นปีที่ 3 (รุ่น 67)'),
+    'รุ่น 66': getOrCreateSubFolder(root, '04_ชั้นปีที่ 4 (รุ่น 66)'),
+    'รุ่น 65': getOrCreateSubFolder(root, '05_ศิษย์เก่า (รุ่น 65)'),
+    'รุ่น 64': getOrCreateSubFolder(root, '06_ศิษย์เก่า (รุ่น 64)')
+  };
+
+  let created = 0;
+  for (let i = 1; i < data.length; i++) {
+    const sid = String(data[i][1] || '').trim();
+    if (!sid) continue;
+    const rank = String(data[i][2] || 'นพอ.');
+    const fname = String(data[i][3] || '');
+    const lname = String(data[i][4] || '');
+    const cyear = String(data[i][5] || 'รุ่น 69');
+
+    const parentFolder = yearFolders[cyear] || root;
+    const folderName = sid + ' - ' + rank + ' ' + fname + ' ' + lname;
+    const sFolder = getOrCreateSubFolder(parentFolder, folderName);
+
+    getOrCreateSubFolder(sFolder, '01_หลักฐานภาพถ่ายความดี');
+    getOrCreateSubFolder(sFolder, '02_เอกสารรับรอง_Word_PDF');
+    created++;
+  }
+
+  return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
+}
+

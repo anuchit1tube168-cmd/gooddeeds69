@@ -28,9 +28,9 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
 # === CONFIG ===
-LINE_CHANNEL_TOKEN = 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU='
-TELEGRAM_BOT_TOKEN = '8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'
-TELEGRAM_CHAT_ID = '-4839151586'
+LINE_CHANNEL_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=')
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '-4839151586')
 WEBHOOK_PORT = 3001
 
 # === In-Memory: LINE userId → Telegram message mapping for replies ===

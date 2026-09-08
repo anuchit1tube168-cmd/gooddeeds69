@@ -1107,7 +1107,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 response = {'status': 'error', 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"❌ Error updating student: {e}")
-        elif self.path == '/api/bind_line':
+        elif parsed_path.path == '/api/bind_line':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             try:

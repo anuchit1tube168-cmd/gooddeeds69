@@ -24,7 +24,7 @@ SETTINGS_DATA = [
     ["teacher_username", "teacher", "ชื่อผู้ใช้ Teacher (อาจารย์)"],
     ["teacher_password", "teacher69", "รหัสผ่าน Teacher (อาจารย์)"],
     ["teacher_name", "อาจารย์ผู้ควบคุม (Teacher)", "ชื่อแสดงของ Teacher"],
-    ["telegram_bot_token", "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k", "Telegram Bot Token"],
+    ["telegram_bot_token", "8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s", "Telegram Bot Token"],
     ["telegram_chat_id", "-4839151586", "Telegram Chat ID"],
     ["min_hours_per_semester", "25", "เกณฑ์ชั่วโมงขั้นต่ำต่อภาคเรียน (เทอม)"],
     ["min_hours_per_year", "50", "เกณฑ์ชั่วโมงขั้นต่ำต่อปีการศึกษา"],
