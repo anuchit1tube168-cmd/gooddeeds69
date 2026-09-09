@@ -89,7 +89,7 @@ Read `docs/RELEASE_REVIEW_20260908.md` for evidence and current gates. Python is
 
 Both read-adapter master and ledger columns require explicit unique header maps. Observed staging ledger has eight columns; the positional eleven-column legacy approval writer is incompatible. Never enable that writer against this staging schema. Parse only the stored official level label; never infer level/pass/carry-forward from partial records. Preserve category and total formulas.
 
-Run Python boundary tests alongside JS tests. Historical reports of sync/audit PASS must be tagged by source and cannot replace current verification. The current UI has rendering-state tests but visual QA is blocked until the test browser can access the pilot. No layout-quality or production-readiness claim without corresponding evidence.
+Run Python boundary tests alongside JS tests. Historical reports of sync/audit PASS must be tagged by source and cannot replace current verification. The September 9 design continuation now has local browser evidence in `design-qa.md`. This closes the local preview capture gap only; authenticated provider E2E and production readiness still require separate evidence.
 
 Legacy public roster/photo/settings exporters and destructive Settings reset are intentionally suspended. Do not bypass their guards; implement a reviewed private pipeline first. Source-embedded roster/QA seeds were privately archived before removal. Document rendering must require an exact, unique record and explicit matching owner; URL parameters cannot be evidence or approval authority.
 
@@ -98,3 +98,11 @@ Legacy public roster/photo/settings exporters and destructive Settings reset are
 Legacy submission/review now reject incompatible headers before effects. Never weaken the guard to make the eight-column staging sheet accept the eleven-column writer. A failed/uncertain append must retain its deed ID for reconciliation; notification failure cannot roll back or duplicate a persisted record.
 
 `backend/GoodDeedReviewPlan.gs` is a pure internal calculator, not an enabled review adapter. Read `docs/REVIEW_STORAGE_CONTRACT.md` before extending it. Complete values/formula snapshots and explicit nine-category maps are required; preserve formulas and carry-forward. A returned plan is never authorization or an executable transaction. The gateway still needs assigned-scope enforcement, fresh-signature proof, official policy checks and durable journal/outbox integration. Do not expose this helper or enable review because its synthetic tests pass.
+
+## Aviation design and React continuation — 2026-09-09
+
+Keep the original college crest and the new restrained aviation theme. `gooddeed-ui.js` provides presentation, `kindness-react.js` provides the React intention/encouragement island, and the existing gateway client remains the identity/read boundary. Unmount the React root before replacing its parent DOM. Vendored React distributions are pinned with their MIT notice and checksums in `docs/DESIGN_HANDOFF.md`; no package installation or runtime CDN is required.
+
+`secure-pilot/demo.html`, `workflow.js` and `demo.js` are an isolated in-memory synthetic walkthrough, with `connect-src 'none'`. A role selector, drawing, intention or encouragement reaction is never authority or official hours. Never import this model into the authenticated adapter. Evidence stays in temporary object URLs, no genuine signatures should be drawn in the demo, and reloading resets the example data. Preserve this distinction in UI and release notes.
+
+Use `node scripts/preview.cjs` for an allowlisted local preview. Its `/_preview/*` routes are developer QA helpers only. Never replace this with a server exposing the repository root. Browser QA uses actual rendered DOM and user controls; intermittent automation timeouts are not proof of application failure or success. Record the observed result and stop repeated attempts after a bounded recovery.

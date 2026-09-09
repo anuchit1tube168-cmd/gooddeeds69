@@ -1,0 +1,9 @@
+{
+  "name": "rtafnc-gooddeed-review",
+  "private": true,
+  "scripts": {
+    "dev": "node scripts/preview.cjs",
+    "check": "node scripts/check-syntax.cjs",
+    "test": "node --test tests/*.test.cjs"
+  }
+}

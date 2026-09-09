@@ -1,3 +1,15 @@
+# อัปเดตหน้าจอและ React — 9 กันยายน 2569
+
+ปรับธีมขาว–กรมท่า–ทอง ใช้ตราวิทยาลัยเดิม ภาพเครื่องบินและมิติแบบเบา เพิ่มการ์ด React “ความตั้งใจของวันนี้” พร้อมข้อความให้กำลังใจสำหรับนักเรียนพยาบาล การกดเลือก/ให้กำลังใจไม่มีผลต่อชั่วโมงหรือผลประเมิน
+
+เปิดหน้าตัวอย่างด้วย `node scripts/preview.cjs` แล้วเลือก “ทดลองใช้งานด้วยข้อมูลตัวอย่าง” ไม่ต้องติดตั้ง npm/clasp เลือกบทบาทในชุดสาธิตเพื่อทดลองส่งกิจกรรม แนบภาพ ลงนาม อนุมัติ/ไม่อนุมัติ และจำลองแจ้งเตือน ข้อมูลเก็บเฉพาะหน้านี้และเริ่มใหม่เมื่อโหลดหน้า ห้ามใช้ลายเซ็นจริงในการสาธิต
+
+ทดสอบโค้ดผ่าน 100 เคส (JavaScript 88 + Python 12) และมีภาพตรวจหน้าจอ desktop/กรอบมือถือ 360 px แล้ว ขอบเขตและหลักฐานอยู่ใน [Design handoff](docs/DESIGN_HANDOFF.md) และ [Design QA](design-qa.md) React เป็นส่วนโต้ตอบที่เพิ่มเข้า pilot เดิม; ไม่ได้ย้ายระบบสิทธิ์หรือทะเบียนไปอยู่ใน React
+
+**ยังไม่เปิดระบบจริงจากชุดนี้:** ต้องตรวจ deployment ของ Apps Script/Cloudflare สิทธิ์ผู้ตรวจ ลายเซ็นฝั่งเซิร์ฟเวอร์ หลักฐาน private และคิวแจ้งเตือนถาวรให้ครบก่อน การสาธิตผ่านไม่ใช่ผลทดสอบ LINE/Google Drive/Telegram จริง ไม่เปลี่ยนลิงก์ LIFF หรือเปิด write flag จากหน้านี้
+
+---
+
 > Current integration instructions (2026-09-09): see [Release review](docs/RELEASE_REVIEW_20260908.md) and [Review storage contract](docs/REVIEW_STORAGE_CONTRACT.md). Python serves static previews only. The gateway pilot requires a verified origin and explicit master/ledger header maps. The eight-column staging ledger has a tested internal review planner, but its write path remains disabled. Earlier pilot instructions below do not waive these gates.
 
 # คู่มือระบบความดี วพอ. — ชุดปรับปรุงและส่งต่องาน

@@ -49,6 +49,9 @@ class LocalBoundaryTests(unittest.TestCase):
         for path in ['data/students.json','data/line_mappings.json','data/students_data.js','photos/evidence/test.jpg']:
             p = root / path; p.parent.mkdir(parents=True, exist_ok=True); p.write_text('private synthetic payload')
         (root / 'shortcut.js').symlink_to(root / 'data/students_data.js')
+        (root / 'secure-pilot').mkdir()
+        (root / 'secure-pilot/airforce-flight.png').write_bytes(b'public aircraft fixture')
+        (root / 'secure-pilot/private-evidence.png').write_bytes(b'private evidence fixture')
         cls.dir_patch = patch.object(server, 'FRONTEND_DIR', str(root)); cls.dir_patch.start()
         cls.httpd = server.ThreadingHTTPServer(('127.0.0.1', 0), server.CustomHandler)
         cls.thread = threading.Thread(target=cls.httpd.serve_forever, daemon=True); cls.thread.start()
@@ -82,6 +85,10 @@ class LocalBoundaryTests(unittest.TestCase):
         code,headers,body = self.request('GET','/api/health')
         self.assertEqual(code,200); self.assertFalse(json.loads(body)['dataApiEnabled'])
         self.assertNotIn('Access-Control-Allow-Origin',headers); self.assertEqual(headers['Cache-Control'],'no-store')
+    def test_public_aircraft_does_not_open_other_pilot_images(self):
+        for method in ['GET', 'HEAD']:
+            self.assertEqual(self.request(method, '/secure-pilot/airforce-flight.png')[0], 200)
+            self.assertEqual(self.request(method, '/secure-pilot/private-evidence.png')[0], 403)
 
 class LineTransportTests(unittest.TestCase):
     def test_unverified_binding_never_writes_or_starts_sync(self):

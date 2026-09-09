@@ -1,5 +1,8 @@
 const fs = require('node:fs');
 const vm = require('node:vm');
+for (const file of ['frontend/gooddeed-ui.js','frontend/secure-pilot/workflow.js','frontend/secure-pilot/demo.js','frontend/secure-pilot/kindness-react.js','frontend/secure-pilot/react-18.3.1.production.min.js','frontend/secure-pilot/react-dom-18.3.1.production.min.js','scripts/preview.cjs']) {
+  new vm.Script(fs.readFileSync(file,'utf8'),{filename:file});
+}
 const files = ['frontend/app.js','frontend/secure-pilot/app.js','backend/Code.gs','backend/CodeV2.gs','backend/CloudflareReadAdapter.gs','backend/GoodDeedReviewPlan.gs','frontend/liff-sdk.js','frontend/gateway-config.js','frontend/gateway-client.js','frontend/secure-pilot/gateway-view.js'];
 for (const file of files) new vm.Script(fs.readFileSync(file,'utf8'),{filename:file});
 for (const file of ['frontend/index.html','frontend/profile.html','frontend/student-dashboard.html','frontend/submit-deed.html','frontend/teacher-dashboard.html','frontend/secure-pilot/index.html','frontend/approve_sign.html','frontend/deed_slip.html','frontend/qa-board.html']) {

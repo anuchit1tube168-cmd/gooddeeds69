@@ -40,6 +40,7 @@ function viewSetup(client){
  const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:()=>[]};
  const node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',disabled:false});return nodes.get(id);};
  const context=vm.createContext({console,Intl,Date,window:{createGoodDeedGatewayClient:()=>client},document:{getElementById:node}});
+ vm.runInContext(fs.readFileSync('frontend/gooddeed-ui.js','utf8'),context);
  vm.runInContext(fs.readFileSync('frontend/secure-pilot/gateway-view.js','utf8'),context);
  return {root,node,start:()=>context.window.startGoodDeedGatewayView({root,config:{GATEWAY_ORIGIN:'https://staging.example'}})};
 }

@@ -1,3 +1,19 @@
+# Aviation / warm React checkpoint — 2026-09-09
+
+State: LOCAL DESIGN AND SYNTHETIC WALKTHROUGH COMPLETE / DRAFT / PRODUCTION WRITE = FALSE.
+Remote parent: `bcfb46baed4218643198a888cfe37623570ca371`, existing draft PR #4. Preserve all earlier owner work. This checkpoint supersedes the old local-visual-QA blockers below; it does not close provider integration gates.
+
+- Reused the pilot, original college crest, existing Cloudflare session client and official-total semantics. Added aviation raster art, restrained depth and white/navy/gold styling. Latest user steering adds warmth and React: a pinned, locally served React intention/encouragement card now works without changing hours or permissions.
+- Added isolated in-memory walkthrough for student submission, temporary evidence, teacher review, fresh drawing, reasoned rejection and simulated notification retries. Its CSP disallows connections; no provider SDK or authentication adapter is imported. Reload resets synthetic state. The real gateway still does not expose submission/review routes.
+- Browser evidence: empty form rejected; valid synthetic 2.5-hour deed with generated PNG submitted as pending; blank signature blocked; drawn synthetic line approved; total changed 15.5 → 18 once; rejected another record with a required reason; simulated delivery failed and retried without changing hours. React keyboard/click actions and its form CTA worked without changing the total.
+- Corrected the HTTP-preview form failure, stale guide controls, invalid-file replacement, stuck error messages, narrow-view heading under the header, and neutral help styling. Dates default to Asia/Bangkok; navigating retains intentionally empty inputs for validation.
+- Local checks: syntax pass; JavaScript 88/88; Python boundary 12/12 (100 total). Final remote CI is tracked on the published PR head, not inferred from these counts. Optional DOCX generation is untested locally because `pythainlp` is absent.
+- Visual evidence: `design-qa.md` and `docs/design/`. Desktop and 360 CSS-pixel iframe layout inspected. Physical Android/iOS LINE webview and assistive signature input remain UAT gaps. Extra narrow React clicks encountered automation timeouts; only the observed desktop interaction is claimed as passed.
+- No production deployment, real notification, student-data mutation, token rotation or endpoint change occurred. Current browser still cannot establish the previously blocked Apps Script/Cloudflare deployment evidence; do not repeat those challenges.
+- Next runtime task: verify the owned staging resolver/worker deployment and bindings, then implement/review assigned scope, verifiable fresh signature, official period policy and durable journal/outbox before enabling write flags. Read `docs/REVIEW_STORAGE_CONTRACT.md` first. Do not replace the ledger, promote the synthetic role selector, or execute a saved plan.
+
+Guide: `docs/DESIGN_HANDOFF.md`. Preview: `node scripts/preview.cjs` (no installation). Existing safe code boundary remains enforced. Publish only reviewed changed blobs on the remote parent; this local checkout is a partial snapshot and must never replace the full remote tree.
+
 # Storage integrity checkpoint — 2026-09-09
 
 State: DRAFT / STAGING ONLY / PRODUCTION WRITE = FALSE. Continue this branch; do not restart the project.

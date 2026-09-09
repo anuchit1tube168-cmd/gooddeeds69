@@ -699,7 +699,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
             '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
         ) or (
             relative.startswith('secure-pilot/') and relative.count('/') == 1
-            and (relative.endswith(('.html', '.css', '.js')) or relative.endswith('/510903.jpg'))
+            and (relative.endswith(('.html', '.css', '.js')) or relative in {
+                'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
+            })
         ) or (
             relative.startswith('photos/chibi/') and relative.count('/') == 2
             and relative.endswith('.png')
