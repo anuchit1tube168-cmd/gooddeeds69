@@ -260,9 +260,9 @@ const App = {
             return {
                 student_id: clean,
                 rank: 'นพอ.',
-                first_name: 'รหัส ' + clean,
+                first_name: '',
                 last_name: '',
-                full_name: 'นพอ. รหัส ' + clean,
+                full_name: `นพอ. (${clean})`,
                 class_year: cy,
                 year_level: yl,
                 role: 'student',
@@ -270,6 +270,45 @@ const App = {
             };
         }
         return null;
+    },
+
+    async ensureStudentProfile(studentId) {
+        if (!studentId) return null;
+        const clean = normalizeThaiDigits(String(studentId)).trim().replace(/[^\d]/g, '');
+        let student = this.getStudentById(clean);
+        if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+            return student;
+        }
+
+        if (this.canUseBackendApi()) {
+            try {
+                const res = await fetch(`${this.getApiBaseUrl()}/api/get_student?studentId=${encodeURIComponent(clean)}`, {
+                    headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
+                });
+                if (res.ok) {
+                    const fresh = await res.json();
+                    if (fresh && fresh.first_name) {
+                        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+                            const idx = STUDENTS_DATA.findIndex(s => String(s.student_id) === clean);
+                            if (idx >= 0) STUDENTS_DATA[idx] = { ...STUDENTS_DATA[idx], ...fresh };
+                            else STUDENTS_DATA.push(fresh);
+                        }
+                        try {
+                            const cached = localStorage.getItem('gooddeeds_cached_students');
+                            let list = cached ? JSON.parse(cached) : [];
+                            if (Array.isArray(list)) {
+                                const cIdx = list.findIndex(s => String(s.student_id) === clean);
+                                if (cIdx >= 0) list[cIdx] = { ...list[cIdx], ...fresh };
+                                else list.push(fresh);
+                                localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+                            }
+                        } catch(e) {}
+                        return fresh;
+                    }
+                }
+            } catch (e) {}
+        }
+        return student;
     },
 
     findStudent(query) {
@@ -495,7 +534,7 @@ const App = {
         }
         if (user && user.role === 'student' && user.student_id) {
             const fresh = this.getStudentById(user.student_id);
-            if (fresh && fresh.first_name && fresh.first_name !== 'นักเรียน') {
+            if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส') && fresh.first_name !== 'นักเรียน') {
                 user = { ...user, ...fresh };
                 Storage.set('session', user);
             }
@@ -538,9 +577,11 @@ const App = {
         if (typeof window === 'undefined' || !window.location) return false;
         const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        // Only the local Python server implements these legacy /api routes.
-        // Cloudflare/GAS integration must use its own authenticated adapter.
-        return hostname === 'localhost' || hostname === '127.0.0.1';
+        if (hostname.endsWith('.github.io')) return false;
+        return hostname === 'localhost' ||
+               hostname === '127.0.0.1' ||
+               hostname.endsWith('.trycloudflare.com') ||
+               (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL && window.location.origin === String(CONFIG.SYSTEM_URL).replace(/\/+$/, ''));
     },
 
     canUseBackendApi() {
@@ -1605,8 +1646,19 @@ const App = {
             };
 
             const cat = this.getCategoryById(deed.categoryId);
-            const stuName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
-            const yearLvl = student.year_level || (String(student.class_year) === '69' ? '1' : String(student.class_year) === '68' ? '2' : String(student.class_year) === '67' ? '3' : '4');
+            let stuName = '';
+            if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+                stuName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+            } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
+                stuName = deed.student_name;
+            } else if (deed.studentName && !deed.studentName.includes('รหัส')) {
+                stuName = deed.studentName;
+            } else {
+                const cleanSid = (student && student.student_id) || deed.student_id || '';
+                stuName = `นพอ. (${cleanSid})`;
+            }
+            const sClassYear = (student && student.class_year) || deed.class_year || '69';
+            const yearLvl = (student && student.year_level) || (String(sClassYear) === '69' ? '1' : String(sClassYear) === '68' ? '2' : String(sClassYear) === '67' ? '3' : '4');
 
             // 6. Section 1 Box (ข้อมูลผู้ขออนุมัติ)
             ctx.strokeStyle = '#0c1b33';
@@ -1792,14 +1844,28 @@ const App = {
     async notifyAdmins(deed, student) {
         const settings = this.getSettings();
         const cat = this.getCategoryById(deed.categoryId);
-        const yearName = this.getYearName(student.class_year);
+        const sClassYear = (student && student.class_year) || deed.class_year || '69';
+        const yearName = this.getYearName(sClassYear);
+
+        let realName = '';
+        if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+            realName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+        } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
+            realName = deed.student_name;
+        } else if (deed.studentName && !deed.studentName.includes('รหัส')) {
+            realName = deed.studentName;
+        } else {
+            const cleanSid = (student && student.student_id) || deed.student_id || '';
+            realName = `นพอ. (${cleanSid})`;
+        }
+        const sid = (student && student.student_id) || deed.student_id || '';
 
         // Build message
         const msgLines = [
             `🔔 แจ้งเตือนขออนุมัติความดี`,
             `━━━━━━━━━━━━━━━`,
-            `👤 ผู้ขอ : ${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}`,
-            `🆔 รหัส นพอ. : ${student.student_id}`,
+            `👤 ผู้ขอ : ${realName}`,
+            `🆔 รหัส นพอ. : ${sid}`,
             `📂 กิจกรรม : ${cat.emoji} ${cat.name}`,
             `⏱ ชั่วโมง : ${deed.hours} ชม.`,
             `📅 วันที่ : ${deed.activityDate}`,
@@ -1813,8 +1879,8 @@ const App = {
         const htmlMsg = [
             `🔔 <b>แจ้งเตือนการขออนุมัติความดี</b>`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
-            `👤 <b>ผู้ขอ:</b> ${student.rank || 'นพอ.'}${student.first_name} ${student.last_name}`,
-            `🆔 <b>รหัส:</b> <code>${student.student_id}</code> (${yearName})`,
+            `👤 <b>ผู้ขอ:</b> ${realName}`,
+            `🆔 <b>รหัส:</b> <code>${sid}</code> (${yearName})`,
             `📂 <b>หมวดหมู่:</b> ${cat.emoji} ${cat.name}`,
             `⏱ <b>จำนวน:</b> <b>${deed.hours} ชั่วโมง</b>`,
             `📅 <b>วันที่:</b> ${deed.activityDate}`,
@@ -1824,11 +1890,10 @@ const App = {
             `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
-        const studentName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
         const qParams = new URLSearchParams({
             id: deed.id,
-            studentId: student.student_id,
-            name: studentName,
+            studentId: sid,
+            name: realName,
             year: yearName,
             cat: deed.categoryId || 1,
             catName: cat.name || '',

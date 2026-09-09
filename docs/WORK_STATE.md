@@ -2,7 +2,7 @@
 
 **Current Branch:** `codex/fable-gooddeed-hardening-20260907`  
 **Base Commit:** `29531524` (feat: notify Telegram group on web deed approval/rejection)  
-**Last Updated:** 2026-09-08  
+**Last Updated:** 2026-09-09  
 **Operational Skill:** `rtafnc-gooddeed-fable` / `gooddeeds-system`  
 
 ---
@@ -29,6 +29,7 @@
 | **P0-6** | **All 380 Students Audit & Online Master Cloud Sync**<br>- ปี 1 (69): ตัดกิจกรรมปฐมนิเทศ 5 ชม. ออกตามคำสั่ง คงข้อมูลจริง (มีประวัติทำจริง 1 นาย = 2 ชม., อีก 63 คน = 0 ชม.)<br>- ปี 2-4: หมวด 9 บทบาทพิเศษ (+25 ชม.) ครบ 69 คน (รวมแก้บั๊ก นพอ. ชั้นปี 4 น.ตัดต่อ)<br>- `Main_2569_Summary.csv` & Google Sheets ซิงก์ตรง Local DB 100% (Zero Discrepancy) | ✅ PASS | `Main_2569_Summary.csv`<br>Google Apps Script Master Sheet<br>`data/deeds.json` |
 | **P0-7** | **LINE Centralized ID Storage & Auto-Push Notifications**<br>- จัดเก็บ LINE User ID ถาวรในระบบกลาง (`students.json`, `students_data.js`, `line_mappings.json`, `Main_2569_Summary.csv`, Google Sheets)<br>- ระบบจดจำอัตโนมัติ **"ถ้ามีแล้วไม่ต้องรายคน"** ผ่าน LIFF โดยค้นหาจากฐานข้อมูลกลาง พร้อมแสดง Badge สถานะเชื่อมต่อแล้ว<br>- ระบบ Push Notification อัตโนมัติทุกครั้งเมื่อส่งความดี หรือได้รับการอนุมัติ/ปฏิเสธ (Web + Telegram Bot) | ✅ PASS | `backend/line_notifier.py`<br>`backend/server.py`<br>`data/telegram_bot_listener.py`<br>`frontend/liff-sdk.js` |
 | **P0-8** | **Full-Stack Audit & System Hardening (GAS, Server, PDPA, Versioning)**<br>- แก้ไข `backend/Code.gs` เพิ่ม 3 ฟังก์ชันที่ขาด (`bindLineAccount`, `initAllStudents`, `setupAllStudentFolders`) พร้อมแก้สูตรโฟลเดอร์ Drive กลับด้าน<br>- แก้ไข `backend/server.py` ปรับ routing `/api/bind_line`<br>- กักกันข้อมูลส่วนบุคคล (PDPA Zero-Leak) ย้ายรายชื่อฮาร์ดโค้ดในสคริปต์ไป `data/private/missing_historical_students.json`<br>- ปรับปรุง Version Tag เป็น `?v=3580` ครบ 15 หน้า HTML และล้าง Token เก่าในสคริปต์เสริม | ✅ PASS | `backend/Code.gs`<br>`backend/server.py`<br>`data/export_students.py`<br>`data/build_photos.py`<br>`frontend/*.html` |
+| **P0-9** | **End-to-End Student Identity Resolution & Flow Hardening**<br>- แก้ไขบั๊กชื่อนักเรียนแสดงเป็น "รหัส XXXXXXX" บนสลิปและ Telegram<br>- ปรับปรุง `frontend/app.js`: ลบ fallback สังเคราะห์ชื่อรหัส, เพิ่ม `ensureStudentProfile`, ปรับ `isBackendMode` รองรับ Cloudflare Tunnel<br>- ปรับปรุง `backend/server.py`: บังคับผสานชื่อจริงจากฐานข้อมูล Master อย่างเด็ดขาดใน `save_or_update_deed_in_db` และเพิ่มการแจ้งเตือน Telegram อัตโนมัติทันทีที่บันทึกความดีพร้อมปุ่มกดและรูปหลักฐาน<br>- ปรับปรุง `backend/Code.gs`: ค้นหาชื่อจริงจากชีต `Main_2569` แทนการส่ง "รหัส"<br>- ตรวจสอบและแก้ไขประวัติความดีในฐานข้อมูลเดิมของนักเรียนที่มีปัญหาให้ถูกต้องสมบูรณ์ 100% | ✅ PASS | `frontend/app.js`<br>`frontend/submit-deed.html`<br>`backend/server.py`<br>`backend/Code.gs`<br>`data/deeds.json` |
 
 ---
 

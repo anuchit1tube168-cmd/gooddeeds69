@@ -8,6 +8,8 @@ import threading
 import queue
 from http.server import SimpleHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
+import urllib.request
+import ssl
 from http.cookies import SimpleCookie
 
 # Real-time event streams for connected clients
@@ -531,6 +533,182 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     return buffer
 
 
+def get_env_config(key, default=''):
+    val = os.environ.get(key)
+    if val:
+        return val
+    env_file = os.path.join(BASE_DIR, '.env')
+    if os.path.exists(env_file):
+        try:
+            with open(env_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith(f"{key}="):
+                        return line.split('=', 1)[1].strip(' "\'')
+        except Exception:
+            pass
+    return default
+
+def send_telegram_request(method, payload):
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    if not token:
+        return {}
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+    ctx = ssl._create_unverified_context()
+    try:
+        with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except Exception as e:
+        print(f"⚠️ Telegram API Error ({method}): {e}")
+        return {}
+
+def send_telegram_photo(photo_path, caption, reply_markup=None):
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    chat_id = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
+    if not token or not chat_id:
+        return False
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
+    body = bytearray()
+    
+    # chat_id
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode('utf-8'))
+    # caption
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode('utf-8'))
+    # parse_mode
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
+    # reply_markup
+    if reply_markup:
+        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
+    
+    # photo file
+    try:
+        with open(photo_path, 'rb') as f:
+            file_bytes = f.read()
+        filename = os.path.basename(photo_path)
+        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{filename}\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
+        body.extend(file_bytes)
+        body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
+        
+        req = urllib.request.Request(url, data=bytes(body), headers={
+            'Content-Type': f'multipart/form-data; boundary={boundary}',
+            'Content-Length': str(len(body))
+        })
+        ctx = ssl._create_unverified_context()
+        with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
+            res = json.loads(resp.read().decode('utf-8'))
+            return res.get('ok', False)
+    except Exception as e:
+        print(f"⚠️ Telegram sendPhoto error: {e}")
+        return False
+
+def notify_deed_submission_telegram(deed_data):
+    """Send interactive Telegram notification for newly submitted deed."""
+    try:
+        token = get_env_config('TELEGRAM_BOT_TOKEN')
+        chat_id = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
+        if not token or not chat_id:
+            return False
+
+        student_id = str(deed_data.get('studentId') or deed_data.get('student_id') or '').strip()
+        deed_id = str(deed_data.get('id') or '').strip()
+        student_name = deed_data.get('student_name') or deed_data.get('studentName') or f"นพอ. ({student_id})"
+        class_year = str(deed_data.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
+        year_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
+        year_level = str(deed_data.get('year_level') or year_map.get(class_year, '1'))
+        year_name = f"ชั้นปีที่ {year_level} (รุ่น {class_year})"
+
+        cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 7)
+        cat_emoji_map = {
+            1: ('บริจาคโลหิต/เกล็ดเลือด/พลาสมา', '🩸'),
+            2: ('โครงการภายนอก (คำสั่ง วพอ.)', '🏛️'),
+            3: ('ช่วยเหลืองานภายใน วพอ.', '🏥'),
+            4: ('เข้าอบรมที่ วพอ. จัดให้', '📚'),
+            5: ('ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', '🤝'),
+            6: ('ทำนุบำรุงศาสนสถาน', '🛕'),
+            7: ('งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)', '🧹'),
+            8: ('กิจกรรมจงรักภักดีต่อสถาบัน', '👑'),
+            9: ('ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', '⭐'),
+        }
+        cat_name, cat_emoji = cat_emoji_map.get(cat_id, (CATEGORIES_NAME_MAP.get(cat_id, 'กิจกรรมความดี'), '📌'))
+
+        hours = deed_data.get('hours', 0)
+        activity_date = deed_data.get('activityDate') or deed_data.get('event_date') or time.strftime('%Y-%m-%d')
+        desc = deed_data.get('description') or deed_data.get('title') or ''
+        location = deed_data.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
+        approver = deed_data.get('approver') or deed_data.get('approved_by') or 'ร.อ.อนุชิต ทำจะดี (Bird)'
+
+        base_url = get_env_config('SYSTEM_URL', 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend').rstrip('/')
+        if not base_url.endswith('/frontend'):
+            base_url += '/frontend'
+
+        q_params = urllib.parse.urlencode({
+            'id': deed_id,
+            'studentId': student_id,
+            'name': student_name,
+            'year': class_year,
+            'cat': cat_id,
+            'catName': cat_name,
+            'hours': hours,
+            'date': activity_date,
+            'desc': desc,
+            'loc': location,
+            'appr': approver,
+            'status': 'pending'
+        })
+        approve_url = f"{base_url}/approve_sign.html?{q_params}"
+        slip_url = f"{base_url}/deed_slip.html?{q_params}"
+
+        reply_markup = {
+            'inline_keyboard': [
+                [
+                    {'text': '✅ อนุมัติด่วน', 'callback_data': f"approve_{deed_id}_{student_id}"},
+                    {'text': '❌ ปฏิเสธ', 'callback_data': f"reject_{deed_id}_{student_id}"}
+                ],
+                [
+                    {'text': '✍️ ตรวจสอบ & ลงนาม ↗️', 'url': approve_url},
+                    {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': slip_url}
+                ]
+            ]
+        }
+
+        html_msg = (
+            f"🔔 <b>แจ้งเตือนการขออนุมัติความดี (วพอ. 2569)</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"👤 <b>ผู้ขอ:</b> {student_name}\n"
+            f"🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> ({year_name})\n"
+            f"📂 <b>หมวดที่ {cat_id}:</b> {cat_emoji} {cat_name}\n"
+            f"⏱ <b>จำนวน:</b> <b>{hours} ชั่วโมง</b>\n"
+            f"📅 <b>วันที่:</b> {activity_date}\n"
+            f"📍 <b>สถานที่:</b> {location}\n"
+            f"📝 <b>รายละเอียด:</b> {desc}\n"
+            f"👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> {approver}\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>"
+        )
+
+        photo_sent = False
+        img_rel = deed_data.get('imageUrl') or ''
+        if img_rel and not img_rel.startswith('data:'):
+            img_full = os.path.join(FRONTEND_DIR, img_rel)
+            if os.path.exists(img_full):
+                photo_sent = send_telegram_photo(img_full, html_msg, reply_markup)
+
+        if not photo_sent:
+            send_telegram_request('sendMessage', {
+                'chat_id': chat_id,
+                'text': html_msg,
+                'parse_mode': 'HTML',
+                'reply_markup': reply_markup
+            })
+        print(f"✈️ Telegram notification sent for deed [{deed_id}] ({student_name})")
+        return True
+    except Exception as e:
+        print(f"⚠️ Telegram deed notification error: {e}")
+        return False
+
 def load_students_map():
     for p in [os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
         if os.path.exists(p):
@@ -553,18 +731,42 @@ def save_or_update_deed_in_db(student_id, deed_data):
     class_year = student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69')
     category_id = deed_data.get('categoryId') or deed_data.get('category_id') or 7
 
-    # Ensure deed has real student identity info
-    if not deed_data.get('student_name'):
-        s_map = load_students_map()
-        s = s_map.get(student_id)
-        if s:
-            deed_data['student_name'] = f"{s.get('rank', 'นพอ.')} {s.get('first_name', '')} {s.get('last_name', '')}".strip()
-            deed_data['studentName'] = deed_data['student_name']
-            deed_data['student_rank'] = s.get('rank', 'นพอ.')
-            deed_data['student_first_name'] = s.get('first_name', '')
-            deed_data['student_last_name'] = s.get('last_name', '')
-            deed_data['class_year'] = str(s.get('class_year', class_year))
-            if s.get('position'): deed_data['student_position'] = s.get('position')
+    # Ensure deed has real authoritative student identity info
+    s_map = load_students_map()
+    s = s_map.get(student_id)
+    if s:
+        real_rank = s.get('rank', 'นพอ.')
+        real_fn = s.get('first_name', '')
+        real_ln = s.get('last_name', '')
+        real_full = f"{real_rank} {real_fn} {real_ln}".strip()
+        real_cy = str(s.get('class_year', class_year))
+        real_yl = str(s.get('year_level', '1'))
+        real_pos = s.get('position', '')
+
+        deed_data['student_name'] = real_full
+        deed_data['studentName'] = real_full
+        deed_data['student_rank'] = real_rank
+        deed_data['student_first_name'] = real_fn
+        deed_data['student_last_name'] = real_ln
+        deed_data['class_year'] = real_cy
+        deed_data['year_level'] = real_yl
+        if real_pos:
+            deed_data['student_position'] = real_pos
+
+        student_obj = deed_data.get('student')
+        if not isinstance(student_obj, dict):
+            student_obj = {}
+        student_obj['student_id'] = student_id
+        student_obj['rank'] = real_rank
+        student_obj['first_name'] = real_fn
+        student_obj['last_name'] = real_ln
+        student_obj['full_name'] = real_full
+        student_obj['class_year'] = real_cy
+        student_obj['year_level'] = real_yl
+        if real_pos:
+            student_obj['position'] = real_pos
+        student_obj['role'] = 'student'
+        deed_data['student'] = student_obj
 
     # 1. Save directly into records/
     target_dir = os.path.join(
@@ -697,7 +899,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
             return
             
         if parsed_path.path == '/api/get_student':
-            student_id = query_params.get('studentId')
+            student_id = query_params.get('studentId') or query_params.get('student_id') or query_params.get('id')
             if not student_id:
                 self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId'})
                 return
@@ -940,6 +1142,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     notify_deed_submission_line(student_id, deed_data)
                 except Exception as _ne:
                     pass
+                threading.Thread(target=notify_deed_submission_telegram, args=(deed_data,), daemon=True).start()
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error submitting deed: {e}")

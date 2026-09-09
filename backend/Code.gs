@@ -160,10 +160,27 @@ function addDeed(payload) {
 
   // 3. Notify Admins via Telegram
   try {
+    let resolvedName = '';
+    const masterSheet = ss ? ss.getSheetByName(SHEETS.STUDENTS) : null;
+    if (masterSheet) {
+      const mRows = masterSheet.getDataRange().getValues();
+      const foundRow = mRows.find((r, i) => i > 0 && String(r[1]).trim() === String(studentId).trim());
+      if (foundRow && foundRow[2]) {
+        resolvedName = String(foundRow[2]).trim();
+      }
+    }
+    if (!resolvedName) {
+      if (student && student.first_name && !String(student.first_name).startsWith('รหัส')) {
+        resolvedName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+      } else {
+        resolvedName = `นพอ. (${studentId})`;
+      }
+    }
+
     notifyTelegramNewDeed({
       id: deedId,
       studentId: studentId,
-      studentName: student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim() : `นพอ. (${studentId})`,
+      studentName: resolvedName,
       classYear: student.class_year || studentId.substring(0, 2) || '69',
       category: catId,
       hours: hours,

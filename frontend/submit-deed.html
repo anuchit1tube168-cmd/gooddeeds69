@@ -551,9 +551,15 @@
         let selectedCategoryId = null;
         let uploadedImages = [];
 
-        function init() {
+        async function init() {
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
+            if (!currentUser.first_name || currentUser.first_name.startsWith('รหัส')) {
+                const resolved = await App.ensureStudentProfile(currentUser.student_id);
+                if (resolved && resolved.first_name) {
+                    currentUser = { ...currentUser, ...resolved };
+                }
+            }
             document.getElementById('nav-avatar').textContent = (currentUser.first_name || '?')[0];
 
             // Set today as default date
@@ -895,6 +901,14 @@
 
             const loadingOverlay = document.getElementById('chibi-loading-overlay');
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
+
+            // Ensure student profile has real authoritative name
+            if (currentUser && (!currentUser.first_name || currentUser.first_name.startsWith('รหัส'))) {
+                const resolved = await App.ensureStudentProfile(currentUser.student_id);
+                if (resolved && resolved.first_name) {
+                    currentUser = { ...currentUser, ...resolved };
+                }
+            }
 
             // Save images
             const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
