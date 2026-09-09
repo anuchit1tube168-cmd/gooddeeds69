@@ -1,8 +1,8 @@
-> Current integration instructions (2026-09-08): see [Release review](docs/RELEASE_REVIEW_20260908.md). Python now serves static previews only. The gateway pilot requires a verified origin and explicit master/ledger header maps. The inspected eight-column staging ledger must never be written by the positional legacy approval handler. Earlier pilot instructions below do not waive these gates.
+> Current integration instructions (2026-09-09): see [Release review](docs/RELEASE_REVIEW_20260908.md) and [Review storage contract](docs/REVIEW_STORAGE_CONTRACT.md). Python serves static previews only. The gateway pilot requires a verified origin and explicit master/ledger header maps. The eight-column staging ledger has a tested internal review planner, but its write path remains disabled. Earlier pilot instructions below do not waive these gates.
 
 # คู่มือระบบความดี วพอ. — ชุดปรับปรุงและส่งต่องาน
 
-วันที่ 7 กันยายน 2569 • สถานะ: Draft สำหรับตรวจและทดสอบ ยังไม่ใช่รุ่นเปิดใช้งานจริง
+ปรับปรุง 9 กันยายน 2569 • สถานะ: Draft สำหรับตรวจและทดสอบ ยังไม่ใช่รุ่นเปิดใช้งานจริง
 
 ## ใช้กับ Antigravity / Gemini
 
@@ -35,11 +35,12 @@
 ```sh
 node scripts/check-syntax.cjs
 node --test tests/*.test.cjs
+python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 เทสต์ใช้ข้อมูลสมมติและจำลอง Sheets/Telegram ไม่มีการส่งข้อความหรือเขียนข้อมูลนักเรียนจริง ไม่พิสูจน์การเชื่อม Apps Script deployment จริง
 
-สำหรับดูหน้าจอ: ใช้ local static server ของ IDE แล้วเปิด `frontend/secure-pilot/index.html`. โฟลเดอร์นี้ยังอ้าง backend ตาม config เดิม อย่ากรอกบัญชีจริงใน preview; จัด staging config ก่อนทดสอบการเข้าสู่ระบบ ไม่ใช้ `file://` สำหรับการทดสอบระบบ API
+สำหรับดูหน้าจอ: ใช้ local static server ของ IDE แล้วเปิด `frontend/secure-pilot/index.html`. ตั้ง gateway origin ตามหัวข้อ Gateway pilot ด้านล่างหลังตรวจ deployment แล้ว ใช้บัญชีควบคุมของ staging เมื่อทดสอบการเข้าสู่ระบบ ไม่ใช้ `file://` สำหรับการทดสอบระบบ API
 
 ## ค่าหลังบ้านที่ต้องตั้งใน staging
 
@@ -77,6 +78,8 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 | หน้าแสดง 0 | การโหลดสำเร็จหรือไม่, schema, จำนวนรายการ, ยอด official vs รายการที่โหลด | reset database หรือสร้างนักเรียนใหม่ |
 | Telegram กดแล้วไม่เปลี่ยน | webhook key, numeric allowlist/chat, ID parsing, สถานะ ledger | เอาการตรวจสิทธิ์ออก |
 | แถวค้าง `approving` | สำรองแถวและยอด master ก่อน ตรวจว่าเพิ่มยอดแล้วหรือยัง พร้อม audit | reset เป็น pending แล้วกดซ้ำ |
+| `ledger_schema_incompatible` | ตรวจว่าใช้ adapter ตรงกับโครงสร้าง 8 หรือ 11 คอลัมน์ | ปิด guard / ย้ายคอลัมน์ชีตจริงให้เทสต์ผ่าน |
+| `submission_requires_reconciliation` | ใช้ deed ID ที่คืนมาเทียบแถวและหลักฐาน เพราะอาจบันทึกไปแล้ว | เปลี่ยนเป็น ID ใหม่แล้วส่งซ้ำทันที |
 | หลักฐานเปิดไม่ได้ | สิทธิ์ evidence API และไฟล์ private | เปลี่ยนแชร์ Anyone with link |
 | Gemini ทำซ้ำ/หยุด | WORK_STATE, error class, quota/permission กับ code failure | ลบงานหรือเริ่มระบบใหม่ |
 
@@ -102,4 +105,10 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 
 ตัวอย่าง schema อยู่ใน `docs/staging-columns.example.json`: serialize object แต่ละอันเป็นค่า Script Properties `GOODDEED_MASTER_COLUMN_MAP` และ `GOODDEED_LEDGER_COLUMN_MAP` ก่อนใช้ตรวจหัวคอลัมน์กับ staging อีกครั้ง รองรับชื่อแยกหลายช่องและระดับที่มีรูปแบบ `Lv.N label` จากต้นทาง ไม่คำนวณระดับเอง ถ้ารูปแบบไม่ตรงให้หยุดและตรวจข้อมูล
 
-ทดสอบ: `node scripts/check-syntax.cjs`, `node --test tests/*.test.cjs`, `python3 -m unittest discover -s tests -p 'test_*.py' -v` ชุดล่าสุดผ่าน 60 เคสในเครื่อง ไม่ใช่ผลทดสอบบริการจริง
+ทดสอบล่าสุด 9 กันยายน: JavaScript 78 + Python 11 = 89 เคสผ่าน พร้อม syntax checks ไม่ใช่ผลทดสอบบริการจริง
+
+## การบันทึกและแผนอนุมัติที่เพิ่มล่าสุด
+
+ตัวเขียน legacy ตรวจหัวคอลัมน์ก่อนเขียนหรืออัปโหลดหลักฐาน ไม่สร้างชีตว่างเมื่อไม่พบที่เก็บ ไม่รับรหัสรายการซ้ำ ตรวจวันที่/ชั่วโมง และเก็บข้อความที่ขึ้นต้นเหมือนสูตรเป็นข้อความ การแจ้งเตือนเกิดหลังบันทึกและ flush สำเร็จ; หากการส่งแจ้งเตือนล้มเหลว รายการที่บันทึกแล้วจะยังอยู่ แต่ยังไม่มี outbox ถาวรสำหรับส่งซ้ำ
+
+`GoodDeedReviewPlan.gs` คำนวณรายการเซลล์ที่จะเปลี่ยนจากข้อมูลจำลอง/ข้อมูลที่ backend อ่านอย่างถูกสิทธิ์ รองรับตาราง staging 8 คอลัมน์ รักษาชั่วโมงยกมาและสูตร ไม่แก้ Grade/Level เอง และหยุดเมื่อข้อมูลหรือผลอนุมัติขัดแย้ง ผลลัพธ์ระบุ `executable: false` ทุกครั้ง ห้ามนำไปเขียนชีตโดยตรง ขั้นถัดไปต้องเชื่อมสิทธิ์อาจารย์ตามกลุ่ม ลายเซ็นสด เกณฑ์ทางการ และ journal/outbox ให้ครบก่อนเปิด review flag รายละเอียดอยู่ใน [Review storage contract](docs/REVIEW_STORAGE_CONTRACT.md)

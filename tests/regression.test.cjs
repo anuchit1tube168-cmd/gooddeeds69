@@ -3,20 +3,22 @@ const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const vm = require('node:vm');
 const cp = require('node:child_process');
+const LEDGER_HEADERS = ['Deed ID','รหัสนักเรียน','หมวดหมู่ ID','จำนวนชั่วโมง','วันที่ทำกิจกรรม','รายละเอียด','สถานที่','รูปหลักฐาน URL','ผู้ตรวจประเมิน','สถานะ','วันที่ส่งเรื่อง'];
+const MASTER_HEADERS = ['ลำดับ','รหัสประจำตัว','ยศ','ชื่อ','นามสกุล','ชั้นปี (รุ่น)',...JSON.parse(fs.readFileSync('docs/staging-columns.example.json','utf8')).masterColumnMap.categoryHours,'รวมชั่วโมงสะสม','เกณฑ์ขั้นต่ำ','ผลการประเมิน (Grade)','ระดับความดี (Level)','LINE User ID','LINE Display Name','อัปเดตล่าสุด'];
 const TEST_STUDENT = ['99', '00001'].join('');
 const source = path => process.env.BASELINE === '1' ? cp.execFileSync('git', ['show', 'HEAD:' + path], {encoding:'utf8'}) : fs.readFileSync(path,'utf8');
 
 function backend() {
-  const ledger = [['id','student','category','hours','date','description','location','evidence','reviewer','status'], ['deed_123_abcd','9900001',6,1,'2026-09-06','Synthetic activity','','','','pending']];
-  const master = [Array(18).fill('header'), ['', '9900001', '', '', '', '', 0,0,0,0,0,5,0,0,0,5,'','']];
-  const writes = [], messages = [];
-  let failMaster = false;
-  const sheet = (rows, type) => ({getDataRange:()=>({getValues:()=>rows.map(r=>r.map(v=>typeof v==='string'&&v.startsWith('=')?5:v))}),getRange:(r,c)=>({getFormula:()=>String(rows[r-1][c-1]).startsWith('=')?rows[r-1][c-1]:'',setValue:v=>{if(type==='master' && failMaster) throw Error('storage unavailable'); rows[r-1][c-1]=v;writes.push([type,c,v]);},setFormula:v=>{rows[r-1][c-1]=v;}})});
+  const ledger = [[...LEDGER_HEADERS], ['deed_123_abcd','9900001',6,1,'2026-09-06','Synthetic activity','','','','pending']];
+  const master = [[...MASTER_HEADERS], ['', '9900001', '', '', '', '', 0,0,0,0,0,5,0,0,0,5,'','']];
+  const writes = [], messages = [], events = [];
+  let failMaster = false, failFlush = false, failLock = false;
+  const sheet = (rows, type) => ({getDataRange:()=>({getValues:()=>rows.map(r=>r.map(v=>typeof v==='string'&&v.startsWith('=')?5:v))}),appendRow:row=>{rows.push([...row]);writes.push([type,'append']);events.push('append');},getRange:(r,c)=>({getFormula:()=>String(rows[r-1][c-1]).startsWith('=')?rows[r-1][c-1]:'',setValue:v=>{if(type==='master' && failMaster) throw Error('storage unavailable'); rows[r-1][c-1]=v;writes.push([type,c,v]);},setFormula:v=>{rows[r-1][c-1]=v;}})});
   const sheets = {Deeds_2569:sheet(ledger,'ledger'),Main_2569:sheet(master,'master')};
   const props = {TELEGRAM_WEBHOOK_KEY:'x'.repeat(32),TELEGRAM_APPROVER_IDS:'123',TELEGRAM_CHAT_ID:'-456',TELEGRAM_BOT_TOKEN:'synthetic'};
-  const context = vm.createContext({console,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]||''})},SpreadsheetApp:{getActiveSpreadsheet:()=>({getSheetByName:n=>sheets[n]}),flush:()=>{}},LockService:{getScriptLock:()=>({waitLock:()=>{},releaseLock:()=>{}})},UrlFetchApp:{fetch:(url,opts)=>{messages.push(JSON.parse(opts.payload));return {getResponseCode:()=>200}}}});
+  const context = vm.createContext({console,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]||''})},SpreadsheetApp:{getActiveSpreadsheet:()=>({getSheetByName:n=>sheets[n]}),flush:()=>{events.push('flush');if(failFlush)throw Error('flush unavailable');}},LockService:{getScriptLock:()=>({waitLock:()=>{if(failLock)throw Error('lock unavailable');events.push('lock');},releaseLock:()=>{events.push('unlock');}})},UrlFetchApp:{fetch:(url,opts)=>{messages.push(JSON.parse(opts.payload));return {getResponseCode:()=>200}}}});
   vm.runInContext(source('backend/Code.gs'),context);
-  return {context,ledger,master,writes,messages,fail:()=>{failMaster=true;},removeMaster:()=>{delete sheets.Main_2569;},cb:{id:'query-1',data:'approve_deed_123_abcd_9900001',from:{id:123},message:{chat:{id:-456},message_id:1}}};
+  return {context,ledger,master,writes,messages,events,failFlush:()=>{failFlush=true;},failLock:()=>{failLock=true;},removeLedger:()=>{delete sheets.Deeds_2569;},fail:()=>{failMaster=true;},removeMaster:()=>{delete sheets.Main_2569;},cb:{id:'query-1',data:'approve_deed_123_abcd_9900001',from:{id:123},message:{chat:{id:-456},message_id:1}}};
 }
 test('approval uses stored category/hours and increments only once',()=>{
   const b=backend();const request={deedId:'deed_123_abcd',studentId:TEST_STUDENT,categoryId:1,hours:99};
@@ -84,4 +86,69 @@ test('invalid master category or total fails before an approving marker is writt
 test('existing category and total formulas survive approval',()=>{
   const b=backend();b.master[1][11]='=SUMIF(Deeds!A:A,B2,Deeds!D:D)';b.master[1][15]='=SUM(G2:O2)+100';const original=[...b.master[1]];
   assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).status,'success');assert.equal(b.master[1][11],original[11]);assert.equal(b.master[1][15],original[15]);
+});
+
+
+test('legacy reviewer rejects reordered, duplicate and eight-column ledger schemas before writes',()=>{
+  const eight=['Deed ID','รหัสนักเรียน','หมวดหมู่ ID','จำนวนชั่วโมง','วันที่ทำกิจกรรม','รายละเอียด','สถานะ','วันที่ส่งเรื่อง'];
+  for(const headers of [[...LEDGER_HEADERS].reverse(),[...LEDGER_HEADERS,'สถานะ'],eight]){
+    const b=backend();b.ledger[0]=headers;
+    assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'ledger_schema_incompatible');
+    assert.equal(b.writes.length,0);
+  }
+});
+test('legacy reviewer refuses displaced master identity/category/total headers',()=>{
+  for(const column of [1,11,15]){const b=backend();b.master[0][column]='unexpected header';
+    assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'master_requires_reconciliation');assert.equal(b.writes.length,0);
+  }
+});
+test('legacy submission refuses missing or incompatible storage before evidence or notification',()=>{
+  for(const mode of ['missing','reordered']){const b=backend();let uploads=0;b.context.uploadImage=()=>{uploads++;return {url:'synthetic'};};
+    if(mode==='missing')b.removeLedger();else b.ledger[0].reverse();
+    const result=b.context.addDeed({id:'new_synthetic',studentId:TEST_STUDENT,categoryId:6,hours:1,description:'Synthetic',imageData:'data:image/png;base64,AA=='});
+    assert.equal(result.status,'error');assert.equal(uploads,0);assert.equal(b.messages.length,0);assert.equal(b.writes.length,0);
+  }
+});
+test('legacy submission rejects reused IDs and invalid half-hours before side effects',()=>{
+  for(const [id,hours] of [['deed_123_abcd',1],['new_synthetic',true],['new_synthetic','1e1'],['new_synthetic',0.75]]){const b=backend();let uploads=0;b.context.uploadImage=()=>{uploads++;return {};};
+    const result=b.context.addDeed({id,studentId:TEST_STUDENT,categoryId:6,hours,description:'Synthetic',imageData:'data:image/png;base64,AA=='});
+    assert.equal(result.status,'error');assert.equal(uploads,0);assert.equal(b.messages.length,0);assert.equal(b.writes.length,0);
+  }
+});
+
+const validSubmission = () => ({id:'new_synthetic',studentId:TEST_STUDENT,categoryId:6,hours:1,description:'Synthetic',activityDate:'2026-09-06'});
+test('legacy submission stores literal text and notifies after flush and unlock',()=>{
+  const b=backend();b.context.notifyTelegramNewDeed=()=>b.events.push('notify');
+  const result=b.context.addDeed({...validSubmission(),description:'=1+1',location:'+synthetic',approver:'@synthetic'});
+  assert.equal(result.status,'success');assert.equal(b.ledger.length,3);
+  assert.equal(b.ledger[2].length,11);assert.equal(b.ledger[2][5],"'=1+1");
+  assert.equal(b.ledger[2][6],"'+synthetic");assert.equal(b.ledger[2][8],"'@synthetic");
+  assert.equal(b.ledger[2][9],'pending');assert.deepEqual(b.events,['lock','append','flush','unlock','notify']);
+});
+test('legacy submission preserves uncertain append, identifies it and refuses replay',()=>{
+  const b=backend();b.failFlush();b.context.notifyTelegramNewDeed=()=>assert.fail('must not notify');
+  const result=b.context.addDeed(validSubmission());
+  assert.equal(result.code,'submission_requires_reconciliation');assert.equal(result.deedId,'new_synthetic');
+  assert.equal(b.ledger.length,3);assert.equal(b.context.addDeed(validSubmission()).code,'deed_identity_conflict');
+  assert.equal(b.ledger.length,3);assert.equal(b.messages.length,0);
+});
+test('legacy submission rejects an unavailable lock without writing or unlocking it',()=>{
+  const b=backend();b.failLock();const result=b.context.addDeed(validSubmission());
+  assert.equal(result.code,'submission_failed');assert.equal(b.writes.length,0);assert.deepEqual(b.events,[]);
+});
+test('legacy submission stops on a failed evidence upload',()=>{
+  const b=backend();b.context.uploadImage=()=>({status:'error'});
+  assert.equal(b.context.addDeed({...validSubmission(),imageData:'data:image/png;base64,AA=='}).code,'evidence_upload_failed');
+  assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
+});
+test('legacy submission failure to notify does not lose a persisted record',()=>{
+  const b=backend();b.context.console={error:()=>{}};b.context.notifyTelegramNewDeed=()=>{throw Error('delivery unavailable');};
+  assert.equal(b.context.addDeed(validSubmission()).status,'success');assert.equal(b.ledger.length,3);
+  assert.equal(b.context.addDeed(validSubmission()).code,'deed_identity_conflict');assert.equal(b.ledger.length,3);
+});
+test('legacy submission rejects malformed dates and typed text without effects',()=>{
+  for(const bad of [{activityDate:'2026-02-30'},{activityDate:{}},{activityDate:'=TODAY()'},{location:{}},{approver:true}]){
+    const b=backend();assert.equal(b.context.addDeed({...validSubmission(),...bad}).code,'invalid_deed');
+    assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
+  }
 });

@@ -6,7 +6,7 @@ function setup(){
  props.GOODDEED_MASTER_COLUMN_MAP=JSON.stringify({studentId:'studentId'});
  props.GOODDEED_LEDGER_COLUMN_MAP=JSON.stringify(Object.fromEntries(['deedId','studentId','categoryId','hours','activityDate','description','status','submittedAt','evidenceUrl'].map(k=>[k,k])));
  const context=vm.createContext({console,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]})},SpreadsheetApp:{getActiveSpreadsheet:()=>({getSheetByName:n=>tables[n]?{getDataRange:()=>({getValues:()=>{reads++;return tables[n]}})}:null})},LockService:{getScriptLock:()=>({waitLock:()=>{},releaseLock:()=>{}})},CacheService:{getScriptCache:()=>({get:k=>cache.get(k),put:(k,v)=>cache.set(k,v)})},Utilities:{newBlob:s=>({getBytes:()=>[...Buffer.from(s)]}),DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,s)=>[...crypto.createHash('sha256').update(s).digest()],computeHmacSha256Signature:(s,k)=>[...crypto.createHmac('sha256',k).update(s).digest()]},ContentService:{MimeType:{JSON:'json'},createTextOutput:s=>({setMimeType:()=>JSON.parse(s)})}});
- for(const f of ['backend/Code.gs','backend/CloudflareReadAdapter.gs'])vm.runInContext(fs.readFileSync(f,'utf8'),context);
+ for(const f of ['backend/Code.gs','backend/CloudflareReadAdapter.gs','backend/GoodDeedReviewPlan.gs'])vm.runInContext(fs.readFileSync(f,'utf8'),context);
  const signed=(changes={})=>{const p={action:'cloudflareListSelf',subjectRef:sid,requestId:'test-request',timestamp:String(Math.floor(Date.now()/1000)),nonce:'synthetic_nonce_12345678',body:'{}',...changes};const hash=crypto.createHash('sha256').update(p.body).digest('hex');p.signature=crypto.createHmac('sha256',secret).update(['v2',p.action,p.subjectRef,p.requestId,p.timestamp,p.nonce,hash].join('\n')).digest('hex');return {parameter:p};};
  return {context,signed,props,tables,reads:()=>reads};
 }
@@ -15,6 +15,12 @@ test('signed request matches v2 HMAC and returns only self without raw evidence'
 test('tampered signature/body and expired request never read storage',()=>{for(const kind of ['signature','body','expired']){const s=setup(),e=s.signed(kind==='expired'?{timestamp:'1'}:{});if(kind==='signature')e.parameter.signature='0'.repeat(64);if(kind==='body')e.parameter.body='{"limit":1}';assert.equal(s.context.doPost(e).ok,false);assert.equal(s.reads(),0);}});
 test('replay is rejected after first accepted request',()=>{const s=setup(),e=s.signed();assert.equal(s.context.doPost(e).ok,true);assert.equal(s.context.doPost(e).error,'ADAPTER_REPLAY_BLOCKED');});
 test('non-staging, write action and subject overrides fail closed',()=>{let s=setup();s.props.APP_ENV='production';assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_STAGING_REQUIRED');s=setup();assert.equal(s.context.doPost(s.signed({action:'cloudflareSubmitSelf'})).error,'ADAPTER_ACTION_DISABLED');assert.equal(s.context.doPost(s.signed({body:'{"studentId":"other"}'})).error,'ADAPTER_BODY_INVALID');assert.equal(s.reads(),0);});
+test('loading the review planner never enables staff, write, evidence or activation routes',()=>{
+ for(const action of ['cloudflarePendingQueue','cloudflareReviewDeed','cloudflareSubmitSelf','cloudflareGetEvidence','cloudflareActivateLink']){
+  const s=setup();assert.equal(typeof s.context.buildGoodDeedReviewPlan_,'function');
+  assert.equal(s.context.doPost(s.signed({action,subjectRef:'staff:synthetic'})).error,'ADAPTER_ACTION_DISABLED');assert.equal(s.reads(),0);
+ }
+});
 test('duplicate master identity requires reconciliation',()=>{const s=setup();s.tables.Main_2569.push(s.tables.Main_2569[1]);assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_IDENTITY_AMBIGUOUS');});
 function cardSetup(){
  const s=setup(),sid=s.tables.Main_2569[1][1];

@@ -28,6 +28,33 @@ const SHEETS = {
   SETTINGS: 'Settings'
 };
 
+// Positional legacy writers must verify their complete contract before effects.
+// The mapped eight-column staging ledger is deliberately rejected here.
+const LEGACY_DEED_HEADERS = [
+  'Deed ID', 'รหัสนักเรียน', 'หมวดหมู่ ID', 'จำนวนชั่วโมง', 'วันที่ทำกิจกรรม',
+  'รายละเอียด', 'สถานที่', 'รูปหลักฐาน URL', 'ผู้ตรวจประเมิน', 'สถานะ', 'วันที่ส่งเรื่อง'
+];
+const LEGACY_CATEGORY_HEADERS = [
+  'หมวด 1 บริจาคโลหิต', 'หมวด 2 โครงการภายนอก', 'หมวด 3 ช่วยงานภายใน',
+  'หมวด 4 อบรม', 'หมวด 5 ช่วยชุมชน', 'หมวด 6 ศาสนสถาน',
+  'หมวด 7 งานฟรีทั่วไป', 'หมวด 8 จงรักภักดี', 'หมวด 9 บทบาทพิเศษ'
+];
+function legacyColumnsMatch_(headers, expected) {
+  return Array.isArray(headers) && Object.keys(expected).every(index => {
+    const name = expected[index];
+    return headers[Number(index)] === name && headers.filter(value => value === name).length === 1;
+  });
+}
+function legacyMasterColumnsMatch_(headers) {
+  const expected = {1: 'รหัสประจำตัว', 15: 'รวมชั่วโมงสะสม'};
+  LEGACY_CATEGORY_HEADERS.forEach((name, index) => { expected[index + 6] = name; });
+  return legacyColumnsMatch_(headers, expected);
+}
+function legacySheetLiteral_(value) {
+  const text = String(value == null ? '' : value);
+  return /^[=+@-]/.test(text) ? "'" + text : text;
+}
+
 // ==================== SHEET HELPERS ====================
 function getSS() {
   try {
@@ -111,78 +138,68 @@ function doPost(e) {
 
 // ==================== DEED LOGIC ====================
 function addDeed(payload) {
-  const deed = payload.deed || payload;
-  const student = deed.student || {};
+  const deed = payload && (payload.deed || payload);
+  if (!deed || typeof deed !== 'object' || Array.isArray(deed)) return { status: 'error', code: 'invalid_deed' };
+  const student = deed.student && typeof deed.student === 'object' ? deed.student : {};
   const studentId = String(deed.studentId || student.student_id || '').trim();
-  const hours = parseFloat(deed.hours || 0);
-  const catId = parseInt(deed.categoryId || deed.category_id || 1);
+  const hours = legacyDecimal_(deed.hours);
+  const catId = legacyDecimal_(deed.categoryId === undefined ? deed.category_id : deed.categoryId);
   const deedId = deed.id || ('deed_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
-  const desc = deed.description || deed.title || 'กิจกรรมจิตอาสา';
+  const desc = deed.description || deed.title || '';
+  if (!/^\d{7}$/.test(studentId) || !Number.isInteger(catId) || catId < 1 || catId > 9 ||
+      !Number.isFinite(hours) || hours < 0.5 || hours > 24 || !Number.isInteger(hours * 2) ||
+      typeof deedId !== 'string' || !/^[A-Za-z0-9._:-]{3,120}$/.test(deedId) ||
+      typeof desc !== 'string' || !desc.trim() || desc.length > 1200) return { status: 'error', code: 'invalid_deed' };
   const activityDate = deed.activityDate || deed.event_date || new Date().toISOString().split('T')[0];
   const location = deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
-  const approver = deed.approver || deed.approved_by || 'ร.อ.อนุชิต ทำจะดี (Bird)';
-
-  // 1. Handle image upload to Google Drive if base64 provided
-  let imageUrl = deed.imageUrl || '';
-  if (deed.imageData && deed.imageData.startsWith('data:image')) {
-    const uploadRes = uploadImage({
-      base64: deed.imageData,
-      studentId: studentId,
-      studentName: student.first_name ? `${student.first_name} ${student.last_name || ''}` : '',
-      activityName: desc
-    });
-    if (uploadRes && uploadRes.url) {
-      imageUrl = uploadRes.url;
-    }
-  }
-
-  // 2. Append to Deeds Sheet
-  const sheet = getOrCreateSheet(SHEETS.DEEDS, [
-    'Deed ID', 'รหัสนักเรียน', 'หมวดหมู่ ID', 'จำนวนชั่วโมง', 'วันที่ทำกิจกรรม',
-    'รายละเอียด', 'สถานที่', 'รูปหลักฐาน URL', 'ผู้ตรวจประเมิน', 'สถานะ', 'วันที่ส่งเรื่อง'
-  ]);
-
-  if (sheet) {
-    sheet.appendRow([
-      deedId,
-      studentId,
-      catId,
-      hours,
-      activityDate,
-      desc,
-      location,
-      imageUrl,
-      approver,
-      'pending',
-      new Date()
-    ]);
-  }
-
-  // 3. Notify Admins via Telegram
+  const approver = deed.approver || deed.approved_by || 'ผู้ตรวจ';
+  if (typeof activityDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(activityDate) ||
+      !Number.isFinite(Date.parse(activityDate)) || new Date(activityDate).toISOString().slice(0, 10) !== activityDate ||
+      typeof location !== 'string' || location.length > 500 ||
+      typeof approver !== 'string' || approver.length > 180) return { status: 'error', code: 'invalid_deed' };
+  let imageUrl = String(deed.imageUrl || ''), attemptedWrite = false;
+  let lock, locked = false;
   try {
-    notifyTelegramNewDeed({
-      id: deedId,
-      studentId: studentId,
-      studentName: student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim() : `นพอ. (${studentId})`,
-      classYear: student.class_year || studentId.substring(0, 2) || '69',
-      category: catId,
-      hours: hours,
-      date: activityDate,
-      desc: desc,
-      location: location,
-      imageUrl: imageUrl,
-      approver: approver
-    });
-  } catch (te) {
-    console.error('Telegram notification error:', te);
+    lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    locked = true;
+    const ss = getSS(), sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
+    if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
+    const values = sheet.getDataRange().getValues();
+    if (!legacyColumnsMatch_(values[0], LEGACY_DEED_HEADERS)) return { status: 'error', code: 'ledger_schema_incompatible' };
+    if (values.slice(1).some(row => String(row[0]) === deedId)) return { status: 'error', code: 'deed_identity_conflict' };
+    const master = ss.getSheetByName(SHEETS.STUDENTS);
+    if (!master) return { status: 'error', code: 'student_not_found' };
+    const students = master.getDataRange().getValues();
+    if (!legacyMasterColumnsMatch_(students[0])) return { status: 'error', code: 'master_schema_incompatible' };
+    if (students.slice(1).filter(row => String(row[1]) === studentId).length !== 1) return { status: 'error', code: 'student_identity_ambiguous' };
+    // No file upload, empty-sheet creation or notification precedes storage validation.
+    if (deed.imageData) {
+      if (typeof deed.imageData !== 'string' || !deed.imageData.startsWith('data:image')) return { status: 'error', code: 'evidence_invalid' };
+      const uploaded = uploadImage({base64: deed.imageData, studentId: studentId,
+        studentName: String(student.first_name || ''), activityName: desc});
+      if (!uploaded || uploaded.status !== 'success' || !uploaded.url) return { status: 'error', code: 'evidence_upload_failed' };
+      imageUrl = uploaded.url;
+    }
+    attemptedWrite = true;
+    sheet.appendRow([deedId, studentId, catId, hours, legacySheetLiteral_(activityDate),
+      legacySheetLiteral_(desc), legacySheetLiteral_(location), legacySheetLiteral_(imageUrl),
+      legacySheetLiteral_(approver), 'pending', new Date()]);
+    SpreadsheetApp.flush();
+  } catch (_) {
+    return { status: 'error', code: attemptedWrite ? 'submission_requires_reconciliation' : 'submission_failed', deedId: deedId };
+  } finally {
+    if (locked) lock.releaseLock();
   }
-
-  return {
-    status: 'success',
-    deedId: deedId,
-    imageUrl: imageUrl,
-    message: 'Deed recorded successfully'
-  };
+  try {
+    notifyTelegramNewDeed({id: deedId, studentId: studentId,
+      studentName: student.first_name ? String(student.first_name) : 'นักเรียนพยาบาล',
+      classYear: student.class_year || studentId.substring(0, 2), category: catId, hours: hours,
+      date: activityDate, desc: desc, location: location, imageUrl: imageUrl, approver: approver});
+  } catch (_) {
+    console.error('LEGACY_NOTIFICATION_UNCONFIRMED');
+  }
+  return { status: 'success', deedId: deedId, imageUrl: imageUrl, message: 'Deed recorded successfully' };
 }
 
 function approveDeed(data) {
@@ -198,6 +215,7 @@ function approveDeed(data) {
     const sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
     if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
     const values = sheet.getDataRange().getValues();
+    if (!legacyColumnsMatch_(values[0], LEGACY_DEED_HEADERS)) return { status: 'error', code: 'ledger_schema_incompatible' };
     const matches = values.map((row, i) => i > 0 && String(row[0]) === deedId ? i : -1).filter(i => i >= 0);
     if (!matches.length) return { status: 'error', code: 'deed_not_found' };
     if (matches.length !== 1) return { status: 'error', code: 'deed_identity_ambiguous' };
@@ -335,6 +353,7 @@ function legacyDecimal_(value) {
 // Prepare validation BEFORE the ledger transition; never overwrite formulas.
 function prepareMasterStudentHoursUpdate_(sheet, studentId, catId, addedHours) {
   const data = sheet.getDataRange().getValues();
+  if (!legacyMasterColumnsMatch_(data[0])) throw new Error('master_schema_incompatible');
   const matches = data.map((row,i) => i > 0 && String(row[1]) === String(studentId) ? i : -1).filter(i => i >= 0);
   if (matches.length !== 1) throw new Error('master_identity_requires_reconciliation');
   const index = matches[0], catCol = 6 + catId;
@@ -592,4 +611,3 @@ function setupAllStudentFolders() {
 
   return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
 }
-

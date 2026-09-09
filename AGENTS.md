@@ -2,7 +2,7 @@
 
 Owner: วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
 Scope: ระบบบันทึกความดีสำหรับนักเรียน อาจารย์ผู้ตรวจ และผู้ดูแล
-Updated: 2026-09-08 | Release state: DRAFT / NOT PRODUCTION READY
+Updated: 2026-09-09 | Release state: DRAFT / NOT PRODUCTION READY
 
 ## Start here
 
@@ -92,3 +92,9 @@ Both read-adapter master and ledger columns require explicit unique header maps.
 Run Python boundary tests alongside JS tests. Historical reports of sync/audit PASS must be tagged by source and cannot replace current verification. The current UI has rendering-state tests but visual QA is blocked until the test browser can access the pilot. No layout-quality or production-readiness claim without corresponding evidence.
 
 Legacy public roster/photo/settings exporters and destructive Settings reset are intentionally suspended. Do not bypass their guards; implement a reviewed private pipeline first. Source-embedded roster/QA seeds were privately archived before removal. Document rendering must require an exact, unique record and explicit matching owner; URL parameters cannot be evidence or approval authority.
+
+## Storage continuation — 2026-09-09
+
+Legacy submission/review now reject incompatible headers before effects. Never weaken the guard to make the eight-column staging sheet accept the eleven-column writer. A failed/uncertain append must retain its deed ID for reconciliation; notification failure cannot roll back or duplicate a persisted record.
+
+`backend/GoodDeedReviewPlan.gs` is a pure internal calculator, not an enabled review adapter. Read `docs/REVIEW_STORAGE_CONTRACT.md` before extending it. Complete values/formula snapshots and explicit nine-category maps are required; preserve formulas and carry-forward. A returned plan is never authorization or an executable transaction. The gateway still needs assigned-scope enforcement, fresh-signature proof, official policy checks and durable journal/outbox integration. Do not expose this helper or enable review because its synthetic tests pass.
