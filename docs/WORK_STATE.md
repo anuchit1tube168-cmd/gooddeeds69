@@ -1,3 +1,15 @@
+# Runtime access checkpoint — 2026-09-09
+
+User authorized direct inspection of Apps Script and Cloudflare. Production write remains false; no release or account setting was changed.
+
+- Verified remote code heads: Good Deed PR #4 `a8be7d878eca7751f1a78356595af8f9a9b24f54`; gateway branch `gooddeed-final-gateway-20260902` at `6c72530768bfbbba142e34020fa22d2519b3d332`.
+- Gateway source identifies worker `rtafnc-one-gateway-staging`, entrypoint `src/gooddeed-final-audited.ts`, and staging origin `https://rtafnc-one-gateway-staging.anuchit1tube168.workers.dev`. These are source configuration, not a confirmed deployed version.
+- The gateway repository's `docs/APP_SCRIPT_DEPLOYMENT_INSPECTION_2026-08-16.md` contains an editor link for the existing RTAFNC ONE LIFF Services project and a historical version-1 observation. It does not prove that project is the separate Good Deed staging resolver. Do not install the adapter into that project on this evidence alone.
+- Actual browser access: Apps Script redirected to Google's public landing page. Its Google sign-in page returned `502 Bad Gateway` / connection refused, unchanged after one reload. No credentials were entered and no script editor was reached.
+- Actual browser access: Cloudflare dashboard remained on `Performing security verification` after one reload. No dashboard values, bindings, secrets or deployments were reached; do not retry the challenge in a loop.
+- GitHub evidence: no workflow-dispatch runs were returned for the gateway branch and no combined commit statuses were returned. This does not exclude deployment through Cloudflare Build, another branch or another mechanism.
+- Next exact task: obtain a readable authenticated Apps Script deployment view and Cloudflare Worker deployment/bindings view; capture project identity, active version, update time and target staging sheet without secret values. Then match those runtime facts to the reviewed code. The access blocker is the current browser path, not missing user permission.
+
 # Current checkpoint — 2026-09-08 integration review
 
 State: DRAFT / STAGING ONLY / PRODUCTION WRITE = FALSE.
