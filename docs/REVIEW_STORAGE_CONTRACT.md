@@ -69,3 +69,72 @@ Evidence created before an uncertain append can remain private without a confirm
 ## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
 
 Preserve records, hours, private evidence and signatures. Student Master remains canonical; LINE identity verification and assigned scope are server decisions. GitHub contains source/synthetic tests only. Follow `AGENTS.md` for the official policy source, backup/rollback proof and staging/cutover gates. No production changes were made by this work.
+
+## Review prerequisite continuation — 2026-09-10
+
+`backend/GoodDeedReviewGate.gs` adds an internal read-only prerequisite checker,
+`checkGoodDeedReviewPrerequisites_(request, ports, now)`. It is deliberately not
+called by any HTTP route, frontend, legacy writer or the pure storage planner.
+The current signed gateway request format and disabled review action are unchanged.
+
+The request permits only `requestId`, `deedId`, `decision`, `note` and an opaque
+`signatureRef`. Rejection requires a nonblank reason. Actor, student, role, hours,
+raw drawing, scope and verification flags are forbidden request overrides.
+`now` is server epoch milliseconds. The synchronous ports are functions supplied
+by trusted server code, never JSON or browser objects:
+
+| Port | Required trusted result / behavior |
+| --- | --- |
+| `session()` | Current verified server session: actorRef, sessionRef, teacher/admin role, active, validFrom, expiresAt |
+| `deed(deedId)` | Exact unique private deed: deedId, canonical string studentId, pending status, revisionDigest |
+| `assignment(actorRef, studentId)` | Current exact assignment: matching actor/student, permission `gooddeed.review`, active, version, validFrom, expiresAt |
+| `signature(signatureRef)` | Persisted private verification: matching reference/actor/session, purpose `gooddeed.review`, state `verified-private`, consumed false, intentDigest, validFrom, expiresAt |
+
+**These production port implementations do not exist yet.** The checker cannot
+prove the provenance of arbitrary objects returned by a wrongly implemented port.
+The session port must reuse verified gateway identity; the deed port must reject
+duplicate rows; assignment resolution must use the authoritative assigned scope.
+Admin role is not a universal scope bypass. A cohort assignment must be resolved
+against the current Master by that server resolver, not a browser-supplied cohort.
+
+`revisionDigest` must be a server-generated SHA-256 of a documented canonical
+snapshot covering every review-relevant deed field and private evidence version.
+Do not hash only the deed ID or trust a browser's digest. Its canonical snapshot
+format and durable storage remain integration work; no new Sheet column or
+synthetic revision number was imposed on the existing eight-column ledger.
+
+The review intent is SHA-256 over UTF-8 `JSON.stringify` of this ordered array:
+
+```text
+["gooddeed-review-intent-v1", actorRef, sessionRef, deedId, studentId,
+ revisionDigest, assignmentVersion, requestId, decision, exactNote]
+```
+
+A future server challenge issuer and private signature verifier must derive that
+same intent from trusted records, bind and persist it after fresh signing, and
+make it available through the signature port. The digest is a binding, not a
+secret, HMAC, identity proof or bearer token. A drawing/upload or a client boolean
+cannot create a verified-private record. Changes to note (including whitespace),
+decision, request, session, deed revision or assignment version invalidate it.
+The proposed technical proof lifetime is at most five minutes, also bounded by
+session/assignment expiry; this is not an academic-hours policy.
+
+The returned result always has `executable: false`. It includes the checked
+revision/assignment/intent and expiry for server comparison, never a reusable
+permission receipt. It does not consume a signature or lock anything. Do not send
+it to a client and later treat it as authority. Final/uncertain deeds require the
+separate durable receipt/reconciliation path; they cannot pass as pending here.
+
+Before any write, reread and recheck all prerequisites under the chosen lock,
+apply the verified official policy, and atomically coordinate proof consumption
+with the durable review journal and recoverable summary/outbox changes. Rechecking
+alone cannot prevent a concurrent approval. The writer, challenge issuance,
+private verifier, academic policy and failure recovery remain blocked integration
+work. No provider storage or notification is accessed by these tests.
+
+The self-read adapter additionally rejects aliased configured header names and
+self deed IDs colliding anywhere in the ledger, including another student. It
+returns a generic reconciliation code rather than the other student's record.
+Three new regression tests failed before this repair and pass after it. Eleven
+prerequisite tests cover scope, session expiry, request overrides, proof binding,
+revocation, consumption, sanitization and the non-executable return boundary.

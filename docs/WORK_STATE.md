@@ -1,3 +1,21 @@
+# Server review prerequisite checkpoint — 2026-09-10
+
+State: SOURCE CHECKS PASS / PRIVATE RESOLVERS AND RUNTIME QA BLOCKED / PRODUCTION WRITE = FALSE.
+Remote parent reverified: `84e68fc08c64a31c81edb6dce0659a50c800af67`; local parent `0f92e78`. Separate gateway remains `6c72530768bfbbba142e34020fa22d2519b3d332`. Publish changed blobs on the current remote tree only; never push this partial checkout.
+
+- Reused project Fable workflow and existing staging read adapter/review storage contract. No new UI or alternate backend.
+- Reproduced three accepted-invalid-read cases, then fixed aliased field maps and a self Mission ID colliding with another owner. No private row is exposed in error output.
+- Added `backend/GoodDeedReviewGate.gs`, an internal read-only prerequisite checker with trusted synchronous server ports. It rejects missing/expired identity or exact assignment, nonpending deeds, request overrides, stale/reused/mismatched private signature intent. Return is always non-executable; HTTP review remains disabled.
+- The private resolver ports, challenge issuer and actual signature verifier are NOT implemented; no claim of working server authorization integration. Read the appended precise intent and port contract in `docs/REVIEW_STORAGE_CONTRACT.md` before continuing.
+- Verification: syntax PASS; JS 129/129; Python 16/16; total 145. Eleven new gate tests and three read-integrity cases use only synthetic data. Existing adapter tests load the gate and still prove disabled staff/write/evidence/activation routes.
+- No provider calls, browser bypass, deployment, real write, notification, schema change, token rotation or LIFF endpoint edit. Browser denial and Google/Cloudflare access blockers remain unchanged.
+
+Next required input: permitted evidence of the actual staging resolver and Worker deployment versions/bindings (names only, no secret values), authoritative category/period policy and assigned-reviewer source. Implement the trusted private resolvers/challenge verifier against those facts, then the locked durable journal/outbox writer; do not enable this checker or a saved plan as a substitute. Resume current browser/device QA only after permitted access changes. Preserve the existing eight-column ledger until a reviewed storage contract requires otherwise.
+
+Commands after related changes: `node scripts/check-syntax.cjs`, `node --test tests/*.test.cjs`, `python3 -m unittest discover -s tests -p 'test_*.py' -v`. Check unchanged PII rules against all PR-touched contents, publish to draft PR #4 and verify final-head CI. Older checkpoints below retain their historical counts.
+
+---
+
 # Light Mission Control checkpoint — 2026-09-10
 
 State: SOURCE IMPLEMENTED + LOCAL TESTS PASS / CURRENT VISUAL QA BLOCKED / DRAFT / PRODUCTION WRITE = FALSE.

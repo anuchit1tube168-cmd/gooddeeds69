@@ -26,3 +26,9 @@ Local syntax passes; 115 JavaScript + 16 Python tests pass. Controller tests use
 ### Concurrent owner updates preserved
 
 Merged source updates through `2bff70e2522f9c92d4dd495ed1b86dd1e793d44a` before publication. Kept name/signature layout and stored sequence improvements; corrected Master column reads and undefined URL-name references, removed unsigned identity fallbacks/student-number arithmetic, restored verified Telegram TLS/accurate delivery results, and suspended public-roster/Git-auto-publish/legacy callback effects. The static preview no longer starts a notification/review daemon. Added eight regression cases for these findings; final local total is 131 (115 JS + 16 Python).
+
+## 2026-09-10 — Server review prerequisites
+
+- Fix self-read mappings accepting aliased fields and Mission IDs colliding across owners.
+- Add internal, read-only review prerequisite checks for current server session, exact assigned scope and private signature intent. No new enabled route, schema, writer or auth provider.
+- Add 14 regression cases; local suite now 145 passed. Production resolver/signature/journal integration and current browser/provider acceptance remain open.

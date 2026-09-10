@@ -82,3 +82,7 @@ During implementation, the branch advanced five commits to `2bff70e2522f9c92d4dd
 - Telegram transport uses certificate/hostname verification and sanitized errors; rejected delivery returns false. No real Telegram call was made in testing.
 
 The final publication must use the latest verified remote parent, not the initial audit snapshot. Runtime/deployment claims in historical WORK_STATE sections are still unverified.
+
+## Review prerequisite source extension
+
+`backend/GoodDeedReviewGate.gs` checks trusted server-resolved session, exact assigned scope, current deed revision and fresh private signature intent. It always returns a non-executable result and has no HTTP route. Private resolver implementations, challenge issuance, signature verification, locked journal/writer and policy are still missing. See `REVIEW_STORAGE_CONTRACT.md` for the precise port/intent contract. The real self-read adapter now rejects column-map aliases and cross-owner Mission ID collisions.

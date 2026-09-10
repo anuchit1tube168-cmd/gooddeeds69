@@ -6,7 +6,7 @@ function setup(){
  props.GOODDEED_MASTER_COLUMN_MAP=JSON.stringify({studentId:'studentId'});
  props.GOODDEED_LEDGER_COLUMN_MAP=JSON.stringify(Object.fromEntries(['deedId','studentId','categoryId','hours','activityDate','description','status','submittedAt','evidenceUrl'].map(k=>[k,k])));
  const context=vm.createContext({console,PropertiesService:{getScriptProperties:()=>({getProperty:k=>props[k]})},SpreadsheetApp:{getActiveSpreadsheet:()=>({getSheetByName:n=>tables[n]?{getDataRange:()=>({getValues:()=>{reads++;return tables[n]}})}:null})},LockService:{getScriptLock:()=>({waitLock:()=>{},releaseLock:()=>{}})},CacheService:{getScriptCache:()=>({get:k=>cache.get(k),put:(k,v)=>cache.set(k,v)})},Utilities:{newBlob:s=>({getBytes:()=>[...Buffer.from(s)]}),DigestAlgorithm:{SHA_256:'sha256'},Charset:{UTF_8:'utf8'},computeDigest:(_,s)=>[...crypto.createHash('sha256').update(s).digest()],computeHmacSha256Signature:(s,k)=>[...crypto.createHmac('sha256',k).update(s).digest()]},ContentService:{MimeType:{JSON:'json'},createTextOutput:s=>({setMimeType:()=>JSON.parse(s)})}});
- for(const f of ['backend/Code.gs','backend/CloudflareReadAdapter.gs','backend/GoodDeedReviewPlan.gs'])vm.runInContext(fs.readFileSync(f,'utf8'),context);
+ for(const f of ['backend/Code.gs','backend/CloudflareReadAdapter.gs','backend/GoodDeedReviewPlan.gs','backend/GoodDeedReviewGate.gs'])vm.runInContext(fs.readFileSync(f,'utf8'),context);
  const signed=(changes={})=>{const p={action:'cloudflareListSelf',subjectRef:sid,requestId:'test-request',timestamp:String(Math.floor(Date.now()/1000)),nonce:'synthetic_nonce_12345678',body:'{}',...changes};const hash=crypto.createHash('sha256').update(p.body).digest('hex');p.signature=crypto.createHmac('sha256',secret).update(['v2',p.action,p.subjectRef,p.requestId,p.timestamp,p.nonce,hash].join('\n')).digest('hex');return {parameter:p};};
  return {context,signed,props,tables,reads:()=>reads};
 }
@@ -57,3 +57,17 @@ test('staging ledger requires explicit unique header mapping',()=>{
 });
 test('unknown official level text is never inferred from hours',()=>{const s=stagingSetup();s.tables.Main_2569[1][18]='unknown';assert.equal(s.context.doPost(s.signed({action:'cloudflareCardSelf'})).error,'ADAPTER_MASTER_VALUE_INVALID');});
 test('duplicate self ledger ID fails instead of double-counting',()=>{const s=stagingSetup();s.tables.Deeds_2569.push([...s.tables.Deeds_2569[1]]);assert.equal(s.context.doPost(s.signed({action:'cloudflareCardSelf'})).error,'ADAPTER_LEDGER_REQUIRES_RECONCILIATION');});
+test('ledger fields cannot alias the same configured column',()=>{
+ const s=stagingSetup(),map=JSON.parse(s.props.GOODDEED_LEDGER_COLUMN_MAP);
+ map.hours=map.categoryId;s.props.GOODDEED_LEDGER_COLUMN_MAP=JSON.stringify(map);
+ assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_LEDGER_MAPPING_REQUIRED');
+});
+test('Master display name cannot alias the official total',()=>{
+ const s=cardSetup(),map=JSON.parse(s.props.GOODDEED_MASTER_COLUMN_MAP);
+ map.displayName=map.totalHours;s.props.GOODDEED_MASTER_COLUMN_MAP=JSON.stringify(map);s.tables.Main_2569[1][3]='105';
+ assert.equal(s.card().error,'ADAPTER_MASTER_MAPPING_REQUIRED');
+});
+test('self deed IDs colliding with another owner require reconciliation',()=>{
+ const s=stagingSetup(),other=[...s.tables.Deeds_2569[1]];other[1]=['99','00002'].join('');s.tables.Deeds_2569.push(other);
+ assert.equal(s.context.doPost(s.signed()).error,'ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
+});

@@ -69,3 +69,7 @@ Release requires all original necessary features working through authorized path
 ## Reconciliation tests for new upstream commits
 
 Four JavaScript cases cover loopback transport restriction, no unsigned profile fallback, correct Master name/sequence/total columns and invalid/duplicate identity rejection. Four isolated Python function tests prove no daemon/callback/export/Git effects, verified TLS, sanitized network errors and false returned after Telegram rejection. They do not import or start the legacy daemon. Owner signature placement/cropping remains a rendered QA gap under the same browser denial.
+
+## Latest server prerequisite verification
+
+2026-09-10 continuation: **129 JavaScript + 16 Python = 145 passed**, syntax passed. Three self-read integrity regressions failed before the mapping/cross-owner ID fix. Eleven new review-gate cases use synchronous synthetic server-port doubles and cover exact scope, expired session, stale/consumed proof, changed review intent, revoked assignment, request overrides and non-executable output. Loading the new helper still leaves every staff/write/evidence/activation route disabled. This is no proof of real signature provenance, journal atomicity or provider E2E; all existing rendered/device/provider blockers remain.

@@ -125,6 +125,15 @@ function readAdapterMap_(props,key,kind) {
   let map;
   try { map=JSON.parse(props.getProperty(key)||''); } catch (_) { throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED'); }
   if(!map||typeof map!=='object'||Array.isArray(map)) throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED');
+  const names=[];
+  for(const value of Object.values(map)) {
+    const headers=Array.isArray(value)?value:[value];
+    if(!headers.length||headers.some(name=>typeof name!=='string'||!name.trim()||names.includes(name))) throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED');
+    for(const name of headers) {
+      if(names.includes(name)) throw new Error('ADAPTER_'+kind+'_MAPPING_REQUIRED');
+      names.push(name);
+    }
+  }
   return map;
 }
 function readAdapterIndex_(headers,name,kind) {
@@ -137,10 +146,11 @@ function readAdapterLedger_(props,values,subject) {
   const map=readAdapterMap_(props,'GOODDEED_LEDGER_COLUMN_MAP','LEDGER'), columns={};
   ['deedId','studentId','categoryId','hours','activityDate','description','status','submittedAt'].forEach(key=>{columns[key]=readAdapterIndex_(values[0],map[key],'LEDGER');});
   if(map.evidenceUrl!==undefined) columns.evidenceUrl=readAdapterIndex_(values[0],map.evidenceUrl,'LEDGER');
-  const seen=new Set();
+  const seen=new Set(),idCounts=new Map();
+  values.slice(1).forEach(row=>{const id=String(row[columns.deedId]||'');idCounts.set(id,(idCounts.get(id)||0)+1);});
   return values.slice(1).filter(row=>String(row[columns.studentId])===subject).map(row=>{
     const id=String(row[columns.deedId]||''),hours=readAdapterDecimal_(row[columns.hours]), categoryId=readAdapterDecimal_(row[columns.categoryId]), status=String(row[columns.status]);
-    if(!id||id.length>120||seen.has(id)||!Number.isFinite(hours)||hours<0.5||hours>24||!Number.isInteger(hours*2)||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
+    if(!id.trim()||id.length>120||seen.has(id)||idCounts.get(id)!==1||!Number.isFinite(hours)||hours<0.5||hours>24||!Number.isInteger(hours*2)||!Number.isInteger(categoryId)||categoryId<1||categoryId>9||!['pending','approving','approved','rejected'].includes(status)) throw new Error('ADAPTER_LEDGER_REQUIRES_RECONCILIATION');
     seen.add(id);
     return {deedId:id,categoryId,hours,activityDate:readAdapterDate_(row[columns.activityDate]),description:String(row[columns.description]||'').slice(0,1200),status,submittedAt:readAdapterDate_(row[columns.submittedAt]),hasEvidence:columns.evidenceUrl!==undefined && Boolean(row[columns.evidenceUrl])};
   });

@@ -123,3 +123,7 @@ Production write remains FALSE. Current architecture/test documents enumerate th
 
 
 Concurrent upstream reconciliation: five commits through `2bff70e2522f9c92d4dd495ed1b86dd1e793d44a` arrived during this continuation. Preserve their name formatting, stored sequence and signature placement work. Fix the confirmed Master-column/undefined-name regressions; do not restore unsigned profile fallback or infer a class sequence from student-number ranges. Keep legacy Python callback/public-roster/Git-auto-publish effects suspended: preview startup may never start a data-writing daemon. TLS must verify certificates, and Telegram rejection cannot be a reported success. Current tests include these boundaries; no live data or notification was exercised.
+
+## Server prerequisite continuation — 2026-09-10
+
+`GoodDeedReviewGate.gs` is an internal read-only checker, not an enabled review adapter. Its server ports must resolve verified session, exact current assignment, a canonical deed revision and persisted private signature intent. The ports/challenge verifier are not implemented. Never populate them from client claims or treat `checksPassed` as write authority; every result stays `executable: false`. Follow the appended contract in `docs/REVIEW_STORAGE_CONTRACT.md` and recheck under the future durable writer's lock. Latest source suite: 129 JS + 16 Python = 145; current runtime/browser gates remain open.
