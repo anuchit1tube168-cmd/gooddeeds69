@@ -280,35 +280,63 @@ const App = {
             return student;
         }
 
-        if (this.canUseBackendApi()) {
-            try {
-                const res = await fetch(`${this.getApiBaseUrl()}/api/get_student?studentId=${encodeURIComponent(clean)}`, {
-                    headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
-                });
+        // 1. Try local/tunnel backend endpoints
+        try {
+            const apiBase = this.getApiBaseUrl();
+            const endpoints = [`/api/get_student?studentId=${encodeURIComponent(clean)}`];
+            if (apiBase && !endpoints.includes(`${apiBase}/api/get_student?studentId=${encodeURIComponent(clean)}`)) {
+                endpoints.unshift(`${apiBase}/api/get_student?studentId=${encodeURIComponent(clean)}`);
+            }
+            for (const ep of endpoints) {
+                try {
+                    const res = await fetch(ep, {
+                        headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
+                    });
+                    if (res.ok) {
+                        const fresh = await res.json();
+                        if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส')) {
+                            this._cacheStudentProfile(clean, fresh);
+                            return fresh;
+                        }
+                    }
+                } catch (e) {}
+            }
+        } catch (e) {}
+
+        // 2. Try Google Apps Script Cloud Web App
+        try {
+            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+            if (gasUrl) {
+                const res = await fetch(`${gasUrl}?action=getStudent&studentId=${encodeURIComponent(clean)}`);
                 if (res.ok) {
                     const fresh = await res.json();
-                    if (fresh && fresh.first_name) {
-                        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
-                            const idx = STUDENTS_DATA.findIndex(s => String(s.student_id) === clean);
-                            if (idx >= 0) STUDENTS_DATA[idx] = { ...STUDENTS_DATA[idx], ...fresh };
-                            else STUDENTS_DATA.push(fresh);
-                        }
-                        try {
-                            const cached = localStorage.getItem('gooddeeds_cached_students');
-                            let list = cached ? JSON.parse(cached) : [];
-                            if (Array.isArray(list)) {
-                                const cIdx = list.findIndex(s => String(s.student_id) === clean);
-                                if (cIdx >= 0) list[cIdx] = { ...list[cIdx], ...fresh };
-                                else list.push(fresh);
-                                localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
-                            }
-                        } catch(e) {}
+                    if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส')) {
+                        this._cacheStudentProfile(clean, fresh);
                         return fresh;
                     }
                 }
-            } catch (e) {}
-        }
+            }
+        } catch (e) {}
+
         return student;
+    },
+
+    _cacheStudentProfile(clean, fresh) {
+        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+            const idx = STUDENTS_DATA.findIndex(s => String(s.student_id) === clean);
+            if (idx >= 0) STUDENTS_DATA[idx] = { ...STUDENTS_DATA[idx], ...fresh };
+            else STUDENTS_DATA.push(fresh);
+        }
+        try {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            let list = cached ? JSON.parse(cached) : [];
+            if (Array.isArray(list)) {
+                const cIdx = list.findIndex(s => String(s.student_id) === clean);
+                if (cIdx >= 0) list[cIdx] = { ...list[cIdx], ...fresh };
+                else list.push(fresh);
+                localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+            }
+        } catch(e) {}
     },
 
     findStudent(query) {

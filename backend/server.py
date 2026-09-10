@@ -614,10 +614,25 @@ def notify_deed_submission_telegram(deed_data):
 
         student_id = str(deed_data.get('studentId') or deed_data.get('student_id') or '').strip()
         deed_id = str(deed_data.get('id') or '').strip()
-        student_name = deed_data.get('student_name') or deed_data.get('studentName') or f"นพอ. ({student_id})"
-        class_year = str(deed_data.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
+
+        # Authoritative student identity resolution from students master database
+        s_map = load_students_map()
+        stu_obj = s_map.get(student_id, {})
+        full_authoritative_name = ''
+        if stu_obj and stu_obj.get('first_name'):
+            rank = stu_obj.get('rank', 'นพอ.')
+            fn = stu_obj.get('first_name', '')
+            ln = stu_obj.get('last_name', '')
+            full_authoritative_name = f"{rank} {fn} {ln}".strip()
+
+        raw_student_name = deed_data.get('student_name') or deed_data.get('studentName') or ''
+        if not full_authoritative_name and raw_student_name and 'รหัส' not in raw_student_name:
+            full_authoritative_name = raw_student_name
+
+        student_name = full_authoritative_name or f"นพอ. ({student_id})"
+        class_year = str(stu_obj.get('class_year') or deed_data.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
         year_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
-        year_level = str(deed_data.get('year_level') or year_map.get(class_year, '1'))
+        year_level = str(stu_obj.get('year_level') or deed_data.get('year_level') or year_map.get(class_year, '1'))
         year_name = f"ชั้นปีที่ {year_level} (รุ่น {class_year})"
 
         cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 7)

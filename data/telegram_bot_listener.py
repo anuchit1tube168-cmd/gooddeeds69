@@ -59,11 +59,11 @@ def send_telegram_request(method, payload):
         return {}
 
 def load_students():
-    for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(BASE_DIR, '.local_backup_pdpa', 'students.json')]:
+    for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json'), os.path.join(BASE_DIR, '.local_backup_pdpa', 'students.json')]:
         if os.path.exists(p):
             try:
                 with open(p, 'r', encoding='utf-8') as f:
-                    return {s['student_id']: s for s in json.load(f)}
+                    return {str(s.get('student_id', '')).strip(): s for s in json.load(f) if s.get('student_id')}
             except Exception:
                 pass
     return {}
@@ -224,11 +224,11 @@ def process_callback_query(cb):
         student_id = parts[0]
 
     students_map = load_students()
-    student = students_map.get(student_id, {})
+    student = students_map.get(str(student_id).strip(), {})
     student_name = f"{student.get('rank', 'นพอ.')} {student.get('first_name', '')} {student.get('last_name', '')}".strip()
-    if not student_name or student_name == 'นพอ.':
-        student_name = f"นพอ. รหัส {student_id}"
-    cy = student.get('class_year', '69')
+    if not student_name or student_name == 'นพอ.' or 'รหัส' in student_name:
+        student_name = f"นพอ. ({student_id})"
+    cy = str(student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
 
     # STEP 1: UPDATE DATABASE FIRST TO GET ACCURATE STATS
     if is_approve:

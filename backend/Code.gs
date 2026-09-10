@@ -165,8 +165,12 @@ function addDeed(payload) {
     if (masterSheet) {
       const mRows = masterSheet.getDataRange().getValues();
       const foundRow = mRows.find((r, i) => i > 0 && String(r[1]).trim() === String(studentId).trim());
-      if (foundRow && foundRow[2]) {
-        resolvedName = String(foundRow[2]).trim();
+      if (foundRow) {
+        const rRank = String(foundRow[2] || 'นพอ.').trim();
+        const rFn = String(foundRow[3] || '').trim();
+        const rLn = String(foundRow[4] || '').trim();
+        const rFull = String(foundRow[5] || `${rFn} ${rLn}`).trim();
+        resolvedName = rFull.startsWith('นพอ.') ? rFull : `${rRank} ${rFull}`.trim();
       }
     }
     if (!resolvedName) {
@@ -298,24 +302,32 @@ function getStudents() {
     const sid = String(data[i][1] || '').trim();
     if (!sid || sid === 'undefined') continue;
 
-    const classYearRaw = String(data[i][5] || '');
-    const classYear = classYearRaw.replace(/รุ่น\s*/, '').trim();
-    let yearLevel = '1';
-    if (classYear === '69') yearLevel = '1';
-    else if (classYear === '68') yearLevel = '2';
-    else if (classYear === '67') yearLevel = '3';
-    else if (classYear === '66') yearLevel = '4';
+    const rank = String(data[i][2] || 'นพอ.').trim();
+    const firstName = String(data[i][3] || '').trim();
+    const lastName = String(data[i][4] || '').trim();
+    const fullNameRaw = String(data[i][5] || `${firstName} ${lastName}`).trim();
+    const fullName = fullNameRaw.startsWith('นพอ.') ? fullNameRaw : `${rank} ${fullNameRaw}`.trim();
+
+    const classYearRaw = String(data[i][6] || data[i][5] || '');
+    const classYear = classYearRaw.replace(/รุ่น\s*/, '').trim() || (sid.length >= 2 ? sid.substring(0, 2) : '69');
+    let yearLevel = String(data[i][7] || '1').trim();
+    if (!yearLevel || yearLevel === '0') {
+      if (classYear === '69') yearLevel = '1';
+      else if (classYear === '68') yearLevel = '2';
+      else if (classYear === '67') yearLevel = '3';
+      else if (classYear === '66') yearLevel = '4';
+    }
 
     students.push({
       student_id: sid,
-      rank: String(data[i][2] || 'นพอ.'),
-      first_name: String(data[i][3] || ''),
-      last_name: String(data[i][4] || ''),
-      full_name: `${data[i][2] || 'นพอ.'} ${data[i][3] || ''} ${data[i][4] || ''}`.trim(),
+      rank: rank,
+      first_name: firstName,
+      last_name: lastName,
+      full_name: fullName,
       class_year: classYear,
       year_level: yearLevel,
       role: 'student',
-      total_hours: parseFloat(data[i][15] || 0)
+      total_hours: parseFloat(data[i][17] || data[i][15] || 0)
     });
   }
 
