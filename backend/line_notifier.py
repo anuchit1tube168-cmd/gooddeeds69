@@ -22,146 +22,24 @@ DATA_DIR = os.path.join(BASE_DIR, 'data')
 FRONTEND_DATA_DIR = os.path.join(BASE_DIR, 'frontend', 'data')
 PRIVATE_DIR = os.path.join(DATA_DIR, 'private')
 
-LINE_CHANNEL_ACCESS_TOKEN = os.environ.get(
-    'LINE_CHANNEL_ACCESS_TOKEN',
-    'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU='
-)
-GAS_URL = 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec'
+# Credentials are configured privately. Missing credentials stop delivery.
+LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
 
 def get_ssl_context():
-    return ssl._create_unverified_context()
+    return ssl.create_default_context()
 
-# -------------------------------------------------------------
-# 1. จัดเก็บ LINE User ID ถาวร (Centralized Storage)
-# -------------------------------------------------------------
 def save_student_line_binding(student_id, line_user_id, line_display_name='', line_picture_url=''):
+    """Retired unverified binding entrypoint. Activation belongs to Cloudflare.
+
+    Do not infer account ownership from a supplied student number or LINE ID.
+    Existing private records are preserved; no JSON/JS/CSV export is written.
     """
-    บันทึก LINE ID ของนักเรียนหรือผู้ดูแลระบบลงทุกระบบอย่างสมบูรณ์
-    """
-    student_id = str(student_id).strip()
-    line_user_id = str(line_user_id).strip()
-    if not student_id or not line_user_id:
-        return {'status': 'error', 'message': 'Missing student_id or line_user_id'}
+    return {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'}
 
-    now_iso = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    os.makedirs(PRIVATE_DIR, exist_ok=True)
-    os.makedirs(FRONTEND_DATA_DIR, exist_ok=True)
-
-    # 1. Update line_mappings.json in both private and frontend/data
-    mappings = {}
-    for p in [os.path.join(PRIVATE_DIR, 'line_mappings.json'), os.path.join(FRONTEND_DATA_DIR, 'line_mappings.json')]:
-        if os.path.exists(p):
-            try:
-                with open(p, 'r', encoding='utf-8') as f:
-                    data = json.load(f)
-                    if isinstance(data, dict):
-                        mappings.update(data)
-            except Exception:
-                pass
-
-    # Bidirectional mapping
-    mappings[line_user_id] = student_id
-    mappings[student_id] = {
-        'student_id': student_id,
-        'line_user_id': line_user_id,
-        'line_display_name': line_display_name,
-        'line_picture_url': line_picture_url,
-        'updated_at': now_iso
-    }
-
-    for p in [os.path.join(PRIVATE_DIR, 'line_mappings.json'), os.path.join(FRONTEND_DATA_DIR, 'line_mappings.json')]:
-        try:
-            with open(p, 'w', encoding='utf-8') as f:
-                json.dump(mappings, f, ensure_ascii=False, indent=2)
-        except Exception as e:
-            print(f"⚠️ Error saving line_mappings to {p}: {e}")
-
-    # 2. Update students.json and students_data.js
-    for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(FRONTEND_DATA_DIR, 'students.json')]:
-        if os.path.exists(p):
-            try:
-                with open(p, 'r', encoding='utf-8') as f:
-                    s_list = json.load(f)
-                for s in s_list:
-                    if str(s.get('student_id')) == student_id:
-                        s['line_user_id'] = line_user_id
-                        s['line_display_name'] = line_display_name
-                        if line_picture_url:
-                            s['line_picture_url'] = line_picture_url
-                        s['line_bound_at'] = now_iso
-                with open(p, 'w', encoding='utf-8') as f:
-                    json.dump(s_list, f, ensure_ascii=False, indent=2)
-
-                # Re-export students_data.js
-                js_file = p.replace('.json', '_data.js')
-                js_json = json.dumps(s_list, ensure_ascii=False, indent=2)
-                js_content = (
-                    "// Auto-updated by line_notifier.py\n"
-                    f"const STUDENTS_DATA = {js_json};\n\n"
-                    "if (typeof window !== 'undefined') window.STUDENTS_DATA = STUDENTS_DATA;\n"
-                    "if (typeof globalThis !== 'undefined') globalThis.STUDENTS_DATA = STUDENTS_DATA;\n"
-                )
-                with open(js_file, 'w', encoding='utf-8') as jf:
-                    jf.write(js_content)
-            except Exception as e:
-                print(f"⚠️ Error updating {p}: {e}")
-
-    # 3. Update Main_2569_Summary.csv
-    csv_path = os.path.join(BASE_DIR, 'Main_2569_Summary.csv')
-    if os.path.exists(csv_path):
-        try:
-            rows = []
-            with open(csv_path, 'r', encoding='utf-8-sig') as f:
-                reader = csv.reader(f)
-                rows = list(reader)
-
-            if rows and len(rows) > 1:
-                header = rows[0]
-                uid_idx = 21 if len(header) > 21 and 'LINE User ID' in header[21] else -1
-                name_idx = 22 if len(header) > 22 and 'ชื่อ LINE' in header[22] else -1
-
-                if uid_idx != -1:
-                    for r in rows[1:]:
-                        if len(r) > 1 and str(r[1]).strip() == student_id:
-                            r[uid_idx] = line_user_id
-                            if name_idx != -1 and line_display_name:
-                                r[name_idx] = line_display_name
-                            break
-
-                    with open(csv_path, 'w', encoding='utf-8-sig', newline='') as f:
-                        writer = csv.writer(f)
-                        writer.writerows(rows)
-        except Exception as e:
-            print(f"⚠️ Error updating Main_2569_Summary.csv: {e}")
-
-    # 4. Sync to Google Apps Script Cloud in background thread
-    def _sync_gas():
-        try:
-            post_payload = json.dumps({
-                'action': 'bind_line',
-                'studentId': student_id,
-                'lineUserId': line_user_id,
-                'lineDisplayName': line_display_name,
-                'linePictureUrl': line_picture_url
-            }).encode('utf-8')
-            req = urllib.request.Request(GAS_URL, data=post_payload, headers={'Content-Type': 'application/json'})
-            with urllib.request.urlopen(req, context=get_ssl_context(), timeout=15) as resp:
-                pass
-        except Exception:
-            pass
-
-    threading.Thread(target=_sync_gas, daemon=True).start()
-
-    print(f"🟢 Bound & Stored LINE ID: Student={student_id} | LINE={line_display_name} ({line_user_id[:10]}...)")
-    return {'status': 'success', 'studentId': student_id, 'lineUserId': line_user_id}
-
-# -------------------------------------------------------------
-# 2. ค้นหาข้อมูล LINE ID ("ถ้ามีแล้วไม่ต้องรายคน")
-# -------------------------------------------------------------
 def get_student_line(student_id):
     """ดึงข้อมูล LINE ID ของนักเรียนตาม student_id"""
     student_id = str(student_id).strip()
-    s_path = os.path.join(FRONTEND_DATA_DIR, 'students.json')
+    s_path = os.path.join(PRIVATE_DIR, 'students.json')
     if not os.path.exists(s_path):
         s_path = os.path.join(DATA_DIR, 'students.json')
     if os.path.exists(s_path):
@@ -179,7 +57,7 @@ def get_student_line(student_id):
         except Exception:
             pass
 
-    for p in [os.path.join(FRONTEND_DATA_DIR, 'line_mappings.json'), os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
+    for p in [os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
         if os.path.exists(p):
             try:
                 with open(p, 'r', encoding='utf-8') as f:
@@ -203,22 +81,20 @@ def find_user_by_line_id(line_user_id):
     if not line_user_id:
         return None
 
-    for p in [os.path.join(FRONTEND_DATA_DIR, 'line_mappings.json'), os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
+    for p in [os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
         if os.path.exists(p):
             try:
                 with open(p, 'r', encoding='utf-8') as f:
                     m = json.load(f)
                     user_key = m.get(line_user_id)
-                    if user_key:
-                        if user_key in ['admin', 'anuchit', 'bird', 'teacher']:
-                            return {'type': 'staff', 'role': 'admin' if user_key in ['admin', 'anuchit', 'bird'] else 'teacher', 'username': user_key}
-                        else:
-                            student_info = get_student_info(user_key)
-                            return {'type': 'student', 'role': 'student', 'student_id': str(user_key), 'student': student_info}
+                    if isinstance(user_key, str) and len(user_key) == 7 and user_key.isdigit():
+                        student_info = get_student_info(user_key)
+                        if student_info:
+                            return {'type': 'student', 'role': 'student', 'student_id': user_key, 'student': student_info}
             except Exception:
                 pass
 
-    s_path = os.path.join(FRONTEND_DATA_DIR, 'students.json')
+    s_path = os.path.join(PRIVATE_DIR, 'students.json')
     if not os.path.exists(s_path):
         s_path = os.path.join(DATA_DIR, 'students.json')
     if os.path.exists(s_path):
@@ -233,7 +109,7 @@ def find_user_by_line_id(line_user_id):
     return None
 
 def get_student_info(student_id):
-    s_path = os.path.join(FRONTEND_DATA_DIR, 'students.json')
+    s_path = os.path.join(PRIVATE_DIR, 'students.json')
     if not os.path.exists(s_path):
         s_path = os.path.join(DATA_DIR, 'students.json')
     if os.path.exists(s_path):
@@ -248,7 +124,7 @@ def get_student_info(student_id):
 
 def get_all_line_mappings():
     mappings = {}
-    for p in [os.path.join(FRONTEND_DATA_DIR, 'line_mappings.json'), os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
+    for p in [os.path.join(PRIVATE_DIR, 'line_mappings.json')]:
         if os.path.exists(p):
             try:
                 with open(p, 'r', encoding='utf-8') as f:
@@ -263,50 +139,27 @@ def get_all_line_mappings():
 # 3. ส่งข้อความแจ้งเตือนอัตโนมัติ (Automated Notification)
 # -------------------------------------------------------------
 def send_line_push_message(to_line_user_id, messages):
-    """ส่งข้อความ Push Message ผ่าน LINE Official Account"""
-    if not to_line_user_id or not messages:
+    """Return True only when LINE accepts the request, not proof of delivery.
+
+    No automatic fallback/retry: an uncertain timeout can already be accepted.
+    Durable outbox/retry keys are a separate release gate.
+    """
+    if not LINE_CHANNEL_ACCESS_TOKEN or not to_line_user_id or not messages:
         return False
-
-    url = 'https://api.line.me/v2/bot/message/push'
-    payload = {
-        'to': to_line_user_id,
-        'messages': messages
-    }
-    req_data = json.dumps(payload).encode('utf-8')
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': f'Bearer {LINE_CHANNEL_ACCESS_TOKEN}'
-    }
-
-    req = urllib.request.Request(url, data=req_data, headers=headers)
+    payload = json.dumps({'to': to_line_user_id, 'messages': messages}).encode('utf-8')
+    req = urllib.request.Request('https://api.line.me/v2/bot/message/push', data=payload,
+        headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {LINE_CHANNEL_ACCESS_TOKEN}'})
     try:
         with urllib.request.urlopen(req, context=get_ssl_context(), timeout=10) as resp:
-            print(f"📲 LINE Push Success to {to_line_user_id[:10]}... (HTTP {resp.status})")
-            return True
-    except urllib.error.HTTPError as e:
-        err = e.read().decode('utf-8', errors='ignore')
-        print(f"⚠️ LINE Push HTTP Error: {e.code} - {err}")
-        return send_line_via_gas_proxy(to_line_user_id, messages)
-    except Exception as e:
-        print(f"⚠️ LINE Push Request Error: {e}")
-        return send_line_via_gas_proxy(to_line_user_id, messages)
+            result = json.loads(resp.read().decode('utf-8'))
+            return resp.status == 200 and isinstance(result, dict) and not result.get('error')
+    except (urllib.error.URLError, ValueError, OSError):
+        # Never print provider bodies, credentials, recipient IDs or URLs.
+        return False
 
 def send_line_via_gas_proxy(to_line_user_id, messages):
-    """Proxy ส่งข้อความผ่าน Google Apps Script"""
-    try:
-        proxy_payload = json.dumps({
-            'action': 'send_line_message',
-            'target': 'single',
-            'to': to_line_user_id,
-            'messages': messages,
-            'token': LINE_CHANNEL_ACCESS_TOKEN
-        }).encode('utf-8')
-        req = urllib.request.Request(GAS_URL, data=proxy_payload, headers={'Content-Type': 'application/json'})
-        with urllib.request.urlopen(req, context=get_ssl_context(), timeout=15) as resp:
-            return True
-    except Exception as e:
-        print(f"⚠️ GAS Proxy Error: {e}")
-        return False
+    """Retired proxy: never send a channel token to a raw GAS endpoint."""
+    return False
 
 def notify_deed_status_line(student_id, deed, status, approver_name='ร.อ.อนุชิต ทำจะดี (Bird)', note=None):
     """

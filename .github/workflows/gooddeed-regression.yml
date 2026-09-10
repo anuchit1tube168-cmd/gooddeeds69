@@ -14,3 +14,4 @@ jobs:
           persist-credentials: false
       - run: node scripts/check-syntax.cjs
       - run: node --test tests/*.test.cjs
+      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v

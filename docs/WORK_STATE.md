@@ -1,3 +1,64 @@
+# Aviation / warm React checkpoint — 2026-09-09
+
+State: LOCAL DESIGN AND SYNTHETIC WALKTHROUGH COMPLETE / DRAFT / PRODUCTION WRITE = FALSE.
+Remote parent: `bcfb46baed4218643198a888cfe37623570ca371`, existing draft PR #4. Preserve all earlier owner work. This checkpoint supersedes the old local-visual-QA blockers below; it does not close provider integration gates.
+
+- Reused the pilot, original college crest, existing Cloudflare session client and official-total semantics. Added aviation raster art, restrained depth and white/navy/gold styling. Latest user steering adds warmth and React: a pinned, locally served React intention/encouragement card now works without changing hours or permissions.
+- Added isolated in-memory walkthrough for student submission, temporary evidence, teacher review, fresh drawing, reasoned rejection and simulated notification retries. Its CSP disallows connections; no provider SDK or authentication adapter is imported. Reload resets synthetic state. The real gateway still does not expose submission/review routes.
+- Browser evidence: empty form rejected; valid synthetic 2.5-hour deed with generated PNG submitted as pending; blank signature blocked; drawn synthetic line approved; total changed 15.5 → 18 once; rejected another record with a required reason; simulated delivery failed and retried without changing hours. React keyboard/click actions and its form CTA worked without changing the total.
+- Corrected the HTTP-preview form failure, stale guide controls, invalid-file replacement, stuck error messages, narrow-view heading under the header, and neutral help styling. Dates default to Asia/Bangkok; navigating retains intentionally empty inputs for validation.
+- Local checks: syntax pass; JavaScript 88/88; Python boundary 12/12 (100 total). Final remote CI is tracked on the published PR head, not inferred from these counts. Optional DOCX generation is untested locally because `pythainlp` is absent.
+- Visual evidence: `design-qa.md` and `docs/design/`. Desktop and 360 CSS-pixel iframe layout inspected. Physical Android/iOS LINE webview and assistive signature input remain UAT gaps. Extra narrow React clicks encountered automation timeouts; only the observed desktop interaction is claimed as passed.
+- No production deployment, real notification, student-data mutation, token rotation or endpoint change occurred. Current browser still cannot establish the previously blocked Apps Script/Cloudflare deployment evidence; do not repeat those challenges.
+- Next runtime task: verify the owned staging resolver/worker deployment and bindings, then implement/review assigned scope, verifiable fresh signature, official period policy and durable journal/outbox before enabling write flags. Read `docs/REVIEW_STORAGE_CONTRACT.md` first. Do not replace the ledger, promote the synthetic role selector, or execute a saved plan.
+
+Guide: `docs/DESIGN_HANDOFF.md`. Preview: `node scripts/preview.cjs` (no installation). Existing safe code boundary remains enforced. Publish only reviewed changed blobs on the remote parent; this local checkout is a partial snapshot and must never replace the full remote tree.
+
+# Storage integrity checkpoint — 2026-09-09
+
+State: DRAFT / STAGING ONLY / PRODUCTION WRITE = FALSE. Continue this branch; do not restart the project.
+
+- Remote base for this continuation: `339c1d7df6902a6649809fa4a58f28a80d8d1f8f`, draft PR #4. Owner work through `7ef7ffb` is preserved. Source changes are in the storage-guard/review-plan continuation; use the PR head and CI links to identify the published revision.
+- Read `docs/REVIEW_STORAGE_CONTRACT.md` before writing an approval adapter. Verified staging still uses the eight-column ledger and 22-column Master. This continuation also read only Reviews/Notifications/Audit/Evidence headers (13/7/18/9 columns); no identity rows were exported.
+- Fixed retained legacy submission/review to reject displaced, missing or duplicate headers before effects. Submission validates stable supplied IDs, half-hours, dates and text; literal text cannot become a formula. It does not create missing sheets, upload before storage validation, append a reused ID, or notify before append/flush. An uncertain append returns its deed ID for reconciliation; notification exceptions cannot remove the saved record.
+- Added `backend/GoodDeedReviewPlan.gs`: pure mapped storage calculation, complete values/formula snapshots, header and value preconditions, duplicate/conflict handling, preserved category/total formulas and official carry-forward. Every plan is `executable: false`. No route or service call was added. The existing signed adapter still rejects staff/write/evidence/activation actions.
+- Local verification: syntax passed; `node --test tests/*.test.cjs` passed 78/78; Python boundary tests passed 11/11. Total 89, including 24 additional JavaScript cases in this continuation. Reproduced incompatible-header writes and missing uncertain-append ID, uncaught lock failure and invalid-date acceptance before correcting them. Synthetic tests do not prove live Google/LINE/Telegram delivery or cross-sheet transactions.
+- Privacy preflight: passed on all 55 PR-touched file contents (52 current remote files plus three new source/doc/test files), with the existing guard rules unchanged. This is a changed-content check, not a clean bill of health for all repository history or deployed secrets.
+- Latest browser check followed the user's renewed instruction to inspect Apps Script/Cloudflare: this browser exposed no signed-in user tabs. The known project link redirected to the Apps Script public landing page; Google Sign in returned `502 Bad Gateway` / connection refused. Cloudflare displayed `Performing security verification`, still present after one reload. No credentials were entered, CAPTCHA solved, editor/dashboard reached or provider setting changed. Stop retrying those blocked pages without changed access evidence.
+- Next code task: extend the existing gateway review contract with verifiable fresh-signature proof and assigned-student/cohort scope, then build a durable, recoverable writer/journal/outbox around a fresh locked snapshot. Do not execute a saved plan or enable review flags. Current evidence metadata has no explicit signature provenance and the gateway body has only deed/decision/note; this gap is not solved by a staff role or a stored drawing.
+- Runtime task remains blocked: obtain readable deployment/version/bindings evidence for the separate owned staging resolver and worker, then confirm code/config match before controlled self-read and review E2E. Keep existing LIFF endpoints. Policy/academic-period validation, credential rotation, private backup/restore proof, real notification tests and mobile visual QA are still open.
+
+Changed implementation paths: `backend/Code.gs`, `backend/GoodDeedReviewPlan.gs`, `docs/staging-columns.example.json`, `scripts/check-syntax.cjs`, `tests/regression.test.cjs`, `tests/review-plan.test.cjs`, `tests/adapter.test.cjs`. Updated operator/agent contract: `AGENTS.md`, `WIKI.md`, this checkpoint and `docs/REVIEW_STORAGE_CONTRACT.md`.
+
+# Earlier runtime access checkpoint — 2026-09-09
+
+User authorized direct inspection of Apps Script and Cloudflare. Production write remains false; no release or account setting was changed.
+
+- Verified remote code heads: Good Deed PR #4 `a8be7d878eca7751f1a78356595af8f9a9b24f54`; gateway branch `gooddeed-final-gateway-20260902` at `6c72530768bfbbba142e34020fa22d2519b3d332`.
+- Gateway source identifies worker `rtafnc-one-gateway-staging`, entrypoint `src/gooddeed-final-audited.ts`, and staging origin `https://rtafnc-one-gateway-staging.anuchit1tube168.workers.dev`. These are source configuration, not a confirmed deployed version.
+- The gateway repository's `docs/APP_SCRIPT_DEPLOYMENT_INSPECTION_2026-08-16.md` contains an editor link for the existing RTAFNC ONE LIFF Services project and a historical version-1 observation. It does not prove that project is the separate Good Deed staging resolver. Do not install the adapter into that project on this evidence alone.
+- Actual browser access: Apps Script redirected to Google's public landing page. Its Google sign-in page returned `502 Bad Gateway` / connection refused, unchanged after one reload. No credentials were entered and no script editor was reached.
+- Actual browser access: Cloudflare dashboard remained on `Performing security verification` after one reload. No dashboard values, bindings, secrets or deployments were reached; do not retry the challenge in a loop.
+- GitHub evidence: no workflow-dispatch runs were returned for the gateway branch and no combined commit statuses were returned. This does not exclude deployment through Cloudflare Build, another branch or another mechanism.
+- Next exact task: obtain a readable authenticated Apps Script deployment view and Cloudflare Worker deployment/bindings view; capture project identity, active version, update time and target staging sheet without secret values. Then match those runtime facts to the reviewed code. The access blocker is the current browser path, not missing user permission.
+
+# Current checkpoint — 2026-09-08 integration review
+
+State: DRAFT / STAGING ONLY / PRODUCTION WRITE = FALSE.
+Based on owner updates through remote `7ef7ffb788a31ec091aa334df00a0e91cd2d469f`; preserve those changes.
+
+- Current review: `docs/RELEASE_REVIEW_20260908.md`. Read it before any deployment. Older PASS/complete claims below are historical reports, not verification from this review.
+- Implemented: closed Python unauthenticated API/static PII paths; retired unverified LINE binding; TLS/environment-only notification transport; existing Cloudflare session client; authenticated pilot read view and honest states; mapped eight-column staging reader; duplicate/number/formula approval guards.
+- Live staging schema verified read-only: master has split names and combined Lv.N level text; ledger has eight columns (status G, submitted H). Schema example is in `docs/staging-columns.example.json` and contains no student data.
+- Local results: 54 JavaScript + 11 Python tests passed; syntax checks passed. Four newly added approval regressions failed before fixing. Updated UI has VM state/escaping/filter tests, but no successful visual browser capture.
+- Published implementation: `21e002583acc6ab0475fa322c1870a293fefd2dc` in draft PR #4, preserving owner head `7ef7ffb`. Local regression 65/65; GitHub regression run `34291274328` and PII guard run `34291274335` both passed on that implementation commit. Local PII preflight inspected all 52 PR-touched files with the existing rules intact. Documentation-only follow-ups do not change this tested implementation.
+- Final cleanup: exact owner/deed document lookup; no fabricated URL record; source roster and old QA seeds preserved in owner-only Drive archive; bot literals removed; unsafe public exporters and destructive settings reset suspended. Four document cases failed before the fix.
+- Live main still served old v3560 assets and repeated SSE warnings. Draft branch work has not been deployed.
+- Next exact task: identify the owned Apps Script editor/deployment and Cloudflare staging version, configure explicit master/ledger maps and gateway origin, then test self reads with a controlled staging identity. Do not use the positional legacy approval writer on the eight-column ledger. Do not deploy this backend alone.
+- Still blocked: runtime deployment/version/secret rotation, mapped writes/scoped review/evidence/activation, durable outbox, real end-to-end and mobile visual QA. No source-only claim can close these gates.
+
+## Historical checkpoint supplied by earlier work
+
 # RTAFNC Good Deeds 2569 — Work State Tracker 📋
 
 **Current Branch:** `codex/fable-gooddeed-hardening-20260907`  
@@ -39,10 +100,10 @@
 
 - **Backend Server**: Port 3000 (`python3 backend/server.py 3000`)
 - **Telegram Bot Listener**: Background continuous poller (`python3 data/telegram_bot_listener.py`)
-- **Cloudflare Tunnel (Staging URL)**: `https://guided-ate-sponsors-algorithm.trycloudflare.com`
+- **Cloudflare Tunnel (Staging URL)**: `[temporary staging tunnel — verify privately]`
 - **LINE LIFF ID**: `2010948179-Ympqt2bT`
 - **LINE OA Bot**: ฟ้าใส (`@409gzbav`)
-- **Telegram Group ID**: `-4839151586`
+- **Telegram Group ID**: configured privately
 
 ---
 
@@ -142,4 +203,3 @@ Added signed cloudflareCardSelf with explicit GOODDEED_MASTER_COLUMN_MAP. Total 
 Verified GitHub regression and pii-guard success on remote commit 8524d22bd2988293cc9daf7014d2a6cca2ef19c1. Reproduced two failures: list accepted blank hours via Number coercion; card accepted arrays/nondecimal strings as numeric values. Fixed explicit decimal parsing and list half-hour range validation; no stored data changed. 27 synthetic tests pass after the fix (two newly added cases failed before it), plus syntax and changed-file PII checks.
 
 Pilot config still points directly to GAS, so it does not exercise the signed Cloudflare path. No callable Apps Script project/deployment administration or external Cloudflare account tool was found in this session. Existing deployment URL alone does not identify the editor project/version or establish staging ownership. Need the actual Apps Script editor project link and staging deployment/schema evidence to verify runtime integration. UI, write flow, notifications and production remain unverified. Next: inspect that project read-only, map actual headers, then test signed gateway reads with a controlled staging identity; do not deploy this draft backend alone.
-

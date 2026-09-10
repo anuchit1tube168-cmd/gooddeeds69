@@ -11,7 +11,7 @@ line_webhook_bot.py
 3. นำ URL ไปใส่ LINE Developers Console → Webhook URL
 
 Flow:
-- นักเรียนพิมพ์ "รหัสนักเรียน" (เช่น 6803893) → ระบบผูก LINE userId
+- นักเรียนพิมพ์ "รหัสนักเรียน" (เช่น <รหัสนักเรียน 7 หลัก>) → ระบบผูก LINE userId
 - นักเรียนพิมพ์ข้อความอื่น → ส่งต่อไป Telegram Admin + มีปุ่มตอบกลับ
 - Admin ตอบใน Telegram → ส่งกลับไป LINE user
 """
@@ -28,9 +28,9 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
 # === CONFIG ===
-LINE_CHANNEL_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=')
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s')
-TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '-4839151586')
+LINE_CHANNEL_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
+TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
+TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
 WEBHOOK_PORT = 3001
 
 # === In-Memory: LINE userId → Telegram message mapping for replies ===
@@ -250,7 +250,7 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                 print(f"👋 New follower: {line_name} ({line_user_id[:10]}...)")
                 send_line_reply(reply_token, [{
                     'type': 'text',
-                    'text': f'สวัสดีค่ะ {line_name} 🙏\n\nยินดีต้อนรับสู่ระบบบันทึกความดีจิตอาสา วพอ.พอ. ปีการศึกษา 2569\n\n📌 พิมพ์ "รหัสนักเรียน 7 หลัก" เพื่อผูกบัญชี LINE\nเช่น: 6803893\n\nหลังผูกแล้วจะได้รับ:\n✅ แจ้งเตือนอนุมัติความดี\n✅ Flex Message สรุปชั่วโมง\n✅ ข่าวสาร/ประกาศจากอาจารย์'
+                    'text': f'สวัสดีค่ะ {line_name} 🙏\n\nยินดีต้อนรับสู่ระบบบันทึกความดีจิตอาสา วพอ.พอ. ปีการศึกษา 2569\n\n📌 พิมพ์ "รหัสนักเรียน 7 หลัก" เพื่อผูกบัญชี LINE\nเช่น: <รหัสนักเรียน 7 หลัก>\n\nหลังผูกแล้วจะได้รับ:\n✅ แจ้งเตือนอนุมัติความดี\n✅ Flex Message สรุปชั่วโมง\n✅ ข่าวสาร/ประกาศจากอาจารย์'
                 }])
                 send_telegram(
                     f"👋 <b>มีผู้ติดตามใหม่ใน LINE OA</b>\n"
@@ -327,7 +327,7 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                     else:
                         send_line_reply(reply_token, [{
                             'type': 'text',
-                            'text': f'❌ ไม่พบรหัสนักเรียน "{clean_text}" ในระบบ\n\nกรุณาตรวจสอบรหัส 7 หลัก แล้วพิมพ์ใหม่อีกครั้งค่ะ\nเช่น: 6803893'
+                            'text': f'❌ ไม่พบรหัสนักเรียน "{clean_text}" ในระบบ\n\nกรุณาตรวจสอบรหัส 7 หลัก แล้วพิมพ์ใหม่อีกครั้งค่ะ\nเช่น: <รหัสนักเรียน 7 หลัก>'
                         }])
                     continue
 
@@ -417,7 +417,7 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                     else:
                         send_line_reply(reply_token, [{
                             'type': 'text',
-                            'text': 'กรุณาพิมพ์ "รหัสนักเรียน 7 หลัก" เพื่อผูกบัญชีก่อนตรวจสอบชั่วโมงค่ะ\nเช่น: 6803893 😊'
+                            'text': 'กรุณาพิมพ์ "รหัสนักเรียน 7 หลัก" เพื่อผูกบัญชีก่อนตรวจสอบชั่วโมงค่ะ\nเช่น: <รหัสนักเรียน 7 หลัก> 😊'
                         }])
                         continue
 

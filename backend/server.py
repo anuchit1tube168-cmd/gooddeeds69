@@ -42,7 +42,7 @@ except ImportError as e:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
-GDRIVE_DEST = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
+GDRIVE_DEST = os.environ.get('GOODDEED_PRIVATE_BACKUP_DIR', '')
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 try:
@@ -61,7 +61,7 @@ def sync_to_google_drive_bg():
     """Sync data folder to Google Drive in background thread."""
     def run_sync():
         try:
-            if os.path.exists(os.path.dirname(GDRIVE_DEST)):
+            if GDRIVE_DEST and os.path.exists(os.path.dirname(GDRIVE_DEST)):
                 os.makedirs(GDRIVE_DEST, exist_ok=True)
                 import subprocess
                 subprocess.run([
@@ -877,19 +877,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return super().translate_path(path)
 
     def get_auth_context(self):
-        cookies = parse_cookie_header(self.headers.get('Cookie'))
-        return {
-            'role': self.headers.get('X-GoodDeeds-Role') or cookies.get('gooddeeds_role') or '',
-            'student_id': self.headers.get('X-GoodDeeds-Student-Id') or cookies.get('gooddeeds_student_id') or '',
-            'username': self.headers.get('X-GoodDeeds-Username') or cookies.get('gooddeeds_username') or '',
-        }
+        # Browser headers/cookies are claims, not authentication. Local preview
+        # has no identity session; Cloudflare owns verification and scoped RBAC.
+        return {'role': '', 'student_id': '', 'username': ''}
 
     def send_json_response(self, status_code, payload):
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Cache-Control', 'no-store')
         self.end_headers()
         self.wfile.write(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
 
@@ -909,14 +904,58 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return False
 
     def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
-        self.send_header('Access-Control-Max-Age', '86400')
-        self.end_headers()
+        self.send_json_response(405, {'status': 'error', 'code': 'METHOD_NOT_ALLOWED'})
+
+    def do_POST(self):
+        # This old server is a static preview, not the authenticated gateway.
+        self.close_connection = True
+        self.send_json_response(403, {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'})
 
     def do_GET(self):
+        if urlparse(self.path).path == '/api/health':
+            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False})
+            return
+        super().do_GET()
+
+    def send_head(self):
+        # Used by both GET and HEAD. Resolve before checking so encoded paths,
+        # aliases, dot segments and symlinks cannot bypass the private boundary.
+        target = os.path.realpath(self.translate_path(self.path))
+        root = os.path.realpath(FRONTEND_DIR)
+        try:
+            relative = os.path.relpath(target, root).replace(os.sep, '/')
+            inside = os.path.commonpath([root, target]) == root
+        except ValueError:
+            inside, relative = False, ''
+        if relative == '.':
+            target = os.path.join(root, 'index.html')
+            relative = 'index.html'
+        public_asset = (
+            '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
+        ) or (
+            relative.startswith('secure-pilot/') and relative.count('/') == 1
+            and (relative.endswith(('.html', '.css', '.js')) or relative in {
+                'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
+            })
+        ) or (
+            relative.startswith('photos/chibi/') and relative.count('/') == 2
+            and relative.endswith('.png')
+        )
+        if not inside or not public_asset or not os.path.isfile(target):
+            self.send_error(403, 'Authenticated gateway required')
+            return None
+        return super().send_head()
+
+    def end_headers(self):
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('Referrer-Policy', 'no-referrer')
+        super().end_headers()
+
+    def log_message(self, format, *args):
+        # Do not log URLs/query strings containing student or LINE identifiers.
+        pass
+
+    def legacy_get_unsupported(self):
         parsed_path = urlparse(self.path)
         query_params = {}
         if parsed_path.query:
@@ -1012,7 +1051,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 deeds = get_deeds_for_student(student_id)
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps(deeds, ensure_ascii=False).encode('utf-8'))
             except Exception as e:
@@ -1028,7 +1066,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 deeds = get_all_deeds()
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps(deeds, ensure_ascii=False).encode('utf-8'))
             except Exception as e:
@@ -1067,7 +1104,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.send_response(200)
                 self.send_header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                 self.send_header('Content-Disposition', f'attachment; filename="report_{student_id}_{academic_year}.docx"')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(docx_buffer.getvalue())
             except Exception as e:
@@ -1079,7 +1115,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'text/event-stream')
             self.send_header('Cache-Control', 'no-cache')
             self.send_header('Connection', 'keep-alive')
-            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
             
             q = queue.Queue()
@@ -1108,7 +1143,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.path = self.path[9:]
             super().do_GET()
 
-    def do_POST(self):
+    def legacy_post_unsupported(self):
         parsed_path = urlparse(self.path)
         
         if parsed_path.path == '/api/submit_deed':
@@ -1369,7 +1404,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
-    server_address = ('', port)
+    server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print(f"🚀 Starting custom server on port {port}...")
     print(f"📂 Serving static files from {BASE_DIR}")
