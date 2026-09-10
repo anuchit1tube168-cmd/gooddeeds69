@@ -516,9 +516,13 @@ def telegram_reply_listener():
                             )
                             continue
 
-                        # Deed approve/reject (existing logic from telegram_bot_listener.py)
+                        # Deed approve/reject (delegate to telegram_bot_listener)
                         if data_str.startswith('approve_') or data_str.startswith('reject_'):
-                            # Let the existing telegram_bot_listener handle these
+                            try:
+                                from telegram_bot_listener import process_callback_query
+                                process_callback_query(cb)
+                            except Exception as _pe:
+                                print(f"⚠️ Error handling callback query in line_webhook_bot: {_pe}")
                             continue
 
                     # Handle text message (reply to forwarded LINE msg)

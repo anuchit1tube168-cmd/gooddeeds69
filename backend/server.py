@@ -45,6 +45,7 @@ RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 GDRIVE_DEST = os.environ.get('GOODDEED_PRIVATE_BACKUP_DIR', '')
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
 try:
     from line_notifier import (
         save_student_line_binding,
@@ -1399,9 +1400,32 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or lineUserId'})
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
+        elif parsed_path.path == '/api/telegram_webhook':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                from telegram_bot_listener import process_callback_query
+                if 'callback_query' in payload:
+                    threading.Thread(target=process_callback_query, args=(payload['callback_query'],), daemon=True).start()
+                self.send_json_response(200, {'ok': True})
+            except Exception as e:
+                self.send_json_response(500, {'ok': False, 'error': str(e)})
         else:
             self.send_response(404)
             self.end_headers()
+
+def start_telegram_bot_listener_thread():
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    if not token:
+        print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener disabled.")
+        return
+    try:
+        from telegram_bot_listener import start_listener_in_background
+        start_listener_in_background()
+        print("🤖 Telegram Bot Listener daemon thread launched successfully.")
+    except Exception as e:
+        print(f"⚠️ Could not launch Telegram Bot Listener: {e}")
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
     server_address = ('127.0.0.1', port)
@@ -1409,6 +1433,10 @@ def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000
     print(f"🚀 Starting custom server on port {port}...")
     print(f"📂 Serving static files from {BASE_DIR}")
     print(f"📁 Saving records to {RECORDS_DIR}")
+    
+    # Auto-start Telegram Bot Listener daemon
+    start_telegram_bot_listener_thread()
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

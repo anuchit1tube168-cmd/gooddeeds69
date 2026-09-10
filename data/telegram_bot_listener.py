@@ -10,22 +10,34 @@ telegram_bot_listener.py
 """
 import urllib.request
 import urllib.parse
+import urllib.error
 import json
 import os
 import time
 import subprocess
 import threading
 import ssl
+import sys
+import atexit
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
-import sys
 sys.path.insert(0, os.path.join(BASE_DIR, 'backend'))
+sys.path.insert(0, DATA_DIR)
+
 try:
     from line_notifier import notify_deed_status_line
 except Exception as _ne:
     notify_deed_status_line = None
+
+try:
+    from server import save_or_update_deed_in_db, broadcast_event, load_students_map, RECORDS_DIR
+except Exception:
+    save_or_update_deed_in_db = None
+    broadcast_event = None
+    load_students_map = None
+    RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 
 def get_env_config(key, default=''):
     val = os.environ.get(key)
@@ -45,7 +57,41 @@ def get_env_config(key, default=''):
 BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN')
 CHAT_ID = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
 
+LOCK_FILE = '/tmp/gooddeeds_telegram_listener.pid'
+
+def check_and_acquire_lock():
+    if os.path.exists(LOCK_FILE):
+        try:
+            with open(LOCK_FILE, 'r') as f:
+                pid = int(f.read().strip())
+            if pid != os.getpid():
+                os.kill(pid, 0)
+                print(f"ℹ️ Telegram Bot Listener already active on PID {pid}. Skipping duplicate listener.")
+                return False
+        except (OSError, ValueError):
+            pass
+    try:
+        with open(LOCK_FILE, 'w') as f:
+            f.write(str(os.getpid()))
+        return True
+    except Exception:
+        return True
+
+def release_lock():
+    try:
+        if os.path.exists(LOCK_FILE):
+            with open(LOCK_FILE, 'r') as f:
+                pid = int(f.read().strip())
+            if pid == os.getpid():
+                os.remove(LOCK_FILE)
+    except Exception:
+        pass
+
+atexit.register(release_lock)
+
 def send_telegram_request(method, payload):
+    if not BOT_TOKEN:
+        return {}
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
@@ -54,11 +100,23 @@ def send_telegram_request(method, payload):
     try:
         with urllib.request.urlopen(req, timeout=timeout_val, context=ctx) as resp:
             return json.loads(resp.read().decode('utf-8'))
+    except urllib.error.HTTPError as he:
+        if he.code == 409:
+            print("⚠️ Telegram getUpdates 409 Conflict (another bot instance polling). Waiting 15s...")
+            time.sleep(15)
+        elif he.code != 400:
+            print(f"⚠️ Telegram API HTTP {he.code} ({method}): {he}")
+        return {}
     except Exception as e:
         print(f"⚠️ Telegram API Error ({method}): {e}")
         return {}
 
 def load_students():
+    if load_students_map:
+        try:
+            return load_students_map()
+        except Exception:
+            pass
     for p in [os.path.join(DATA_DIR, 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json'), os.path.join(BASE_DIR, '.local_backup_pdpa', 'students.json')]:
         if os.path.exists(p):
             try:
@@ -72,8 +130,11 @@ def calculate_student_total_hours(student_id):
     p = os.path.join(DATA_DIR, 'deeds.json')
     if not os.path.exists(p):
         return 0.0
-    with open(p, 'r', encoding='utf-8') as f:
-        data = json.load(f)
+    try:
+        with open(p, 'r', encoding='utf-8') as f:
+            data = json.load(f)
+    except Exception:
+        return 0.0
     
     deeds_list = []
     if isinstance(data, list):
@@ -93,18 +154,42 @@ def calculate_student_total_hours(student_id):
             total += float(d.get('hours', 0))
     return total
 
+def _save_deeds_fallback(data):
+    deeds_file = os.path.join(DATA_DIR, 'deeds.json')
+    for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
+        try:
+            with open(json_p, 'w', encoding='utf-8') as f:
+                json.dump(data, f, ensure_ascii=False, indent=2)
+        except Exception as e:
+            print(f"⚠️ Error writing {json_p}: {e}")
+        
+    js_content = f"// Auto-updated by telegram_bot_listener.py\nconst IMPORTED_DEEDS = {json.dumps(data, ensure_ascii=False, indent=2)};\nconst DEEDS_DATA = IMPORTED_DEEDS;\n\nif (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
+    for js_p in [os.path.join(DATA_DIR, 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
+        try:
+            with open(js_p, 'w', encoding='utf-8') as f:
+                f.write(js_content)
+        except Exception as e:
+            print(f"⚠️ Error writing {js_p}: {e}")
+
 def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
     def run_push():
         try:
-            subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True)
-            subprocess.run(["git", "commit", "-m", msg], cwd=BASE_DIR, check=False)
-            subprocess.run(["git", "push", "origin", "main"], cwd=BASE_DIR, check=True)
-            print("🚀 Successfully pushed updates to GitHub Pages in background!")
+            res = subprocess.run(["git", "branch", "--show-current"], cwd=BASE_DIR, capture_output=True, text=True)
+            curr_branch = res.stdout.strip()
+            if not curr_branch:
+                return
+            subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=False)
+            commit_res = subprocess.run(["git", "commit", "-m", msg], cwd=BASE_DIR, capture_output=True, text=True)
+            if "nothing to commit" not in commit_res.stdout:
+                subprocess.run(["git", "push", "origin", curr_branch], cwd=BASE_DIR, check=False)
+                print(f"🚀 Successfully pushed updates to branch {curr_branch} in background!")
         except Exception as e:
-            print(f"⚠️ Background Git push error: {e}")
+            print(f"ℹ️ Background Git push skipped: {e}")
     threading.Thread(target=run_push, daemon=True).start()
 
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
+    student_id = str(student_id).strip()
+    deed_id = str(deed_id).strip()
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
     if not os.path.exists(deeds_file):
         return None
@@ -112,9 +197,7 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     with open(deeds_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
     
-    updated = False
     target_deed = None
-    
     all_deeds = []
     if isinstance(data, list):
         all_deeds = data
@@ -126,64 +209,79 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     # 1. Match by exact deed_id
     if deed_id:
         for d in all_deeds:
-            if str(d.get('id')) == str(deed_id):
-                d['status'] = new_status
-                d['approved_by'] = approver_name
-                d['approvedBy'] = approver_name
-                d['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
-                d['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+            if str(d.get('id', '')).strip() == deed_id:
                 target_deed = d
-                updated = True
                 break
                 
     # 2. Fallback: Match by student_id and pending status
-    if not updated and student_id:
+    if not target_deed and student_id:
         for d in all_deeds:
-            if str(d.get('student_id') or d.get('studentId')) == str(student_id) and d.get('status') == 'pending':
-                d['status'] = new_status
-                d['approved_by'] = approver_name
-                d['approvedBy'] = approver_name
-                d['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
-                d['approvedAt'] = time.strftime('%Y-%m-%dT%H:%M:%SZ')
+            if str(d.get('student_id') or d.get('studentId') or '').strip() == student_id and d.get('status') == 'pending':
                 target_deed = d
-                updated = True
                 break
-            
-    if updated and target_deed:
-        # Save deeds.json in both locations
-        for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
-            with open(json_p, 'w', encoding='utf-8') as f:
-                json.dump(data, f, ensure_ascii=False, indent=2)
-            
-        # Update JS files
-        js_content = f"// Auto-updated by telegram_bot_listener.py\nconst IMPORTED_DEEDS = {json.dumps(data, ensure_ascii=False, indent=2)};\nconst DEEDS_DATA = IMPORTED_DEEDS;\n\nif (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
-        for js_p in [os.path.join(DATA_DIR, 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
-            with open(js_p, 'w', encoding='utf-8') as f:
-                f.write(js_content)
-        print(f"✅ DB Updated for student {student_id} (Deed: {target_deed.get('id')}): status={new_status}")
-        
-        # Auto-create individual student folder & PDF slip
+                
+    if not target_deed:
+        print(f"⚠️ Deed not found for student {student_id}, deed {deed_id}")
+        return None
+
+    if not student_id:
+        student_id = str(target_deed.get('student_id') or target_deed.get('studentId') or '').strip()
+
+    now_iso = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    target_deed['status'] = new_status
+    target_deed['approved_by'] = approver_name
+    target_deed['approvedBy'] = approver_name
+    target_deed['updated_at'] = now_iso
+    target_deed['approvedAt'] = now_iso
+
+    # Canonical persistence using server's save_or_update_deed_in_db
+    if save_or_update_deed_in_db:
+        try:
+            save_or_update_deed_in_db(student_id, target_deed)
+        except Exception as _se:
+            print(f"⚠️ Error in server save_or_update_deed_in_db: {_se}")
+            _save_deeds_fallback(data)
+    else:
+        _save_deeds_fallback(data)
+
+    print(f"✅ DB Updated for student {student_id} (Deed: {target_deed.get('id')}): status={new_status}")
+
+    # SSE Real-time broadcast to all web clients
+    if broadcast_event:
+        try:
+            broadcast_event("deed_approved", {
+                "studentId": student_id,
+                "deedId": str(target_deed.get('id', '')),
+                "status": new_status,
+                "approver": approver_name
+            })
+        except Exception as _be:
+            print(f"⚠️ Broadcast SSE error: {_be}")
+
+    # Auto-create individual student folder & PDF slip in background
+    def _run_organize():
         try:
             subprocess.run(["python3", os.path.join(DATA_DIR, "organize_student_records.py")], cwd=BASE_DIR, check=False)
             print("📂 Auto-created individual student folder and PDF slip!")
         except Exception as e:
             print(f"⚠️ Organize error: {e}")
+    threading.Thread(target=_run_organize, daemon=True).start()
 
-        # Trigger background git push
-        push_updates_to_github_bg(f"อนุมัติความดี {student_id} โดย {approver_name}")
+    # Trigger background git push (optional)
+    push_updates_to_github_bg(f"อนุมัติความดี {student_id} โดย {approver_name}")
 
-        # Send LINE notification to student if student has line_user_id
-        if notify_deed_status_line and target_deed:
-            try:
-                notify_deed_status_line(student_id, target_deed, new_status, approver_name)
-            except Exception as _le:
-                print(f"⚠️ Error pushing LINE notification: {_le}")
+    # Send LINE notification to student if student has line_user_id
+    if notify_deed_status_line and target_deed:
+        try:
+            notify_deed_status_line(student_id, target_deed, new_status, approver_name)
+        except Exception as _le:
+            print(f"⚠️ Error pushing LINE notification: {_le}")
         
     return target_deed
 
 def process_callback_query(cb):
     cb_id = cb['id']
-    data_str = cb.get('data', '')
+    data_str = cb.get('data', '').strip()
     msg = cb.get('message', {})
     msg_id = msg.get('message_id')
     chat = msg.get('chat', {})
@@ -212,31 +310,121 @@ def process_callback_query(cb):
     if not is_approve and not is_reject:
         return
 
-    # Extract IDs robustly from callback_data (e.g. approve_deed_1787189912345_6803893 or approve_10001_6803882)
     action = 'approve' if is_approve else 'reject'
-    rest = data_str[len(action) + 1:] # e.g. "deed_1787189912345_6803893" or "10001_6803882"
-    parts = rest.rsplit('_', 1)
-    if len(parts) == 2:
-        deed_id = parts[0]
-        student_id = parts[1]
-    else:
-        deed_id = ''
-        student_id = parts[0]
+    rest = data_str[len(action) + 1:].strip()
+
+    # Load all deeds to identify deed and student
+    deeds_file = os.path.join(DATA_DIR, 'deeds.json')
+    all_deeds = []
+    deeds_map_by_student = {}
+    if os.path.exists(deeds_file):
+        try:
+            with open(deeds_file, 'r', encoding='utf-8') as f:
+                d_raw = json.load(f)
+                if isinstance(d_raw, dict):
+                    deeds_map_by_student = d_raw
+                    for sid_key, d_list in d_raw.items():
+                        if isinstance(d_list, list):
+                            all_deeds.extend(d_list)
+                elif isinstance(d_raw, list):
+                    all_deeds = d_raw
+        except Exception as _e:
+            print(f"⚠️ Error reading deeds.json: {_e}")
+
+    deed_id = ''
+    student_id = ''
+    target_deed = None
+
+    # Strategy 1: rest exactly matches a deed ID in database
+    exact_match = next((d for d in all_deeds if str(d.get('id', '')).strip() == rest), None)
+    if exact_match:
+        target_deed = exact_match
+        deed_id = str(exact_match.get('id', '')).strip()
+        student_id = str(exact_match.get('studentId') or exact_match.get('student_id') or '').strip()
+
+    # Strategy 2: candidate split by rightmost underscore (e.g. deed_1788613140000_6903952_6903952)
+    if not target_deed and '_' in rest:
+        candidate_deed_id, candidate_student_id = rest.rsplit('_', 1)
+        candidate_match = next((d for d in all_deeds if str(d.get('id', '')).strip() == candidate_deed_id), None)
+        if candidate_match:
+            target_deed = candidate_match
+            deed_id = candidate_deed_id
+            student_id = str(candidate_match.get('studentId') or candidate_match.get('student_id') or candidate_student_id).strip()
+        else:
+            if len(candidate_student_id) == 7 and candidate_student_id.isdigit():
+                student_id = candidate_student_id
+                deed_id = candidate_deed_id
+            else:
+                deed_id = candidate_deed_id
+                student_id = candidate_student_id
+
+    # Strategy 3: rest is a 7-digit student ID
+    if not target_deed and len(rest) == 7 and rest.isdigit():
+        student_id = rest
+
+    # Strategy 4: match by student_id and pending status
+    if not target_deed and student_id:
+        s_deeds = deeds_map_by_student.get(student_id, [])
+        pending_s = [d for d in s_deeds if d.get('status') == 'pending']
+        if deed_id:
+            target_deed = next((d for d in s_deeds if str(d.get('id', '')).strip() == deed_id), None)
+        if not target_deed and pending_s:
+            target_deed = pending_s[0]
+            deed_id = str(target_deed.get('id', ''))
+
+    if not target_deed and not deed_id and not student_id:
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': "⚠️ ไม่พบรายการความดีดังกล่าวในระบบ หรืออาจถูกลบไปแล้ว",
+            'show_alert': True
+        })
+        return
+
+    # Check idempotency / already decided
+    if target_deed:
+        current_status = target_deed.get('status')
+        if current_status == 'approved' and is_approve:
+            send_telegram_request('answerCallbackQuery', {
+                'callback_query_id': cb_id,
+                'text': "ℹ️ รายการนี้ได้รับการอนุมัติเรียบร้อยแล้วครับ",
+                'show_alert': True
+            })
+            if msg_id:
+                send_telegram_request('editMessageReplyMarkup', {
+                    'chat_id': target_chat_id,
+                    'message_id': msg_id,
+                    'reply_markup': {
+                        'inline_keyboard': [
+                            [{'text': f'✅ บันทึกอนุมัติแล้ว ({target_deed.get("approvedBy") or approver_name})', 'callback_data': f'done_{deed_id}'}]
+                        ]
+                    }
+                })
+            return
+        elif current_status == 'rejected' and is_reject:
+            send_telegram_request('answerCallbackQuery', {
+                'callback_query_id': cb_id,
+                'text': "ℹ️ รายการนี้ได้รับการปฏิเสธเรียบร้อยแล้วครับ",
+                'show_alert': True
+            })
+            return
 
     students_map = load_students()
     student = students_map.get(str(student_id).strip(), {})
     student_name = f"{student.get('rank', 'นพอ.')} {student.get('first_name', '')} {student.get('last_name', '')}".strip()
     if not student_name or student_name == 'นพอ.' or 'รหัส' in student_name:
-        student_name = f"นพอ. ({student_id})"
+        if target_deed and target_deed.get('student_name'):
+            student_name = target_deed['student_name']
+        else:
+            student_name = f"นพอ. ({student_id})"
     cy = str(student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
 
-    # STEP 1: UPDATE DATABASE FIRST TO GET ACCURATE STATS
     if is_approve:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'approved', approver_name)
         total_hrs = calculate_student_total_hours(student_id)
         is_pass = total_hrs >= 50
         deed_desc = target_deed.get('description', 'บันทึกความดีจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'
         deed_hrs = target_deed.get('hours', 2) if target_deed else 2
+        effective_deed_id = target_deed.get('id', deed_id) if target_deed else deed_id
 
         # IMMEDIATELY ANSWER TELEGRAM CALLBACK QUERY WITH DETAILED POPUP ALERT
         send_telegram_request('answerCallbackQuery', {
@@ -245,10 +433,9 @@ def process_callback_query(cb):
             'show_alert': True
         })
 
-        # STEP 2: SEND OFFICIAL TELEGRAM CONFIRMATION REPLY MESSAGE
         encoded_name = urllib.parse.quote(student_name)
-        pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={deed_id}&studentId={student_id}&name={encoded_name}"
-        approve_sign_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id={deed_id}&studentId={student_id}&name={encoded_name}&status=approved"
+        pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={effective_deed_id}&studentId={student_id}&name={encoded_name}"
+        approve_sign_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id={effective_deed_id}&studentId={student_id}&name={encoded_name}&status=approved"
         pass_badge = "✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม." if is_pass else "⏳ กำลังสะสมความดี"
 
         reply_html = f"""🎉 <b>บันทึกข้อมูลอนุมัติความดีเรียบร้อยแล้ว ✅</b>
@@ -288,7 +475,7 @@ def process_callback_query(cb):
                 'message_id': msg_id,
                 'reply_markup': {
                     'inline_keyboard': [
-                        [{'text': f'✅ บันทึกอนุมัติแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}],
+                        [{'text': f'✅ บันทึกอนุมัติแล้ว ({approver_name})', 'callback_data': f'done_{effective_deed_id}'}],
                         [
                             {'text': '✍️ จรดลายเซ็นสดในระบบ ↗️', 'url': approve_sign_url},
                             {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': pdf_slip_url}
@@ -300,6 +487,7 @@ def process_callback_query(cb):
     elif is_reject:
         target_deed = update_deed_status_in_db(student_id, deed_id, 'rejected', approver_name)
         deed_desc = target_deed.get('description', 'กิจกรรมจิตอาสา') if target_deed else 'กิจกรรมจิตอาสา'
+        effective_deed_id = target_deed.get('id', deed_id) if target_deed else deed_id
 
         send_telegram_request('answerCallbackQuery', {
             'callback_query_id': cb_id,
@@ -330,12 +518,19 @@ def process_callback_query(cb):
                 'message_id': msg_id,
                 'reply_markup': {
                     'inline_keyboard': [
-                        [{'text': f'❌ ปฏิเสธแล้ว ({approver_name})', 'callback_data': f'done_{deed_id}'}]
+                        [{'text': f'❌ ปฏิเสธแล้ว ({approver_name})', 'callback_data': f'done_{effective_deed_id}'}]
                     ]
                 }
             })
 
+_LISTENER_THREAD = None
+
 def start_listener_loop():
+    if not BOT_TOKEN:
+        print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener stopped.")
+        return
+    if not check_and_acquire_lock():
+        return
     print("🤖 Telegram Bot Listener Daemon started (24/7 Long-Polling Instant Reaction)...")
     offset = 0
     while True:
@@ -357,6 +552,14 @@ def start_listener_loop():
             print(f"⚠️ Listener Loop Error: {e}")
             time.sleep(10)
         time.sleep(1)
+
+def start_listener_in_background():
+    global _LISTENER_THREAD
+    if _LISTENER_THREAD and _LISTENER_THREAD.is_alive():
+        return _LISTENER_THREAD
+    _LISTENER_THREAD = threading.Thread(target=start_listener_loop, daemon=True, name="TelegramBotListener")
+    _LISTENER_THREAD.start()
+    return _LISTENER_THREAD
 
 if __name__ == '__main__':
     start_listener_loop()
