@@ -284,6 +284,20 @@ function getDeeds(studentId) {
   return deeds;
 }
 
+function calculateCohortNo(sid) {
+  if (!sid) return '-';
+  const clean = String(sid).replace(/\D/g, '');
+  if (clean.length !== 7) return '-';
+  const num = parseInt(clean, 10);
+  if (num >= 6903946 && num <= 6904009) return num - 6903945;
+  if (num >= 6803882 && num <= 6803945) return num - 6803881;
+  if (num >= 6703818 && num <= 6703881) return num - 6703817;
+  if (num >= 6603754 && num <= 6603817) return num - 6603753;
+  if (num >= 6503690 && num <= 6503753) return num - 6503689;
+  if (num >= 6403626 && num <= 6403689) return num - 6403625;
+  return '-';
+}
+
 // ==================== STUDENTS & SETTINGS ====================
 function getStudents() {
   const cache = CacheService.getScriptCache();
@@ -302,6 +316,8 @@ function getStudents() {
     const sid = String(data[i][1] || '').trim();
     if (!sid || sid === 'undefined') continue;
 
+    const noRaw = String(data[i][0] || '').replace(/\*/g, '').trim();
+    const cohortNo = noRaw ? (parseInt(noRaw, 10) || noRaw) : calculateCohortNo(sid);
     const rank = String(data[i][2] || 'นพอ.').trim();
     const firstName = String(data[i][3] || '').trim();
     const lastName = String(data[i][4] || '').trim();
@@ -320,6 +336,7 @@ function getStudents() {
 
     students.push({
       student_id: sid,
+      no: cohortNo,
       rank: rank,
       first_name: firstName,
       last_name: lastName,

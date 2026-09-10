@@ -724,6 +724,21 @@ def notify_deed_submission_telegram(deed_data):
         print(f"⚠️ Telegram deed notification error: {e}")
         return False
 
+def calculate_cohort_no(sid_str):
+    if not sid_str:
+        return None
+    try:
+        n = int(str(sid_str).strip())
+        if 6903946 <= n <= 6904009: return n - 6903945
+        if 6803882 <= n <= 6803945: return n - 6803881
+        if 6703818 <= n <= 6703881: return n - 6703817
+        if 6603754 <= n <= 6603817: return n - 6603753
+        if 6503690 <= n <= 6503753: return n - 6503689
+        if 6403626 <= n <= 6403689: return n - 6403625
+    except Exception:
+        pass
+    return None
+
 def load_students_map():
     for p in [os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
         if os.path.exists(p):
@@ -757,12 +772,14 @@ def save_or_update_deed_in_db(student_id, deed_data):
         real_cy = str(s.get('class_year', class_year))
         real_yl = str(s.get('year_level', '1'))
         real_pos = s.get('position', '')
+        real_no = s.get('no') or calculate_cohort_no(student_id)
 
         deed_data['student_name'] = real_full
         deed_data['studentName'] = real_full
         deed_data['student_rank'] = real_rank
         deed_data['student_first_name'] = real_fn
         deed_data['student_last_name'] = real_ln
+        deed_data['student_no'] = real_no
         deed_data['class_year'] = real_cy
         deed_data['year_level'] = real_yl
         if real_pos:
@@ -772,6 +789,7 @@ def save_or_update_deed_in_db(student_id, deed_data):
         if not isinstance(student_obj, dict):
             student_obj = {}
         student_obj['student_id'] = student_id
+        student_obj['no'] = real_no
         student_obj['rank'] = real_rank
         student_obj['first_name'] = real_fn
         student_obj['last_name'] = real_ln
@@ -923,6 +941,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
             if s:
                 safe_s = {
                     'student_id': s.get('student_id'),
+                    'no': s.get('no') or calculate_cohort_no(student_id),
                     'rank': s.get('rank', 'นพอ.'),
                     'first_name': s.get('first_name', ''),
                     'last_name': s.get('last_name', ''),
@@ -952,6 +971,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 sid_str = str(s.get('student_id'))
                 safe_list.append({
                     'student_id': s.get('student_id'),
+                    'no': s.get('no') or calculate_cohort_no(sid_str),
                     'rank': s.get('rank', 'นพอ.'),
                     'first_name': s.get('first_name', ''),
                     'last_name': s.get('last_name', ''),

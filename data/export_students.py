@@ -2,10 +2,11 @@
 """Export student data from Excel to JSON for import into Google Sheets
    ปีการศึกษา 2569 — อัพเดท 9 มี.ค. 2569
 """
-import openpyxl
 import json
 import re
 import os
+import zipfile
+import xml.etree.ElementTree as ET
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
@@ -30,8 +31,68 @@ def clean_number(val):
     except:
         return None
 
+def calculate_cohort_no(sid_str):
+    try:
+        n = int(str(sid_str).strip())
+        if 6903946 <= n <= 6904009: return n - 6903945
+        if 6803882 <= n <= 6803945: return n - 6803881
+        if 6703818 <= n <= 6703881: return n - 6703817
+        if 6603754 <= n <= 6603817: return n - 6603753
+        if 6503690 <= n <= 6503753: return n - 6503689
+        if 6403626 <= n <= 6403689: return n - 6403625
+    except Exception:
+        pass
+    return None
+
+def read_xlsx_sheet_rows(filename, sheet_name):
+    """Read rows from an xlsx file without third-party dependencies."""
+    if not os.path.exists(filename):
+        return []
+    with zipfile.ZipFile(filename, 'r') as z:
+        sst = []
+        if 'xl/sharedStrings.xml' in z.namelist():
+            tree = ET.fromstring(z.read('xl/sharedStrings.xml'))
+            sst = [''.join(t.text for t in si.findall('.//{*}t') if t.text) for si in tree.findall('{*}si')]
+
+        wb_tree = ET.fromstring(z.read('xl/workbook.xml'))
+        rels_tree = ET.fromstring(z.read('xl/_rels/workbook.xml.rels'))
+        rel_map = {r.attrib['Id']: r.attrib['Target'] for r in rels_tree.findall('{*}Relationship')}
+
+        sheet_path = None
+        for s in wb_tree.findall('.//{*}sheet'):
+            if s.attrib.get('name') == sheet_name:
+                target = rel_map[s.attrib['{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id']].lstrip('/')
+                if not target.startswith('xl/'):
+                    target = 'xl/' + target
+                sheet_path = target
+                break
+
+        if not sheet_path or sheet_path not in z.namelist():
+            return []
+
+        ws_tree = ET.fromstring(z.read(sheet_path))
+        rows = []
+        for row_el in ws_tree.findall('.//{*}row'):
+            row_dict = {}
+            for c in row_el.findall('{*}c'):
+                ref = c.attrib.get('r', '')
+                col = ''.join([ch for ch in ref if ch.isalpha()])
+                t = c.attrib.get('t')
+                if t == 'inlineStr':
+                    t_el = c.find('.//{*}t')
+                    val = t_el.text if t_el is not None else ''
+                elif t == 's':
+                    v_el = c.find('{*}v')
+                    idx = v_el.text if v_el is not None else ''
+                    val = sst[int(idx)] if idx.isdigit() and int(idx) < len(sst) else ''
+                else:
+                    v_el = c.find('{*}v')
+                    val = v_el.text if v_el is not None else ''
+                row_dict[col] = val
+            rows.append(row_dict)
+        return rows
+
 def main():
-    wb = openpyxl.load_workbook(EXCEL_FILE)
     students = []
     
     # Load existing student profiles to merge edits (prevent data loss)
@@ -47,19 +108,20 @@ def main():
             print(f"⚠️ Failed to load existing students.json for merging: {e}")
 
     for sheet_name, meta in SHEET_CLASS_MAP.items():
-        if sheet_name not in wb.sheetnames:
+        rows = read_xlsx_sheet_rows(EXCEL_FILE, sheet_name)
+        if not rows:
             continue
-        ws = wb[sheet_name]
         
-        for row in ws.iter_rows(min_row=5, values_only=True):
-            student_id = clean_number(row[1])
-            if student_id is None:
+        for r in rows:
+            student_id = clean_number(r.get('B'))
+            if student_id is None or len(str(student_id)) != 7:
                 continue
             
-            rank = str(row[2]).strip() if row[2] else 'นพอ.'
-            first_name = str(row[3]).strip() if row[3] else ''
-            last_name = str(row[4]).strip() if row[4] else ''
-            note = str(row[5]).strip() if row[5] else ''
+            no_val = clean_number(r.get('A'))
+            rank = str(r.get('C', '')).strip() if r.get('C') else 'นพอ.'
+            first_name = str(r.get('D', '')).strip() if r.get('D') else ''
+            last_name = str(r.get('E', '')).strip() if r.get('E') else ''
+            note = str(r.get('F', '')).strip() if r.get('F') else ''
             
             student_id_str = str(student_id)
             password = student_id_str
@@ -72,6 +134,9 @@ def main():
             position = 'นักเรียนพยาบาล'
             nickname = ''
             phone = ''
+
+            # Fallback sequence number if missing in sheet
+            cohort_no = no_val or calculate_cohort_no(student_id_str)
 
             # Merge edits from existing database if present
             if student_id_str in existing_students:
@@ -89,9 +154,11 @@ def main():
                 position = existing.get('position', position)
                 nickname = existing.get('nickname', nickname)
                 phone = existing.get('phone', phone)
+                cohort_no = cohort_no or existing.get('no')
 
             student = {
                 'student_id': student_id_str,
+                'no': cohort_no,
                 'rank': rank,
                 'first_name': first_name,
                 'last_name': last_name,
@@ -113,51 +180,51 @@ def main():
     excel_69_path = os.path.join(BASE_DIR, "รายชื่อ นพอ.ปี 69.xlsx")
     if os.path.exists(excel_69_path):
         try:
-            wb69 = openpyxl.load_workbook(excel_69_path, data_only=True)
-            if 'นพอ.ปี1' in wb69.sheetnames:
-                ws69 = wb69['นพอ.ปี1']
-                for r in range(5, ws69.max_row + 1):
-                    sid = ws69.cell(r, 2).value
-                    rank_v = ws69.cell(r, 3).value
-                    fname_v = ws69.cell(r, 4).value
-                    lname_v = ws69.cell(r, 5).value
-                    note_v = ws69.cell(r, 6).value
-                    
-                    if not sid or not fname_v:
-                        continue
-                    try:
-                        sid_str = str(int(float(sid)))
-                    except:
-                        sid_str = str(sid).strip()
-                        
-                    s = {
-                        'student_id': sid_str,
-                        'rank': str(rank_v).strip() if rank_v else 'นพอ.',
-                        'first_name': str(fname_v).strip(),
-                        'last_name': str(lname_v).strip() if lname_v else '',
-                        'full_name': f"{str(fname_v).strip()} {str(lname_v).strip() if lname_v else ''}".strip(),
-                        'nickname': '',
-                        'phone': '',
-                        'class_year': 69,
-                        'year_level': 1,
-                        'note': str(note_v).strip() if note_v else 'นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 1 (รุ่น 69)',
-                        'position': 'นักเรียนพยาบาล',
-                        'password': sid_str,
-                        'email': '',
-                        'telegram_chat_id': '',
-                        'line_user_id': '',
-                        'line_display_name': '',
-                        'line_picture_url': '',
-                        'role': 'student'
-                    }
-                    
-                    if sid_str in existing_students:
-                        existing = existing_students[sid_str]
-                        for k, v in existing.items():
-                            if v and not s.get(k):
-                                s[k] = v
-                    students.append(s)
-                print(f"✅ Loaded {len([s for s in students if s['class_year'] == 69])} official Class 69 students from {excel_69_path}")
+            rows69 = read_xlsx_sheet_rows(excel_69_path, 'นพอ.ปี1')
+            for r in rows69:
+                sid = clean_number(r.get('B'))
+                fname_v = str(r.get('D', '')).strip()
+                if not sid or not fname_v:
+                    continue
+                
+                no_val = clean_number(r.get('A'))
+                rank_v = str(r.get('C', '')).strip() or 'นพอ.'
+                lname_v = str(r.get('E', '')).strip()
+                note_v = str(r.get('F', '')).strip()
+                sid_str = str(sid)
+                cohort_no = no_val or calculate_cohort_no(sid_str)
+
+                s = {
+                    'student_id': sid_str,
+                    'no': cohort_no,
+                    'rank': rank_v,
+                    'first_name': fname_v,
+                    'last_name': lname_v,
+                    'full_name': f"{fname_v} {lname_v}".strip(),
+                    'nickname': '',
+                    'phone': '',
+                    'class_year': 69,
+                    'year_level': 1,
+                    'note': note_v or 'นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 1 (รุ่น 69)',
+                    'position': 'นักเรียนพยาบาล',
+                    'password': sid_str,
+                    'email': '',
+                    'telegram_chat_id': '',
+                    'line_user_id': '',
+                    'line_display_name': '',
+                    'line_picture_url': '',
+                    'role': 'student'
+                }
+                
+                if sid_str in existing_students:
+                    existing = existing_students[sid_str]
+                    for k, v in existing.items():
+                        if v and not s.get(k):
+                            s[k] = v
+                    if existing.get('no'):
+                        s['no'] = existing.get('no')
+                students.append(s)
+            print(f"✅ Loaded {len([s for s in students if s['class_year'] == 69])} official Class 69 students from {excel_69_path}")
         except Exception as e:
             print(f"⚠️ Error reading Class 69 workbook: {e}")
     
@@ -174,6 +241,7 @@ def main():
     # Merge existing modifications for missing historical students
     for s in missing_historical_students:
         sid = s['student_id']
+        s['no'] = s.get('no') or calculate_cohort_no(sid)
         if sid in existing_students:
             existing = existing_students[sid]
             s['rank'] = existing.get('rank', s['rank'])
@@ -187,9 +255,19 @@ def main():
             s['telegram_chat_id'] = existing.get('telegram_chat_id', s['telegram_chat_id'])
             s['role'] = existing.get('role', s['role'])
             s['note'] = existing.get('note', s['note'])
+            s['no'] = existing.get('no') or s.get('no') or calculate_cohort_no(sid)
 
     students.extend(missing_historical_students)
     
+    # Deduplicate by student_id
+    seen_ids = set()
+    unique_students = []
+    for s in students:
+        if s['student_id'] not in seen_ids:
+            seen_ids.add(s['student_id'])
+            unique_students.append(s)
+    students = unique_students
+
     # Sort by class year then student_id
     students.sort(key=lambda x: (x['class_year'], x['student_id']))
     

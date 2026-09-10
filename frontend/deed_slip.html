@@ -365,9 +365,9 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3590"></script>
-    <script src="data/deeds_data.js?v=3590"></script>
-    <script src="app.js?v=3590"></script>
+    <script src="data/students_data.js?v=3591"></script>
+    <script src="data/deeds_data.js?v=3591"></script>
+    <script src="app.js?v=3591"></script>
     <script>
         function trimImageMargins(imgSrc, callback) {
             if (!imgSrc || typeof imgSrc !== 'string' || !imgSrc.startsWith('data:image')) {
@@ -511,6 +511,24 @@
                 return true;
             }
 
+            function calculateCohortNo(studentId) {
+                if (!studentId) return '-';
+                const clean = String(studentId).replace(/\D/g, '');
+                if (clean.length !== 7) return '-';
+                if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+                    const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
+                    if (s && s.no) return s.no;
+                }
+                const num = parseInt(clean, 10);
+                if (num >= 6903946 && num <= 6904009) return num - 6903945;
+                if (num >= 6803882 && num <= 6803945) return num - 6803881;
+                if (num >= 6703818 && num <= 6703881) return num - 6703817;
+                if (num >= 6603754 && num <= 6603817) return num - 6603753;
+                if (num >= 6503690 && num <= 6503753) return num - 6503689;
+                if (num >= 6403626 && num <= 6403689) return num - 6403625;
+                return '-';
+            }
+
             let student = null;
             const sid = (deed && (deed.student_id || deed.studentId)) || studentId || '';
             if (sid) {
@@ -545,7 +563,7 @@
                         full_name: deedCandidate || `${deed.student_rank || 'นพอ.'} ${deed.student_first_name || ''} ${deed.student_last_name || ''}`.trim(),
                         position: deed.student_position || '',
                         class_year: deed.class_year || (sid ? sid.substring(0, 2) : '69'),
-                        no: deed.student_no || ''
+                        no: deed.student_no || calculateCohortNo(sid)
                     };
                 }
             }
@@ -560,7 +578,7 @@
                     full_name: urlName,
                     position: '',
                     class_year: params.get('year') || (sid ? sid.substring(0, 2) : '69'),
-                    no: sid ? sid.slice(-2) : '-'
+                    no: calculateCohortNo(sid)
                 };
             }
 
@@ -608,17 +626,17 @@
                 const posSuffix = (student.position && student.position !== 'นักเรียนพยาบาล') ? ` [${student.position}]` : '';
                 document.getElementById('doc-student-name').textContent = fullName + posSuffix;
                 document.getElementById('doc-seq-student').textContent = student.student_id || sid;
-                document.getElementById('doc-student-no').textContent = student.no || (sid ? sid.slice(-2) : '-');
+                document.getElementById('doc-student-no').textContent = student.no || calculateCohortNo(student.student_id || sid);
                 document.getElementById('doc-academic-year').textContent = student.academic_year || '2569';
             } else if (isValidRealName(urlName)) {
                 document.getElementById('doc-student-name').textContent = urlName;
                 document.getElementById('doc-seq-student').textContent = studentId || '-';
-                document.getElementById('doc-student-no').textContent = studentId ? studentId.slice(-2) : '-';
+                document.getElementById('doc-student-no').textContent = calculateCohortNo(studentId || sid);
                 document.getElementById('doc-academic-year').textContent = '2569';
             } else if (sid) {
                 document.getElementById('doc-student-name').textContent = `นพอ. (${sid})`;
                 document.getElementById('doc-seq-student').textContent = sid;
-                document.getElementById('doc-student-no').textContent = sid.slice(-2);
+                document.getElementById('doc-student-no').textContent = calculateCohortNo(sid);
                 document.getElementById('doc-academic-year').textContent = '2569';
             }
 

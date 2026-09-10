@@ -194,6 +194,26 @@ if (typeof window !== 'undefined') {
     syncStudentsFromCloud();
 }
 
+// Authoritative cohort sequence number calculator (1..64 per cohort)
+function calculateCohortNo(studentId) {
+    if (!studentId) return '-';
+    const clean = String(studentId).replace(/\D/g, '');
+    if (clean.length !== 7) return '-';
+    // If global students data is loaded and has official no, use it
+    if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+        const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
+        if (s && s.no) return s.no;
+    }
+    const num = parseInt(clean, 10);
+    if (num >= 6903946 && num <= 6904009) return num - 6903945;
+    if (num >= 6803882 && num <= 6803945) return num - 6803881;
+    if (num >= 6703818 && num <= 6703881) return num - 6703817;
+    if (num >= 6603754 && num <= 6603817) return num - 6603753;
+    if (num >= 6503690 && num <= 6503753) return num - 6503689;
+    if (num >= 6403626 && num <= 6403689) return num - 6403625;
+    return '-';
+}
+
 // ==================== APP CORE ====================
 const App = {
     // ---------- AUTH ----------
@@ -215,13 +235,17 @@ const App = {
             }
         }
         let found = students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim());
-        if (found) return found;
+        if (found) {
+            if (!found.no) found.no = calculateCohortNo(clean);
+            return found;
+        }
 
         // Smart fallback: Check if stored in profile or synthesize from ID
         const profile = Storage.get('profile_' + clean);
         if (profile && profile.first_name) {
             return {
                 student_id: clean,
+                no: profile.no || calculateCohortNo(clean),
                 rank: profile.rank || 'นพอ.',
                 first_name: profile.first_name,
                 last_name: profile.last_name || '',
@@ -239,6 +263,7 @@ const App = {
             const fullName = deedWithName.student_name || deedWithName.studentName;
             return {
                 student_id: clean,
+                no: deedWithName.student_no || calculateCohortNo(clean),
                 rank: deedWithName.student_rank || 'นพอ.',
                 first_name: deedWithName.student_first_name || fullName,
                 last_name: deedWithName.student_last_name || '',
@@ -259,6 +284,7 @@ const App = {
             else if (cy === '66') yl = '4';
             return {
                 student_id: clean,
+                no: calculateCohortNo(clean),
                 rank: 'นพอ.',
                 first_name: '',
                 last_name: '',
@@ -322,6 +348,9 @@ const App = {
     },
 
     _cacheStudentProfile(clean, fresh) {
+        if (fresh && !fresh.no) {
+            fresh.no = calculateCohortNo(clean);
+        }
         if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
             const idx = STUDENTS_DATA.findIndex(s => String(s.student_id) === clean);
             if (idx >= 0) STUDENTS_DATA[idx] = { ...STUDENTS_DATA[idx], ...fresh };
