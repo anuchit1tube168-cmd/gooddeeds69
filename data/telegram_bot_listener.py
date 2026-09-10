@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """
 telegram_bot_listener.py
-สคริปต์จัดการ Telegram Bot Callback Query แบบอัตโนมัติ (Continuous Long-Polling Listener)
+Retained legacy listener — SUSPENDED / PRODUCTION WRITE = FALSE.
+Use the authenticated, assigned-scope gateway review contract before activation.
+Historical behavior below is not an enabled service:
 เมื่ออาจารย์กดปุ่ม [ ✅ อนุมัติ ] หรือ [ ❌ ปฏิเสธ ] ในกลุ่ม Telegram:
 1. ส่ง answerCallbackQuery ตอบกลับ Telegram ทันทีภายใน 0.5 วินาที เพื่อแสดงป๊อปอัปเด้งแจ้งเตือนอาจารย์บนหน้าจอ
 2. อัปเดตสถานะในฐานข้อมูล deeds.json และ deeds_data.js
@@ -55,7 +57,7 @@ def get_env_config(key, default=''):
     return default
 
 BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN')
-CHAT_ID = get_env_config('TELEGRAM_CHAT_ID', '-4839151586')
+CHAT_ID = get_env_config('TELEGRAM_CHAT_ID')
 
 LOCK_FILE = '/tmp/gooddeeds_telegram_listener.pid'
 
@@ -95,7 +97,7 @@ def send_telegram_request(method, payload):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
-    ctx = ssl._create_unverified_context()
+    ctx = ssl.create_default_context()
     timeout_val = 35 if method == 'getUpdates' else 15
     try:
         with urllib.request.urlopen(req, timeout=timeout_val, context=ctx) as resp:
@@ -105,10 +107,10 @@ def send_telegram_request(method, payload):
             print("⚠️ Telegram getUpdates 409 Conflict (another bot instance polling). Waiting 15s...")
             time.sleep(15)
         elif he.code != 400:
-            print(f"⚠️ Telegram API HTTP {he.code} ({method}): {he}")
+            print(f"TELEGRAM_HTTP_FAILURE status={he.code}")
         return {}
     except Exception as e:
-        print(f"⚠️ Telegram API Error ({method}): {e}")
+        print("TELEGRAM_REQUEST_FAILED")
         return {}
 
 def load_students():
@@ -135,7 +137,7 @@ def calculate_student_total_hours(student_id):
             data = json.load(f)
     except Exception:
         return 0.0
-    
+
     deeds_list = []
     if isinstance(data, list):
         deeds_list = data
@@ -147,7 +149,7 @@ def calculate_student_total_hours(student_id):
                     for d in dlist:
                         if str(d.get('student_id') or d.get('studentId')) == str(student_id):
                             deeds_list.append(d)
-                            
+
     total = 0.0
     for d in deeds_list:
         if d.get('status') == 'approved':
@@ -155,6 +157,8 @@ def calculate_student_total_hours(student_id):
     return total
 
 def _save_deeds_fallback(data):
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    raise RuntimeError("PRIVATE_LEDGER_REQUIRED")
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
     for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
         try:
@@ -162,7 +166,7 @@ def _save_deeds_fallback(data):
                 json.dump(data, f, ensure_ascii=False, indent=2)
         except Exception as e:
             print(f"⚠️ Error writing {json_p}: {e}")
-        
+
     js_content = f"// Auto-updated by telegram_bot_listener.py\nconst IMPORTED_DEEDS = {json.dumps(data, ensure_ascii=False, indent=2)};\nconst DEEDS_DATA = IMPORTED_DEEDS;\n\nif (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\nif (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
     for js_p in [os.path.join(DATA_DIR, 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
         try:
@@ -172,6 +176,8 @@ def _save_deeds_fallback(data):
             print(f"⚠️ Error writing {js_p}: {e}")
 
 def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    return False
     def run_push():
         try:
             res = subprocess.run(["git", "branch", "--show-current"], cwd=BASE_DIR, capture_output=True, text=True)
@@ -188,15 +194,17 @@ def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
     threading.Thread(target=run_push, daemon=True).start()
 
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    return None
     student_id = str(student_id).strip()
     deed_id = str(deed_id).strip()
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
     if not os.path.exists(deeds_file):
         return None
-    
+
     with open(deeds_file, 'r', encoding='utf-8') as f:
         data = json.load(f)
-    
+
     target_deed = None
     all_deeds = []
     if isinstance(data, list):
@@ -205,21 +213,21 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
         for sid, dlist in data.items():
             if isinstance(dlist, list):
                 all_deeds.extend(dlist)
-                
+
     # 1. Match by exact deed_id
     if deed_id:
         for d in all_deeds:
             if str(d.get('id', '')).strip() == deed_id:
                 target_deed = d
                 break
-                
+
     # 2. Fallback: Match by student_id and pending status
     if not target_deed and student_id:
         for d in all_deeds:
             if str(d.get('student_id') or d.get('studentId') or '').strip() == student_id and d.get('status') == 'pending':
                 target_deed = d
                 break
-                
+
     if not target_deed:
         print(f"⚠️ Deed not found for student {student_id}, deed {deed_id}")
         return None
@@ -276,10 +284,12 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
             notify_deed_status_line(student_id, target_deed, new_status, approver_name)
         except Exception as _le:
             print(f"⚠️ Error pushing LINE notification: {_le}")
-        
+
     return target_deed
 
 def process_callback_query(cb):
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    return {'ok': False, 'code': 'AUTHENTICATED_REVIEW_GATEWAY_REQUIRED'}
     cb_id = cb['id']
     data_str = cb.get('data', '').strip()
     msg = cb.get('message', {})
@@ -287,7 +297,7 @@ def process_callback_query(cb):
     chat = msg.get('chat', {})
     target_chat_id = chat.get('id') or CHAT_ID
     from_user = cb.get('from', {})
-    
+
     approver_name = f"{from_user.get('first_name', '')} {from_user.get('last_name', '')}".strip()
     u_name = (from_user.get('username') or '').lower()
     fn = (from_user.get('first_name') or '').lower()
@@ -526,6 +536,8 @@ def process_callback_query(cb):
 _LISTENER_THREAD = None
 
 def start_listener_loop():
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    return False
     if not BOT_TOKEN:
         print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener stopped.")
         return
@@ -554,6 +566,8 @@ def start_listener_loop():
         time.sleep(1)
 
 def start_listener_in_background():
+    # Suspended: private scoped gateway/journal/outbox required; no production writes.
+    return None
     global _LISTENER_THREAD
     if _LISTENER_THREAD and _LISTENER_THREAD.is_alive():
         return _LISTENER_THREAD

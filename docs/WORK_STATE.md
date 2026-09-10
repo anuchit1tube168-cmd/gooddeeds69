@@ -1,3 +1,24 @@
+# Light Mission Control checkpoint — 2026-09-10
+
+State: SOURCE IMPLEMENTED + LOCAL TESTS PASS / CURRENT VISUAL QA BLOCKED / DRAFT / PRODUCTION WRITE = FALSE.
+Base remote revision: `ce581a7dec158deda4cffec08644810f9367edeb`; base local snapshot: `896f66d`. Current continuation is the reviewed Mission Control change set on draft PR #4; use its current head/checks to identify the published revision. Main was inspected at `29531524a407d46de9a65e4032de40a3fc2c32cb`. Preserve both owner work and the full remote tree; this local checkout is partial and must not replace it.
+
+- Completed audit of inventory and selected frontend/GAS/API/schema/upload/auth/review contracts before coding. New documentation records KEEP / IMPROVE / REPLACE / MISSING. Obsolete remote README instructions were read and replaced, not treated as current deployment authority.
+- Extended the existing pilot with Light Mission Control shell, six KPI slots, React overview/Radar/analytics/profile, mission cards and timeline. Shared CSS now separates aviation and mission rules. No new backend or data schema.
+- Extended the disconnected demo with autosaved in-memory drafts, bottom-sheet dialog, student drawing, header-checked evidence/local preparation and preview sizing, Mission ID receipt, preserved rejection revisions/resubmission, queue filters and selected per-record review with confirmation. Nothing is uploaded or notified by this demo.
+- The authenticated view still uses only the existing session/self read client. Missing annual target, profile photo and unavailable write/evidence/queue functionality remain gated; nine stored category IDs are unchanged. Bangkok timestamp grouping avoids shifting early-month activity into the previous month. Client projections now reject duplicate IDs/contradictory owners.
+- Verification executed: syntax PASS, JS 115/115, Python 16/16 (131 total). Controller/input tests are doubles, not a browser or live provider. Optional CSS parser and DOCX dependency are unavailable; no program installation was performed.
+- Current browser blocker: automatic approval review explicitly denied access to the current local preview. Do not try another host, port, browser/CDP surface or deployment as a workaround. New Mission Control layout/console/native dialog/physical LIFF/performance are unverified. September 9 design screenshots below remain historical evidence for the prior UI only.
+- Updated README, root SKILL entrypoint, existing project skill, AGENTS, CHANGELOG, architecture/UX/test documents and current design verdict. No live deployment, real data mutation, schema edit, notification, credential rotation or LIFF endpoint change.
+
+Next code/runtime task: obtain permitted, readable evidence of the actual staging resolver and Worker version/bindings; confirm official 6.2–6.9 mapping and annual/term policy. Then extend the existing signed gateway/storage contract for assigned scope, fresh private signature, durable drafts/revisions and recoverable journal/outbox on verified staging. Follow `docs/REVIEW_STORAGE_CONTRACT.md`; do not execute the pure planner or wire the demo as an API. Resume rendered UI/device QA only after permitted access changes. Do not restart the project.
+
+Source checks to resume after relevant edits: `node scripts/check-syntax.cjs`, `node --test tests/*.test.cjs`, `python3 -m unittest discover -s tests -p 'test_*.py' -v`; use the unchanged PII guard over reviewed changed contents before publication. Publish only changed blobs on the current remote parent and verify the final PR head's CI.
+
+Concurrent upstream reconciliation: remote advanced five commits to `2bff70e2522f9c92d4dd495ed1b86dd1e793d44a`. Applied those changes without overwriting their identity formatting, stored sequence and signature layout. Fixed Master F/G/H/R misinterpretation, absent URL-name binding, unsigned profile fallback, unverified TLS and false Telegram success. Removed private student-number arithmetic from source fallbacks; missing sequence stays unknown. Suspended legacy Python review/public export/Git auto-publish before effects and removed preview daemon autostart. Original data and remote commit history are preserved; no service was run. These eight additional regression cases bring verification to 115 JS + 16 Python = 131.
+
+---
+
 # Aviation / warm React checkpoint — 2026-09-09
 
 State: LOCAL DESIGN AND SYNTHETIC WALKTHROUGH COMPLETE / DRAFT / PRODUCTION WRITE = FALSE.
@@ -63,7 +84,7 @@ Based on owner updates through remote `7ef7ffb788a31ec091aa334df00a0e91cd2d469f`
 
 **Current Branch:** `codex/fable-gooddeed-hardening-20260907`  
 **Base Commit:** `29531524` (feat: notify Telegram group on web deed approval/rejection)  
-**Last Updated:** 2026-09-09  
+**Last Updated:** 2026-09-09
 **Operational Skill:** `rtafnc-gooddeed-fable` / `gooddeeds-system`  
 
 ---

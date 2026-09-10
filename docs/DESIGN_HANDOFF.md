@@ -1,3 +1,15 @@
+# Current handoff — Light Mission Control — 2026-09-10
+
+Current source is the incremental Mission Control implementation on existing draft PR #4. Read `GOOD_DEED_UX.md`, `GOOD_DEED_ARCHITECTURE.md` and `GOOD_DEED_TEST_PLAN.md` for current behavior and release gates. React adds overview/Radar/analytics/profile; the original warmth island and aviation assets below are retained with their provenance.
+
+Local checks pass (115 JS + 16 Python); current visual verdict is BLOCKED because automatic approval review denied opening the preview. The captures and browser walkthrough below apply to the previous aviation version only. No new rendered/mobile/LIFF/console/performance pass is claimed. Production write remains FALSE; real submission/review/evidence integration is not enabled by the demo.
+
+New modules: `mission-data.js` (pure projections), `mission-react.js` (React views), `mission.css` (shell/layout), `signature-pad.js` and `evidence-preview.js` (demo inputs). Drafts and revisions are memory-only; a new server write stack was not introduced.
+
+---
+
+## Historical aviation handoff and asset provenance
+
 # Aviation and warm React design — 2026-09-09
 
 Status: implementation and synthetic walkthrough completed; production integration is not released.

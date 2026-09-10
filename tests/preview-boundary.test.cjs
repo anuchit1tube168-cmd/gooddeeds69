@@ -3,7 +3,7 @@ const assert=require('node:assert/strict');
 const http=require('node:http');
 const {serve,resolvePublicPath}=require('../scripts/preview.cjs');
 test('preview only resolves explicitly public pilot and shared assets',()=>{
-  for(const route of ['/','/demo.html','/workflow.js','/gooddeed-ui.js','/airforce-flight.png'])assert.ok(resolvePublicPath(route),route);
+  for(const route of ['/','/demo.html','/workflow.js','/gooddeed-ui.js','/airforce-flight.png','/mission-data.js','/mission-react.js','/mission.css','/signature-pad.js','/evidence-preview.js'])assert.ok(resolvePublicPath(route),route);
   for(const route of ['/AGENTS.md','/data/students.json','/frontend/data/students_data.js','/photos/evidence/file.png','/backend/Code.gs','/.env','/api/students','/gateway-config.js','/secure-pilot/','/%2e%2e%2fdata/students.json','/%5cdata/students.json','/%'])assert.equal(resolvePublicPath(route),null,route);
 });
 test('preview HTTP denies writes and private reads with no wildcard CORS',async()=>{

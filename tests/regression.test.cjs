@@ -69,6 +69,25 @@ test('frontend notification functions never use browser tokens',async()=>{
   assert.equal(await a.App.sendTelegram('-456','test'),false);assert.equal(await a.App.sendTelegramPhoto('-456',{}),false);
 });
 
+test('remote continuation cannot enable local transports merely from a tunnel or configured hostname',()=>{
+  for(const host of ['synthetic.trycloudflare.com','staging.example']){const a=app(host);assert.equal(a.App.canUseBackendApi(),false);a.context.startRealtimeUpdates();assert.equal(a.sources.length,0);}
+});
+test('profile name repair cannot fall back to unsigned local or GAS identity requests',async()=>{
+  const a=app('example.github.io');assert.equal(await a.App.ensureStudentProfile(TEST_STUDENT),null);
+});
+test('Master name, official sequence and total use the verified columns, never category or grade',()=>{
+  const b=backend();b.context.CacheService={getScriptCache:()=>({get:()=>null,put:()=>{}})};
+  b.master[1][0]=17;b.master[1][2]='นพอ.';b.master[1][3]='Synthetic';b.master[1][4]='Student';b.master[1][5]='69';b.master[1][6]=8;b.master[1][7]=2;b.master[1][15]=105;b.master[1][17]='ยังไม่ผ่าน';
+  const student=b.context.getStudents()[0];assert.equal(student.full_name,'นพอ. Synthetic Student');assert.equal(student.no,17);assert.equal(student.class_year,'69');assert.equal(student.year_level,'1');assert.equal(student.total_hours,105);
+  b.master[1][0]='';assert.equal(b.context.getStudents()[0].no,'-');
+});
+test('Master identity lookup rejects wrong headers or duplicate identities instead of choosing a profile',()=>{
+  for(const mode of ['header','duplicate']){const b=backend();b.context.CacheService={getScriptCache:()=>({get:()=>null,put:()=>{}})};
+    if(mode==='header')b.master[0][5]='full name';else b.master.push([...b.master[1]]);
+    assert.throws(()=>b.context.getStudents());
+  }
+});
+
 test('v2 rejects quarter-hour increments before any storage call',()=>{
   const context=vm.createContext({console});vm.runInContext(source('backend/CodeV2.gs'),context);
   assert.throws(()=>context.submitDeed_({role:'student',studentId:TEST_STUDENT,memberId:'synthetic'}, {studentId:TEST_STUDENT,category:'6',activityDate:'2026-09-06',hours:0.75,description:'Synthetic activity'},'test'),/ข้อมูลกิจกรรม/);

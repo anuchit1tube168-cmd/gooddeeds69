@@ -196,12 +196,13 @@ function addDeed(payload) {
     const ss = getSS(), masterSheet = ss ? ss.getSheetByName(SHEETS.STUDENTS) : null;
     if (masterSheet) {
       const mRows = masterSheet.getDataRange().getValues();
-      const foundRow = mRows.find((r, i) => i > 0 && String(r[1]).trim() === String(studentId).trim());
+      const matchingRows = mRows.filter((r, i) => i > 0 && String(r[1]).trim() === String(studentId).trim());
+      const foundRow = matchingRows.length === 1 ? matchingRows[0] : null;
       if (foundRow) {
         const rRank = String(foundRow[2] || 'นพอ.').trim();
         const rFn = String(foundRow[3] || '').trim();
         const rLn = String(foundRow[4] || '').trim();
-        const rFull = String(foundRow[5] || `${rFn} ${rLn}`).trim();
+        const rFull = `${rFn} ${rLn}`.trim(); // Column F is cohort, not full name.
         resolvedName = rFull.startsWith('นพอ.') ? rFull : `${rRank} ${rFull}`.trim();
       }
     }
@@ -307,23 +308,14 @@ function getDeeds(studentId) {
 }
 
 function calculateCohortNo(sid) {
-  if (!sid) return '-';
-  const clean = String(sid).replace(/\D/g, '');
-  if (clean.length !== 7) return '-';
-  const num = parseInt(clean, 10);
-  if (num >= 6903946 && num <= 6904009) return num - 6903945;
-  if (num >= 6803882 && num <= 6803945) return num - 6803881;
-  if (num >= 6703818 && num <= 6703881) return num - 6703817;
-  if (num >= 6603754 && num <= 6603817) return num - 6603753;
-  if (num >= 6503690 && num <= 6503753) return num - 6503689;
-  if (num >= 6403626 && num <= 6403689) return num - 6403625;
+  // Sequence comes from the stored Master field, never private ID ranges.
   return '-';
 }
 
 // ==================== STUDENTS & SETTINGS ====================
 function getStudents() {
   const cache = CacheService.getScriptCache();
-  const cached = cache.get('students_api_v3');
+  const cached = cache.get('students_api_v4_mapped_identity');
   if (cached) {
     return JSON.parse(cached);
   }
@@ -332,29 +324,29 @@ function getStudents() {
   if (!sheet) return [];
   const data = sheet.getDataRange().getValues();
   if (data.length <= 1) return [];
+  if (!legacyMasterColumnsMatch_(data[0]) || !legacyColumnsMatch_(data[0], {0:'ลำดับ',2:'ยศ',3:'ชื่อ',4:'นามสกุล',5:'ชั้นปี (รุ่น)'})) throw new Error('MASTER_SCHEMA_INCOMPATIBLE');
 
   const students = [];
+  const identities = new Set();
   for (let i = 1; i < data.length; i++) {
     const sid = String(data[i][1] || '').trim();
     if (!sid || sid === 'undefined') continue;
+    if (!/^\d{7}$/.test(sid) || identities.has(sid)) throw new Error('MASTER_IDENTITY_REQUIRES_RECONCILIATION');
+    identities.add(sid);
 
     const noRaw = String(data[i][0] || '').replace(/\*/g, '').trim();
-    const cohortNo = noRaw ? (parseInt(noRaw, 10) || noRaw) : calculateCohortNo(sid);
+    const cohortNo = /^\d+$/.test(noRaw) && Number(noRaw)>0 ? Number(noRaw) : '-';
     const rank = String(data[i][2] || 'นพอ.').trim();
     const firstName = String(data[i][3] || '').trim();
     const lastName = String(data[i][4] || '').trim();
-    const fullNameRaw = String(data[i][5] || `${firstName} ${lastName}`).trim();
+    const fullNameRaw = `${firstName} ${lastName}`.trim();
     const fullName = fullNameRaw.startsWith('นพอ.') ? fullNameRaw : `${rank} ${fullNameRaw}`.trim();
 
-    const classYearRaw = String(data[i][6] || data[i][5] || '');
-    const classYear = classYearRaw.replace(/รุ่น\s*/, '').trim() || (sid.length >= 2 ? sid.substring(0, 2) : '69');
-    let yearLevel = String(data[i][7] || '1').trim();
-    if (!yearLevel || yearLevel === '0') {
-      if (classYear === '69') yearLevel = '1';
-      else if (classYear === '68') yearLevel = '2';
-      else if (classYear === '67') yearLevel = '3';
-      else if (classYear === '66') yearLevel = '4';
-    }
+    const classYearRaw = String(data[i][5] || '');
+    const classYear = classYearRaw.replace(/รุ่น\s*/, '').trim();
+    const yearLevel = ({'69':'1','68':'2','67':'3','66':'4'})[classYear] || '';
+    const totalHours = legacyDecimal_(data[i][15]);
+    if (!Number.isFinite(totalHours) || totalHours<0) throw new Error('MASTER_TOTAL_REQUIRES_RECONCILIATION');
 
     students.push({
       student_id: sid,
@@ -366,12 +358,12 @@ function getStudents() {
       class_year: classYear,
       year_level: yearLevel,
       role: 'student',
-      total_hours: parseFloat(data[i][17] || data[i][15] || 0)
+      total_hours: totalHours
     });
   }
 
   const jsonStr = JSON.stringify(students);
-  cache.put('students_api_v3', jsonStr, 300); // 5 mins cache
+  cache.put('students_api_v4_mapped_identity', jsonStr, 300); // 5 mins cache
   return students;
 }
 

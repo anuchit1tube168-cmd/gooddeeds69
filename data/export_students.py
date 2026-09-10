@@ -32,16 +32,7 @@ def clean_number(val):
         return None
 
 def calculate_cohort_no(sid_str):
-    try:
-        n = int(str(sid_str).strip())
-        if 6903946 <= n <= 6904009: return n - 6903945
-        if 6803882 <= n <= 6803945: return n - 6803881
-        if 6703818 <= n <= 6703881: return n - 6703817
-        if 6603754 <= n <= 6603817: return n - 6603753
-        if 6503690 <= n <= 6503753: return n - 6503689
-        if 6403626 <= n <= 6403689: return n - 6403625
-    except Exception:
-        pass
+    """A missing official sequence cannot be inferred from a student ID."""
     return None
 
 def read_xlsx_sheet_rows(filename, sheet_name):
@@ -93,8 +84,9 @@ def read_xlsx_sheet_rows(filename, sheet_name):
         return rows
 
 def main():
+    raise RuntimeError("AUTHENTICATED_PRIVATE_EXPORT_REQUIRED: public roster generation is suspended")
     students = []
-    
+
     # Load existing student profiles to merge edits (prevent data loss)
     existing_students = {}
     frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
@@ -111,18 +103,18 @@ def main():
         rows = read_xlsx_sheet_rows(EXCEL_FILE, sheet_name)
         if not rows:
             continue
-        
+
         for r in rows:
             student_id = clean_number(r.get('B'))
             if student_id is None or len(str(student_id)) != 7:
                 continue
-            
+
             no_val = clean_number(r.get('A'))
             rank = str(r.get('C', '')).strip() if r.get('C') else 'นพอ.'
             first_name = str(r.get('D', '')).strip() if r.get('D') else ''
             last_name = str(r.get('E', '')).strip() if r.get('E') else ''
             note = str(r.get('F', '')).strip() if r.get('F') else ''
-            
+
             student_id_str = str(student_id)
             password = student_id_str
             email = ''
@@ -130,7 +122,7 @@ def main():
             role = 'student'
             class_year = meta['class_year']
             year_level = meta['year']
-            
+
             position = 'นักเรียนพยาบาล'
             nickname = ''
             phone = ''
@@ -186,7 +178,7 @@ def main():
                 fname_v = str(r.get('D', '')).strip()
                 if not sid or not fname_v:
                     continue
-                
+
                 no_val = clean_number(r.get('A'))
                 rank_v = str(r.get('C', '')).strip() or 'นพอ.'
                 lname_v = str(r.get('E', '')).strip()
@@ -215,7 +207,7 @@ def main():
                     'line_picture_url': '',
                     'role': 'student'
                 }
-                
+
                 if sid_str in existing_students:
                     existing = existing_students[sid_str]
                     for k, v in existing.items():
@@ -227,7 +219,7 @@ def main():
             print(f"✅ Loaded {len([s for s in students if s['class_year'] == 69])} official Class 69 students from {excel_69_path}")
         except Exception as e:
             print(f"⚠️ Error reading Class 69 workbook: {e}")
-    
+
     # Missing historical students loaded securely from private storage (PDPA Zero-Leak)
     missing_historical_students = []
     missing_json_path = os.path.join(DATA_DIR, "private", "missing_historical_students.json")
@@ -237,7 +229,7 @@ def main():
                 missing_historical_students = json.load(f)
         except Exception as _e:
             print(f"⚠️ Note: Could not load missing_historical_students.json: {_e}")
-    
+
     # Merge existing modifications for missing historical students
     for s in missing_historical_students:
         sid = s['student_id']
@@ -258,7 +250,7 @@ def main():
             s['no'] = existing.get('no') or s.get('no') or calculate_cohort_no(sid)
 
     students.extend(missing_historical_students)
-    
+
     # Deduplicate by student_id
     seen_ids = set()
     unique_students = []
@@ -270,22 +262,22 @@ def main():
 
     # Sort by class year then student_id
     students.sort(key=lambda x: (x['class_year'], x['student_id']))
-    
+
     print(f"Total students exported: {len(students)}")
-    
+
     # Print breakdown
     from collections import Counter
     years = Counter(s['class_year'] for s in students)
     for y, count in sorted(years.items()):
         print(f"  Class {y}: {count} students")
-    
+
     # Save to JSON
     json_path = os.path.join(DATA_DIR, 'students.json')
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(students, f, ensure_ascii=False, indent=2)
-    
+
     print(f"\nSaved to {json_path}")
-    
+
     # Also save as JS module for frontend use
     js_path = os.path.join(DATA_DIR, 'students_data.js')
     with open(js_path, 'w', encoding='utf-8') as f:
@@ -296,17 +288,17 @@ def main():
         f.write(";\n\n")
         f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
         f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
-    
+
     print(f"Saved to {js_path}")
 
     # Write to frontend/data/
     frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
     frontend_js_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js')
     os.makedirs(os.path.dirname(frontend_js_path), exist_ok=True)
-    
+
     with open(frontend_json_path, 'w', encoding='utf-8') as f:
         json.dump(students, f, ensure_ascii=False, indent=2)
-    
+
     with open(frontend_js_path, 'w', encoding='utf-8') as f:
         f.write("// Auto-generated student data - DO NOT EDIT MANUALLY\n")
         f.write("// Generated from: รายชื่อ นพอ.ปี69 ทุกชั้นปี\n\n")
@@ -315,7 +307,7 @@ def main():
         f.write(";\n\n")
         f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
         f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
-        
+
     print(f"Sync-copied to {frontend_js_path}")
 
 if __name__ == '__main__':

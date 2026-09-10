@@ -41,3 +41,11 @@ At interruption/model switch: read WORK_STATE, verify HEAD, rerun only the affec
 - Code/tests in the project with no real data.
 - Honest readiness: local pass, browser pass, staging blocked or production verified.
 - Human instructions in WIKI; AI instructions here and in AGENTS.
+
+## Mission Control mode
+
+For the current light UI, use `docs/GOOD_DEED_UX.md` and `docs/GOOD_DEED_ARCHITECTURE.md`; route test claims through `docs/GOOD_DEED_TEST_PLAN.md`. Preserve the nine stored category IDs pending an authoritative 6.2–6.9 map. Period-specific goals and official totals are distinct values. The React views accept scoped projections; they never acquire rights or credit hours.
+
+Before a UI edit, identify whether it belongs in shared presentation, the authenticated self-read view, or the disconnected demo controller. Reuse these modules. Memory drafts, local file progress and synthetic signatures are not working backend integrations. Preserve review revisions and require per-record confirmation in the demo; keep real write routes gated by their server contract.
+
+For a denied runtime operation, record that exact action/cause and continue independent work. Do not retry through another browser/host/deployment to evade the denial. A controller double or a screenshot from an earlier revision cannot prove the current rendered interface. Save the next unresolved task in WORK_STATE so a model switch resumes it rather than rebuilding the app.

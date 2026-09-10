@@ -6,7 +6,7 @@ const root = path.resolve(__dirname, '../frontend');
 const pilot = new Set(['index.html','demo.html','app.js','config.js','gateway-view.js','workflow.js','demo.js','design.css','styles.css','510903.jpg','airforce-flight.png']);
 const shared = new Set(['gateway-client.js','gooddeed-ui.js']);
 const mime = {'.html':'text/html; charset=utf-8','.css':'text/css; charset=utf-8','.js':'text/javascript; charset=utf-8','.jpg':'image/jpeg','.png':'image/png'};
-['react-18.3.1.production.min.js','react-dom-18.3.1.production.min.js','kindness-react.js'].forEach(file=>pilot.add(file));
+['react-18.3.1.production.min.js','react-dom-18.3.1.production.min.js','kindness-react.js','mission-data.js','mission-react.js','signature-pad.js','evidence-preview.js','mission.css'].forEach(file=>pilot.add(file));
 function resolvePublicPath(raw) {
   let pathname;
   try { pathname = decodeURIComponent(new URL(raw, 'http://preview.invalid').pathname); } catch (_) { return null; }

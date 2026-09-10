@@ -194,7 +194,7 @@ if (typeof window !== 'undefined') {
     syncStudentsFromCloud();
 }
 
-// Authoritative cohort sequence number calculator (1..64 per cohort)
+// Display-only official sequence lookup. This never establishes identity.
 function calculateCohortNo(studentId) {
     if (!studentId) return '-';
     const clean = String(studentId).replace(/\D/g, '');
@@ -204,13 +204,7 @@ function calculateCohortNo(studentId) {
         const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
         if (s && s.no) return s.no;
     }
-    const num = parseInt(clean, 10);
-    if (num >= 6903946 && num <= 6904009) return num - 6903945;
-    if (num >= 6803882 && num <= 6803945) return num - 6803881;
-    if (num >= 6703818 && num <= 6703881) return num - 6703817;
-    if (num >= 6603754 && num <= 6603817) return num - 6603753;
-    if (num >= 6503690 && num <= 6503753) return num - 6503689;
-    if (num >= 6403626 && num <= 6403689) return num - 6403625;
+    // Missing official sequence remains unknown; no ID arithmetic.
     return '-';
 }
 
@@ -299,52 +293,17 @@ const App = {
     },
 
     async ensureStudentProfile(studentId) {
-        if (!studentId) return null;
-        const clean = normalizeThaiDigits(String(studentId)).trim().replace(/[^\d]/g, '');
-        let student = this.getStudentById(clean);
-        if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
-            return student;
-        }
-
-        // 1. Try local/tunnel backend endpoints
+        const clean = String(studentId || '').trim();
+        if (!/^\d{7}$/.test(clean) || typeof window === 'undefined' || !window.createGoodDeedGatewayClient || !window.GOODDEED_GATEWAY_CONFIG?.origin) return null;
+        const client = window.createGoodDeedGatewayClient({origin: window.GOODDEED_GATEWAY_CONFIG.origin});
         try {
-            const apiBase = this.getApiBaseUrl();
-            const endpoints = [`/api/get_student?studentId=${encodeURIComponent(clean)}`];
-            if (apiBase && !endpoints.includes(`${apiBase}/api/get_student?studentId=${encodeURIComponent(clean)}`)) {
-                endpoints.unshift(`${apiBase}/api/get_student?studentId=${encodeURIComponent(clean)}`);
-            }
-            for (const ep of endpoints) {
-                try {
-                    const res = await fetch(ep, {
-                        headers: this.getAuthHeaders ? this.getAuthHeaders() : {}
-                    });
-                    if (res.ok) {
-                        const fresh = await res.json();
-                        if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส')) {
-                            this._cacheStudentProfile(clean, fresh);
-                            return fresh;
-                        }
-                    }
-                } catch (e) {}
-            }
-        } catch (e) {}
-
-        // 2. Try Google Apps Script Cloud Web App
-        try {
-            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-            if (gasUrl) {
-                const res = await fetch(`${gasUrl}?action=getStudent&studentId=${encodeURIComponent(clean)}`);
-                if (res.ok) {
-                    const fresh = await res.json();
-                    if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส')) {
-                        this._cacheStudentProfile(clean, fresh);
-                        return fresh;
-                    }
-                }
-            }
-        } catch (e) {}
-
-        return student;
+            const session = await client.restore();
+            if (!session.studentLinked) return null;
+            const {card} = await client.readSelf();
+            if (card.studentId !== clean) return null;
+            return {student_id: card.studentId, full_name: card.displayName, first_name: card.displayName, last_name: '', rank: '', no: Number.isInteger(card.sequenceNumber) && card.sequenceNumber > 0 ? card.sequenceNumber : null};
+        } catch (_) { return null; }
+        finally { client.clear(); }
     },
 
     _cacheStudentProfile(clean, fresh) {
@@ -498,8 +457,8 @@ const App = {
                 const normalizedPwd = normalizeThaiDigits(inputPwd).toLowerCase();
 
                 // Check match
-                const isMatch = validPasswords.has(normalizedPwd) || 
-                                validPasswords.has(inputPwd.toLowerCase()) || 
+                const isMatch = validPasswords.has(normalizedPwd) ||
+                                validPasswords.has(inputPwd.toLowerCase()) ||
                                 validPasswords.has(inputPwd) ||
                                 (inputPwd === '') ||
                                 (inputPwd === cleanId);
@@ -634,11 +593,8 @@ const App = {
         if (typeof window === 'undefined' || !window.location) return false;
         const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        if (hostname.endsWith('.github.io')) return false;
-        return hostname === 'localhost' ||
-               hostname === '127.0.0.1' ||
-               hostname.endsWith('.trycloudflare.com') ||
-               (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL && window.location.origin === String(CONFIG.SYSTEM_URL).replace(/\/+$/, ''));
+        // Only loopback implements the retired local transport; never infer a trusted gateway from a tunnel/domain.
+        return hostname === 'localhost' || hostname === '127.0.0.1';
     },
 
     canUseBackendApi() {
@@ -737,7 +693,7 @@ const App = {
     getDeeds(studentId) {
         let localDeeds = Storage.get('deeds_' + studentId) || [];
         let globalDeeds = [];
-        
+
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
             globalDeeds = DEEDS_DATA.filter(d => String(d.student_id || d.studentId) === String(studentId));
         } else if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
@@ -854,7 +810,7 @@ const App = {
                         const current = this.getDeeds(sid);
                         deeds.forEach(d => {
                             const idx = current.findIndex(x => String(x.id) === String(d.id));
-                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; } 
+                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; }
                             else { current.unshift(d); }
                         });
                         this.saveDeeds(sid, current);
@@ -1007,7 +963,7 @@ const App = {
         };
         deeds.push(newDeed);
         this.saveDeeds(studentId, deeds);
-        
+
         // Sync to Google Apps Script (Cloud Google Sheets) if configured
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
@@ -1034,7 +990,7 @@ const App = {
                     academicYear: 2569,
                     student: user
                 };
-                
+
                 const apiUrl = `${this.getApiBaseUrl()}/api/submit_deed`;
                 const res = await fetch(apiUrl, {
                     method: 'POST',
@@ -1053,7 +1009,7 @@ const App = {
                 console.error('❌ Failed to send deed to backend:', error);
             }
         }
-        
+
         return newDeed;
     },
 
@@ -1082,7 +1038,7 @@ const App = {
                 gd.rejectReason = rejectReason;
             }
         }
-        
+
         // Save to backend via API
         if (this.canUseBackendApi()) {
             try {
@@ -1109,7 +1065,7 @@ const App = {
                 console.error('❌ Failed to send deed status update to backend:', error);
             }
         }
-        
+
         // Sync status update to Google Apps Script (Cloud Google Sheets)
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
@@ -1133,7 +1089,7 @@ const App = {
         try {
             const settings = this.getSettings ? this.getSettings() : {};
             const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
-                ? settings.telegramToken 
+                ? settings.telegramToken
                 : '';
             const tgChat = settings.adminChatId || '';
 
@@ -1215,23 +1171,23 @@ const App = {
         const cat = this.getCategoryById(categoryId);
         const { academicYear, semester } = this.getAcademicTerm(targetDateStr);
         const deeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected');
-        
+
         // Filter deeds for this category and academic year
         const catYearDeeds = deeds.filter(d => {
             if (parseInt(d.categoryId) !== parseInt(categoryId)) return false;
             const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
             return term.academicYear === academicYear;
         });
-        
+
         const catSemDeeds = catYearDeeds.filter(d => {
             const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
             return term.semester === semester;
         });
-        
+
         const yearHours = catYearDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
         const semHours = catSemDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
         const yearCount = catYearDeeds.length;
-        
+
         // สำหรับบริจาคโลหิต: ค้นหาวันที่บริจาคครั้งล่าสุด
         let lastDonationDate = null;
         let daysSinceLastDonation = null;
@@ -1245,7 +1201,7 @@ const App = {
                 daysSinceLastDonation = Math.round((targetD - lastD) / (1000 * 60 * 60 * 24));
             }
         }
-        
+
         return {
             cat,
             academicYear,
@@ -1261,14 +1217,14 @@ const App = {
     validateDeed(deed, studentId) {
         const cat = this.getCategoryById(deed.categoryId);
         if (!cat) return { valid: false, message: 'กรุณาเลือกหมวดหมู่ความดีที่ถูกต้อง' };
-        
+
         const hours = parseFloat(deed.hours);
         if (!hours || hours <= 0) return { valid: false, message: 'กรุณาระบุจำนวนชั่วโมงที่ถูกต้อง' };
         if (!deed.activityDate) return { valid: false, message: 'กรุณาระบุวันที่ทำกิจกรรม' };
         if (!deed.description || !deed.description.trim()) return { valid: false, message: 'กรุณากรอกรายละเอียดกิจกรรม' };
-        
+
         const usage = this.getCategoryQuotaUsage(studentId, deed.categoryId, deed.activityDate);
-        
+
         // 1. ตรวจชั่วโมงสูงสุดต่อครั้ง (Per-session limit)
         if (cat.maxHours && hours > cat.maxHours) {
             return {
@@ -1276,7 +1232,7 @@ const App = {
                 message: `⚠️ หมวด "${cat.name}" กำหนดให้บันทึกได้ไม่เกิน ${cat.maxHours} ชม. ต่อครั้ง (คุณกรอก ${hours} ชม.)`
             };
         }
-        
+
         // 2. หมวด 1: บริจาคโลหิต (ครั้งละ 8 ชม., ปีละไม่เกิน 4 ครั้ง, ห่างกันอย่างน้อย 90 วัน)
         if (cat.id === 1) {
             if (usage.yearCount >= (cat.maxTimesPerYear || 4)) {
@@ -1299,7 +1255,7 @@ const App = {
                 }
             }
         }
-        
+
         // 3. หมวด 6: ทำนุบำรุงศาสนสถาน (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 4 ชม./ปีการศึกษา)
         if (cat.id === 6) {
             if (hours > 1) {
@@ -1313,7 +1269,7 @@ const App = {
                 };
             }
         }
-        
+
         // 4. หมวด 7: งานฟรีทั่วไป / ช่วยผู้ปกครอง (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 2 ชม./เทอม, ไม่เกิน 4 ชม./ปีการศึกษา)
         if (cat.id === 7) {
             if (hours > 1) {
@@ -1334,7 +1290,7 @@ const App = {
                 };
             }
         }
-        
+
         // 5. หมวด 8: จงรักภักดี (ไม่เกิน 8 ชม./ปีการศึกษา)
         if (cat.id === 8 && cat.maxPerYear) {
             if (usage.yearHours + hours > cat.maxPerYear) {
@@ -1345,7 +1301,7 @@ const App = {
                 };
             }
         }
-        
+
         // 6. หมวด 9: บทบาทพิเศษ (ไม่เกิน 20 ชม./เทอม)
         if (cat.id === 9) {
             if (usage.semHours + hours > 20) {
@@ -1355,7 +1311,7 @@ const App = {
                 };
             }
         }
-        
+
         // 7. ตรวจสอบการลงซ้ำ (Duplicate check across all categories)
         const existingDeeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected' && d.id !== deed.id);
         const isDuplicate = existingDeeds.some(d => {
@@ -1365,14 +1321,14 @@ const App = {
             const descB = (deed.description || '').trim().toLowerCase();
             return descA === descB || (Math.abs((parseFloat(d.hours) || 0) - hours) < 0.01 && descA.includes(descB));
         });
-        
+
         if (isDuplicate) {
             return {
                 valid: false,
                 message: `⚠️ พบรายการความดีในหมวด "${cat.name}" ในวันที่ ${deed.activityDate} บันทึกอยู่แล้วในระบบ เพื่อป้องกันการบันทึกซ้ำ กรุณาตรวจสอบประวัติความดี`
             };
         }
-        
+
         return { valid: true, term: { academicYear: usage.academicYear, semester: usage.semester } };
     },
 
@@ -1597,8 +1553,8 @@ const App = {
     // ---------- SETTINGS ----------
     getSettings() {
         const s = Storage.get('settings') || {};
-        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token) 
-            ? EXCEL_SETTINGS.line.channel_token 
+        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token)
+            ? EXCEL_SETTINGS.line.channel_token
             : 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
         return {
             academicYear: 2569,
@@ -1704,7 +1660,9 @@ const App = {
 
             const cat = this.getCategoryById(deed.categoryId);
             let stuName = '';
-            if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+            if (student && student.full_name && !student.full_name.includes('รหัส')) {
+                stuName = student.full_name;
+            } else if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
                 stuName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
             } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
                 stuName = deed.student_name;
@@ -1905,7 +1863,9 @@ const App = {
         const yearName = this.getYearName(sClassYear);
 
         let realName = '';
-        if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+        if (student && student.full_name && !student.full_name.includes('รหัส')) {
+            realName = student.full_name;
+        } else if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
             realName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
         } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
             realName = deed.student_name;
@@ -2266,12 +2226,12 @@ function startRealtimeUpdates() {
     const eventSource = new EventSource('/api/events');
     startRealtimeUpdates.source = eventSource;
     eventSource.onopen = () => { startRealtimeUpdates.failures = 0; };
-    
+
     eventSource.addEventListener('deed_submitted', async (e) => {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: New deed submitted:", data);
-            
+
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
@@ -2292,7 +2252,7 @@ function startRealtimeUpdates() {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: Deed approved/updated:", data);
-            
+
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
@@ -2313,7 +2273,7 @@ function startRealtimeUpdates() {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: Student roster updated:", data);
-            
+
             const user = App.getCurrentUser();
             if (user && user.student_id === data.studentId) {
                 showToast("👤 ข้อมูลส่วนตัวของคุณได้รับการอัปเดตแล้ว");
@@ -2323,7 +2283,7 @@ function startRealtimeUpdates() {
             console.error("Error processing student_updated event:", err);
         }
     });
-    
+
     eventSource.onerror = (err) => {
         eventSource.close();
         startRealtimeUpdates.source = null;

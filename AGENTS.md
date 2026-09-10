@@ -2,7 +2,7 @@
 
 Owner: วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
 Scope: ระบบบันทึกความดีสำหรับนักเรียน อาจารย์ผู้ตรวจ และผู้ดูแล
-Updated: 2026-09-09 | Release state: DRAFT / NOT PRODUCTION READY
+Updated: 2026-09-10 | Release state: DRAFT / NOT PRODUCTION READY
 
 ## Start here
 
@@ -106,3 +106,20 @@ Keep the original college crest and the new restrained aviation theme. `gooddeed
 `secure-pilot/demo.html`, `workflow.js` and `demo.js` are an isolated in-memory synthetic walkthrough, with `connect-src 'none'`. A role selector, drawing, intention or encouragement reaction is never authority or official hours. Never import this model into the authenticated adapter. Evidence stays in temporary object URLs, no genuine signatures should be drawn in the demo, and reloading resets the example data. Preserve this distinction in UI and release notes.
 
 Use `node scripts/preview.cjs` for an allowlisted local preview. Its `/_preview/*` routes are developer QA helpers only. Never replace this with a server exposing the repository root. Browser QA uses actual rendered DOM and user controls; intermittent automation timeouts are not proof of application failure or success. Record the observed result and stop repeated attempts after a bounded recovery.
+
+## Light Mission Control continuation — 2026-09-10
+
+Read root `SKILL.md`, `README.md` and the latest `docs/GOOD_DEED_ARCHITECTURE.md`, `docs/GOOD_DEED_UX.md`, `docs/GOOD_DEED_TEST_PLAN.md` before modifying this continuation. Use PLAN → REUSE → BUILD → TEST → FIX → DOCUMENT. Audit KEEP / IMPROVE / REPLACE / MISSING first; continue an authorized implementation when the necessary facts are available.
+
+`mission-data.js` is a pure presentation projection and `mission-react.js` owns the React mission views. The existing gateway client still owns session/self reads. Unmount both React islands before replacing parent HTML. Keep `mission.css` separate from the retained aviation stylesheet. No new backend, database, runtime package installation or LIFF ID was introduced.
+
+Preserve stored category IDs 1–9 until the owner's 6.2–6.9 mapping is verified. A calendar month is not an academic year. Convert timestamp activity dates to Asia/Bangkok before monthly grouping. Annual progress requires a separate period-specific approved-hours value; do not use lifetime totals/carry-forward or invent a target. Missing profile photos and API metadata remain explicit.
+
+The demo's draft/resubmission, drawing, preparation progress and selected review sequence are disconnected behavior demonstrations. Drafts are memory-only and reset on reload. Keep old rejection/evidence snapshots and revision-specific event identity. Require explicit confirmation and a fresh drawing for each review; changing a prepared decision invalidates confirmation. These client objects cannot become server authorization or the real journal/outbox.
+
+Current local suite after upstream reconciliation: 115 JS + 16 Python tests pass, including controller doubles. New visual/mobile/console QA is BLOCKED: automatic approval review denied opening the current preview. Do not bypass that denial with another host/port, raw browser protocol, alternate browser surface or deployment. Historical September 9 screenshots are not evidence of the new Mission Control layout. Preserve this boundary in handoffs; do independent source work and report the missing runtime evidence honestly.
+
+Production write remains FALSE. Current architecture/test documents enumerate the unresolved assigned-scope, signature, policy, durable write, provider deployment, credential rotation and backup/restore gates. Do not label the project production-complete merely because the local suite passes.
+
+
+Concurrent upstream reconciliation: five commits through `2bff70e2522f9c92d4dd495ed1b86dd1e793d44a` arrived during this continuation. Preserve their name formatting, stored sequence and signature placement work. Fix the confirmed Master-column/undefined-name regressions; do not restore unsigned profile fallback or infer a class sequence from student-number ranges. Keep legacy Python callback/public-roster/Git-auto-publish effects suspended: preview startup may never start a data-writing daemon. TLS must verify certificates, and Telegram rejection cannot be a reported success. Current tests include these boundaries; no live data or notification was exercised.

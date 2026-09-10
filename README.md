@@ -1,212 +1,64 @@
-# ระบบบันทึกความดี
-## วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ ปีการศึกษา 2569
+# RTAFNC Good Deed — Light Mission Control
 
----
+ระบบบันทึกความดี นักเรียนพยาบาลทหารอากาศ วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
 
-## 🚀 วิธีเปิดใช้งาน (Offline Mode)
+**สถานะ 10 กันยายน 2569: DRAFT / PRODUCTION WRITE = FALSE**
 
-1. เปิดโฟลเดอร์ `frontend/`
-2. ดับเบิลคลิก **`index.html`** เพื่อเปิดในบราวเซอร์  
-   (หรือรันด้วย Live Server / python -m http.server)
-3. เข้าสู่ระบบได้เลย!
+พัฒนาต่อใน repository และ Draft PR #4 เดิม ไม่เปลี่ยนฐานข้อมูล ไม่เปลี่ยนลิงก์ LIFF และยังไม่ Deploy ชุดนี้เข้าสู่ production
 
----
+## เริ่มอ่าน / ทำงานต่อ
 
-## 🔑 บัญชีทดสอบ
+อ่าน `AGENTS.md` → `SKILL.md` → `docs/WORK_STATE.md` แล้วตรวจ source ที่เกี่ยวข้อง ใช้ **PLAN → REUSE → BUILD → TEST → FIX → DOCUMENT** ก่อนเปิดงานใหม่ ตรวจ branch และการแก้ไขของเจ้าของทุกครั้ง
 
-### นักเรียน
-- **รหัสนักเรียน**: รหัสนักเรียน 7 หลัก เช่น `6900001`
-- **รหัสผ่าน**: เท่ากับรหัสนักเรียน (เช่น `6900001`)
+| เอกสาร | ใช้ทำอะไร |
+| --- | --- |
+| [UX](docs/GOOD_DEED_UX.md) | หน้าจอ Light Mission Control, สถานะ, ขอบเขตตัวเลข และส่วนที่ยังขาด |
+| [Architecture](docs/GOOD_DEED_ARCHITECTURE.md) | สัญญา API/Sheets/Drive/auth ที่ตรวจพบและขอบเขตการนำกลับมาใช้ |
+| [Test plan](docs/GOOD_DEED_TEST_PLAN.md) | ผลทดสอบจริง แผน staging และเงื่อนไขเปิดระบบ |
+| [Storage contract](docs/REVIEW_STORAGE_CONTRACT.md) | ข้อแตกต่าง ledger 8/11 คอลัมน์ และกติกาการเขียนชั่วโมง |
+| [Wiki](WIKI.md) | วิธีทดลองและส่งต่องานให้ Antigravity/Gemini |
+| [Changelog](CHANGELOG.md) | การเปลี่ยนแปลงในชุดนี้ |
 
-### อาจารย์ / Admin
-| ชื่อผู้ใช้ | รหัสผ่าน | บทบาท |
-|-----------|---------|-------|
-| `admin` | `admin69` | ผู้ดูแลระบบ (เข้าได้ทุกเมนูรวม settings) |
-| `teacher` | `teacher69` | อาจารย์ |
+## ทดลองโดยไม่ติดตั้งโปรแกรมเพิ่ม
 
----
-
-## 📁 โครงสร้างไฟล์
-```
-ระบบบันทึกความดี/
-├── frontend/
-│   ├── index.html              ← หน้า Login
-│   ├── student-dashboard.html  ← Dashboard นักเรียน
-│   ├── submit-deed.html        ← บันทึกความดีใหม่
-│   ├── history.html            ← ประวัติความดี
-│   ├── ranking.html            ← จัดอันดับ & สถิติ (ทุก role)
-│   ├── teacher-dashboard.html  ← Dashboard อาจารย์
-│   ├── profile.html            ← โปรไฟล์ / เปลี่ยนรหัสผ่าน
-│   ├── settings.html           ← ตั้งค่าระบบ (admin only)
-│   ├── style.css               ← Design System
-│   └── app.js                  ← Core Logic
-├── backend/
-│   └── Code.gs                 ← Google Apps Script (ออนไลน์ optional)
-└── data/
-    ├── students.json           ← รายชื่อนักเรียน (JSON ต้นทาง)
-    ├── students_data.js        ← ข้อมูลรายชื่อ (ใช้ใน Frontend)
-    ├── students_photos.js      ← รูปโปรไฟล์ base64 (สร้างจาก import_photos.py)
-    ├── deeds_data.js           ← ข้อมูลความดีที่นำเข้า
-    ├── import_photos.py        ← จับคู่รูปภาพจากโฟลเดอร์กับรายชื่อ Excel
-    └── export_students.py      ← Script สร้าง students_data.js จาก Excel
-```
-
----
-
-## ✅ ฟีเจอร์ที่มี
-
-| ฟีเจอร์ | สถานะ |
-|---------|-------|
-| Login ตามรหัสนักเรียน | ✅ |
-| Login อาจารย์ (พร้อมอนุมัติ) | ✅ |
-| บันทึกความดีพร้อมรูปภาพ | ✅ |
-| 9 หมวดหมู่ความดี | ✅ |
-| อาจารย์อนุมัติ/ปฏิเสธ | ✅ |
-| ดูรายบุคคล (นักเรียน+อาจารย์) | ✅ |
-| ดูตามเกณฑ์ (ผ่าน/ไม่ผ่าน) | ✅ |
-| กรองตามชั้นปี / หมวดหมู่ | ✅ |
-| พิมพ์รายงานความดี (PDF) | ✅ |
-| จัดอันดับทำเนียบความดี | ✅ |
-| สถิติภาพรวมรายชั้นปี | ✅ |
-| ผูก Email / แจ้งเตือน Telegram | ✅ |
-| ค้นหา/กรองข้อมูล | ✅ |
-| รูปโปรไฟล์จากระบบ (base64) | ✅ |
-| ลบรายการที่ถูกปฏิเสธ (นักเรียน) | ✅ |
-
----
-
-## ☁️ วิธี Deploy ขึ้น Google Apps Script (Online)
-
-1. เปิด [script.google.com](https://script.google.com/) → สร้างโปรเจกต์ใหม่
-2. Copy โค้ดจาก `backend/Code.gs` ไปวาง
-3. สร้าง Google Sheets ใหม่ → copy **Spreadsheet ID** จาก URL
-4. แก้ `SPREADSHEET_ID` ใน Code.gs
-5. รัน function `setupSpreadsheet()` เพื่อสร้าง sheets
-6. Deploy → New Deployment → Web App → Execute as: Me, Access: Anyone → Deploy
-7. Copy Web App URL ไปใส่ใน `settings.html` → บันทึก
-
----
-
-## 💬 ตั้งค่า Telegram Bot
-
-1. เปิด Telegram → ค้นหา **@BotFather**
-2. พิมพ์ `/newbot` → ตั้งชื่อ → รับ **Token**
-3. เปิด settings.html → ใส่ Token + Chat ID ของอาจารย์
-4. กด "ทดสอบการแจ้งเตือน"
-
----
-
-## 🖼️ วิธีนำเข้ารูปโปรไฟล์
+ใช้ Node.js และ Python ที่มีอยู่แล้ว ไม่ต้องติดตั้ง npm/clasp หรือฐานข้อมูลใหม่
 
 ```bash
-pip install openpyxl
-python3 data/import_photos.py
-```
-สคริปต์จะจับคู่รูปจากโฟลเดอร์รูปกับรายชื่อใน Excel  
-แล้วสร้างไฟล์ `data/students_photos.js` สำหรับใช้ใน frontend
-
----
-
-## 📊 ข้อมูลนักเรียน
-รายชื่อจาก Excel ปีการศึกษา 2568/2569:
-- **ชั้นปีที่ 1 (SWD68)**: รุ่น 68
-- **ชั้นปีที่ 2 (SWD67)**: รุ่น 67
-- **ชั้นปีที่ 3 (SWD66)**: รุ่น 66
-- **ชั้นปีที่ 4 (SWD65)**: รุ่น 65
-- **ศิษย์เก่า (SWD64)**: รุ่น 64
-
-
----
-
-## 🚀 วิธีเปิดใช้งาน (Offline Mode)
-
-1. เปิดโฟลเดอร์ `frontend/`
-2. ดับเบิลคลิก **`index.html`** เพื่อเปิดในบราวเซอร์
-3. เข้าสู่ระบบได้เลย!
-
----
-
-## 🔑 บัญชีทดสอบ
-
-### นักเรียน
-- **รหัสนักเรียน**: รหัสนักเรียน 7 หลัก เช่น `6900001`
-- **รหัสผ่าน**: เท่ากับรหัสนักเรียน (เช่น `6900001`)
-
-### อาจารย์ / Admin
-| ชื่อผู้ใช้ | รหัสผ่าน | บทบาท |
-|-----------|---------|-------|
-| `admin` | `admin69` | ผู้ดูแลระบบ |
-| `teacher` | `teacher69` | อาจารย์ |
-
----
-
-## 📁 โครงสร้างไฟล์
-```
-ระบบบันทึกความดี/
-├── frontend/
-│   ├── index.html              ← หน้า Login
-│   ├── student-dashboard.html  ← Dashboard นักเรียน
-│   ├── submit-deed.html        ← บันทึกความดีใหม่
-│   ├── history.html            ← ประวัติความดี
-│   ├── teacher-dashboard.html  ← Dashboard อาจารย์
-│   ├── profile.html            ← โปรไฟล์ / เปลี่ยนรหัสผ่าน
-│   ├── settings.html           ← ตั้งค่าระบบ (Telegram, เกณฑ์)
-│   ├── style.css               ← Design System
-│   └── app.js                  ← Core Logic
-├── backend/
-│   └── Code.gs                 ← Google Apps Script (ออนไลน์)
-└── data/
-    ├── students.json           ← รายชื่อนักเรียน 311 คน
-    ├── students_data.js        ← ข้อมูลรายชื่อ (ใช้ใน Frontend)
-    └── export_students.py      ← Script สร้าง data จาก Excel
+node scripts/preview.cjs
 ```
 
----
+ตัว preview เปิดเฉพาะไฟล์สาธารณะที่อนุญาตไว้ใน pilot หน้าล็อกอินมีปุ่ม **ทดลองใช้งานด้วยข้อมูลตัวอย่าง** ซึ่งเปิด `frontend/secure-pilot/demo.html` ใช้ข้อมูลสมมติและลายเส้นตัวอย่างเท่านั้น
 
-## ✅ ฟีเจอร์ที่มี
+ชุดสาธิตเก็บแบบร่าง หลักฐาน และประวัติในหน่วยความจำของหน้านี้ เมื่อโหลดหน้าใหม่ข้อมูลจะเริ่มใหม่ ไม่มีการส่งไป Google Drive, LINE หรือ Telegram; CSP ใช้ `connect-src 'none'` การกดบทบาทอาจารย์เป็นเพียงการสาธิต ไม่ใช่สิทธิ์เข้าระบบ
 
-| ฟีเจอร์ | สถานะ |
-|---------|-------|
-| Login ตามรหัสนักเรียน | ✅ |
-| Login อาจารย์ (พร้อมอนุมัติ) | ✅ |
-| บันทึกความดีพร้อมรูปภาพ | ✅ |
-| 9 หมวดหมู่ความดี | ✅ |
-| อาจารย์อนุมัติ/ปฏิเสธ | ✅ |
-| ดูรายบุคคล (นักเรียน+อาจารย์) | ✅ |
-| ดูตามเกณฑ์ (ผ่าน/ไม่ผ่าน) | ✅ |
-| พิมพ์รายงานความดี (PDF) | ✅ |
-| ผูก Email | ✅ |
-| แจ้งเตือน Telegram | ✅ |
-| ค้นหา/กรองข้อมูล | ✅ |
-| สถิติภาพรวมรายชั้นปี | ✅ |
+การเปิดพรีวิวรอบ Mission Control ใน browser ของเซสชันพัฒนานี้ถูกระบบตรวจอนุมัติอัตโนมัติปฏิเสธ จึงยังไม่มีผลตรวจภาพหรือ console รอบใหม่ ภาพวันที่ 9 กันยายนใน `docs/design/` เป็นหลักฐานของหน้าตารุ่นก่อนเท่านั้น
 
----
+## สิ่งที่ลง source แล้ว
 
-## ☁️ วิธี Deploy ขึ้น Google Apps Script (Online)
+- Shell โทนสว่าง Sidebar / Bottom Navigation, ตราวิทยาลัยเดิม เครื่องบินเดิม และมิติ CSS แบบเบา
+- React Dashboard, KPI 6 ช่อง, Radar เลือกหมวด, สถิติ 6 เดือน, เป้าหมายเมื่อมีข้อมูลยืนยัน และโปรไฟล์จากบัญชีเดิม
+- ชุดสาธิต: Bottom Sheet, แบบร่างอัตโนมัติในหน้านี้, ตรวจชนิด/หัวไฟล์, ย่อภาพตัวอย่างเมื่อ browser รองรับ, ลายเส้นผู้บันทึก, Mission ID, การ์ด/Timeline, แก้ไขและส่งใหม่พร้อมรักษาประวัติ
+- ชุดสาธิตอาจารย์: กรองชั้นปี/นักเรียน/หมวด/เดือน/สถานะ เลือกหลายรายการแล้วตรวจทีละรายการ ลงนามใหม่และยืนยันผลรายครั้ง จำลองการแจ้งเตือนล้มเหลว/ส่งซ้ำ
+- ขอบเขต API จริงยังเป็น session และ self card/list เดิม ไม่มีการนำโมเดลสาธิตมาเป็น backend
 
-1. เปิด [script.google.com](https://script.google.com/) → สร้างโปรเจกต์ใหม่
-2. Copy โค้ดจาก `backend/Code.gs` ไปวาง
-3. สร้าง Google Sheets ใหม่ → copy **Spreadsheet ID** จาก URL
-4. แก้ `SPREADSHEET_ID` ใน Code.gs
-5. รัน function `setupSpreadsheet()` เพื่อสร้าง sheets
-6. Deploy → New Deployment → Web App → Execute as: Me, Access: Anyone → Deploy
-7. Copy Web App URL ไปใส่ใน `settings.html` → บันทึก
+## ข้อมูลที่ยังต้องยืนยัน
 
----
+หมวดที่ตรวจพบในทะเบียนเป็น ID **1–9**; ยังไม่มีตารางเทียบกับข้อ **6.2–6.9** ที่ยืนยันได้ จึงคง ID/ชื่อเดิมทุกหมวด เป้าหมายประจำปีและช่วงปีการศึกษาต้องมาจากข้อมูลทางการ ไม่ใช้ยอดสะสมตลอดการเรียนแทนยอดในปีนั้น รูปนักเรียนยังไม่มี API ที่ตรวจสิทธิ์แล้วในสัญญาปัจจุบัน จึงแสดงอักษรชื่อแทนโดยไม่สร้างภาพบุคคลสมมติ
 
-## 💬 ตั้งค่า Telegram Bot
+ยังต้องยืนยัน deployment ของ Apps Script/Cloudflare, assigned scope, หลักฐาน/ลายเซ็น private, draft/edit/resubmit API, policy รายปี/เทอม, journal/outbox, credential rotation และ backup/restore ก่อนทดสอบ staging ครบวงจรแล้วขออนุมัติ cutover
 
-1. เปิด Telegram → ค้นหา **@BotFather**
-2. พิมพ์ `/newbot` → ตั้งชื่อ → รับ **Token**
-3. เปิด settings.html → ใส่ Token + Chat ID ของอาจารย์
-4. กด "ทดสอบการแจ้งเตือน"
+คำแนะนำ offline login, รหัสผ่านตัวอย่าง, การใส่ token ใน settings และการสร้าง/Deploy Apps Script แบบสาธารณะใน README รุ่นเก่า **ถูกแทนที่ด้วยคู่มือฉบับนี้** ไม่ใช้เป็นขั้นตอนเปิดระบบปัจจุบัน
 
----
+## ทดสอบ
 
-## 📊 ข้อมูลนักเรียน
-รายชื่อจาก Excel มีทั้งหมด **311 คน** ใน 5 ชั้นปี:
-- **SWD68** (ชั้นปี 1): 64 คน
-- **SWD67** (ชั้นปี 2): 61 คน  
-- **SWD66** (ชั้นปี 3): 63 คน
-- **SWD65** (ชั้นปี 4): 63 คน
-- **SWD64** (รุ่นเก่า): 60 คน
+```bash
+node scripts/check-syntax.cjs
+node --test tests/*.test.cjs
+python3 -m unittest discover -s tests -p 'test_*.py' -v
+```
+
+ผล local ชุดนี้: syntax ผ่าน, JavaScript **115/115**, Python **16/16** รวม **131** รายการ ใช้ข้อมูลสมมติ/transport doubles ไม่ใช่ผล LINE/Google/Telegram จริง ดูขอบเขตและสิ่งที่ยัง BLOCKED ใน test plan ตรวจ PII ด้วยกฎเดิมก่อน commit เสมอ
+
+## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
+
+รักษาข้อมูล หลักฐาน ลายเซ็น LINE bindings และยอดอนุมัติ/ยกมาเดิม Clean คือแยกจัดระเบียบ ไม่ลบ Student Master เป็นแหล่งตัวตนกลาง; ตรวจ LINE/LIFF, RBAC และขอบเขตผู้ตรวจฝั่งเซิร์ฟเวอร์ Google Sheets/Drive ผ่าน Apps Script เป็นแหล่งข้อมูลธุรกิจ ห้ามใส่ข้อมูลบุคคล/สุขภาพหรือ secret ลง GitHub ไม่มี production write, เปลี่ยน schema, เปลี่ยน endpoint หรือ cutover จากผลทดสอบสาธิต

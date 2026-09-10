@@ -630,6 +630,8 @@
             }
         }
 
+        const urlName = ''; // URL parameters are not verified identity.
+
         function isValidRealName(name) {
             if (!name) return false;
             const s = String(name).trim();
@@ -744,31 +746,8 @@
                     }
                 } catch(e) {}
 
-                if (!currentStudent || !isValidRealName(currentStudent.first_name || currentStudent.full_name)) {
-                    try {
-                        const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
-                        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-                        const endpoints = [`/api/get_student?studentId=${sid}`];
-                        if (sysUrl && !sysUrl.includes(window.location.host)) {
-                            endpoints.push(`${sysUrl.replace(/\/+$/, '')}/api/get_student?studentId=${sid}`);
-                        }
-                        if (gasUrl) {
-                            endpoints.push(`${gasUrl}?action=getStudent&studentId=${sid}`);
-                        }
-                        for (const ep of endpoints) {
-                            try {
-                                const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
-                                if (res.ok) {
-                                    const sData = await res.json();
-                                    if (sData && isValidRealName(sData.first_name || sData.full_name)) {
-                                        currentStudent = sData;
-                                        break;
-                                    }
-                                }
-                            } catch (e) {}
-                        }
-                    } catch (e) {}
-                }
+                // No direct local/GAS profile fallback: the authenticated helper above is authoritative.
+
             }
 
             if (currentStudent && (isValidRealName(currentStudent.first_name || currentStudent.full_name) || currentStudent.full_name)) {

@@ -296,7 +296,7 @@
 
     <div class="a4-page">
         <div class="doc-outer-border">
-            
+
             <div class="top-index-bar">
                 ลำดับที่ <span id="doc-seq-student" style="border-bottom:1px dotted #000; padding:0 4px;">........</span> / <span id="doc-seq-total" style="border-bottom:1px dotted #000; padding:0 4px;">3235</span>
             </div>
@@ -464,7 +464,9 @@
                 return;
             }
 
-            function isValidRealName(name) {
+            const urlName = ''; // URL parameters are not verified identity.
+
+        function isValidRealName(name) {
                 if (!name) return false;
                 const s = String(name).trim();
                 if (!s || s === 'นพอ.' || s === '-' || s.includes('รหัส') || /นพอ\.?\s*\(?\d+\)?/.test(s)) return false;
@@ -479,13 +481,7 @@
                     const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
                     if (s && s.no) return s.no;
                 }
-                const num = parseInt(clean, 10);
-                if (num >= 6903946 && num <= 6904009) return num - 6903945;
-                if (num >= 6803882 && num <= 6803945) return num - 6803881;
-                if (num >= 6703818 && num <= 6703881) return num - 6703817;
-                if (num >= 6603754 && num <= 6603817) return num - 6603753;
-                if (num >= 6503690 && num <= 6503753) return num - 6503689;
-                if (num >= 6403626 && num <= 6403689) return num - 6403625;
+                // Use stored official no only; absence is not an ID-derived sequence.
                 return '-';
             }
 
@@ -553,31 +549,8 @@
                     }
                 } catch(e) {}
 
-                if (!student || !isValidRealName(student.first_name || student.full_name)) {
-                    try {
-                        const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
-                        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-                        const endpoints = [`/api/get_student?studentId=${sid}`];
-                        if (sysUrl && !sysUrl.includes(window.location.host)) {
-                            endpoints.push(`${sysUrl.replace(/\/+$/, '')}/api/get_student?studentId=${sid}`);
-                        }
-                        if (gasUrl) {
-                            endpoints.push(`${gasUrl}?action=getStudent&studentId=${sid}`);
-                        }
-                        for (const ep of endpoints) {
-                            try {
-                                const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
-                                if (res.ok) {
-                                    const sData = await res.json();
-                                    if (sData && isValidRealName(sData.first_name || sData.full_name)) {
-                                        student = sData;
-                                        break;
-                                    }
-                                }
-                            } catch (e) {}
-                        }
-                    } catch (e) {}
-                }
+                // No direct local/GAS profile fallback: the authenticated helper above is authoritative.
+
             }
 
             if (student && isValidRealName(student.first_name || student.full_name)) {
@@ -621,7 +594,7 @@
                     loc = 'วิทยาลัยพยาบาลทหารอากาศ';
                 }
                 document.getElementById('doc-activity-location').textContent = loc;
-                
+
                 const dt = deed.activityDate || deed.event_date || '';
                 if (dt) {
                     const dObj = new Date(dt);
@@ -636,7 +609,7 @@
                 }
 
                 document.getElementById('doc-hours').textContent = deed.hours || '-';
-                
+
                 const approver = deed.approved_by || deed.approvedBy || deed.signer || deed.approver || 'อาจารย์ผู้รับรองการทำกิจกรรม';
                 document.getElementById('doc-approver-name').textContent = approver;
 

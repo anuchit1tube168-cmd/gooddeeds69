@@ -1,3 +1,17 @@
+# Current Design QA — Light Mission Control — 2026-09-10
+
+final result: blocked
+
+The current source adds a new shell, React dashboard/charts, native submission dialog, drafts/revisions and review confirmation. Its new rendered UI has not been inspected: automatic approval review denied opening the current preview. No alternate browser, port, host, raw CDP or deployment workaround was attempted.
+
+Source checks and 131 automated local tests pass, including model/controller/input doubles. These do not prove React painting, responsive layout, native focus containment, assistive technology, console cleanliness, physical LIFF or measured performance. The optional CSS parser is unavailable. Follow `docs/GOOD_DEED_TEST_PLAN.md` when permitted browser access changes.
+
+The original crest and aircraft raster are reused. The user requested a new Light Mission Control direction, not a copy of external branding. New source has light surfaces, thin borders, subtle depth, circular data displays and mobile safe-area navigation; these are implementation facts, not a new visual PASS.
+
+All captures and assessments below are preserved evidence for the **previous September 9 aviation UI**. They must not be presented as current Mission Control screenshots.
+
+---
+
 # Design QA — 2026-09-09
 
 Scope: requested aviation redesign and warm React experience in the existing Good Deed pilot. This is a redesign, not a pixel-exact clone of the old page. Provider authentication, persistence and notification deployment are outside this local design verdict.
@@ -49,4 +63,4 @@ No real LINE account, provider session, teacher scope, Google Drive persistence,
 
 No actionable P0/P1/P2 visual issues remain in the inspected local states. P3: refine decorative mobile aircraft cropping and small helper text after physical-device feedback.
 
-final result: passed
+historical result (2026-09-09 aviation UI only): passed

@@ -91,7 +91,7 @@
             filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        
+
         .cat-option:hover .icon, .cat-option.selected .icon {
             transform: scale(1.15);
         }
@@ -107,7 +107,7 @@
             padding: 6px;
             transition: all 0.2s;
         }
-        
+
         .hours-input-wrap:focus-within {
             border-color: var(--gold);
             box-shadow: 0 0 0 3px rgba(201, 162, 39, 0.15);
@@ -145,7 +145,7 @@
             font-weight: 600;
             padding: 0;
         }
-        
+
         .hours-input-wrap input[type=number]:focus {
             box-shadow: none;
         }
@@ -172,7 +172,7 @@
             display: block;
             transition: transform 0.3s;
         }
-        
+
         .preview-item:hover img {
             transform: scale(1.05);
         }
@@ -195,7 +195,7 @@
             transition: background 0.2s;
             backdrop-filter: blur(4px);
         }
-        
+
         .preview-remove:hover {
             background: var(--red);
         }
@@ -213,7 +213,7 @@
                 gap: 16px;
             }
         }
-        
+
         .submit-layout-grid {
             display: grid;
             grid-template-columns: 1fr 340px;
@@ -226,7 +226,7 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
         .custom-card {
             background: rgba(14, 31, 61, 0.35);
             backdrop-filter: blur(20px) saturate(180%);
@@ -238,7 +238,7 @@
             position: relative;
             overflow: hidden;
         }
-        
+
         .custom-card::before {
             content: '';
             position: absolute;
@@ -421,37 +421,37 @@
                     <span class="light green"></span>
                     <span class="mac-title">EXP growth preview</span>
                 </div>
-                
+
                 <div style="display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center;">
                     <div style="font-size:0.75rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; letter-spacing:1.2px;">ความคืบหน้าคาดการณ์</div>
-                    
+
                     <div class="chibi-avatar-glow lv1" id="chibi-calc-avatar-container" style="width:130px; height:130px; border-radius:50%; display:flex; align-items:center; justify-content:center; transition: all 0.3s ease;">
                         <img id="chibi-calc-img" src="photos/chibi/chibi_lv1.png" alt="Chibi" style="width:105px; height:105px; object-fit:contain; filter:drop-shadow(0 6px 14px rgba(0,0,0,0.4)); animation:cardChibiFloat 3s ease-in-out infinite;">
                     </div>
-                    
+
                     <div class="chibi-level-badge" id="chibi-calc-level-badge" style="font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:20px; background:var(--gold-bg); border:1px solid var(--gold); color:var(--gold);">Lv.1 Novice</div>
-                    
+
                     <div style="width:100%; text-align:left; margin-top:8px;">
                         <div style="display:flex; justify-content:space-between; font-size:0.8rem; font-weight:600; margin-bottom:4px;">
                             <span style="color:var(--text-secondary);">Volunteer EXP:</span>
                             <span style="color:var(--text-primary);" id="chibi-calc-exp-text">0 / 36 ชม.</span>
                         </div>
-                        
+
                         <div class="crystal-progress-track" style="height:8px; background:rgba(255,255,255,0.06); border-radius:999px; overflow:hidden; border:1px solid rgba(255,255,255,0.04);">
                             <div class="crystal-progress-fill" id="chibi-calc-progress-fill" style="width:0%; height:100%; background:linear-gradient(90deg, var(--gold-dark), var(--gold-light)); border-radius:999px; transition:width 0.4s ease; box-shadow: 0 0 8px var(--gold);"></div>
                         </div>
-                        
+
                         <div style="display:flex; justify-content:center; gap:4px; margin-top:12px; color:var(--gold);" id="chibi-calc-stars">
                             ⭐⭐
                         </div>
                     </div>
-                    
+
                     <div style="width:100%; border-top:1px solid rgba(255,255,255,0.06); padding-top:12px; text-align:left; font-size:0.75rem; color:var(--text-secondary); display:flex; flex-direction:column; gap:6px;">
                         <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">ชั่วโมงที่อนุมัติแล้ว:</span><span style="font-weight:600; color:var(--text-primary);" id="chibi-calc-current-hrs">0 ชม.</span></div>
                         <div style="display:flex; justify-content:space-between;"><span style="color:var(--text-muted);">บวกเพิ่ม (รอพิจารณา):</span><span style="font-weight:600; color:var(--gold);" id="chibi-calc-added-hrs">+2 ชม.</span></div>
                         <div style="display:flex; justify-content:space-between; border-top:1px dashed rgba(255,255,255,0.06); padding-top:4px; font-weight:700;"><span style="color:var(--text-secondary);">รวมเมื่อผ่านอนุมัติ:</span><span style="color:var(--text-primary);" id="chibi-calc-projected-hrs">2 ชม.</span></div>
                     </div>
-                    
+
                     <div style="font-size:0.75rem; color:var(--text-muted); font-style:italic; line-height:1.4; margin-top:4px;" id="chibi-calc-next-goal">
                         เป้าหมายถัดไป: สะสมชั่วโมงความดีเพื่อวิวัฒนาการตัวละคร!
                     </div>
@@ -485,7 +485,7 @@
         <div style="background:linear-gradient(180deg, #0f172a 0%, #070d18 100%); border:2px solid rgba(245,158,11,0.6); border-radius:24px; max-width:480px; width:100%; padding:28px 24px; text-align:center; color:#fff; box-shadow:0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(245,158,11,0.25); position:relative; overflow:hidden;">
             <!-- Angel Glow Backdrop -->
             <div style="position:absolute; top:-50px; left:50%; transform:translateX(-50%); width:250px; height:250px; background:radial-gradient(circle, rgba(245,158,11,0.25) 0%, transparent 70%); border-radius:50%; pointer-events:none;"></div>
-            
+
             <!-- Chibi Angel Nurse Pose -->
             <div style="position:relative; width:140px; height:140px; margin:0 auto 12px auto; display:flex; align-items:center; justify-content:center;">
                 <img id="modal-chibi-img" src="photos/chibi/chibi_lv5.png" alt="พยาบาลนางฟ้าโพสท่าสำเร็จ" style="width:125px; height:125px; object-fit:contain; filter:drop-shadow(0 12px 24px rgba(245,158,11,0.6)); animation:float 3s ease-in-out infinite alternate;">
@@ -499,7 +499,7 @@
             <h2 style="color:#ffffff; font-family:'Kanit',sans-serif; font-size:1.45rem; font-weight:700; margin-bottom:6px;">
                 🎉 บันทึกความดีจิตอาสาสำเร็จ!
             </h2>
-            
+
             <!-- Deed Summary Box -->
             <div id="modal-deed-summary" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; margin:14px 0 18px 0; text-align:left; font-size:0.85rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
@@ -612,8 +612,8 @@
         function renderCategories() {
             const grid = document.getElementById('cat-grid');
             grid.innerHTML = CATEGORIES.map(cat => `
-                <div class="cat-option ${selectedCategoryId === cat.id ? 'selected' : ''}" 
-                     id="cat-${cat.id}" 
+                <div class="cat-option ${selectedCategoryId === cat.id ? 'selected' : ''}"
+                     id="cat-${cat.id}"
                      onclick="selectCategory(${cat.id})">
                     <div class="icon">${cat.emoji}</div>
                     <div style="font-weight: 500;">${cat.name}</div>
@@ -634,11 +634,11 @@
                 const ruleText = document.getElementById('cat-rule-text');
                 const targetDate = document.getElementById('activity-date') ? document.getElementById('activity-date').value : '';
                 const usage = (currentUser && App.getCategoryQuotaUsage) ? App.getCategoryQuotaUsage(currentUser.student_id, id, targetDate) : null;
-                
+
                 let quotaBadge = '';
                 if (usage) {
                     if (id === 1) {
-                        const daysText = usage.lastDonationDate 
+                        const daysText = usage.lastDonationDate
                             ? `(ครั้งล่าสุด: ${usage.lastDonationDate} ผ่านมาแล้ว ${usage.daysSinceLastDonation || 0} วัน ${usage.daysSinceLastDonation >= 90 ? '✅ ครบ 90 วัน' : '⚠️ ยังไม่ครบ 90 วัน'})`
                             : '(ยังไม่เคยมีประวัติบริจาคโลหิต)';
                         quotaBadge = `<div style="margin-top:6px;padding:6px 10px;background:rgba(239,68,68,0.15);border-radius:6px;font-size:0.85rem;color:#fca5a5;">
@@ -957,7 +957,8 @@
             if (studentNameEl && currentUser) {
                 const rank = currentUser.rank || 'นพอ.';
                 const yr = currentUser.year_level || currentUser.year || '1';
-                studentNameEl.textContent = `${rank} ${currentUser.first_name || ''} ${currentUser.last_name || ''} (ชั้นปี ${yr})`;
+                const displayName = currentUser.full_name || `${rank} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
+                studentNameEl.textContent = `${displayName} (ชั้นปี ${yr})`;
             }
 
             const cat = CATEGORIES.find(c => c.id === (deed.categoryId || deed.category_id));

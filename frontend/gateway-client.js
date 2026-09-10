@@ -57,8 +57,10 @@
         const [cardResult, listResult] = await Promise.all([request('/api/gooddeed/card-self'), request('/api/gooddeed/deeds-self')]);
         const card = cardResult.card, items = listResult.items;
         if (!card || typeof card.displayName !== 'string' || !/^\d{7}$/.test(card.studentId) || typeof card.totalHours !== 'number' || !Number.isFinite(card.totalHours) || card.totalHours < 0 || !Number.isInteger(card.levelNumber) || card.levelNumber < 1 || card.levelNumber > 10 || typeof card.levelLabel !== 'string' || typeof card.passed !== 'boolean' || ![card.pendingCount,card.approvedCount].every(x=>Number.isInteger(x)&&x>=0) || !Array.isArray(items) || items.length > 150) throw error('RESPONSE_INVALID');
+        const seen = new Set();
         for (const item of items) {
-          if (!item || typeof item.deedId !== 'string' || !Number.isInteger(item.categoryId) || item.categoryId < 1 || item.categoryId > 9 || typeof item.hours !== 'number' || item.hours < 0.5 || item.hours > 24 || !Number.isInteger(item.hours * 2) || !['pending','approving','approved','rejected'].includes(item.status)) throw error('RESPONSE_INVALID');
+          if (!item || typeof item.deedId !== 'string' || !item.deedId.trim() || item.deedId.length > 120 || seen.has(item.deedId) || (item.studentId !== undefined && item.studentId !== card.studentId) || !Number.isInteger(item.categoryId) || item.categoryId < 1 || item.categoryId > 9 || typeof item.hours !== 'number' || item.hours < 0.5 || item.hours > 24 || !Number.isInteger(item.hours * 2) || !['pending','approving','approved','rejected'].includes(item.status)) throw error('RESPONSE_INVALID');
+          seen.add(item.deedId);
         }
         return {card, items, loadedAt:new Date().toISOString(), listLimit:150};
       },

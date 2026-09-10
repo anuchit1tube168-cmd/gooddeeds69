@@ -37,20 +37,38 @@ function liffSetup(gatewayResult) {
 test('forged local admin mapping never creates a staff session or a binding',async()=>{const s=liffSetup({...session,studentLinked:false});await s.helper.handleAutoLogin();assert.equal(s.sessions.length,0);assert.equal(s.helper.connectionState,'pending');assert.match(s.nodes['line-liff-title'].textContent,/รอเชื่อม/);assert.equal(s.store.size,1);});
 test('LINE UI does not claim binding or notification success after failure',async()=>{const s=liffSetup(Error('failure'));assert.equal(await s.helper.handleAutoLogin(),false);assert.equal(s.helper.verifiedSession,null);assert.match(s.nodes['line-liff-title'].textContent,/ยังยืนยันบัญชีไม่ได้/);assert.doesNotMatch(s.nodes['line-liff-detail'].textContent,/พร้อมรับแจ้งเตือน/);});
 function viewSetup(client){
- const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:()=>[]};
- const node=id=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',disabled:false});return nodes.get(id);};
+ const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:selector=>selector==='[data-view]'?[...root.innerHTML.matchAll(/data-view="([^"]+)"/g)].map(match=>node('nav-'+match[1],{dataset:{view:match[1]}})):[]};
+ const node=(id,extra={})=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',disabled:false,focus:()=>{},...extra});return nodes.get(id);};
  const context=vm.createContext({console,Intl,Date,window:{createGoodDeedGatewayClient:()=>client},document:{getElementById:node}});
  vm.runInContext(fs.readFileSync('frontend/gooddeed-ui.js','utf8'),context);
+ vm.runInContext(fs.readFileSync('frontend/secure-pilot/mission-data.js','utf8'),context);
  vm.runInContext(fs.readFileSync('frontend/secure-pilot/gateway-view.js','utf8'),context);
- return {root,node,start:()=>context.window.startGoodDeedGatewayView({root,config:{GATEWAY_ORIGIN:'https://staging.example'}})};
+ return {root,node,go:view=>node('nav-'+view).onclick(),start:()=>context.window.startGoodDeedGatewayView({root,config:{GATEWAY_ORIGIN:'https://staging.example'}})};
 }
 const viewCard={studentId:['99','00001'].join(''),displayName:'Synthetic Student',cohortLabel:'Synthetic cohort',positionLabel:'นักเรียนพยาบาล',totalHours:105,levelNumber:3,levelLabel:'Official',passed:false,pendingCount:1,approvedCount:0};
 const viewSnapshot={card:viewCard,items:[{deedId:'own',categoryId:6,hours:0.5,status:'pending',description:'<img src=x onerror=alert(1)>',activityDate:'not-a-date'}],loadedAt:'2026-09-08T10:00:00Z'};
 test('gateway view escapes student content and displays official totals with provenance',async()=>{
- const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();assert.match(v.root.innerHTML,/105/);assert.match(v.root.innerHTML,/ชั่วโมงรวมตามทะเบียนกลาง/);assert.match(v.node('gateway-records').innerHTML,/&lt;img/);assert.doesNotMatch(v.node('gateway-records').innerHTML,/<img src=x/);assert.match(v.node('gateway-records').innerHTML,/ไม่ระบุวันที่/);
+ const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();v.go('records');assert.match(v.root.innerHTML,/105/);assert.match(v.root.innerHTML,/ยอดทางการจากทะเบียนกลาง/);assert.match(v.node('gateway-records').innerHTML,/&lt;img/);assert.doesNotMatch(v.node('gateway-records').innerHTML,/<img src=x/);assert.match(v.node('gateway-records').innerHTML,/ไม่ระบุวันที่/);
 });
 test('gateway view labels stale data on refresh failure and clears it on authorization loss',async()=>{
  let code='';const v=viewSetup({restore:async()=>session,readSelf:async()=>{if(code)throw {code};return viewSnapshot;}});await v.start();code='REQUEST_TIMEOUT';await v.node('gateway-refresh').onclick();assert.match(v.root.innerHTML,/อาจยังไม่เป็นปัจจุบัน/);code='SESSION_REQUIRED';await v.node('gateway-refresh').onclick();assert.doesNotMatch(v.root.innerHTML,/Synthetic Student|>105</);assert.match(v.root.innerHTML,/เซสชันหมดอายุ/);
 });
-test('gateway view gives an empty filtered state without replacing official total',async()=>{const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();v.node('gateway-filter').value='approved';v.node('gateway-filter').onchange();assert.match(v.node('gateway-records').innerHTML,/ไม่พบรายการ/);assert.match(v.root.innerHTML,/105/);});
+test('gateway view gives an empty filtered state without replacing official total',async()=>{const v=viewSetup({restore:async()=>session,readSelf:async()=>viewSnapshot});await v.start();v.go('records');v.node('gateway-filter').value='approved';v.node('gateway-filter').onchange();assert.match(v.node('gateway-records').innerHTML,/ไม่พบรายการ/);assert.match(v.root.innerHTML,/105/);});
 test('gateway view unlinked state never reads records',async()=>{let reads=0;const v=viewSetup({restore:async()=>({...session,studentLinked:false}),readSelf:async()=>{reads++;}});await v.start();assert.equal(reads,0);assert.match(v.root.innerHTML,/รอเชื่อมบัญชีนักเรียน/);});
+
+test('self projection rejects duplicate mission IDs and contradictory owner data',async()=>{
+ for(const items of [[...viewSnapshot.items,...viewSnapshot.items],[{...viewSnapshot.items[0],studentId:['99','00002'].join('')}],[{...viewSnapshot.items[0],deedId:''}]]){
+  const s=setup(url=>response(url.endsWith('card-self')?{card:viewCard}:url.endsWith('deeds-self')?{items}:session));
+  await s.client.restore();await assert.rejects(s.client.readSelf(),{code:'RESPONSE_INVALID'});
+ }
+});
+test('slow gateway requests fail explicitly instead of constructing a success projection',async()=>{
+ const s=setup((url,options)=>new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(Object.assign(new Error('aborted'),{name:'AbortError'})))));
+ await assert.rejects(s.client.restore(),{code:'REQUEST_TIMEOUT'});await assert.rejects(s.client.readSelf(),{code:'LINK_REQUIRED'});
+});
+test('Mission Control navigation keeps submission behind the existing integration gate',async()=>{
+ let reads=0;const v=viewSetup({restore:async()=>session,readSelf:async()=>{reads++;return viewSnapshot;}});await v.start();
+ assert.match(v.root.innerHTML,/ทุกความดี คือภารกิจที่มีคุณค่า/);
+ for(const view of ['radar','analytics','profile','history','submit'])v.go(view);
+ assert.match(v.root.innerHTML,/กำลังเตรียมเปิดรับบันทึกความดี/);assert.doesNotMatch(v.root.innerHTML,/<form/);assert.equal(reads,1);
+});

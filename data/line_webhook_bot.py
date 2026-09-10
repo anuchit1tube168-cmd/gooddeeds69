@@ -358,9 +358,9 @@ class LineWebhookHandler(BaseHTTPRequestHandler):
                                         if 1 <= cid <= 9: cat_hrs[cid] += h
                                         total_hrs += h
                             except: pass
-                            
+
                             grade_status = 'ผ่านเกณฑ์แล้ว ✅' if total_hrs >= 50 else f'ขาดอีก {50 - total_hrs:.1f} ชม. ⏳'
-                            
+
                             send_line_reply(reply_token, [{
                                 'type': 'flex',
                                 'altText': f'สรุปชั่วโมงจิตอาสา - {s_name}',
