@@ -97,6 +97,7 @@ class LocalBoundaryTests(unittest.TestCase):
         self.assertEqual(self.request('GET','/')[0],200)
         code,headers,body = self.request('GET','/api/health')
         self.assertEqual(code,200); self.assertFalse(json.loads(body)['dataApiEnabled'])
+        self.assertIs(json.loads(body)['productionWriteEnabled'], False)
         self.assertNotIn('Access-Control-Allow-Origin',headers); self.assertEqual(headers['Cache-Control'],'no-store')
     def test_public_aircraft_does_not_open_other_pilot_images(self):
         for method in ['GET', 'HEAD']:

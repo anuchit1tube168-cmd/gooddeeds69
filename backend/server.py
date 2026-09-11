@@ -907,7 +907,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         if urlparse(self.path).path == '/api/health':
-            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False})
+            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False, 'productionWriteEnabled': False})
             return
         super().do_GET()
 

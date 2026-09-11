@@ -439,8 +439,8 @@ const App = {
                     student.password,                          // student.password from database
                     localPwd,                                  // custom changed password
                     profilePwd,                                // profile password
-                    cleanId.slice(-4),                         // last 4 digits (e.g. 3773)
-                    cleanId.slice(-5),                         // last 5 digits (e.g. 03773)
+                    cleanId.slice(-4),                         // last 4 digits
+                    cleanId.slice(-5),                         // last 5 digits
                     '1234',                                    // universal easy pin
                     '123456',                                  // universal easy pin
                     '69',                                      // class year abbreviation
@@ -1085,58 +1085,8 @@ const App = {
               .catch(err => console.warn('⚠️ GAS Status Update Sync Error:', err));
         }
 
-        // Notify Telegram group of approval or rejection
-        try {
-            const settings = this.getSettings ? this.getSettings() : {};
-            const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
-                ? settings.telegramToken
-                : '';
-            const tgChat = settings.adminChatId || '';
-
-            const student = (this.findStudent ? this.findStudent(studentId) : null) || (deedData ? deedData.student : null) || {};
-            const studentName = student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}` : `นพอ. รหัส ${studentId}`;
-            const cy = student.class_year || '69';
-            const deedDesc = deed.title || deed.description || 'กิจกรรมจิตอาสา';
-            const deedHrs = deed.hours || 1;
-            const totalSummary = (this.getStudentSummary ? this.getStudentSummary(studentId) : null) || {};
-            const totalHrs = totalSummary.totalHours || deedHrs;
-            const passBadge = totalHrs >= 50 ? '✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม.' : '⏳ กำลังสะสมความดี';
-
-            const encodedName = encodeURIComponent(studentName);
-            const pdfSlipUrl = `https://liff.line.me/2010948179-Ympqt2bT?page=slip&id=${deedId}&studentId=${studentId}&name=${encodedName}`;
-
-            if (status === 'approved') {
-                const tgMsg = `🎉 <b>แจ้งเตือนการอนุมัติความดี (ผ่านระบบออนไลน์) ✅</b>\n` +
-                    `━━━━━━━━━━━━━━━━━━\n` +
-                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
-                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code> (รุ่น ${cy})\n` +
-                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
-                    `⏱ <b>ชั่วโมงที่อนุมัติ:</b> <b>${deedHrs} ชม.</b>\n` +
-                    `📊 <b>ชั่วโมงสะสมรวม:</b> <b>${Number(totalHrs).toFixed(1)} / 400 ชม.</b> (${passBadge})\n` +
-                    `👩‍🏫 <b>ผู้อนุมัติ:</b> ${teacherName}\n` +
-                    `✅ <i>อนุมัติและบันทึกลงระบบเรียบร้อยแล้ว</i>`;
-
-                this.sendTelegram(tgChat, tgMsg, {
-                    inline_keyboard: [
-                        [
-                            { text: '📄 พิมพ์ใบบันทึกความดี (PDF Slip) ↗️', url: pdfSlipUrl }
-                        ]
-                    ]
-                });
-            } else if (status === 'rejected') {
-                const tgMsg = `❌ <b>แจ้งเตือนการปฏิเสธความดี</b>\n` +
-                    `━━━━━━━━━━━━━━━━━━\n` +
-                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
-                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code>\n` +
-                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
-                    `👩‍🏫 <b>ผู้ปฏิเสธ:</b> ${teacherName}\n` +
-                    `📝 <b>เหตุผล:</b> ${rejectReason || 'กรุณาตรวจสอบหลักฐานและส่งใหม่'}`;
-
-                this.sendTelegram(tgChat, tgMsg);
-            }
-        } catch (tge) {
-            console.warn('⚠️ Telegram notify on status update error:', tge);
-        }
+        // Delivery belongs to the authenticated server's durable outbox.
+        // Browser settings must never supply Telegram credentials.
 
         return deed;
     },

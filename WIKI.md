@@ -158,3 +158,22 @@ Legacy callback ใช้ `webhookKey` query parameter เพราะ Apps Scri
 ตัวเขียน legacy ตรวจหัวคอลัมน์ก่อนเขียนหรืออัปโหลดหลักฐาน ไม่สร้างชีตว่างเมื่อไม่พบที่เก็บ ไม่รับรหัสรายการซ้ำ ตรวจวันที่/ชั่วโมง และเก็บข้อความที่ขึ้นต้นเหมือนสูตรเป็นข้อความ การแจ้งเตือนเกิดหลังบันทึกและ flush สำเร็จ; หากการส่งแจ้งเตือนล้มเหลว รายการที่บันทึกแล้วจะยังอยู่ แต่ยังไม่มี outbox ถาวรสำหรับส่งซ้ำ
 
 `GoodDeedReviewPlan.gs` คำนวณรายการเซลล์ที่จะเปลี่ยนจากข้อมูลจำลอง/ข้อมูลที่ backend อ่านอย่างถูกสิทธิ์ รองรับตาราง staging 8 คอลัมน์ รักษาชั่วโมงยกมาและสูตร ไม่แก้ Grade/Level เอง และหยุดเมื่อข้อมูลหรือผลอนุมัติขัดแย้ง ผลลัพธ์ระบุ `executable: false` ทุกครั้ง ห้ามนำไปเขียนชีตโดยตรง ขั้นถัดไปต้องเชื่อมสิทธิ์อาจารย์ตามกลุ่ม ลายเซ็นสด เกณฑ์ทางการ และ journal/outbox ให้ครบก่อนเปิด review flag รายละเอียดอยู่ใน [Review storage contract](docs/REVIEW_STORAGE_CONTRACT.md)
+
+
+## September 11 incoming patch and health observations
+
+The legacy GAS callback defaults to `PRODUCTION_WRITE_DISABLED` unless the Script Property `PRODUCTION_WRITE_ENABLED` is exactly `true`. Keep it false: setting it true does not supply assigned scope, private signature or the missing storage integration. Existing properties remain `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID` and `EVIDENCE_FOLDER_ID`. Do not rename deployment secrets to match the discarded partial-checkout patch. This gate covers the callback entrypoint, not all internal migration helpers.
+
+Python remains a static preview with writes always false; no environment flag enables its API. A healthy preview must never count as a deployed Cloudflare gateway.
+
+Only after independently confirming owned staging endpoints and their health contract, run:
+
+```bash
+python3 scripts/verify_staging.py \
+  --gas-url "$STAGING_GAS_URL" \
+  --cloudflare-health-url "$STAGING_WORKER_HEALTH_URL" \
+  --gas-service "$EXPECTED_GAS_SERVICE" \
+  --cloudflare-service "$EXPECTED_WORKER_SERVICE"
+```
+
+The legacy GAS source identifies itself as `rtafnc-gooddeeds-legacy-gas`. The Worker health path/service must come from its verified contract; neither is invented by this script. URLs must use HTTPS without credentials/query/fragment. Exit zero means two matching read-only health observations; deployment ownership, active code version, bindings, persistence and E2E remain unverified. Output is sanitized and explicitly sets `deploymentVerified: false`. A mismatch is a failed observation, not a reason to weaken the checks or deploy another backend.

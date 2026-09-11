@@ -22,6 +22,10 @@ const CONFIG = {
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 
+function productionWritesEnabled() {
+  return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
+}
+
 const SHEETS = {
   STUDENTS: 'Main_2569',
   DEEDS: 'Deeds_2569',
@@ -97,7 +101,9 @@ function doGet(e) {
     if (action === 'ping') {
       return jsonResponse({
         status: 'success',
+        service: 'rtafnc-gooddeeds-legacy-gas',
         message: 'GoodDeeds 69 Cloud Engine Active 🟢',
+        productionWriteEnabled: productionWritesEnabled(),
         time: new Date().toISOString()
       });
     }
@@ -495,6 +501,7 @@ function notifyTelegramNewDeed(d) {
 // Apps Script cannot inspect Telegram's secret header. A high-entropy query
 // key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
 function handleTelegramCallback(cb, suppliedKey) {
+  if (!productionWritesEnabled()) return { status: 'error', code: 'PRODUCTION_WRITE_DISABLED' };
   const props = PropertiesService.getScriptProperties();
   const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
   if (expected.length < 32 || String(suppliedKey || '') !== expected) return { status: 'error', code: 'webhook_unauthorized' };

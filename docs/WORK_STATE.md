@@ -1,3 +1,21 @@
+# Incoming patch reconciliation — 2026-09-11
+
+State: SOURCE VERIFIED / PRIVATE DEPLOYMENT AND WRITE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.
+Base and fetched remote: `4ad635a7a1cbae8fb34471933d3be4131fa6cdfa`, existing Draft PR #4 and branch `codex/fable-gooddeed-hardening-20260907`.
+
+- Found incoming uncommitted conflicts in Code.gs, server.py, app.js and this document. Preserved their original files privately under local `work/incoming-patch/` (never stage/publish). Reconciled against complete upstream history; retained signed gateway dispatch, existing Script Property names, legacy review failure fixes and Python response framing. The earlier partial-checkout report about missing remote/contract is historical, not current evidence. The reported `50d89042` is not this checkout's HEAD.
+- Added exact-`true` Script Property gate before the retained Telegram callback's provider/auth/write effects. Default callback write is disabled. Existing webhook/actor checks still apply if configured true; this is not assigned-scope/signature authorization. Internal migration helpers remain internal and are NOT globally gated by this flag. Eight-column staging remains incompatible with the legacy writer; do not enable it.
+- GAS ping exposes its service identity and configured write flag. Python actual HTTP health always reports static-preview and write false; an environment variable cannot enable its denied POST API. Removed browser review notification code; no durable outbox is claimed.
+- Reworked GET-only verifier to require explicitly supplied health URL and expected service names, exact false, and non-preview responses. It never prints URLs/provider bodies/errors, rejects credential/query/fragment URLs, limits response size, and always returns deploymentVerified false. A matching health response is not ownership/version evidence. No live check was attempted against the unconfirmed old production/tunnel URLs.
+- Local verification: syntax PASS; 139 JS + 20 Python = 159 PASS. Tests use synthetic services/HTTP fixtures only. Optional pythainlp remains unavailable. No browser preview was opened or denial bypassed.
+- No provider administration tools were callable in this session. Required staging project/deployment/version, Worker bindings and authoritative assignment/private-signature inputs have been requested; no new evidence supplied yet. No deployment, data write, schema change, notification, endpoint edit, token rotation or deletion occurred.
+
+Publication checks: unchanged PII rules initially flagged a synthetic credential-URL fixture as an email; split that fixture literal without changing its tested URL or guard rules. Full PR-touched content check is required after the final commit.
+
+Next: obtain permitted staging Apps Script project/deployment/version and Worker deployment/version/binding names; verify actual service contracts before invoking the observer. Then implement trusted session/assignment/signature ports and durable journal/outbox against the reviewed storage contract and official policy. Student/admin/mobile/physical LIFF E2E, private backup/restore and credential rotation remain open. Do not build a parallel backend or execute a prerequisite plan. Publish only reviewed files to Draft PR #4 without force; verify CI at the final head.
+
+---
+
 # Review failure continuation — 2026-09-11
 
 State: SOURCE CHECKS PASS / DEPLOYMENT AND PRIVATE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.
