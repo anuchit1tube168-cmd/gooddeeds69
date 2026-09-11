@@ -1,3 +1,35 @@
+# Review failure continuation — 2026-09-11
+
+State: SOURCE CHECKS PASS / DEPLOYMENT AND PRIVATE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.
+Base: `b3a07fa079d3c3cccc708cc73067816f9b7472f7`, Draft PR #4, branch `codex/fable-gooddeed-hardening-20260907`. This workspace was initially an empty Git repository; fetched the complete remote history/tree and tracked the existing branch. Unlike earlier partial-checkout checkpoints, this checkout is complete. Use the published PR head for this continuation's final commit and CI; earlier checkpoints are historical.
+
+## Reverified evidence and access
+
+- Good Deed remote head and PR head both matched the base above; preserve all upstream work. Gateway head through the authenticated GitHub connector still matches `6c72530768bfbbba142e34020fa22d2519b3d332`.
+- Gateway entrypoint is relative to `cloudflare/worker/`: `cloudflare/worker/src/gooddeed-final-audited.ts`, importing `gooddeed-final.ts`. Re-read both sources and `.github/workflows/cloudflare-staging-guard.yml` at that immutable head. Review still forwards deed ID, decision and note; this is not the private fresh-signature/assigned-scope contract.
+- The staging guard uses synthetic secrets and `wrangler deploy --dry-run`; no deployed version follows from a green guard. The connector's workflow lookup is PR-triggered-only and returned no gateway runs; it cannot establish whether manual deployments occurred. No callable provider deployment-administration tool was available.
+- Shell Git could not authenticate to the gateway repository; the already-authorized GitHub connector could read its source. Neither supplies Apps Script project/deployment/version or current Cloudflare deployment/binding evidence.
+- Browser inventory on September 11 exposed Chrome and an empty in-app browser, with no Apps Script or Cloudflare tab ready for inspection. No previously denied preview or blocked provider page was opened, retried or bypassed. Historical Google 502/Cloudflare challenge results are not fresh runtime observations.
+
+## Verified source changes
+
+- `backend/Code.gs`: retained legacy review validates input before lock acquisition; lock/read failure returns sanitized `review_failed` with deed ID. Any attempted mutation failure returns `review_requires_reconciliation` with the same ID. An existing `approving` row returns that explicit reconciliation code without another write. Lock release failure logs only a fixed code and cannot erase the persisted outcome.
+- This is failure reporting and replay containment, NOT an automatic recovery writer. Eight-column staging remains incompatible with this eleven-column writer. No schema, route, write flag, signature resolver, journal or outbox was added/enabled.
+- `tests/regression.test.cjs`: seven new tests plus strengthened existing uncertain-write test. Five cases failed on the old source. Covers before/after all five approval cell writes, flush boundaries, lock acquisition/release, rejection uncertainty, sanitized errors and repeated decisions without repeated credit.
+- Full Python run initially hit `ConnectionResetError` reading a rejected POST on this machine. `backend/server.py` now sends exact UTF-8 byte `Content-Length`; clients need not wait for EOF after early request rejection. `tests/test_local_boundary.py` reproduces missing framing before the fix, checks Thai byte length and complete denied POST responses. Request body remains unread and data-write helpers remain uncalled.
+- Verification: `node scripts/check-syntax.cjs` PASS; `node --test tests/*.test.cjs` **136/136 PASS**; `python3 -m unittest discover -s tests -p 'test_*.py' -v` **17/17 PASS**. Total **153**. Python HTTP tests use local synthetic fixtures; JS service tests are doubles. Optional DOCX dependency `pythainlp` remains unavailable; DOCX generation is not certified.
+- No provider deployment, student-data write, real notification, data deletion, schema migration, endpoint change or credential rotation occurred. Production write remains FALSE.
+
+## Next exact integration step / blockers
+
+Obtain permitted evidence of the owned separate staging Apps Script project + deployment ID/version and Worker active deployment/version + binding names (no secret values), then compare to the source above. Also required: authoritative teacher assignment source, private signature verification/persistence contract, canonical deed revision/evidence version, official category/academic-period policy and private backup/restore proof. The request for these missing facts remains unanswered; “continue” authorizes independent work but does not supply them.
+
+Implement the existing gateway's trusted session/assignment/signature resolver ports only against verified facts, then the locked durable journal/outbox and reconciliation writer. Do not execute the planner, promote prerequisites to authorization, or treat this legacy error-reporting fix as staging persistence. Controlled student/admin, mobile and physical LINE LIFF E2E remain BLOCKED. Resume current rendered QA only after permitted access changes. Read `docs/REVIEW_STORAGE_CONTRACT.md` before editing.
+
+Publication preflight: diff reviewed; unchanged PII rules passed all 94 PR-touched file contents (`PII_GUARD_BASE_REF=origin/main node scripts/pii-guard.mjs`); remote head rechecked at the base above. Update Draft PR #4 without force and verify final-head CI. See PR for actual publication/check results.
+
+---
+
 # Server review prerequisite checkpoint — 2026-09-10
 
 State: SOURCE CHECKS PASS / PRIVATE RESOLVERS AND RUNTIME QA BLOCKED / PRODUCTION WRITE = FALSE.

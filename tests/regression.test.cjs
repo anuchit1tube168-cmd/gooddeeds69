@@ -37,8 +37,9 @@ test('carry-forward numeric total and existing formula/policy columns are preser
   const c=backend();c.master[1][15]='=SUM(G2:O2)+100';c.context.approveDeed({deedId:'deed_123_abcd'});assert.equal(c.master[1][15],'=SUM(G2:O2)+100');
 });
 test('uncertain cross-sheet write cannot replay hours',()=>{
-  const b=backend();b.fail();assert.throws(()=>b.context.approveDeed({deedId:'deed_123_abcd'}));
-  assert.equal(b.ledger[1][9],'approving');assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_conflict');
+  const b=backend();b.fail();const r=b.context.approveDeed({deedId:'deed_123_abcd'});
+  assert.equal(r.code,'review_requires_reconciliation');assert.equal(r.deedId,'deed_123_abcd');
+  assert.equal(b.ledger[1][9],'approving');assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_requires_reconciliation');
 });
 test('callback preserves underscore IDs and confirms only after persistence',()=>{
   const b=backend();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.status,'success');assert.equal(b.ledger[1][9],'approved');assert.equal(b.master[1][11],6);assert.equal(b.messages.length,2);
@@ -170,4 +171,83 @@ test('legacy submission rejects malformed dates and typed text without effects',
     const b=backend();assert.equal(b.context.addDeed({...validSubmission(),...bad}).code,'invalid_deed');
     assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
   }
+});
+
+
+test('legacy review reports lock failure with stable identity and no effects',()=>{
+  const b=backend();b.failLock();
+  const r=b.context.approveDeed({deedId:'deed_123_abcd'});
+  assert.equal(r.code,'review_failed');assert.equal(r.deedId,'deed_123_abcd');
+  assert.equal(b.writes.length,0);assert.deepEqual(b.events,[]);
+});
+test('legacy review reports uncertain flush and preserves its reconciliation marker',()=>{
+  const b=backend();b.failFlush();
+  const r=b.context.approveDeed({deedId:'deed_123_abcd'});
+  assert.equal(r.code,'review_requires_reconciliation');assert.equal(r.deedId,'deed_123_abcd');
+  assert.equal(b.ledger[1][9],'approving');assert.equal(b.master[1][11],5);
+  assert.equal(b.events.at(-1),'unlock');assert.equal(b.messages.length,0);
+  const before=b.writes.length;
+  assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_requires_reconciliation');
+  assert.equal(b.writes.length,before);
+});
+test('legacy rejection flush failure is uncertain, and replay never credits hours',()=>{
+  const b=backend();b.failFlush();
+  const request={deedId:'deed_123_abcd',status:'rejected'};
+  assert.equal(b.context.approveDeed(request).code,'review_requires_reconciliation');
+  assert.equal(b.master[1][11],5);assert.equal(b.ledger[1][9],'rejected');
+  const before=b.writes.length;
+  assert.equal(b.context.approveDeed(request).duplicate,true);assert.equal(b.writes.length,before);
+});
+test('legacy review rejects malformed input before requesting a lock',()=>{
+  for(const input of [null,undefined,[],{}, {deedId:{}}, {deedId:'=formula'}, {deedId:'deed_123_abcd',status:'unknown'}]){
+    const b=backend();assert.equal(b.context.approveDeed(input).code,'invalid_review');assert.deepEqual(b.events,[]);
+  }
+});
+
+test('every approval write boundary fails explicitly and cannot double-credit on retry',()=>{
+  for(const phase of ['before','after'])for(let point=1;point<=5;point++){
+    const b=backend(), ss=b.context.SpreadsheetApp.getActiveSpreadsheet();let call=0;
+    b.context.SpreadsheetApp.getActiveSpreadsheet=()=>({getSheetByName:name=>{
+      const sheet=ss.getSheetByName(name);return {...sheet,getRange:(...args)=>{
+        const range=sheet.getRange(...args);return {...range,setValue:value=>{
+          const selected=++call===point;
+          if(selected&&phase==='before')throw Error('PRIVATE_STORAGE_DETAIL');
+          range.setValue(value);
+          if(selected&&phase==='after')throw Error('PRIVATE_STORAGE_DETAIL');
+        }};
+      }};
+    }});
+    const r=b.context.approveDeed({deedId:'deed_123_abcd'});
+    assert.equal(r.code,'review_requires_reconciliation',`${phase} write ${point}`);
+    assert.equal(r.deedId,'deed_123_abcd');assert.equal(JSON.stringify(r).includes('PRIVATE_STORAGE_DETAIL'),false);
+    assert.equal(b.events.at(-1),'unlock');assert.equal(b.messages.length,0);
+    const before=b.writes.length, status=b.ledger[1][9];
+    const retry=b.context.approveDeed({deedId:'deed_123_abcd'});
+    if(status==='approving'){
+      assert.equal(retry.code,'review_requires_reconciliation');assert.equal(b.writes.length,before);
+    }else{
+      assert.equal(retry.status,'success');assert.equal(b.master[1][11],6);assert.equal(b.master[1][15],6);
+    }
+    assert.ok(b.master[1][11]<=6);assert.ok(b.master[1][15]<=6);
+  }
+});
+test('later approval flush failures retain state and never credit again',()=>{
+  for(let point=2;point<=3;point++){
+    const b=backend(), flush=b.context.SpreadsheetApp.flush;let call=0;
+    b.context.SpreadsheetApp.flush=()=>{flush();if(++call===point)throw Error('PRIVATE_FLUSH_DETAIL');};
+    assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_requires_reconciliation');
+    const before=b.writes.length;
+    b.context.approveDeed({deedId:'deed_123_abcd'});
+    assert.equal(b.writes.length,before);assert.equal(b.master[1][11],6);assert.equal(b.master[1][15],6);
+  }
+});
+test('lock release failure cannot replace a persisted review outcome with a thrown error',()=>{
+  const b=backend(), warnings=[];
+  b.context.console={warn:message=>warnings.push(message)};
+  b.context.LockService.getScriptLock=()=>({waitLock:()=>{},releaseLock:()=>{throw Error('PRIVATE_LOCK_DETAIL');}});
+  const r=b.context.approveDeed({deedId:'deed_123_abcd'});
+  assert.equal(r.status,'success');assert.equal(b.master[1][11],6);
+  assert.deepEqual(warnings,['LEGACY_REVIEW_LOCK_RELEASE_UNCONFIRMED']);
+  assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).duplicate,true);
+  assert.equal(b.master[1][11],6);
 });

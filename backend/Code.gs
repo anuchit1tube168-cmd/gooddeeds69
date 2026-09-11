@@ -224,14 +224,17 @@ function addDeed(payload) {
 }
 
 function approveDeed(data) {
-  const deedId = String(data.deedId || data.id || '');
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return { status: 'error', code: 'invalid_review' };
+  const deedId = data.deedId || data.id;
   const status = data.status || 'approved';
-  if (!deedId || !['approved', 'rejected'].includes(status)) {
+  if (typeof deedId !== 'string' || !/^[A-Za-z0-9._:-]{3,120}$/.test(deedId) || !['approved', 'rejected'].includes(status)) {
     return { status: 'error', code: 'invalid_review' };
   }
-  const lock = LockService.getScriptLock();
-  lock.waitLock(20000);
+  let lock, locked = false, attemptedWrite = false;
   try {
+    lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    locked = true;
     const ss = getSS();
     const sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
     if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
@@ -246,6 +249,7 @@ function approveDeed(data) {
     if (data.studentId && String(data.studentId) !== studentId) return { status: 'error', code: 'student_mismatch' };
     if (row[9] === status) return { status: 'success', deedId, newStatus: status, duplicate: true };
     // 'approving' marks an uncertain cross-sheet write. Never auto-retry its hours.
+    if (row[9] === 'approving') return { status: 'error', code: 'review_requires_reconciliation', deedId };
     if (row[9] !== 'pending') return { status: 'error', code: 'review_conflict' };
     const category = legacyDecimal_(row[2]);
     const hours = legacyDecimal_(row[3]);
@@ -259,6 +263,9 @@ function approveDeed(data) {
       try { applyMasterUpdate = prepareMasterStudentHoursUpdate_(master, studentId, category, hours); }
       catch (_) { return { status: 'error', code: 'master_requires_reconciliation' }; }
     }
+    // Mark uncertainty before the first attempted mutation, including rejection.
+    // A provider may persist a setValue/flush even when that call throws.
+    attemptedWrite = true;
     if (status === 'approved') {
       sheet.getRange(index + 1, 10).setValue('approving');
       SpreadsheetApp.flush();
@@ -269,8 +276,13 @@ function approveDeed(data) {
     sheet.getRange(index + 1, 10).setValue(status);
     SpreadsheetApp.flush();
     return { status: 'success', deedId, newStatus: status };
+  } catch (_) {
+    return { status: 'error', code: attemptedWrite ? 'review_requires_reconciliation' : 'review_failed', deedId };
   } finally {
-    lock.releaseLock();
+    if (locked) {
+      try { lock.releaseLock(); }
+      catch (_) { console.warn('LEGACY_REVIEW_LOCK_RELEASE_UNCONFIRMED'); }
+    }
   }
 }
 

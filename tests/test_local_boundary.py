@@ -72,8 +72,21 @@ class LocalBoundaryTests(unittest.TestCase):
     def test_mutations_denied_before_body_or_side_effects(self):
         with patch.object(server,'save_student_line_binding') as binding, patch.object(server,'save_or_update_deed_in_db') as save:
             for endpoint in ['bind_line','submit_deed','approve_deed','update_student']:
-                self.assertEqual(self.request('POST','/api/'+endpoint,'{}')[0],403)
+                code, headers, body = self.request('POST','/api/'+endpoint,'{}')
+                self.assertEqual(code,403)
+                self.assertEqual(int(headers['Content-Length']),len(body))
+                self.assertEqual(json.loads(body)['code'],'AUTHENTICATED_GATEWAY_REQUIRED')
             binding.assert_not_called(); save.assert_not_called()
+    def test_json_response_frames_utf8_without_reading_request_body(self):
+        handler = object.__new__(server.CustomHandler)
+        handler.wfile = io.BytesIO()
+        headers = {}
+        with patch.object(handler,'send_response') as status, patch.object(handler,'end_headers'), patch.object(handler,'send_header',side_effect=lambda key,value:headers.update({key:value})):
+            handler.send_json_response(403,{'message':'ต้องตรวจสิทธิ์'})
+        body = handler.wfile.getvalue()
+        status.assert_called_once_with(403)
+        self.assertEqual(int(headers['Content-Length']),len(body))
+        self.assertEqual(json.loads(body)['message'],'ต้องตรวจสิทธิ์')
     def test_static_get_head_aliases_and_symlinks_cannot_expose_private_data(self):
         for path in ['/data/students.json','/frontend/data/line_mappings.json','/data/students_data.js','/photos/evidence/test.jpg','/frontend/%64ata/students.json','/secure-pilot/../data/students.json','/shortcut.js','/data/']:
             for method in ['GET','HEAD']:

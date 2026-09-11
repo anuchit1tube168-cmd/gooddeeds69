@@ -2,7 +2,7 @@
 
 ระบบบันทึกความดี นักเรียนพยาบาลทหารอากาศ วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
 
-**สถานะ 10 กันยายน 2569: DRAFT / PRODUCTION WRITE = FALSE**
+**สถานะ 11 กันยายน 2569: DRAFT / PRODUCTION WRITE = FALSE**
 
 พัฒนาต่อใน repository และ Draft PR #4 เดิม ไม่เปลี่ยนฐานข้อมูล ไม่เปลี่ยนลิงก์ LIFF และยังไม่ Deploy ชุดนี้เข้าสู่ production
 
@@ -57,7 +57,7 @@ node --test tests/*.test.cjs
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-ผล local ชุดนี้: syntax ผ่าน, JavaScript **129/129**, Python **16/16** รวม **145** รายการ ใช้ข้อมูลสมมติ/transport doubles ไม่ใช่ผล LINE/Google/Telegram จริง ดูขอบเขตและสิ่งที่ยัง BLOCKED ใน test plan ตรวจ PII ด้วยกฎเดิมก่อน commit เสมอ
+ผล local ชุดนี้: syntax ผ่าน, JavaScript **136/136**, Python **17/17** รวม **153** รายการ ใช้ข้อมูลสมมติ/transport doubles ไม่ใช่ผล LINE/Google/Telegram จริง ดูขอบเขตและสิ่งที่ยัง BLOCKED ใน test plan ตรวจ PII ด้วยกฎเดิมก่อน commit เสมอ
 
 ## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
 

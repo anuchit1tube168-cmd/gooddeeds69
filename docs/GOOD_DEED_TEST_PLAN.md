@@ -73,3 +73,15 @@ Four JavaScript cases cover loopback transport restriction, no unsigned profile 
 ## Latest server prerequisite verification
 
 2026-09-10 continuation: **129 JavaScript + 16 Python = 145 passed**, syntax passed. Three self-read integrity regressions failed before the mapping/cross-owner ID fix. Eleven new review-gate cases use synchronous synthetic server-port doubles and cover exact scope, expired session, stale/consumed proof, changed review intent, revoked assignment, request overrides and non-executable output. Loading the new helper still leaves every staff/write/evidence/activation route disabled. This is no proof of real signature provenance, journal atomicity or provider E2E; all existing rendered/device/provider blockers remain.
+
+
+## September 11 failure-path verification
+
+Latest: **136 JS + 17 Python = 153 PASS**, syntax PASS. Seven added JS cases
+exercise retained review lock/write/flush/release failures and no duplicate credit;
+five tests failed against the prior implementation before the repair. Python's
+initial real local HTTP run encountered a reset reading a rejected POST; exact
+UTF-8 Content-Length now frames its JSON denial. One new byte-framing case and
+stronger existing POST assertions pass. No browser/provider E2E was performed.
+See the current WORK_STATE for verified source heads and unresolved deployment,
+private session/scope/signature, journal/outbox, policy and physical LIFF gates.

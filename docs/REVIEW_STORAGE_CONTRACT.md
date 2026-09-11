@@ -138,3 +138,22 @@ returns a generic reconciliation code rather than the other student's record.
 Three new regression tests failed before this repair and pass after it. Eleven
 prerequisite tests cover scope, session expiry, request overrides, proof binding,
 revocation, consumption, sanitization and the non-executable return boundary.
+
+
+## Retained review failure responses — 2026-09-11
+
+The eleven-column `approveDeed` now returns sanitized errors instead of leaking
+provider exceptions: `review_failed` with `deedId` means no mutation was attempted;
+`review_requires_reconciliation` with that ID means a mutation was attempted or
+an existing `approving` row was observed. Do not interpret an exception as proof
+that a provider did not persist the write. Reconcile the exact record privately;
+never reset `approving`, overwrite Master from a stale backup, or force a new ID.
+A final same-decision read still returns the stored duplicate outcome without
+incrementing again; an opposing final decision remains a conflict. Lock-release
+errors cannot replace the confirmed write result and log only a fixed code.
+
+The local fault matrix covers errors before and after every approval cell write
+and at each flush boundary, including partial Master updates. It proves replay
+containment for those doubles, not a transaction or automatic repair. A rejection
+can also return uncertainty. No repair, receipt store, outbox or live write API is
+introduced; eight-column staging still rejects this retained legacy writer.

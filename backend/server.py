@@ -874,11 +874,13 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return {'role': '', 'student_id': '', 'username': ''}
 
     def send_json_response(self, status_code, payload):
+        body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
+        self.send_header('Content-Length', str(len(body)))
         self.send_header('Cache-Control', 'no-store')
         self.end_headers()
-        self.wfile.write(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
+        self.wfile.write(body)
 
     def deny_json(self, message='Forbidden'):
         self.send_json_response(403, {'status': 'error', 'message': message})
