@@ -1,6 +1,6 @@
 # Session and slow-network checkpoint — 2026-09-12
 
-State: LOCAL SOURCE VERIFIED / AUTHENTICATION BROWSER BLOCKED / PRODUCTION WRITE = FALSE.
+State: SOURCE PUBLISHED AND CI VERIFIED / AUTHENTICATION BROWSER BLOCKED / PRODUCTION WRITE = FALSE.
 Remote parent: `ffa7b65d4067a5469df1f00bc6a049e12e07d645`; local parent `520f515`.
 This workspace is the earlier **partial** professional-review checkout. Other agents' complete-checkout reports below describe their environments, not this one. Publish only reviewed blobs on the current remote tree; never push this local tree/history as the full repository.
 
@@ -12,7 +12,9 @@ This workspace is the earlier **partial** professional-review checkout. Other ag
 - Current browser inspection found only about:blank. Reading the advertised browserAuth capability was explicitly denied by automatic approval review: usage limit reached. No sign-in, credentials, provider page, preview retry, alternate-browser workaround or deployment was performed. This is a current tool-approval limitation, not evidence of a provider outage or missing user authorization.
 - No production write, real notification, schema edit, credential rotation, LIFF change, merge or cutover. Production remains unverified.
 
-Next: preserve this tested source on Draft PR #4 and verify final-head CI. Integration still needs the owned staging GAS project/deployment/version and Worker version/binding names, authoritative assignment/private-signature inputs, official category/period policy and durable storage/recovery evidence listed below. Resume the approved browser path only when access actually changes; do not replace this missing evidence with more demo logic or another prerequisite checker.
+Publication: source commit `16f2639c84adf788f35244f8ed9ec443e5740669` on Draft PR #4 preserves the remote parent. All 16 changed blob identities match the reviewed local files. Unchanged PII rules passed the full contents of all 97 PR-touched files. GitHub regression run `34683088867` and PII run `34683088947` both completed successfully, including syntax, JS and Python steps. This checkpoint update is documentation only; inspect the current PR head/checks before continuing.
+
+Next: integration still needs the owned staging GAS project/deployment/version and Worker version/binding names, authoritative assignment/private-signature inputs, official category/period policy and durable storage/recovery evidence listed below. Resume the approved browser path only when access actually changes; do not replace this missing evidence with more demo logic or another prerequisite checker.
 
 ---
 
