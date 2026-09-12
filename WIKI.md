@@ -1,3 +1,23 @@
+## สถานะล่าสุด — 12 กันยายน 2569
+
+ตรวจ source ผ่าน 139 JavaScript + 23 Python = 162 รายการ แต่ยังไม่ผ่าน deployment และ E2E จริง งานเชื่อม session/สิทธิ์อาจารย์/ลายเซ็น และ writer ที่กู้คืนได้ยังต้องใช้แหล่ง private ที่ยืนยันแล้ว ดูตารางงานทั้งสี่ข้อใน [WORK_STATE](docs/WORK_STATE.md)
+
+แก้เครื่องมือตรวจให้ตรง `/readiness` ของ gateway เดิมแล้ว เมื่อยืนยันว่าเป็น staging ของโครงการและตรวจ active version แล้ว ให้ใช้:
+
+```bash
+python3 scripts/verify_staging.py \
+  --gas-url "$STAGING_GAS_URL" \
+  --gas-service rtafnc-gooddeeds-legacy-gas \
+  --cloudflare-health-url "$STAGING_WORKER_READINESS_URL" \
+  --cloudflare-readiness
+```
+
+Worker URL ต้องลงท้าย path `/readiness` อย่างตรงตัว ตัวตรวจต้องพบ staging, auth/read/pilot ที่ตั้งค่าแล้ว และ production/submit/review/activation gates เป็น false แบบ boolean ทุกตัว จึงผ่าน ห้ามเปิด gates หรือเปลี่ยนค่าจริงเพื่อบังคับให้ตัวตรวจผ่าน ให้ตรวจสาเหตุเทียบกับ deployment ที่ถูกต้องก่อน รูปแบบ service ทั่วไปยังใช้ `--cloudflare-service` ได้ แต่ห้ามใช้สองรูปแบบพร้อมกัน
+
+ผลสำเร็จเป็นเพียงคำตอบ readiness ที่ตรงสัญญา และยังระบุ `deploymentVerified: false` ไม่ได้พิสูจน์ว่า session ใช้ได้หรือบันทึก/อนุมัติจริงสำเร็จ ไม่ส่ง token หรือข้อมูลนักเรียนมาในแชต คง Production write = FALSE
+
+---
+
 ## ต่อการจัดการข้อผิดพลาด — 11 กันยายน 2569
 
 ผล local ล่าสุด **136 JavaScript + 17 Python = 153 รายการผ่าน**; ยังเป็น Draft และ Production write = FALSE

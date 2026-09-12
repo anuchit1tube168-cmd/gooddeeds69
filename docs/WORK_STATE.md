@@ -1,3 +1,29 @@
+# Gateway readiness contract continuation — 2026-09-12
+
+State: LOCAL SOURCE VERIFIED / LIVE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.
+Base and fetched PR #4 head: `01d320c33bba90eb7aeac9c958f80dba335d13fe`.
+The complete existing branch is present; preserved the untracked private `work/` archive.
+
+- Re-read AGENTS, root/project skills and storage contract. Rechecked PR #4: open/draft, source head matches local. Base-head GitHub regression run `34620775932` and PII run `34620775937` both completed successfully.
+- Re-read gateway branch `gooddeed-final-gateway-20260902` through GitHub: `cloudflare/worker/src/gooddeed-final.ts` blob `3b1fbda55a3460b5326db66bfc43f72c14d696b4`, audited wrapper blob `5d9702ed68cc393e3099a5ec3b874d13ddb32184`. These are source blob identities, NOT deployed versions.
+- Found an actual observer contract mismatch: the gateway `/readiness` emits `ok/app/environment` and gate booleans, not `status/service`. Added an explicit `--cloudflare-readiness` profile for that existing audited contract; retained the generic service profile. Exact staging identity, configured read/auth/pilot booleans and false production/submit/review/activation gates are required. The profile refuses other paths before any network call. No gateway or backend was created or enabled.
+- `deploymentVerified` remains false even for matching readiness. Configuration reports do not verify usable sessions, active code version, private services, persistence or E2E. This profile is for the current read-only staging phase, not later controlled write acceptance. No live endpoint observation was attempted without a confirmed owned staging URL.
+- Verification: syntax PASS; 139 JS + 23 Python = 162 local tests PASS. Three added Python cases cover the real source response shape, every missing/wrongly typed field, write gates, CLI selection/path and non-certifying output. Provider responses remain synthetic. Optional DOCX dependency `pythainlp` is unavailable.
+- No provider administration tool or installed `gh`, `clasp`, `wrangler` CLI was available. Requested actual staging project/deployment and authority references; none supplied during this continuation. Historical browser denial remains in force; no preview/provider page was retried or bypassed.
+
+## Four requested outcomes: acceptance and exact missing input
+
+| Outcome | Current result | Required next input/action |
+| --- | --- | --- |
+| Actual Apps Script + Cloudflare staging | BLOCKED; observer now matches source | Owned GAS project/deployment/version and Worker deployment/version plus permitted staging URLs and binding names; compare versions before GET observation |
+| Session / teacher scope / private signatures | BLOCKED; existing session code inspected, private ports absent | Authoritative assignment source, current Master linkage and persisted signature verification/purpose/expiry contract; resolve from trusted server records |
+| Durable submit/review and recovery | BLOCKED; retained legacy contains replay and uncertainty handling only | Verified journal/outbox fields and official period/category policy; implement locked durable identity/proof consumption and explicit reconciliation against eight-column storage, never enable legacy eleven-column writer |
+| Student/admin/mobile/LINE LIFF E2E | BLOCKED | Permitted browser access, verified staging identities and private backup/restore evidence; run the existing controlled acceptance sequence after real adapters work |
+
+Next: obtain the references above, inspect only permitted configuration/header metadata, then implement the trusted private adapters against that evidence. Do not add another prerequisite checker in place of the writer, guess schemas, reuse client roles/drawings as authority, or label all four outcomes complete. No deployment, real data write, deletion, schema change, notification, endpoint change or credential rotation occurred. Keep Draft PR #4 and Production write FALSE.
+
+---
+
 # Incoming patch reconciliation — 2026-09-11
 
 State: SOURCE VERIFIED / PRIVATE DEPLOYMENT AND WRITE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.
