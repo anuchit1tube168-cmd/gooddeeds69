@@ -57,7 +57,7 @@ node --test tests/*.test.cjs
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
-ผล local ชุดนี้: syntax ผ่าน, JavaScript **136/136**, Python **17/17** รวม **153** รายการ ใช้ข้อมูลสมมติ/transport doubles ไม่ใช่ผล LINE/Google/Telegram จริง ดูขอบเขตและสิ่งที่ยัง BLOCKED ใน test plan ตรวจ PII ด้วยกฎเดิมก่อน commit เสมอ
+ผล local ชุดนี้: syntax ผ่าน, JavaScript **143/143**, Python **23/23** รวม **166** รายการ ใช้ข้อมูลสมมติ/transport doubles ไม่ใช่ผล LINE/Google/Telegram จริง ดูขอบเขตและสิ่งที่ยัง BLOCKED ใน test plan ตรวจ PII ด้วยกฎเดิมก่อน commit เสมอ
 
 ## เงื่อนไขบังคับของระบบ (Non-negotiable Conditions)
 

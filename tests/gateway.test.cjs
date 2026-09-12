@@ -37,8 +37,8 @@ function liffSetup(gatewayResult) {
 test('forged local admin mapping never creates a staff session or a binding',async()=>{const s=liffSetup({...session,studentLinked:false});await s.helper.handleAutoLogin();assert.equal(s.sessions.length,0);assert.equal(s.helper.connectionState,'pending');assert.match(s.nodes['line-liff-title'].textContent,/รอเชื่อม/);assert.equal(s.store.size,1);});
 test('LINE UI does not claim binding or notification success after failure',async()=>{const s=liffSetup(Error('failure'));assert.equal(await s.helper.handleAutoLogin(),false);assert.equal(s.helper.verifiedSession,null);assert.match(s.nodes['line-liff-title'].textContent,/ยังยืนยันบัญชีไม่ได้/);assert.doesNotMatch(s.nodes['line-liff-detail'].textContent,/พร้อมรับแจ้งเตือน/);});
 function viewSetup(client){
- const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:selector=>selector==='[data-view]'?[...root.innerHTML.matchAll(/data-view="([^"]+)"/g)].map(match=>node('nav-'+match[1],{dataset:{view:match[1]}})):[]};
- const node=(id,extra={})=>{if(!nodes.has(id))nodes.set(id,{innerHTML:'',textContent:'',value:'',disabled:false,focus:()=>{},...extra});return nodes.get(id);};
+ const nodes = new Map(), root={innerHTML:'',setAttribute:()=>{},querySelectorAll:selector=>selector==='[data-view]'?[...root.innerHTML.matchAll(/data-view="([^"]+)"/g)].map(match=>node('nav-'+match[1],{dataset:{view:match[1]}})):selector==='button'?[...root.innerHTML.matchAll(/<button\b[^>]*\bid="([^"]+)"/g)].map(match=>node(match[1])):[]};
+ const node=(id,extra={})=>{if(!nodes.has(id))nodes.set(id,{id,innerHTML:'',textContent:'',value:'',disabled:false,focus:()=>{},...extra});return nodes.get(id);};
  const context=vm.createContext({console,Intl,Date,window:{createGoodDeedGatewayClient:()=>client},document:{getElementById:node}});
  vm.runInContext(fs.readFileSync('frontend/gooddeed-ui.js','utf8'),context);
  vm.runInContext(fs.readFileSync('frontend/secure-pilot/mission-data.js','utf8'),context);
@@ -71,4 +71,25 @@ test('Mission Control navigation keeps submission behind the existing integratio
  assert.match(v.root.innerHTML,/ทุกความดี คือภารกิจที่มีคุณค่า/);
  for(const view of ['radar','analytics','profile','history','submit'])v.go(view);
  assert.match(v.root.innerHTML,/กำลังเตรียมเปิดรับบันทึกความดี/);assert.doesNotMatch(v.root.innerHTML,/<form/);assert.equal(reads,1);
+});
+test('native abort exceptions become a stable timeout code',async()=>{
+ const s=setup((url,options)=>new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(new DOMException('Synthetic abort','AbortError')))));
+ await assert.rejects(s.client.restore(),{code:'REQUEST_TIMEOUT'});
+});
+test('explicit cancellation is distinct from a network timeout',async()=>{
+ const s=setup((url,options)=>new Promise((resolve,reject)=>options.signal.addEventListener('abort',()=>reject(new DOMException('Synthetic abort','AbortError')))));
+ const pending=s.client.restore();s.client.clear();await assert.rejects(pending,{code:'REQUEST_CANCELLED'});
+});
+test('logout remains available during a slow read and an old read cannot return student data',async()=>{
+ let resolveRead,resolveLogout,clears=0,logouts=0,reads=0;
+ const v=viewSetup({restore:async()=>session,readSelf:()=>++reads===1?Promise.resolve(viewSnapshot):new Promise(r=>resolveRead=r),clear:()=>clears++,logout:()=>{logouts++;return new Promise(r=>resolveLogout=r);}});
+ await v.start();const reading=v.node('gateway-refresh').onclick();assert.equal(v.node('gateway-logout').disabled,false);const leaving=v.node('gateway-logout').onclick();
+ assert.equal(logouts,1);assert.equal(clears,0,'logout owns cancellation and retains its existing CSRF token');
+ assert.doesNotMatch(v.root.innerHTML,/Synthetic Student/);resolveRead(viewSnapshot);await reading;assert.doesNotMatch(v.root.innerHTML,/Synthetic Student/);
+ resolveLogout();await leaving;assert.match(v.root.innerHTML,/ออกจากระบบแล้ว/);
+});
+test('stale data warning survives navigation until a fresh read succeeds',async()=>{
+ let failed=false;const v=viewSetup({restore:async()=>session,readSelf:async()=>{if(failed)throw {code:'REQUEST_TIMEOUT'};return viewSnapshot;}});
+ await v.start();failed=true;await v.node('gateway-refresh').onclick();v.go('records');assert.match(v.root.innerHTML,/อาจยังไม่เป็นปัจจุบัน/);
+ v.go('radar');assert.match(v.root.innerHTML,/อาจยังไม่เป็นปัจจุบัน/);failed=false;await v.node('gateway-refresh').onclick();assert.doesNotMatch(v.root.innerHTML,/อาจยังไม่เป็นปัจจุบัน/);
 });

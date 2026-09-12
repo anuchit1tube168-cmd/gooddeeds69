@@ -7,7 +7,7 @@ Updated 2026-09-12. Release verdict: **NOT PRODUCTION READY**. Local code verifi
 | Check | Result | Scope |
 | --- | --- | --- |
 | `node scripts/check-syntax.cjs` | PASS | JS, Apps Script and retained inline scripts; Python AST |
-| `node --test tests/*.test.cjs` | PASS — 139/139 | Pure domain/projection logic, synthetic controller/input doubles, mock gateway/storage and preview HTTP boundary |
+| `node --test tests/*.test.cjs` | PASS — 143/143 | Pure domain/projection logic, synthetic controller/input doubles, mock gateway/storage and preview HTTP boundary |
 | `python3 -m unittest discover -s tests -p 'test_*.py' -v` | PASS — 23/23 | Local static/API/auth/notification boundary behavior |
 | Readiness observer contract | PASS — synthetic fixtures only | Explicit audited gateway shape and disabled gates; no live deployment verification |
 | New screenshot/layout/console inspection | BLOCKED | Automatic approval review denied current browser access to the preview |
@@ -15,7 +15,7 @@ Updated 2026-09-12. Release verdict: **NOT PRODUCTION READY**. Local code verifi
 | Live LINE/GAS/Drive/Cloudflare/Telegram E2E | BLOCKED / NOT VERIFIED | No verified active staging deployment/session in this continuation |
 | DOCX generation | NOT VERIFIED | Optional `pythainlp` dependency unavailable; boundary tests do not prove document rendering |
 
-Total executed passing automated tests: **162**. Controller doubles do not implement browser layout, native dialog focus containment, pointer devices, file pickers, real React DOM painting or assistive technology. Do not relabel them browser E2E.
+Total executed passing automated tests: **166**. Controller doubles do not implement browser layout, native dialog focus containment, pointer devices, file pickers, real React DOM painting or assistive technology. Do not relabel them browser E2E.
 
 ## Requirement coverage
 
@@ -45,7 +45,7 @@ Total executed passing automated tests: **162**. Controller doubles do not imple
 | F — Admin | Demo filters, selected sequence and per-record confirmation | Server assigned scope and secure durable review |
 | G — Mobile / LIFF | Responsive rules and keyboard input callbacks | Browser/device UAT |
 | H — Performance / Security | Reuse pinned React, no heavy engine, preview sizing, stricter self projection | Measured loading/INP, server evidence validation and provider security gates |
-| I — Testing / Docs | 162 local tests and current documentation | Complete regression plus staging/browser evidence before release |
+| I — Testing / Docs | 166 local tests and current documentation | Complete regression plus staging/browser evidence before release |
 
 ## Controlled staging acceptance sequence
 
@@ -86,3 +86,23 @@ UTF-8 Content-Length now frames its JSON denial. One new byte-framing case and
 stronger existing POST assertions pass. No browser/provider E2E was performed.
 See the current WORK_STATE for verified source heads and unresolved deployment,
 private session/scope/signature, journal/outbox, policy and physical LIFF gates.
+
+## Session and slow-network continuation — 2026-09-12
+
+Four new regression cases failed before the client/view fix and now pass:
+actual DOMException AbortError normalizes to REQUEST_TIMEOUT; explicit cancellation
+normalizes to REQUEST_CANCELLED; logout remains enabled during a pending refresh,
+hides the snapshot immediately and ignores its late result; stale-data warnings
+persist across record/Radar navigation until a successful read.
+
+The view no longer clears the client's CSRF token before invoking logout, avoiding
+an unnecessary token-fetch dependency. Session acceptance and completed paired
+reads also check their operation generation. Old login/restore/refresh completion
+cannot unlock an ongoing logout. The UI/controller checks are still test doubles,
+not rendered browser or physical LINE webview acceptance.
+
+Current combined suite after preserving upstream readiness changes: **143 JS +
+23 Python = 166 passed**, syntax passed. Browser authentication capability access
+was rejected by automatic approval review with a usage-limit reason before any
+provider sign-in or deployment page was reached. No new provider-runtime result
+or screenshot is claimed; do not route around the denial.

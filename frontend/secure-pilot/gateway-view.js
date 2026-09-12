@@ -5,7 +5,7 @@ window.startGoodDeedGatewayView = function (options) {
   const ui = window.GoodDeedUI;
   let view = 'overview', selected = '', categoryFilter = '';
   const client = window.createGoodDeedGatewayClient({origin:config.GATEWAY_ORIGIN, timeoutMs:config.REQUEST_TIMEOUT_MS});
-  let snapshot = null, session = null, busy = false, filter = 'all', query = '', revision = 0;
+  let snapshot = null, session = null, busy = false, loggingOut = false, staleMessage = '', filter = 'all', query = '', revision = 0;
   const escape = value => String(value ?? '').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const status = ui.statuses;
   const categories = ['','บริจาคโลหิต / เกล็ดเลือด / พลาสมา','โครงการภายนอกตามคำสั่ง','ช่วยงานภายในวิทยาลัย','การอบรมของวิทยาลัย','ช่วยงานหน่วยงาน / ชุมชน','ทำนุบำรุงศาสนสถาน','งานช่วยเหลือโดยไม่รับค่าตอบแทน','กิจกรรมจงรักภักดี','บทบาทพิเศษ'];
@@ -36,7 +36,7 @@ window.startGoodDeedGatewayView = function (options) {
     const events=window.GoodDeedMissionData.timeline(item);
     return `<section class="panel"><div class="panel-head"><div><p class="eyebrow">MISSION LOG</p><h2>${escape(categories[item.categoryId])}</h2><p>${escape(item.deedId)}</p></div><button class="btn btn-secondary" data-view="records">กลับไปรายการ</button></div><div class="panel-body"><span class="gateway-status status-${escape(item.status)}">${escape(status[item.status])}</span><h3>${item.hours} ชม. · ${escape(date(item.activityDate))}</h3><p class="detail-description">${escape(item.description)}</p>${events.length?ui.timeline(events):'<p class="muted">ยังไม่มีข้อมูลเวลาในประวัติ</p>'}${item.note||item.reviewNote?`<div class="gateway-notice"><strong>ข้อเสนอแนะจากผู้ตรวจ</strong><p>${escape(item.note||item.reviewNote)}</p></div>`:''}<p class="gateway-notice notice-info">การเปิดหลักฐานและแก้ไขรายการจะเปิดใช้หลังผ่านการทดสอบสิทธิ์กับระบบจริง กรุณาติดต่ออาจารย์ผู้ดูแลหากต้องการแก้ไข</p></div></section>`;
   }
-  function dashboard(message = '') {
+  function dashboard(message = staleMessage) {
     const {card}=snapshot,metrics=window.GoodDeedMissionData.summarize(card,snapshot.items,{complete:false});
     let content;
     if(['overview','radar','analytics','profile'].includes(view))content=ui.missionSlot()+(view==='overview'?ui.kindnessSlot():'');
@@ -56,50 +56,59 @@ window.startGoodDeedGatewayView = function (options) {
     window.GoodDeedKindness?.mount(document.getElementById('kindness-panel'),{onStart:()=>navigate('submit')});
   }
   function focusContent(){document.getElementById('workspace-view')?.focus?.({preventScroll:true});}
-  function navigate(next){view=next;dashboard();focusContent();}
+  function navigate(next){if(!snapshot||busy||loggingOut)return;view=next;dashboard();focusContent();}
   function bindNavigation(){root.querySelectorAll('[data-view]').forEach(button=>{button.onclick=()=>navigate(button.dataset.view);});}
-  function lock(value) { busy=value; root.setAttribute('aria-busy', String(value)); root.querySelectorAll('button').forEach(button=>{button.disabled=value;}); }
+  function lock(value) { busy=value; root.setAttribute('aria-busy', String(value)); root.querySelectorAll('button').forEach(button=>{button.disabled=value && (button.id!=='gateway-logout'||loggingOut);}); }
   async function refresh() {
     if (busy) return;
     const current = ++revision; lock(true);
-    try { const data = await client.readSelf(); if(current===revision) { snapshot=data; dashboard(); } }
+    try { const data = await client.readSelf(); if(current===revision) { snapshot=data; staleMessage=''; dashboard(); } }
     catch (error) {
       if (current!==revision) return;
       // Do not render another student's or expired-session data after denial.
-      if (['SESSION_REQUIRED','ACCESS_DENIED','LINK_REQUIRED'].includes(error.code)) { snapshot=null;session=null;entry(errorText(error)); }
-      else if (snapshot) dashboard('ข้อมูลอาจยังไม่เป็นปัจจุบัน · '+errorText(error));
+      if (['SESSION_REQUIRED','ACCESS_DENIED','LINK_REQUIRED'].includes(error.code)) { snapshot=null;session=null;staleMessage='';entry(errorText(error)); }
+      else if (snapshot) { staleMessage='ข้อมูลอาจยังไม่เป็นปัจจุบัน · '+errorText(error);dashboard(); }
       else entry(errorText(error));
     } finally { if(current===revision) lock(false); }
   }
   async function login() {
     if (busy) return;
+    const current=++revision;
     lock(true);
     try {
       if (!config.GATEWAY_ORIGIN) throw {code:'GATEWAY_NOT_CONFIGURED'};
       if (!window.liff) throw {code:'LINE_TOKEN_REQUIRED'};
       await window.liff.init({liffId:config.LIFF_ID});
+      if(current!==revision)return;
       if (!window.liff.isLoggedIn()) { window.liff.login(); return; }
-      session = await client.verifyLine(window.liff.getIDToken());
+      const verified = await client.verifyLine(window.liff.getIDToken());
+      if(current!==revision)return;
+      session=verified;
       if (!session.studentLinked) { entry(errors.LINK_REQUIRED, true); return; }
       lock(false); await refresh();
-    } catch (error) { snapshot=null;entry(errorText(error)); }
-    finally { lock(false); }
+    } catch (error) { if(current===revision){snapshot=null;session=null;entry(errorText(error));} }
+    finally { if(current===revision)lock(false); }
   }
   async function logout() {
-    if (busy) return;
-    ++revision; snapshot=null;session=null;client.clear();entry('กำลังออกจากระบบ…');lock(true);
+    if (loggingOut) return;
+    const current=++revision;loggingOut=true;snapshot=null;session=null;staleMessage='';entry('กำลังออกจากระบบ…');lock(true);
+    // logout() cancels reads itself and preserves the current CSRF token for
+    // revocation. A preliminary clear() would discard that token unnecessarily.
     try { await client.logout(); if(window.liff?.isLoggedIn()) window.liff.logout();entry('ออกจากระบบแล้ว'); }
     catch (_) { entry('ซ่อนข้อมูลบนหน้านี้แล้ว แต่ยังยืนยันการออกจากระบบกับเซิร์ฟเวอร์ไม่ได้ กรุณาลองอีกครั้ง', false, true); }
-    finally { lock(false); }
+    finally { if(current===revision){loggingOut=false;lock(false);} }
   }
   async function start() {
+    const current=++revision;
     entry(); lock(true);
     try {
-      session = await client.restore();
+      const restored = await client.restore();
+      if(current!==revision)return;
+      session=restored;
       if (!session.studentLinked) { entry(errors.LINK_REQUIRED, true); return; }
       lock(false); await refresh();
-    } catch (error) { entry(error.code==='SESSION_REQUIRED'?'':errorText(error)); }
-    finally { lock(false); }
+    } catch (error) { if(current===revision)entry(error.code==='SESSION_REQUIRED'?'':errorText(error)); }
+    finally { if(current===revision)lock(false); }
   }
   return start();
 };

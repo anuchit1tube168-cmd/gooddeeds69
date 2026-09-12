@@ -77,3 +77,12 @@ A role selector exists only in the disconnected demonstration. Real staff access
 ## Current validation boundary
 
 Source has breakpoints for 360/390/430px, tablet and desktop, keyboard drawing callbacks, reduced motion and native dialog semantics. New rendered layout, dialog focus containment, screen-reader behavior, console status, performance measurements and physical LINE webviews are **not yet verified** because current browser preview access was denied by automatic approval review. Controller doubles and old screenshots do not close those gates. See the test plan.
+
+## Session feedback and exit
+
+During a data refresh, logout remains available. It immediately hides personal
+information while requesting server revocation; a failed revocation says that
+server logout is unconfirmed and offers retry. Late refresh responses do not
+repopulate the page. An unsuccessful refresh retains the existing stale-data
+notice when navigating between views; only a successful fresh read clears it.
+These transitions have controller coverage; current browser/device QA is pending.

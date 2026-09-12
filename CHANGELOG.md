@@ -32,3 +32,10 @@ Merged source updates through `2bff70e2522f9c92d4dd495ed1b86dd1e793d44a` before 
 - Fix self-read mappings accepting aliased fields and Mission IDs colliding across owners.
 - Add internal, read-only review prerequisite checks for current server session, exact assigned scope and private signature intent. No new enabled route, schema, writer or auth provider.
 - Add 14 regression cases; local suite now 145 passed. Production resolver/signature/journal integration and current browser/provider acceptance remain open.
+
+## 2026-09-12 — Session and slow-network reliability
+
+- Preserve upstream failure-reporting, callback write gate and audited readiness observer changes through ffa7b65.
+- Normalize native abort errors, distinguish explicit cancellation, guard session/read completion generations and allow logout while a read is pending.
+- Preserve the CSRF token for revocation and keep stale-data warnings across view changes until a successful refresh.
+- Update client/view asset references. Four reproduced regressions fixed; combined suite 166 passed. No provider deployment or write enabled.

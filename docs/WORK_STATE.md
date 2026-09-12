@@ -1,3 +1,21 @@
+# Session and slow-network checkpoint — 2026-09-12
+
+State: LOCAL SOURCE VERIFIED / AUTHENTICATION BROWSER BLOCKED / PRODUCTION WRITE = FALSE.
+Remote parent: `ffa7b65d4067a5469df1f00bc6a049e12e07d645`; local parent `520f515`.
+This workspace is the earlier **partial** professional-review checkout. Other agents' complete-checkout reports below describe their environments, not this one. Publish only reviewed blobs on the current remote tree; never push this local tree/history as the full repository.
+
+- Applied and preserved incoming commits `4ad635a7`, `01d320c3`, `ffa7b65d` before final testing: review uncertainty/failure identity, response framing, callback gate and readiness observer. Do not overwrite these changes with older local files.
+- Four new tests reproduced native DOMException timeout misclassification, explicit-cancel misclassification, logout blocked during slow refresh and stale warnings disappearing on navigation. Fixed in the existing gateway client/view; no new auth/backend.
+- Logout hides the snapshot and can cancel an ongoing refresh. Its own client method retains CSRF before clearing reads, so the view no longer discards the token first. Late operations cannot restore data or unlock a newer logout; session acceptance and paired reads also verify generation.
+- Kept stale-data notice until a successful fresh read. Updated six HTML entrypoints' client/view version references. Shared aviation/Radar design and all write boundaries remain unchanged.
+- Verification after upstream reconciliation: syntax PASS; JavaScript 143/143; Python 23/23; **166 total**. The focused gateway suite passed after strengthening the visible logout-button state assertion. No browser layout/device/E2E claim follows from these doubles.
+- Current browser inspection found only about:blank. Reading the advertised browserAuth capability was explicitly denied by automatic approval review: usage limit reached. No sign-in, credentials, provider page, preview retry, alternate-browser workaround or deployment was performed. This is a current tool-approval limitation, not evidence of a provider outage or missing user authorization.
+- No production write, real notification, schema edit, credential rotation, LIFF change, merge or cutover. Production remains unverified.
+
+Next: preserve this tested source on Draft PR #4 and verify final-head CI. Integration still needs the owned staging GAS project/deployment/version and Worker version/binding names, authoritative assignment/private-signature inputs, official category/period policy and durable storage/recovery evidence listed below. Resume the approved browser path only when access actually changes; do not replace this missing evidence with more demo logic or another prerequisite checker.
+
+---
+
 # Gateway readiness contract continuation — 2026-09-12
 
 State: LOCAL SOURCE VERIFIED / LIVE INTEGRATION BLOCKED / PRODUCTION WRITE = FALSE.

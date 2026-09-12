@@ -127,3 +127,7 @@ Concurrent upstream reconciliation: five commits through `2bff70e2522f9c92d4dd49
 ## Server prerequisite continuation — 2026-09-10
 
 `GoodDeedReviewGate.gs` is an internal read-only checker, not an enabled review adapter. Its server ports must resolve verified session, exact current assignment, a canonical deed revision and persisted private signature intent. The ports/challenge verifier are not implemented. Never populate them from client claims or treat `checksPassed` as write authority; every result stays `executable: false`. Follow the appended contract in `docs/REVIEW_STORAGE_CONTRACT.md` and recheck under the future durable writer's lock. Latest source suite: 129 JS + 16 Python = 145; current runtime/browser gates remain open.
+
+## Session reliability continuation — 2026-09-12
+
+The real gateway view must allow logout during read refresh, preserve the client's CSRF token until its logout method captures it, and prevent stale async work from restoring data or unlocking a later operation. Navigation must retain a stale-data warning until a fresh read succeeds. Native abort exceptions have numeric DOM codes; normalize them to stable cancellation/timeout errors rather than passing them through as domain codes. Latest combined tests: 143 JS + 23 Python = 166. Browser-auth capability access was denied with a usage-limit reason; current provider/device QA remains blocked.

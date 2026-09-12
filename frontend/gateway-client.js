@@ -31,11 +31,14 @@
         if (!data || typeof data !== 'object' || Array.isArray(data) || data.ok === false || data.error) throw error('RESPONSE_INVALID');
         return data;
       } catch (cause) {
-        if (cause.code) throw cause;
-        throw error(cause.name === 'AbortError' ? 'REQUEST_TIMEOUT' : 'CONNECTION_FAILED');
+        if (current !== epoch) throw error('REQUEST_CANCELLED');
+        if (controller.signal.aborted || cause?.name === 'AbortError') throw error('REQUEST_TIMEOUT');
+        if (['SESSION_REQUIRED','ACCESS_DENIED','RATE_LIMITED','SERVICE_UNAVAILABLE','RESPONSE_INVALID'].includes(cause?.code)) throw cause;
+        throw error('CONNECTION_FAILED');
       } finally { clearTimeout(timeout); inflight.delete(controller); }
     }
-    function acceptSession(data) {
+    function acceptSession(data, current) {
+      if (current !== epoch) throw error('REQUEST_CANCELLED');
       if (data.authenticated !== true || typeof data.studentLinked !== 'boolean' || typeof data.accountStatus !== 'string' || !Array.isArray(data.roles) || !Array.isArray(data.permissions)) throw error('RESPONSE_INVALID');
       session = {authenticated:true, studentLinked:data.studentLinked, accountStatus:data.accountStatus, roles:data.roles.filter(x=>typeof x==='string'), permissions:data.permissions.filter(x=>typeof x==='string')};
       csrfToken = typeof data.csrfToken === 'string' ? data.csrfToken : '';
@@ -49,12 +52,15 @@
       async verifyLine(idToken) {
         clear();
         if (typeof idToken !== 'string' || !idToken || idToken.length > 4096) throw error('LINE_TOKEN_REQUIRED');
-        return acceptSession(await request('/auth/line/verify', 'POST', {idToken}));
+        const current = epoch;
+        return acceptSession(await request('/auth/line/verify', 'POST', {idToken}), current);
       },
-      async restore() { clear(); return acceptSession(await request('/auth/session')); },
+      async restore() { clear(); const current = epoch; return acceptSession(await request('/auth/session'), current); },
       async readSelf() {
         if (!session?.studentLinked || !session.permissions.includes('gooddeed:self:read')) throw error('LINK_REQUIRED');
+        const current = epoch;
         const [cardResult, listResult] = await Promise.all([request('/api/gooddeed/card-self'), request('/api/gooddeed/deeds-self')]);
+        if (current !== epoch) throw error('REQUEST_CANCELLED');
         const card = cardResult.card, items = listResult.items;
         if (!card || typeof card.displayName !== 'string' || !/^\d{7}$/.test(card.studentId) || typeof card.totalHours !== 'number' || !Number.isFinite(card.totalHours) || card.totalHours < 0 || !Number.isInteger(card.levelNumber) || card.levelNumber < 1 || card.levelNumber > 10 || typeof card.levelLabel !== 'string' || typeof card.passed !== 'boolean' || ![card.pendingCount,card.approvedCount].every(x=>Number.isInteger(x)&&x>=0) || !Array.isArray(items) || items.length > 150) throw error('RESPONSE_INVALID');
         const seen = new Set();
