@@ -5,21 +5,24 @@ import random
 import time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DATA_DIR = os.path.join(BASE_DIR, 'data')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 
-# 10 Students from Class 64 (รุ่น 64)
-CLASS64_STUDENTS = [
-    {"student_id": "6403626", "first_name": "กชกร", "last_name": "รัตนเวชสิทธิ", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403627", "first_name": "กชนิภา", "last_name": "บุญพลอย", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403628", "first_name": "กัญญารัตน์", "last_name": "มีลา", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403629", "first_name": "กัลย์สุดา", "last_name": "ปิยะพงษ์", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403630", "first_name": "กาญจนา", "last_name": "พิชิตชัยปกรณ์", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403631", "first_name": "เกศินี", "last_name": "เรืองแก้ว", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403633", "first_name": "จิณิฐตา", "last_name": "พรมมูล", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403634", "first_name": "จุฑามาศ", "last_name": "พึ่งเพาะ", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403635", "first_name": "ชลดา", "last_name": "หวังเขื่อนกลาง", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"},
-    {"student_id": "6403636", "first_name": "ชาลิสา", "last_name": "เลียบทวี", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"}
-]
+# Load Students from Class 64 (รุ่น 64) dynamically
+def get_class64_students():
+    students_file = os.path.join(DATA_DIR, 'students.json')
+    if os.path.exists(students_file):
+        with open(students_file, 'r', encoding='utf-8') as f:
+            all_s = json.load(f)
+            c64 = [s for s in all_s if s.get('class_year') == 64]
+            if c64:
+                return c64[:10]
+    return [
+        {"student_id": f"640362{i}", "first_name": f"นักเรียนจำลอง{i}", "last_name": "ทดสอบระบบ", "rank": "นพอ.", "class_year": 64, "year_level": 5, "role": "student"}
+        for i in range(10)
+    ]
+
+CLASS64_STUDENTS = get_class64_students()
 
 DEED_TEMPLATES = [
     (1, 4.0, "บริจาคโลหิตเพื่อช่วยเหลือผู้ป่วยวิกฤต ณ โรงพยาบาลภูมิพลอดุลยเดช"),

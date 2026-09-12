@@ -430,10 +430,10 @@
         </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3545"></script>
-    <script src="data/students_data.js?v=3545"></script>
-    <script src="data/deeds_data.js?v=3545"></script>
-    <script src="app.js?v=3545"></script>
+    <script src="data/teachers_data.js?v=3591"></script>
+    <script src="data/students_data.js?v=3591"></script>
+    <script src="data/deeds_data.js?v=3591"></script>
+    <script src="app.js?v=3591"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -583,52 +583,79 @@
             }
         }
 
+        function cropCanvasToBoundingBox(cvs, padding = 8) {
+            if (!cvs) return '';
+            try {
+                const context = cvs.getContext('2d');
+                const w = cvs.width;
+                const h = cvs.height;
+                const imgData = context.getImageData(0, 0, w, h);
+                const data = imgData.data;
+
+                let minX = w, minY = h, maxX = 0, maxY = 0;
+                let found = false;
+
+                for (let y = 0; y < h; y++) {
+                    for (let x = 0; x < w; x++) {
+                        const alpha = data[(y * w + x) * 4 + 3];
+                        if (alpha > 12) {
+                            if (x < minX) minX = x;
+                            if (x > maxX) maxX = x;
+                            if (y < minY) minY = y;
+                            if (y > maxY) maxY = y;
+                            found = true;
+                        }
+                    }
+                }
+
+                if (!found) return cvs.toDataURL('image/png');
+
+                minX = Math.max(0, minX - padding);
+                minY = Math.max(0, minY - padding);
+                maxX = Math.min(w, maxX + padding);
+                maxY = Math.min(h, maxY + padding);
+
+                const cropW = Math.max(1, maxX - minX);
+                const cropH = Math.max(1, maxY - minY);
+
+                const cropCanvas = document.createElement('canvas');
+                cropCanvas.width = cropW;
+                cropCanvas.height = cropH;
+                const cropCtx = cropCanvas.getContext('2d');
+                cropCtx.drawImage(cvs, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+
+                return cropCanvas.toDataURL('image/png');
+            } catch (e) {
+                return cvs.toDataURL('image/png');
+            }
+        }
+
+        const urlName = ''; // URL parameters are not verified identity.
+
+        function isValidRealName(name) {
+            if (!name) return false;
+            const s = String(name).trim();
+            if (!s || s === 'นพอ.' || s === '-' || s.includes('รหัส') || /นพอ\.?\s*\(?\d+\)?/.test(s)) return false;
+            return true;
+        }
+
         function findDeed(deedId, studentId) {
-            function str(v) { return v ? String(v).trim() : ''; }
-            let all = [];
-            if (studentId) {
-                all = App.getDeeds(studentId);
-            } else if (typeof IMPORTED_DEEDS !== 'undefined') {
-                for (const list of Object.values(IMPORTED_DEEDS)) {
-                    if (Array.isArray(list)) all.push(...list);
-                }
-            } else if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
-                all = DEEDS_DATA;
-            }
-
-            if (deedId) {
-                let found = all.find(d => str(d.id) === str(deedId));
-                if (found) return found;
-
-                found = all.find(d => str(d.id).includes(str(deedId)) || str(deedId).includes(str(d.id)));
-                if (found) return found;
-
-                if (deedId.includes('1724138400000') || deedId.includes('6603771')) {
-                    found = all.find(d => str(d.activityDate) === '2026-08-20' || (d.description && d.description.includes('ค่ายรัฐบุรุษ')));
-                    if (found) return found;
-                }
-            }
-
-            if (all.length > 0) {
-                return all[all.length - 1];
-            }
-            return null;
+            const id = typeof deedId === 'string' ? deedId.trim() : '';
+            const owner = typeof studentId === 'string' ? studentId.trim() : '';
+            if (!id || !/^\d{7}$/.test(owner) || typeof App === 'undefined') return null;
+            const rows = App.getDeeds(owner);
+            if (!Array.isArray(rows)) return null;
+            const matches = rows.filter(row => row && String(row.id || '') === id);
+            if (matches.length !== 1) return null;
+            const row = matches[0];
+            if (String(row.student_id || row.studentId || '') !== owner) return null;
+            return row;
         }
 
         async function loadDeedData() {
             const params = new URLSearchParams(window.location.search);
             const deedId = params.get('id');
             const studentId = params.get('studentId');
-            const urlName = params.get('name');
-            const urlCat = params.get('cat');
-            const urlCatName = params.get('catName');
-            const urlHours = params.get('hours');
-            const urlDate = params.get('date');
-            const urlDesc = params.get('desc');
-            const urlLoc = params.get('loc');
-            const urlAppr = params.get('appr');
-            const urlStatus = params.get('status') || 'pending';
-            const urlImg = params.get('img');
 
             function str(v) { return v ? String(v).trim() : ''; }
 
@@ -653,21 +680,10 @@
                 }
             }
 
-            // 3. Robust Fallback from URL parameters (Zero Network Delay / Works anywhere)
-            if (!currentDeed && (urlDesc || urlHours || urlCat || urlName)) {
-                currentDeed = {
-                    id: deedId || ('deed_' + Date.now()),
-                    studentId: studentId || '',
-                    categoryId: parseInt(urlCat) || 3,
-                    category_name: urlCatName || '',
-                    hours: parseFloat(urlHours) || 1.0,
-                    description: urlDesc || 'กิจกรรมจิตอาสา',
-                    activityDate: urlDate || new Date().toISOString().split('T')[0],
-                    location: urlLoc || 'วิทยาลัยพยาบาลทหารอากาศ',
-                    approver: urlAppr || 'ร.อ.อนุชิต ทำจะดี (Bird)',
-                    status: urlStatus,
-                    imageUrl: urlImg || ''
-                };
+            if (!currentDeed) {
+                document.querySelectorAll('button').forEach(button => { button.disabled = true; });
+                document.body.textContent = 'ไม่พบรายการความดีที่ตรงกับรหัสและเจ้าของ กรุณาเปิดจากรายการที่ตรวจสอบแล้ว';
+                return;
             }
 
             const sid = (currentDeed && (currentDeed.student_id || currentDeed.studentId)) || studentId || '';
@@ -675,57 +691,68 @@
                 currentStudent = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
             }
 
-            // Fallback 1: from deed itself (enriched deeds)
-            if (!currentStudent && currentDeed && (currentDeed.student_name || currentDeed.studentName)) {
-                currentStudent = {
-                    student_id: sid,
-                    rank: currentDeed.student_rank || '',
-                    first_name: currentDeed.student_first_name || currentDeed.student_name || currentDeed.studentName,
-                    last_name: currentDeed.student_last_name || '',
-                    full_name: currentDeed.student_name || currentDeed.studentName,
-                    class_year: currentDeed.class_year || (sid ? sid.substring(0, 2) : ''),
-                    position: currentDeed.student_position || ''
-                };
+            // Check cached students in localStorage
+            if ((!currentStudent || !isValidRealName(currentStudent.first_name || currentStudent.full_name)) && sid) {
+                try {
+                    const cached = localStorage.getItem('gooddeeds_cached_students');
+                    if (cached) {
+                        const list = JSON.parse(cached);
+                        if (Array.isArray(list)) {
+                            const found = list.find(s => str(s.student_id) === str(sid));
+                            if (found && isValidRealName(found.first_name || found.full_name)) {
+                                currentStudent = found;
+                            }
+                        }
+                    }
+                } catch(e) {}
             }
 
-            // Fallback 2: from URL params
-            if (!currentStudent && (urlName || sid)) {
+            // Fallback 1: from deed itself (enriched deeds)
+            if ((!currentStudent || !isValidRealName(currentStudent.first_name || currentStudent.full_name)) && currentDeed) {
+                const deedCandidate = currentDeed.student_name || currentDeed.studentName;
+                if (isValidRealName(deedCandidate) || isValidRealName(currentDeed.student_first_name)) {
+                    currentStudent = {
+                        student_id: sid,
+                        rank: currentDeed.student_rank || '',
+                        first_name: currentDeed.student_first_name || currentDeed.student_name || currentDeed.studentName,
+                        last_name: currentDeed.student_last_name || '',
+                        full_name: deedCandidate || `${currentDeed.student_rank || 'นพอ.'} ${currentDeed.student_first_name || ''} ${currentDeed.student_last_name || ''}`.trim(),
+                        class_year: currentDeed.class_year || (sid ? sid.substring(0, 2) : ''),
+                        position: currentDeed.student_position || ''
+                    };
+                }
+            }
+
+            // Fallback 2: from URL params if valid real name
+            if ((!currentStudent || !isValidRealName(currentStudent.first_name || currentStudent.full_name)) && isValidRealName(urlName)) {
                 currentStudent = {
                     student_id: sid,
-                    rank: '',
-                    first_name: urlName || (sid ? `นพอ. รหัส ${sid}` : '-'),
-                    last_name: '',
-                    full_name: urlName || (sid ? `นพอ. รหัส ${sid}` : '-'),
+                    rank: urlName.startsWith('นพอ.') ? 'นพอ.' : '',
+                    first_name: urlName.replace(/^นพอ\.?\s*/, '').split(' ')[0] || '',
+                    last_name: urlName.replace(/^นพอ\.?\s*/, '').split(' ').slice(1).join(' ') || '',
+                    full_name: urlName,
                     class_year: params.get('year') || (sid ? sid.substring(0, 2) : '')
                 };
             }
 
-            // Fallback 3: Live API fetch from server.py (if available)
-            if ((!currentStudent || !currentStudent.full_name || currentStudent.full_name.includes('รหัส')) && sid) {
+            // Fallback 3: Live API fetch from server.py or Google Apps Script
+            if ((!currentStudent || !isValidRealName(currentStudent.first_name || currentStudent.full_name)) && sid) {
                 try {
-                    const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
-                    const endpoints = [`/api/get_student?studentId=${sid}`];
-                    if (sysUrl && !sysUrl.includes(window.location.host)) {
-                        endpoints.push(`${sysUrl}/api/get_student?studentId=${sid}`);
+                    if (typeof App !== 'undefined' && App.ensureStudentProfile) {
+                        const prof = await App.ensureStudentProfile(sid);
+                        if (prof && isValidRealName(prof.first_name || prof.full_name)) {
+                            currentStudent = prof;
+                        }
                     }
-                    for (const ep of endpoints) {
-                        try {
-                            const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
-                            if (res.ok) {
-                                const sData = await res.json();
-                                if (sData && sData.full_name) {
-                                    currentStudent = sData;
-                                    break;
-                                }
-                            }
-                        } catch (e) {}
-                    }
-                } catch (e) {}
+                } catch(e) {}
+
+                // No direct local/GAS profile fallback: the authenticated helper above is authoritative.
+
             }
 
-            if (currentStudent) {
+            if (currentStudent && (isValidRealName(currentStudent.first_name || currentStudent.full_name) || currentStudent.full_name)) {
                 let display = currentStudent.full_name || '';
-                if (!display) {
+                if (!display || !isValidRealName(display)) {
                     const r = currentStudent.rank || 'นพอ.';
                     display = `${r} ${currentStudent.first_name || ''} ${currentStudent.last_name || ''}`.trim();
                 }
@@ -736,18 +763,24 @@
                 if (pos) extra.push(pos);
 
                 const finalDisplay = display + (extra.length ? ` (${extra.join(' • ')})` : '');
-                document.getElementById('stu-name').textContent = finalDisplay || urlName || (sid ? `นพอ. รหัส ${sid}` : '-');
+                document.getElementById('stu-name').textContent = finalDisplay;
                 document.getElementById('stu-id').textContent = currentStudent.student_id || sid || '-';
+            } else if (isValidRealName(urlName)) {
+                document.getElementById('stu-name').textContent = urlName;
+                document.getElementById('stu-id').textContent = sid || '-';
+            } else if (sid) {
+                document.getElementById('stu-name').textContent = `นพอ. (${sid})`;
+                document.getElementById('stu-id').textContent = sid;
             }
 
             initSignaturePad();
 
             if (currentDeed) {
                 const cat = App.getCategoryById(currentDeed.categoryId || currentDeed.category_id);
-                document.getElementById('deed-cat').textContent = (cat.emoji || '⭐') + ' ' + (currentDeed.category_name || cat.name || urlCatName || 'กิจกรรมจิตอาสา');
-                document.getElementById('deed-desc').textContent = currentDeed.description || currentDeed.title || urlDesc || '-';
-                document.getElementById('deed-date').textContent = App.formatDate(currentDeed.activityDate || currentDeed.event_date || urlDate);
-                document.getElementById('deed-hours').textContent = (currentDeed.hours || urlHours || 0) + ' ชม.';
+                document.getElementById('deed-cat').textContent = (cat.emoji || '⭐') + ' ' + (currentDeed.category_name || cat.name || 'กิจกรรมจิตอาสา');
+                document.getElementById('deed-desc').textContent = currentDeed.description || currentDeed.title || '-';
+                document.getElementById('deed-date').textContent = App.formatDate(currentDeed.activityDate || currentDeed.event_date || '');
+                document.getElementById('deed-hours').textContent = (currentDeed.hours || 0) + ' ชม.';
 
                 // Evidence Photo
                 const evidenceImg = document.getElementById('evidence-img');
@@ -755,7 +788,7 @@
                     this.onerror = null;
                     this.src = '510903.jpg';
                 };
-                const imgKey = currentDeed.imageUrl || currentDeed.imageData || (currentDeed.imageUrls && currentDeed.imageUrls[0]) || urlImg;
+                const imgKey = currentDeed.imageUrl || currentDeed.imageData || (currentDeed.imageUrls && currentDeed.imageUrls[0]) || '';
                 if (imgKey) {
                     evidenceImg.src = (typeof App !== 'undefined' && App.resolveImageUrl) ? App.resolveImageUrl(imgKey) : imgKey;
                 } else {
@@ -763,7 +796,7 @@
                 }
 
                 // Approver Name & Role detection
-                const approver = currentDeed.approvedBy || currentDeed.approved_by || currentDeed.approver || currentDeed.signer || urlAppr || '';
+                const approver = currentDeed.approvedBy || currentDeed.approved_by || currentDeed.approver || currentDeed.signer || '';
                 if (approver.includes('บิดา') || approver.includes('มารดา') || approver.includes('ผู้ปกครอง')) {
                     setApproverRole('parent');
                     document.getElementById('parent-name').value = approver.replace(/\(.*?\)/g, '').trim();
@@ -860,7 +893,7 @@
 
             let sigDataUrl = '';
             if (hasSignature && canvas) {
-                sigDataUrl = canvas.toDataURL('image/png');
+                sigDataUrl = cropCanvasToBoundingBox(canvas, 8);
             }
 
             if (currentDeed && currentStudent) {
@@ -879,10 +912,20 @@
 
                 // Redirect to slip or dashboard with full query parameters for instant hydration
                 if (status === 'approved') {
+                    let passName = '';
+                    if (currentStudent && isValidRealName(currentStudent.full_name)) {
+                        passName = currentStudent.full_name;
+                    } else if (currentStudent && currentStudent.first_name && isValidRealName(currentStudent.first_name)) {
+                        const r = currentStudent.rank || 'นพอ.';
+                        passName = `${r} ${currentStudent.first_name} ${currentStudent.last_name || ''}`.trim();
+                    } else if (isValidRealName(urlName)) {
+                        passName = urlName;
+                    }
+
                     const slipParams = new URLSearchParams({
                         id: currentDeed.id,
                         studentId: currentStudent.student_id,
-                        name: (currentStudent.rank ? currentStudent.rank + ' ' : '') + ((currentStudent.first_name || '') + ' ' + (currentStudent.last_name || '')).trim(),
+                        name: passName,
                         year: currentStudent.class_year ? (currentStudent.year_level ? `${currentStudent.year_level} (รุ่น ${currentStudent.class_year})` : `รุ่น ${currentStudent.class_year}`) : '',
                         cat: currentDeed.categoryId || currentDeed.category_id || 3,
                         catName: currentDeed.category_name || '',

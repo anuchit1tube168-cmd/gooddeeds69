@@ -158,84 +158,13 @@ def read_students():
                 "note": note,
                 "_row_num": row_num,
             })
-    # Append Class 69 test students since they are not in the Excel sheets yet
-    class69_students = [
-        {
-            "student_id": "6900001",
-            "rank": "นพอ.",
-            "first_name": "กิตติภพ",
-            "last_name": "ทองดี",
-            "full_name": "กิตติภพ ทองดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900001",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 1
-        },
-        {
-            "student_id": "6900002",
-            "rank": "นพอ.",
-            "first_name": "พรนภัส",
-            "last_name": "จิตใจดี",
-            "full_name": "พรนภัส จิตใจดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900002",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 2
-        },
-        {
-            "student_id": "6900003",
-            "rank": "นพอ.",
-            "first_name": "วรเมธ",
-            "last_name": "รักสงบ",
-            "full_name": "วรเมธ รักสงบ",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900003",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 3
-        },
-        {
-            "student_id": "6900004",
-            "rank": "นพอ.",
-            "first_name": "ชนม์นิภา",
-            "last_name": "มีสุข",
-            "full_name": "ชนม์นิภา มีสุข",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900004",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 4
-        },
-        {
-            "student_id": "6900005",
-            "rank": "นพอ.",
-            "first_name": "ปองพล",
-            "last_name": "คนดี",
-            "full_name": "ปองพล คนดี",
-            "class_year": 69,
-            "year_level": 1,
-            "note": "นักเรียนใหม่ชั้นปีที่ 1",
-            "password": "6900005",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 5
-        }
-    ]
+    # Roster additions were privately archived before removal from source.
+    private_roster = DATA_DIR / "private" / "class69_students.json"
+    if not private_roster.is_file():
+        raise RuntimeError("Private roster patch required; refusing a partial roster rebuild")
+    class69_students = json.loads(private_roster.read_text(encoding="utf-8"))
+    if not isinstance(class69_students, list) or not class69_students:
+        raise ValueError("Private roster patch must contain reviewed records")
     # Merge existing class69_students modifications if they exist in the DB
     for s in class69_students:
         sid = s['student_id']
@@ -255,84 +184,17 @@ def read_students():
 
     students.extend(class69_students)
     
-    # Missing historical students from Main 2568.xlsx who are not in the new rosters
-    missing_historical_students = [
-        {
-            "student_id": "6503719",
-            "rank": "นพอ.",
-            "first_name": "นันท์นภัส",
-            "last_name": "เภสัชชา",
-            "full_name": "นันท์นภัส เภสัชชา",
-            "class_year": 65,
-            "year_level": 5,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6503719",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 991
-        },
-        {
-            "student_id": "6603775",
-            "rank": "นพอ.",
-            "first_name": "ธิดารัตน์",
-            "last_name": "นิลสังข์",
-            "full_name": "ธิดารัตน์ นิลสังข์",
-            "class_year": 66,
-            "year_level": 4,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6603775",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 992
-        },
-        {
-            "student_id": "6703840",
-            "rank": "นพอ.",
-            "first_name": "ดลภัค",
-            "last_name": "แก้วเอก",
-            "full_name": "ดลภัค แก้วเอก",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703840",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 993
-        },
-        {
-            "student_id": "6703850",
-            "rank": "นพอ.",
-            "first_name": "ประริชญา",
-            "last_name": "ประสิทธิ์พรม",
-            "full_name": "ประริชญา ประสิทธิ์พรม",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703850",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 994
-        },
-        {
-            "student_id": "6703871",
-            "rank": "นพอ.",
-            "first_name": "วีรภัทร",
-            "last_name": "นกดำ",
-            "full_name": "วีรภัทร นกดำ",
-            "class_year": 67,
-            "year_level": 3,
-            "note": "ข้อมูลนำเข้าย้อนหลังจากประวัติปี 2568",
-            "password": "6703871",
-            "email": "",
-            "telegram_chat_id": "",
-            "role": "student",
-            "_row_num": 995
-        }
-    ]
+    # Missing historical students loaded securely from private storage (PDPA Zero-Leak)
+    missing_historical_students = []
+    missing_json_path = os.path.join(DATA_DIR, "private", "missing_historical_students.json")
+    if os.path.exists(missing_json_path):
+        try:
+            with open(missing_json_path, "r", encoding="utf-8") as f:
+                missing_historical_students = json.load(f)
+                for idx, s in enumerate(missing_historical_students):
+                    s['_row_num'] = 991 + idx
+        except Exception as _e:
+            print(f"⚠️ Note: Could not load missing_historical_students.json: {_e}")
     
     # Merge existing modifications for missing historical students
     for s in missing_historical_students:
@@ -357,6 +219,7 @@ def read_students():
 
 # -------- match and resize --------
 def build_photos(students):
+    raise RuntimeError("Legacy public roster/photo export disabled; use the reviewed private pipeline")
     PHOTOS_OUT.mkdir(parents=True, exist_ok=True)
     photo_map = {}  # student_id → "photos/{id}.jpg"
     total_matched = 0
@@ -407,6 +270,7 @@ def build_photos(students):
 
 # -------- write output --------
 def write_photos_js(photo_map):
+    raise RuntimeError("Legacy public roster/photo export disabled; use the reviewed private pipeline")
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
     js = (
         f"// Auto-generated student photos — {ts}\n"
@@ -434,6 +298,7 @@ def write_photos_js(photo_map):
     return output
 
 def write_students_js(students, photo_ids):
+    raise RuntimeError("Legacy public roster/photo export disabled; use the reviewed private pipeline")
     """เขียน students_data.js ทั้งหมด (นักเรียนทุกคน)"""
     clean = [{k: v for k, v in s.items() if not k.startswith("_")} for s in students]
     ts = datetime.now().strftime("%Y-%m-%d %H:%M")
@@ -463,6 +328,7 @@ def write_students_js(students, photo_ids):
 
 # -------- main --------
 def main():
+    raise RuntimeError("Legacy public roster/photo export disabled; use the reviewed private pipeline")
     print("📂 อ่านข้อมูลนักเรียนจาก Excel...")
     students = read_students()
     print(f"   นักเรียนทั้งหมด: {len(students)} คน")

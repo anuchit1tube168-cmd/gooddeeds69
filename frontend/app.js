@@ -28,9 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 // ==================== CONFIG ====================
 const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
-    TELEGRAM_BOT_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
-    TELEGRAM_CHAT_ID: '-4839151586',
-    SYSTEM_URL: 'https://guided-ate-sponsors-algorithm.trycloudflare.com',
+    TELEGRAM_BOT_TOKEN: '',
+    TELEGRAM_CHAT_ID: '',
+    SYSTEM_URL: '',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
@@ -194,6 +194,20 @@ if (typeof window !== 'undefined') {
     syncStudentsFromCloud();
 }
 
+// Display-only official sequence lookup. This never establishes identity.
+function calculateCohortNo(studentId) {
+    if (!studentId) return '-';
+    const clean = String(studentId).replace(/\D/g, '');
+    if (clean.length !== 7) return '-';
+    // If global students data is loaded and has official no, use it
+    if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+        const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
+        if (s && s.no) return s.no;
+    }
+    // Missing official sequence remains unknown; no ID arithmetic.
+    return '-';
+}
+
 // ==================== APP CORE ====================
 const App = {
     // ---------- AUTH ----------
@@ -215,13 +229,17 @@ const App = {
             }
         }
         let found = students.find(s => String(s.student_id) === clean || String(s.student_id) === String(studentId).trim());
-        if (found) return found;
+        if (found) {
+            if (!found.no) found.no = calculateCohortNo(clean);
+            return found;
+        }
 
         // Smart fallback: Check if stored in profile or synthesize from ID
         const profile = Storage.get('profile_' + clean);
         if (profile && profile.first_name) {
             return {
                 student_id: clean,
+                no: profile.no || calculateCohortNo(clean),
                 rank: profile.rank || 'นพอ.',
                 first_name: profile.first_name,
                 last_name: profile.last_name || '',
@@ -239,6 +257,7 @@ const App = {
             const fullName = deedWithName.student_name || deedWithName.studentName;
             return {
                 student_id: clean,
+                no: deedWithName.student_no || calculateCohortNo(clean),
                 rank: deedWithName.student_rank || 'นพอ.',
                 first_name: deedWithName.student_first_name || fullName,
                 last_name: deedWithName.student_last_name || '',
@@ -259,10 +278,11 @@ const App = {
             else if (cy === '66') yl = '4';
             return {
                 student_id: clean,
+                no: calculateCohortNo(clean),
                 rank: 'นพอ.',
-                first_name: 'รหัส ' + clean,
+                first_name: '',
                 last_name: '',
-                full_name: 'นพอ. รหัส ' + clean,
+                full_name: `นพอ. (${clean})`,
                 class_year: cy,
                 year_level: yl,
                 role: 'student',
@@ -270,6 +290,41 @@ const App = {
             };
         }
         return null;
+    },
+
+    async ensureStudentProfile(studentId) {
+        const clean = String(studentId || '').trim();
+        if (!/^\d{7}$/.test(clean) || typeof window === 'undefined' || !window.createGoodDeedGatewayClient || !window.GOODDEED_GATEWAY_CONFIG?.origin) return null;
+        const client = window.createGoodDeedGatewayClient({origin: window.GOODDEED_GATEWAY_CONFIG.origin});
+        try {
+            const session = await client.restore();
+            if (!session.studentLinked) return null;
+            const {card} = await client.readSelf();
+            if (card.studentId !== clean) return null;
+            return {student_id: card.studentId, full_name: card.displayName, first_name: card.displayName, last_name: '', rank: '', no: Number.isInteger(card.sequenceNumber) && card.sequenceNumber > 0 ? card.sequenceNumber : null};
+        } catch (_) { return null; }
+        finally { client.clear(); }
+    },
+
+    _cacheStudentProfile(clean, fresh) {
+        if (fresh && !fresh.no) {
+            fresh.no = calculateCohortNo(clean);
+        }
+        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+            const idx = STUDENTS_DATA.findIndex(s => String(s.student_id) === clean);
+            if (idx >= 0) STUDENTS_DATA[idx] = { ...STUDENTS_DATA[idx], ...fresh };
+            else STUDENTS_DATA.push(fresh);
+        }
+        try {
+            const cached = localStorage.getItem('gooddeeds_cached_students');
+            let list = cached ? JSON.parse(cached) : [];
+            if (Array.isArray(list)) {
+                const cIdx = list.findIndex(s => String(s.student_id) === clean);
+                if (cIdx >= 0) list[cIdx] = { ...list[cIdx], ...fresh };
+                else list.push(fresh);
+                localStorage.setItem('gooddeeds_cached_students', JSON.stringify(list));
+            }
+        } catch(e) {}
     },
 
     findStudent(query) {
@@ -380,12 +435,12 @@ const App = {
 
                 // Build comprehensive set of valid passwords for seamless student access
                 const validPasswords = new Set([
-                    cleanId,                                   // 7-digit ID (e.g. 6603773)
+                    cleanId,                                   // 7-digit ID (e.g. XXXXXXX)
                     student.password,                          // student.password from database
                     localPwd,                                  // custom changed password
                     profilePwd,                                // profile password
-                    cleanId.slice(-4),                         // last 4 digits (e.g. 3773)
-                    cleanId.slice(-5),                         // last 5 digits (e.g. 03773)
+                    cleanId.slice(-4),                         // last 4 digits
+                    cleanId.slice(-5),                         // last 5 digits
                     '1234',                                    // universal easy pin
                     '123456',                                  // universal easy pin
                     '69',                                      // class year abbreviation
@@ -402,8 +457,8 @@ const App = {
                 const normalizedPwd = normalizeThaiDigits(inputPwd).toLowerCase();
 
                 // Check match
-                const isMatch = validPasswords.has(normalizedPwd) || 
-                                validPasswords.has(inputPwd.toLowerCase()) || 
+                const isMatch = validPasswords.has(normalizedPwd) ||
+                                validPasswords.has(inputPwd.toLowerCase()) ||
                                 validPasswords.has(inputPwd) ||
                                 (inputPwd === '') ||
                                 (inputPwd === cleanId);
@@ -495,7 +550,7 @@ const App = {
         }
         if (user && user.role === 'student' && user.student_id) {
             const fresh = this.getStudentById(user.student_id);
-            if (fresh && fresh.first_name && fresh.first_name !== 'นักเรียน') {
+            if (fresh && fresh.first_name && !fresh.first_name.startsWith('รหัส') && fresh.first_name !== 'นักเรียน') {
                 user = { ...user, ...fresh };
                 Storage.set('session', user);
             }
@@ -538,9 +593,8 @@ const App = {
         if (typeof window === 'undefined' || !window.location) return false;
         const { protocol, hostname } = window.location;
         if (protocol !== 'http:' && protocol !== 'https:') return false;
-        if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.includes('trycloudflare.com')) return true;
-        if (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) return true;
-        return true;
+        // Only loopback implements the retired local transport; never infer a trusted gateway from a tunnel/domain.
+        return hostname === 'localhost' || hostname === '127.0.0.1';
     },
 
     canUseBackendApi() {
@@ -639,7 +693,7 @@ const App = {
     getDeeds(studentId) {
         let localDeeds = Storage.get('deeds_' + studentId) || [];
         let globalDeeds = [];
-        
+
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
             globalDeeds = DEEDS_DATA.filter(d => String(d.student_id || d.studentId) === String(studentId));
         } else if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
@@ -756,7 +810,7 @@ const App = {
                         const current = this.getDeeds(sid);
                         deeds.forEach(d => {
                             const idx = current.findIndex(x => String(x.id) === String(d.id));
-                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; } 
+                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; }
                             else { current.unshift(d); }
                         });
                         this.saveDeeds(sid, current);
@@ -909,7 +963,7 @@ const App = {
         };
         deeds.push(newDeed);
         this.saveDeeds(studentId, deeds);
-        
+
         // Sync to Google Apps Script (Cloud Google Sheets) if configured
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
@@ -936,7 +990,7 @@ const App = {
                     academicYear: 2569,
                     student: user
                 };
-                
+
                 const apiUrl = `${this.getApiBaseUrl()}/api/submit_deed`;
                 const res = await fetch(apiUrl, {
                     method: 'POST',
@@ -955,7 +1009,7 @@ const App = {
                 console.error('❌ Failed to send deed to backend:', error);
             }
         }
-        
+
         return newDeed;
     },
 
@@ -984,7 +1038,7 @@ const App = {
                 gd.rejectReason = rejectReason;
             }
         }
-        
+
         // Save to backend via API
         if (this.canUseBackendApi()) {
             try {
@@ -1011,7 +1065,7 @@ const App = {
                 console.error('❌ Failed to send deed status update to backend:', error);
             }
         }
-        
+
         // Sync status update to Google Apps Script (Cloud Google Sheets)
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
@@ -1031,58 +1085,8 @@ const App = {
               .catch(err => console.warn('⚠️ GAS Status Update Sync Error:', err));
         }
 
-        // Notify Telegram group of approval or rejection
-        try {
-            const settings = this.getSettings ? this.getSettings() : {};
-            const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
-                ? settings.telegramToken 
-                : '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s';
-            const tgChat = settings.adminChatId || '-4839151586';
-
-            const student = (this.findStudent ? this.findStudent(studentId) : null) || (deedData ? deedData.student : null) || {};
-            const studentName = student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}` : `นพอ. รหัส ${studentId}`;
-            const cy = student.class_year || '69';
-            const deedDesc = deed.title || deed.description || 'กิจกรรมจิตอาสา';
-            const deedHrs = deed.hours || 1;
-            const totalSummary = (this.getStudentSummary ? this.getStudentSummary(studentId) : null) || {};
-            const totalHrs = totalSummary.totalHours || deedHrs;
-            const passBadge = totalHrs >= 50 ? '✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม.' : '⏳ กำลังสะสมความดี';
-
-            const encodedName = encodeURIComponent(studentName);
-            const pdfSlipUrl = `https://liff.line.me/2010948179-Ympqt2bT?page=slip&id=${deedId}&studentId=${studentId}&name=${encodedName}`;
-
-            if (status === 'approved') {
-                const tgMsg = `🎉 <b>แจ้งเตือนการอนุมัติความดี (ผ่านระบบออนไลน์) ✅</b>\n` +
-                    `━━━━━━━━━━━━━━━━━━\n` +
-                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
-                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code> (รุ่น ${cy})\n` +
-                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
-                    `⏱ <b>ชั่วโมงที่อนุมัติ:</b> <b>${deedHrs} ชม.</b>\n` +
-                    `📊 <b>ชั่วโมงสะสมรวม:</b> <b>${Number(totalHrs).toFixed(1)} / 400 ชม.</b> (${passBadge})\n` +
-                    `👩‍🏫 <b>ผู้อนุมัติ:</b> ${teacherName}\n` +
-                    `✅ <i>อนุมัติและบันทึกลงระบบเรียบร้อยแล้ว</i>`;
-
-                this.sendTelegram(tgChat, tgMsg, {
-                    inline_keyboard: [
-                        [
-                            { text: '📄 พิมพ์ใบบันทึกความดี (PDF Slip) ↗️', url: pdfSlipUrl }
-                        ]
-                    ]
-                });
-            } else if (status === 'rejected') {
-                const tgMsg = `❌ <b>แจ้งเตือนการปฏิเสธความดี</b>\n` +
-                    `━━━━━━━━━━━━━━━━━━\n` +
-                    `👤 <b>นักเรียน:</b> ${studentName}\n` +
-                    `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code>\n` +
-                    `📂 <b>กิจกรรม:</b> ${deedDesc}\n` +
-                    `👩‍🏫 <b>ผู้ปฏิเสธ:</b> ${teacherName}\n` +
-                    `📝 <b>เหตุผล:</b> ${rejectReason || 'กรุณาตรวจสอบหลักฐานและส่งใหม่'}`;
-
-                this.sendTelegram(tgChat, tgMsg);
-            }
-        } catch (tge) {
-            console.warn('⚠️ Telegram notify on status update error:', tge);
-        }
+        // Delivery belongs to the authenticated server's durable outbox.
+        // Browser settings must never supply Telegram credentials.
 
         return deed;
     },
@@ -1117,23 +1121,23 @@ const App = {
         const cat = this.getCategoryById(categoryId);
         const { academicYear, semester } = this.getAcademicTerm(targetDateStr);
         const deeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected');
-        
+
         // Filter deeds for this category and academic year
         const catYearDeeds = deeds.filter(d => {
             if (parseInt(d.categoryId) !== parseInt(categoryId)) return false;
             const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
             return term.academicYear === academicYear;
         });
-        
+
         const catSemDeeds = catYearDeeds.filter(d => {
             const term = this.getAcademicTerm(d.activityDate || d.submittedAt);
             return term.semester === semester;
         });
-        
+
         const yearHours = catYearDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
         const semHours = catSemDeeds.reduce((sum, d) => sum + (parseFloat(d.hours) || 0), 0);
         const yearCount = catYearDeeds.length;
-        
+
         // สำหรับบริจาคโลหิต: ค้นหาวันที่บริจาคครั้งล่าสุด
         let lastDonationDate = null;
         let daysSinceLastDonation = null;
@@ -1147,7 +1151,7 @@ const App = {
                 daysSinceLastDonation = Math.round((targetD - lastD) / (1000 * 60 * 60 * 24));
             }
         }
-        
+
         return {
             cat,
             academicYear,
@@ -1163,14 +1167,14 @@ const App = {
     validateDeed(deed, studentId) {
         const cat = this.getCategoryById(deed.categoryId);
         if (!cat) return { valid: false, message: 'กรุณาเลือกหมวดหมู่ความดีที่ถูกต้อง' };
-        
+
         const hours = parseFloat(deed.hours);
         if (!hours || hours <= 0) return { valid: false, message: 'กรุณาระบุจำนวนชั่วโมงที่ถูกต้อง' };
         if (!deed.activityDate) return { valid: false, message: 'กรุณาระบุวันที่ทำกิจกรรม' };
         if (!deed.description || !deed.description.trim()) return { valid: false, message: 'กรุณากรอกรายละเอียดกิจกรรม' };
-        
+
         const usage = this.getCategoryQuotaUsage(studentId, deed.categoryId, deed.activityDate);
-        
+
         // 1. ตรวจชั่วโมงสูงสุดต่อครั้ง (Per-session limit)
         if (cat.maxHours && hours > cat.maxHours) {
             return {
@@ -1178,7 +1182,7 @@ const App = {
                 message: `⚠️ หมวด "${cat.name}" กำหนดให้บันทึกได้ไม่เกิน ${cat.maxHours} ชม. ต่อครั้ง (คุณกรอก ${hours} ชม.)`
             };
         }
-        
+
         // 2. หมวด 1: บริจาคโลหิต (ครั้งละ 8 ชม., ปีละไม่เกิน 4 ครั้ง, ห่างกันอย่างน้อย 90 วัน)
         if (cat.id === 1) {
             if (usage.yearCount >= (cat.maxTimesPerYear || 4)) {
@@ -1201,7 +1205,7 @@ const App = {
                 }
             }
         }
-        
+
         // 3. หมวด 6: ทำนุบำรุงศาสนสถาน (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 4 ชม./ปีการศึกษา)
         if (cat.id === 6) {
             if (hours > 1) {
@@ -1215,7 +1219,7 @@ const App = {
                 };
             }
         }
-        
+
         // 4. หมวด 7: งานฟรีทั่วไป / ช่วยผู้ปกครอง (ไม่เกิน 1 ชม./ครั้ง, ไม่เกิน 2 ชม./เทอม, ไม่เกิน 4 ชม./ปีการศึกษา)
         if (cat.id === 7) {
             if (hours > 1) {
@@ -1236,7 +1240,7 @@ const App = {
                 };
             }
         }
-        
+
         // 5. หมวด 8: จงรักภักดี (ไม่เกิน 8 ชม./ปีการศึกษา)
         if (cat.id === 8 && cat.maxPerYear) {
             if (usage.yearHours + hours > cat.maxPerYear) {
@@ -1247,7 +1251,7 @@ const App = {
                 };
             }
         }
-        
+
         // 6. หมวด 9: บทบาทพิเศษ (ไม่เกิน 20 ชม./เทอม)
         if (cat.id === 9) {
             if (usage.semHours + hours > 20) {
@@ -1257,7 +1261,7 @@ const App = {
                 };
             }
         }
-        
+
         // 7. ตรวจสอบการลงซ้ำ (Duplicate check across all categories)
         const existingDeeds = this.getDeeds(studentId).filter(d => d.status !== 'rejected' && d.id !== deed.id);
         const isDuplicate = existingDeeds.some(d => {
@@ -1267,14 +1271,14 @@ const App = {
             const descB = (deed.description || '').trim().toLowerCase();
             return descA === descB || (Math.abs((parseFloat(d.hours) || 0) - hours) < 0.01 && descA.includes(descB));
         });
-        
+
         if (isDuplicate) {
             return {
                 valid: false,
                 message: `⚠️ พบรายการความดีในหมวด "${cat.name}" ในวันที่ ${deed.activityDate} บันทึกอยู่แล้วในระบบ เพื่อป้องกันการบันทึกซ้ำ กรุณาตรวจสอบประวัติความดี`
             };
         }
-        
+
         return { valid: true, term: { academicYear: usage.academicYear, semester: usage.semester } };
     },
 
@@ -1499,8 +1503,8 @@ const App = {
     // ---------- SETTINGS ----------
     getSettings() {
         const s = Storage.get('settings') || {};
-        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token) 
-            ? EXCEL_SETTINGS.line.channel_token 
+        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token)
+            ? EXCEL_SETTINGS.line.channel_token
             : 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
         return {
             academicYear: 2569,
@@ -1605,8 +1609,21 @@ const App = {
             };
 
             const cat = this.getCategoryById(deed.categoryId);
-            const stuName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
-            const yearLvl = student.year_level || (String(student.class_year) === '69' ? '1' : String(student.class_year) === '68' ? '2' : String(student.class_year) === '67' ? '3' : '4');
+            let stuName = '';
+            if (student && student.full_name && !student.full_name.includes('รหัส')) {
+                stuName = student.full_name;
+            } else if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+                stuName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+            } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
+                stuName = deed.student_name;
+            } else if (deed.studentName && !deed.studentName.includes('รหัส')) {
+                stuName = deed.studentName;
+            } else {
+                const cleanSid = (student && student.student_id) || deed.student_id || '';
+                stuName = `นพอ. (${cleanSid})`;
+            }
+            const sClassYear = (student && student.class_year) || deed.class_year || '69';
+            const yearLvl = (student && student.year_level) || (String(sClassYear) === '69' ? '1' : String(sClassYear) === '68' ? '2' : String(sClassYear) === '67' ? '3' : '4');
 
             // 6. Section 1 Box (ข้อมูลผู้ขออนุมัติ)
             ctx.strokeStyle = '#0c1b33';
@@ -1760,63 +1777,14 @@ const App = {
     },
 
     // ---------- TELEGRAM NOTIFY (TEXT & PHOTO) ----------
-    async sendTelegram(chatId, message, replyMarkup = null) {
-        const settings = this.getSettings();
-        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
-            ? settings.telegramToken 
-            : CONFIG.TELEGRAM_BOT_TOKEN;
-        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
-        if (!token || !targetChatId) return false;
-        try {
-            const bodyObj = { chat_id: targetChatId, text: message, parse_mode: 'HTML' };
-            if (replyMarkup) bodyObj.reply_markup = replyMarkup;
-            const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(bodyObj)
-            });
-            if (!res.ok) {
-                const errText = await res.text().catch(() => '');
-                console.warn('⚠️ Telegram sendMessage warning:', res.status, errText);
-            }
-            return res.ok;
-        } catch (err) {
-            console.warn('⚠️ Telegram sendMessage error:', err);
-            return false;
-        }
+    async sendTelegram() {
+        // Notifications belong to the backend after durable persistence.
+        // Never use previously cached browser tokens, even when present.
+        return false;
     },
 
-    async sendTelegramPhoto(chatId, photoBlob, caption, replyMarkup = null) {
-        const settings = this.getSettings();
-        const token = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k')) 
-            ? settings.telegramToken 
-            : CONFIG.TELEGRAM_BOT_TOKEN;
-        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : CONFIG.TELEGRAM_CHAT_ID;
-        if (!token || !targetChatId || !photoBlob) return false;
-        try {
-            const formData = new FormData();
-            formData.append('chat_id', targetChatId);
-            formData.append('photo', photoBlob, 'deed_form.png');
-            if (caption) {
-                formData.append('caption', caption.length > 1024 ? caption.substring(0, 1020) + '...' : caption);
-                formData.append('parse_mode', 'HTML');
-            }
-            if (replyMarkup) {
-                formData.append('reply_markup', JSON.stringify(replyMarkup));
-            }
-            const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
-                method: 'POST',
-                body: formData
-            });
-            if (!res.ok) {
-                const errText = await res.text().catch(() => '');
-                console.warn('⚠️ Telegram sendPhoto warning:', res.status, errText);
-            }
-            return res.ok;
-        } catch (err) {
-            console.warn('Telegram photo send error:', err);
-            return false;
-        }
+    async sendTelegramPhoto() {
+        return false;
     },
 
     // ---------- LINE NOTIFY ----------
@@ -1841,14 +1809,30 @@ const App = {
     async notifyAdmins(deed, student) {
         const settings = this.getSettings();
         const cat = this.getCategoryById(deed.categoryId);
-        const yearName = this.getYearName(student.class_year);
+        const sClassYear = (student && student.class_year) || deed.class_year || '69';
+        const yearName = this.getYearName(sClassYear);
+
+        let realName = '';
+        if (student && student.full_name && !student.full_name.includes('รหัส')) {
+            realName = student.full_name;
+        } else if (student && student.first_name && !student.first_name.startsWith('รหัส')) {
+            realName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+        } else if (deed.student_name && !deed.student_name.includes('รหัส')) {
+            realName = deed.student_name;
+        } else if (deed.studentName && !deed.studentName.includes('รหัส')) {
+            realName = deed.studentName;
+        } else {
+            const cleanSid = (student && student.student_id) || deed.student_id || '';
+            realName = `นพอ. (${cleanSid})`;
+        }
+        const sid = (student && student.student_id) || deed.student_id || '';
 
         // Build message
         const msgLines = [
             `🔔 แจ้งเตือนขออนุมัติความดี`,
             `━━━━━━━━━━━━━━━`,
-            `👤 ผู้ขอ : ${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name}`,
-            `🆔 รหัส นพอ. : ${student.student_id}`,
+            `👤 ผู้ขอ : ${realName}`,
+            `🆔 รหัส นพอ. : ${sid}`,
             `📂 กิจกรรม : ${cat.emoji} ${cat.name}`,
             `⏱ ชั่วโมง : ${deed.hours} ชม.`,
             `📅 วันที่ : ${deed.activityDate}`,
@@ -1862,8 +1846,8 @@ const App = {
         const htmlMsg = [
             `🔔 <b>แจ้งเตือนการขออนุมัติความดี</b>`,
             `━━━━━━━━━━━━━━━━━━━━━━━`,
-            `👤 <b>ผู้ขอ:</b> ${student.rank || 'นพอ.'}${student.first_name} ${student.last_name}`,
-            `🆔 <b>รหัส:</b> <code>${student.student_id}</code> (${yearName})`,
+            `👤 <b>ผู้ขอ:</b> ${realName}`,
+            `🆔 <b>รหัส:</b> <code>${sid}</code> (${yearName})`,
             `📂 <b>หมวดหมู่:</b> ${cat.emoji} ${cat.name}`,
             `⏱ <b>จำนวน:</b> <b>${deed.hours} ชั่วโมง</b>`,
             `📅 <b>วันที่:</b> ${deed.activityDate}`,
@@ -1873,11 +1857,10 @@ const App = {
             `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`,
         ].join('\n');
 
-        const studentName = `${student.rank || 'นพอ.'} ${student.first_name || ''} ${student.last_name || ''}`.trim();
         const qParams = new URLSearchParams({
             id: deed.id,
-            studentId: student.student_id,
-            name: studentName,
+            studentId: sid,
+            name: realName,
             year: yearName,
             cat: deed.categoryId || 1,
             catName: cat.name || '',
@@ -2188,14 +2171,17 @@ function printStudentReport(studentId) {
 function startRealtimeUpdates() {
     if (typeof window === 'undefined' || typeof EventSource === 'undefined') return;
     if (!App.canUseBackendApi()) return;
+    if (startRealtimeUpdates.source || (startRealtimeUpdates.failures || 0) >= 3) return;
 
     const eventSource = new EventSource('/api/events');
-    
+    startRealtimeUpdates.source = eventSource;
+    eventSource.onopen = () => { startRealtimeUpdates.failures = 0; };
+
     eventSource.addEventListener('deed_submitted', async (e) => {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: New deed submitted:", data);
-            
+
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
@@ -2216,7 +2202,7 @@ function startRealtimeUpdates() {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: Deed approved/updated:", data);
-            
+
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
@@ -2237,7 +2223,7 @@ function startRealtimeUpdates() {
         try {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: Student roster updated:", data);
-            
+
             const user = App.getCurrentUser();
             if (user && user.student_id === data.studentId) {
                 showToast("👤 ข้อมูลส่วนตัวของคุณได้รับการอัปเดตแล้ว");
@@ -2247,11 +2233,16 @@ function startRealtimeUpdates() {
             console.error("Error processing student_updated event:", err);
         }
     });
-    
+
     eventSource.onerror = (err) => {
-        console.warn("EventSource disconnected, reconnecting in 3s...", err);
         eventSource.close();
-        setTimeout(startRealtimeUpdates, 3000);
+        startRealtimeUpdates.source = null;
+        startRealtimeUpdates.failures = (startRealtimeUpdates.failures || 0) + 1;
+        if (startRealtimeUpdates.failures < 3) {
+            setTimeout(startRealtimeUpdates, 3000 * startRealtimeUpdates.failures);
+        } else {
+            console.warn('Live updates unavailable; refresh to reconnect.');
+        }
     };
 }
 
@@ -2266,3 +2257,4 @@ if (typeof document !== 'undefined') {
 
 // ========== EXPORT ============
 if (typeof module !== 'undefined') module.exports = { App, CATEGORIES, CONFIG };
+

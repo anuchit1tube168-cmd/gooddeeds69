@@ -161,17 +161,44 @@
 
         .signature-section {
             margin-top: 14px;
+            margin-left: auto;
+            width: fit-content;
+            min-width: 280px;
+            max-width: 340px;
             display: flex;
             flex-direction: column;
-            align-items: flex-end;
+            align-items: center;
             text-align: center;
             font-size: 15px;
             line-height: 1.6;
         }
 
         .sig-title {
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             font-weight: 600;
+            text-align: center;
+            width: 100%;
+        }
+
+        .sig-slot {
+            min-height: 52px;
+            height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: -16px;
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            pointer-events: none;
+        }
+
+        .sig-slot img.digital-sig-img {
+            max-height: 50px;
+            max-width: 190px;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
 
         .sig-name-dotted {
@@ -269,7 +296,7 @@
 
     <div class="a4-page">
         <div class="doc-outer-border">
-            
+
             <div class="top-index-bar">
                 ลำดับที่ <span id="doc-seq-student" style="border-bottom:1px dotted #000; padding:0 4px;">........</span> / <span id="doc-seq-total" style="border-bottom:1px dotted #000; padding:0 4px;">3235</span>
             </div>
@@ -318,7 +345,8 @@
 
                 <div class="signature-section">
                     <div class="sig-title">ผู้รับทราบ/ผู้รับรองการทำกิจกรรมครั้งนี้ :</div>
-                    <div style="margin-top: 6px;">
+                    <div class="sig-slot" id="sig-slot"></div>
+                    <div style="margin-top: 6px; position: relative; z-index: 1;">
                         ( <span class="sig-name-dotted" id="doc-approver-name">......................................................................</span> )
                     </div>
                     <div style="font-size: 14px; color: #334155; margin-top: 4px;" id="doc-approver-rank">
@@ -337,40 +365,72 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3545"></script>
-    <script src="data/deeds_data.js?v=3545"></script>
-    <script src="app.js?v=3545"></script>
+    <script src="data/students_data.js?v=3591"></script>
+    <script src="data/deeds_data.js?v=3591"></script>
+    <script src="app.js?v=3591"></script>
     <script>
+        function trimImageMargins(imgSrc, callback) {
+            if (!imgSrc || typeof imgSrc !== 'string' || !imgSrc.startsWith('data:image')) {
+                callback(imgSrc);
+                return;
+            }
+            const img = new Image();
+            img.onload = function() {
+                try {
+                    const cvs = document.createElement('canvas');
+                    cvs.width = img.width;
+                    cvs.height = img.height;
+                    const ctx = cvs.getContext('2d');
+                    ctx.drawImage(img, 0, 0);
+                    const imgData = ctx.getImageData(0, 0, cvs.width, cvs.height);
+                    const data = imgData.data;
+                    let minX = cvs.width, minY = cvs.height, maxX = 0, maxY = 0;
+                    let found = false;
+                    for (let y = 0; y < cvs.height; y++) {
+                        for (let x = 0; x < cvs.width; x++) {
+                            const alpha = data[(y * cvs.width + x) * 4 + 3];
+                            if (alpha > 12) {
+                                if (x < minX) minX = x;
+                                if (x > maxX) maxX = x;
+                                if (y < minY) minY = y;
+                                if (y > maxY) maxY = y;
+                                found = true;
+                            }
+                        }
+                    }
+                    if (!found) { callback(imgSrc); return; }
+                    const pad = 8;
+                    minX = Math.max(0, minX - pad);
+                    minY = Math.max(0, minY - pad);
+                    maxX = Math.min(cvs.width, maxX + pad);
+                    maxY = Math.min(cvs.height, maxY + pad);
+                    const cropW = Math.max(1, maxX - minX);
+                    const cropH = Math.max(1, maxY - minY);
+                    const outCvs = document.createElement('canvas');
+                    outCvs.width = cropW;
+                    outCvs.height = cropH;
+                    const outCtx = outCvs.getContext('2d');
+                    outCtx.drawImage(cvs, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+                    callback(outCvs.toDataURL('image/png'));
+                } catch (e) {
+                    callback(imgSrc);
+                }
+            };
+            img.onerror = () => callback(imgSrc);
+            img.src = imgSrc;
+        }
+
         function findDeed(deedId, studentId) {
-            function str(v) { return v ? String(v).trim() : ''; }
-            let all = [];
-            if (studentId) {
-                all = App.getDeeds(studentId);
-            } else if (typeof IMPORTED_DEEDS !== 'undefined') {
-                for (const list of Object.values(IMPORTED_DEEDS)) {
-                    if (Array.isArray(list)) all.push(...list);
-                }
-            } else if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
-                all = DEEDS_DATA;
-            }
-
-            if (deedId) {
-                let found = all.find(d => str(d.id) === str(deedId));
-                if (found) return found;
-
-                found = all.find(d => str(d.id).includes(str(deedId)) || str(deedId).includes(str(d.id)));
-                if (found) return found;
-
-                if (deedId.includes('1724138400000') || deedId.includes('6603771')) {
-                    found = all.find(d => str(d.activityDate) === '2026-08-20' || (d.description && d.description.includes('ค่ายรัฐบุรุษ')));
-                    if (found) return found;
-                }
-            }
-
-            if (all.length > 0) {
-                return all[all.length - 1];
-            }
-            return null;
+            const id = typeof deedId === 'string' ? deedId.trim() : '';
+            const owner = typeof studentId === 'string' ? studentId.trim() : '';
+            if (!id || !/^\d{7}$/.test(owner) || typeof App === 'undefined') return null;
+            const rows = App.getDeeds(owner);
+            if (!Array.isArray(rows)) return null;
+            const matches = rows.filter(row => row && String(row.id || '') === id);
+            if (matches.length !== 1) return null;
+            const row = matches[0];
+            if (String(row.student_id || row.studentId || '') !== owner) return null;
+            return row;
         }
 
         async function loadSlipData() {
@@ -380,16 +440,6 @@
             }
             const deedId = params.get('id');
             const studentId = params.get('studentId');
-            const urlName = params.get('name');
-            const urlCat = params.get('cat');
-            const urlCatName = params.get('catName');
-            const urlHours = params.get('hours');
-            const urlDate = params.get('date');
-            const urlDesc = params.get('desc');
-            const urlLoc = params.get('loc');
-            const urlAppr = params.get('appr');
-            const urlStatus = params.get('status') || '';
-            const urlImg = params.get('img');
 
             function str(v) { return v ? String(v).trim() : ''; }
 
@@ -408,21 +458,31 @@
                 } catch (e) {}
             }
 
-            // Fallback from URL parameters
-            if (!deed && (urlDesc || urlHours || urlCat || urlName)) {
-                deed = {
-                    id: deedId || ('deed_' + Date.now()),
-                    studentId: studentId || '',
-                    categoryId: parseInt(urlCat) || 3,
-                    category_name: urlCatName || '',
-                    hours: parseFloat(urlHours) || 1.0,
-                    description: urlDesc || 'กิจกรรมจิตอาสา',
-                    activityDate: urlDate || new Date().toISOString().split('T')[0],
-                    location: urlLoc || 'วิทยาลัยพยาบาลทหารอากาศ',
-                    approver: urlAppr || 'ร.อ.อนุชิต ทำจะดี (Bird)',
-                    status: urlStatus || 'pending',
-                    imageUrl: urlImg || ''
-                };
+            if (!deed) {
+                document.querySelectorAll('button').forEach(button => { button.disabled = true; });
+                document.body.textContent = 'ไม่พบรายการความดีที่ตรงกับรหัสและเจ้าของ กรุณาเปิดจากรายการที่ตรวจสอบแล้ว';
+                return;
+            }
+
+            const urlName = ''; // URL parameters are not verified identity.
+
+        function isValidRealName(name) {
+                if (!name) return false;
+                const s = String(name).trim();
+                if (!s || s === 'นพอ.' || s === '-' || s.includes('รหัส') || /นพอ\.?\s*\(?\d+\)?/.test(s)) return false;
+                return true;
+            }
+
+            function calculateCohortNo(studentId) {
+                if (!studentId) return '-';
+                const clean = String(studentId).replace(/\D/g, '');
+                if (clean.length !== 7) return '-';
+                if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+                    const s = STUDENTS_DATA.find(x => String(x.student_id) === clean);
+                    if (s && s.no) return s.no;
+                }
+                // Use stored official no only; absence is not an ID-derived sequence.
+                return '-';
             }
 
             let student = null;
@@ -431,57 +491,85 @@
                 student = (typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : []).find(s => str(s.student_id) === str(sid));
             }
 
+            // Check cached students in localStorage
+            if ((!student || !isValidRealName(student.first_name || student.full_name)) && sid) {
+                try {
+                    const cached = localStorage.getItem('gooddeeds_cached_students');
+                    if (cached) {
+                        const list = JSON.parse(cached);
+                        if (Array.isArray(list)) {
+                            const found = list.find(s => str(s.student_id) === str(sid));
+                            if (found && isValidRealName(found.first_name || found.full_name)) {
+                                student = found;
+                            }
+                        }
+                    }
+                } catch(e) {}
+            }
+
             // Fallback 1: from deed itself (enriched)
-            if (!student && deed && (deed.student_name || deed.studentName)) {
+            if ((!student || !isValidRealName(student.first_name || student.full_name)) && deed) {
+                const deedCandidate = deed.student_name || deed.studentName;
+                if (isValidRealName(deedCandidate) || isValidRealName(deed.student_first_name)) {
+                    student = {
+                        student_id: sid,
+                        rank: deed.student_rank || 'นพอ.',
+                        first_name: deed.student_first_name || '',
+                        last_name: deed.student_last_name || '',
+                        full_name: deedCandidate || `${deed.student_rank || 'นพอ.'} ${deed.student_first_name || ''} ${deed.student_last_name || ''}`.trim(),
+                        position: deed.student_position || '',
+                        class_year: deed.class_year || (sid ? sid.substring(0, 2) : '69'),
+                        no: deed.student_no || calculateCohortNo(sid)
+                    };
+                }
+            }
+
+            // Fallback 2: from URL params if it is a real name
+            if ((!student || !isValidRealName(student.first_name || student.full_name)) && isValidRealName(urlName)) {
                 student = {
                     student_id: sid,
-                    rank: deed.student_rank || 'นพอ.',
-                    first_name: deed.student_first_name || '',
-                    last_name: deed.student_last_name || '',
-                    full_name: deed.student_name || deed.studentName,
-                    position: deed.student_position || '',
-                    class_year: deed.class_year || (sid ? sid.substring(0, 2) : '69')
+                    rank: urlName.startsWith('นพอ.') ? 'นพอ.' : '',
+                    first_name: urlName.replace(/^นพอ\.?\s*/, '').split(' ')[0] || '',
+                    last_name: urlName.replace(/^นพอ\.?\s*/, '').split(' ').slice(1).join(' ') || '',
+                    full_name: urlName,
+                    position: '',
+                    class_year: params.get('year') || (sid ? sid.substring(0, 2) : '69'),
+                    no: calculateCohortNo(sid)
                 };
             }
 
-            // Fallback 2: Live fetch from server if needed
-            if (!student && sid) {
+            // Fallback 3: Live fetch from server API or Google Apps Script
+            if ((!student || !isValidRealName(student.first_name || student.full_name)) && sid) {
                 try {
-                    const sysUrl = (typeof CONFIG !== 'undefined' && CONFIG.SYSTEM_URL) ? CONFIG.SYSTEM_URL : '';
-                    const endpoints = [`/api/get_student?studentId=${sid}`];
-                    if (sysUrl && !sysUrl.includes(window.location.host)) endpoints.push(`${sysUrl}/api/get_student?studentId=${sid}`);
-                    for (const ep of endpoints) {
-                        try {
-                            const res = await fetch(ep, { headers: { 'Accept': 'application/json' } });
-                            if (res.ok) {
-                                const sData = await res.json();
-                                if (sData && sData.full_name) {
-                                    student = sData;
-                                    break;
-                                }
-                            }
-                        } catch (e) {}
+                    if (typeof App !== 'undefined' && App.ensureStudentProfile) {
+                        const prof = await App.ensureStudentProfile(sid);
+                        if (prof && isValidRealName(prof.first_name || prof.full_name)) {
+                            student = prof;
+                        }
                     }
-                } catch (e) {}
+                } catch(e) {}
+
+                // No direct local/GAS profile fallback: the authenticated helper above is authoritative.
+
             }
 
-            if (student) {
+            if (student && isValidRealName(student.first_name || student.full_name)) {
                 const rank = student.rank || 'นพอ.';
                 const fullName = student.full_name || (rank + ' ' + (student.first_name || '') + ' ' + (student.last_name || '')).trim();
                 const posSuffix = (student.position && student.position !== 'นักเรียนพยาบาล') ? ` [${student.position}]` : '';
                 document.getElementById('doc-student-name').textContent = fullName + posSuffix;
                 document.getElementById('doc-seq-student').textContent = student.student_id || sid;
-                document.getElementById('doc-student-no').textContent = student.no || (sid ? sid.slice(-2) : '-');
+                document.getElementById('doc-student-no').textContent = student.no || calculateCohortNo(student.student_id || sid);
                 document.getElementById('doc-academic-year').textContent = student.academic_year || '2569';
-            } else if (urlName) {
+            } else if (isValidRealName(urlName)) {
                 document.getElementById('doc-student-name').textContent = urlName;
                 document.getElementById('doc-seq-student').textContent = studentId || '-';
-                document.getElementById('doc-student-no').textContent = studentId ? studentId.slice(-2) : '-';
+                document.getElementById('doc-student-no').textContent = calculateCohortNo(studentId || sid);
                 document.getElementById('doc-academic-year').textContent = '2569';
             } else if (sid) {
-                document.getElementById('doc-student-name').textContent = `นพอ. รหัส ${sid}`;
+                document.getElementById('doc-student-name').textContent = `นพอ. (${sid})`;
                 document.getElementById('doc-seq-student').textContent = sid;
-                document.getElementById('doc-student-no').textContent = sid.slice(-2);
+                document.getElementById('doc-student-no').textContent = calculateCohortNo(sid);
                 document.getElementById('doc-academic-year').textContent = '2569';
             }
 
@@ -499,15 +587,15 @@
                 }
 
                 const cat = App.getCategoryById(deed.categoryId || deed.category_id);
-                document.getElementById('doc-category-name').textContent = deed.category_name || (cat && cat.name) || urlCatName || 'ช่วยเหลืองานภายใน วพอ.';
-                document.getElementById('doc-activity-title').textContent = deed.description || deed.title || urlDesc || 'กิจกรรมจิตอาสา';
-                let loc = deed.location || deed.note || urlLoc || 'วิทยาลัยพยาบาลทหารอากาศ';
+                document.getElementById('doc-category-name').textContent = deed.category_name || (cat && cat.name) || 'ช่วยเหลืองานภายใน วพอ.';
+                document.getElementById('doc-activity-title').textContent = deed.description || deed.title || 'กิจกรรมจิตอาสา';
+                let loc = deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ';
                 if (!loc || loc.includes('.xlsx') || loc.includes('import') || loc.includes('Data 2568')) {
                     loc = 'วิทยาลัยพยาบาลทหารอากาศ';
                 }
                 document.getElementById('doc-activity-location').textContent = loc;
-                
-                const dt = deed.activityDate || deed.event_date || urlDate;
+
+                const dt = deed.activityDate || deed.event_date || '';
                 if (dt) {
                     const dObj = new Date(dt);
                     if (!isNaN(dObj.getTime())) {
@@ -520,9 +608,9 @@
                     document.getElementById('doc-activity-date').textContent = '-';
                 }
 
-                document.getElementById('doc-hours').textContent = deed.hours || urlHours || '-';
-                
-                const approver = deed.approved_by || deed.approvedBy || deed.signer || deed.approver || urlAppr || 'อาจารย์ผู้รับรองการทำกิจกรรม';
+                document.getElementById('doc-hours').textContent = deed.hours || '-';
+
+                const approver = deed.approved_by || deed.approvedBy || deed.signer || deed.approver || 'อาจารย์ผู้รับรองการทำกิจกรรม';
                 document.getElementById('doc-approver-name').textContent = approver;
 
                 const rankEl = document.getElementById('doc-approver-rank');
@@ -535,20 +623,20 @@
                 }
 
                 // Render Digital Signature strictly from the deed's live captured signature
-                const urlSig = params.get('sig');
-                const sigKey = deed.signatureKey || deed.signature || urlSig;
+                    const sigKey = deed.signatureKey || deed.signature || '';
                 let sigSrc = sigKey ? (App.getImage(sigKey) || (sigKey.startsWith('data:image') ? sigKey : null)) : null;
 
                 if (sigSrc) {
-                    const sigContainer = document.querySelector('.signature-section');
-                    if (sigContainer) {
-                        const existingImg = sigContainer.querySelector('img.digital-sig-img');
-                        if (existingImg) existingImg.remove();
+                    const sigSlot = document.getElementById('sig-slot') || document.querySelector('.sig-slot');
+                    if (sigSlot) {
+                        sigSlot.innerHTML = '';
                         const sigImg = document.createElement('img');
                         sigImg.className = 'digital-sig-img';
-                        sigImg.src = sigSrc;
-                        sigImg.style.cssText = 'height: 45px; max-width: 160px; object-fit: contain; margin-bottom: -15px; z-index: 2; position: relative;';
-                        sigContainer.insertBefore(sigImg, sigContainer.children[1]);
+                        sigImg.alt = 'ลายมือชื่อผู้รับรอง';
+                        trimImageMargins(sigSrc, (trimmed) => {
+                            sigImg.src = trimmed;
+                        });
+                        sigSlot.appendChild(sigImg);
                     }
                 }
 
@@ -557,7 +645,7 @@
                     this.onerror = null;
                     this.src = '510903.jpg';
                 };
-                const imgKey = deed.imageUrl || deed.imageData || (deed.imageUrls && deed.imageUrls[0]) || urlImg;
+                const imgKey = deed.imageUrl || deed.imageData || (deed.imageUrls && deed.imageUrls[0]) || '';
                 if (imgKey) {
                     evidenceImg.src = (typeof App !== 'undefined' && App.resolveImageUrl) ? App.resolveImageUrl(imgKey) : imgKey;
                 } else {

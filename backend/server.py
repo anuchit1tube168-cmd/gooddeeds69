@@ -8,6 +8,8 @@ import threading
 import queue
 from http.server import SimpleHTTPRequestHandler, HTTPServer, ThreadingHTTPServer
 from urllib.parse import urlparse, parse_qs
+import urllib.request
+import ssl
 from http.cookies import SimpleCookie
 
 # Real-time event streams for connected clients
@@ -40,13 +42,27 @@ except ImportError as e:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
-GDRIVE_DEST = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
+GDRIVE_DEST = os.environ.get('GOODDEED_PRIVATE_BACKUP_DIR', '')
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
+try:
+    from line_notifier import (
+        save_student_line_binding,
+        get_student_line,
+        find_user_by_line_id,
+        get_all_line_mappings,
+        notify_deed_status_line,
+        notify_deed_submission_line
+    )
+except Exception as _e:
+    print(f"⚠️ line_notifier import note: {_e}")
 
 def sync_to_google_drive_bg():
     """Sync data folder to Google Drive in background thread."""
     def run_sync():
         try:
-            if os.path.exists(os.path.dirname(GDRIVE_DEST)):
+            if GDRIVE_DEST and os.path.exists(os.path.dirname(GDRIVE_DEST)):
                 os.makedirs(GDRIVE_DEST, exist_ok=True)
                 import subprocess
                 subprocess.run([
@@ -124,9 +140,9 @@ def get_deeds_for_student(student_id):
                 imported_deeds = json.load(f)
         except Exception as e:
             print(f"Error reading deeds.json: {e}")
-            
+
     student_deeds = imported_deeds.get(student_id, [])
-    
+
     # 2. Load dynamic deeds from records/ recursively
     dynamic_deeds = []
     if os.path.exists(RECORDS_DIR):
@@ -141,12 +157,12 @@ def get_deeds_for_student(student_id):
                                 dynamic_deeds.append(deed)
                         except Exception as e:
                             print(f"Error reading dynamic deed {file_path}: {e}")
-                            
+
     # 3. Merge them to avoid duplicates by deed ID
     merged_map = {d['id']: d for d in student_deeds}
     for d in dynamic_deeds:
         merged_map[d['id']] = d
-        
+
     return list(merged_map.values())
 
 def get_all_deeds():
@@ -160,7 +176,7 @@ def get_all_deeds():
                 imported_deeds = json.load(f)
         except Exception as e:
             print(f"Error reading deeds.json: {e}")
-            
+
     # 2. Walk records/ directory to find all dynamic deeds
     dynamic_deeds_by_student = {}
     if os.path.exists(RECORDS_DIR):
@@ -179,7 +195,7 @@ def get_all_deeds():
                                 dynamic_deeds_by_student[student_id].append(deed)
                         except Exception as e:
                             print(f"Error reading dynamic deed {file_path}: {e}")
-                            
+
     # 3. Merge
     all_students = set(list(imported_deeds.keys()) + list(dynamic_deeds_by_student.keys()))
     result = {}
@@ -190,7 +206,7 @@ def get_all_deeds():
         for d in dyn_deeds:
             merged_map[d['id']] = d
         result[sid] = list(merged_map.values())
-        
+
     return result
 
 def get_academic_term(date_str):
@@ -274,7 +290,7 @@ def validate_deed_submission(deed_data, student_id):
         if cat_id == 1:
             if len(year_deeds) >= 4:
                 return False, f"⚠️ การบริจาคโลหิตบันทึกได้ไม่เกิน 4 ครั้งต่อปีการศึกษา (ปีการศึกษา {academic_year} บันทึกครบ 4 ครั้งแล้ว)"
-            
+
             # Spacing check: 90 days from any previous blood donation
             try:
                 from datetime import datetime
@@ -339,22 +355,22 @@ def generate_docx_in_memory(student_id, academic_year=2569):
                 students = json.load(f)
         except Exception as e:
             print(f"Error reading students.json: {e}")
-            
+
     student = next((s for s in students if s['student_id'] == student_id), None)
     if not student:
         return None
-        
+
     # 2. Get approved deeds
     deeds = get_deeds_for_student(student_id)
     approved_deeds = [d for d in deeds if d.get('status') == 'approved' and d.get('academicYear', 2569) == academic_year]
     approved_deeds.sort(key=lambda x: x.get('activityDate', ''))
-    
+
     total_hours = sum(float(d.get('hours', 0)) for d in approved_deeds)
     passed = total_hours >= 50
-    
+
     # 3. Create document
     doc = Document()
-    
+
     # Page Setup (A4 with 2.54 cm margins)
     section = doc.sections[0]
     section.page_width = Cm(21.0)
@@ -363,7 +379,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     section.bottom_margin = Cm(2.54)
     section.left_margin = Cm(2.54)
     section.right_margin = Cm(2.54)
-    
+
     # Default Font Setup (TH Sarabun New)
     font_name = "TH Sarabun New"
     style = doc.styles["Normal"]
@@ -372,7 +388,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     style.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
     style.paragraph_format.line_spacing = 1.15
     style.paragraph_format.space_after = Pt(4)
-    
+
     # Report Title
     p_title = doc.add_paragraph()
     p_title.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -381,7 +397,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     run_title.font.name = font_name
     run_title.font.size = Pt(20)
     run_title.font.bold = True
-    
+
     p_sub = doc.add_paragraph()
     p_sub.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_sub.paragraph_format.space_after = Pt(24)
@@ -389,7 +405,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     run_sub.font.name = font_name
     run_sub.font.size = Pt(16)
     run_sub.font.bold = True
-    
+
     # Student Profile Section
     p_profile_title = doc.add_paragraph()
     p_profile_title.paragraph_format.space_after = Pt(6)
@@ -397,13 +413,13 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     run_profile_title.font.name = font_name
     run_profile_title.font.size = Pt(16)
     run_profile_title.font.bold = True
-    
+
     fullname = f"{student.get('rank', 'นพอ.')} {student.get('first_name', '')} {student.get('last_name', '')}"
-    
+
     p_info = doc.add_paragraph()
     p_info.paragraph_format.left_indent = Cm(1.0)
     p_info.paragraph_format.space_after = Pt(6)
-    
+
     info_text = (
         f"ชื่อ-สกุล: {fullname}\n"
         f"เลขประจำตัวนักเรียน: {student.get('student_id', '')}   ชั้นปี: {student.get('year_level', '')} (รุ่น {student.get('class_year', '')})\n"
@@ -411,7 +427,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
         f"ผลการประเมินชั่วโมงจิตอาสา: {'ผ่านเกณฑ์การสะสมชั่วโมง' if passed else 'ยังไม่ผ่านเกณฑ์การสะสมชั่วโมง'}"
     )
     p_info.add_run(insert_zwsp(info_text))
-    
+
     # Deed Records Section
     p_deeds_title = doc.add_paragraph()
     p_deeds_title.paragraph_format.space_before = Pt(12)
@@ -420,7 +436,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     run_deeds_title.font.name = font_name
     run_deeds_title.font.size = Pt(16)
     run_deeds_title.font.bold = True
-    
+
     if not approved_deeds:
         p_empty = doc.add_paragraph()
         p_empty.paragraph_format.left_indent = Cm(1.0)
@@ -429,7 +445,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
         # Table of approved deeds
         table = doc.add_table(rows=1, cols=5)
         table.style = 'Table Grid'
-        
+
         # Header Row
         hdr_cells = table.rows[0].cells
         hdr_cells[0].text = insert_zwsp("ลำดับ")
@@ -437,7 +453,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
         hdr_cells[2].text = insert_zwsp("ประเภทจิตอาสา")
         hdr_cells[3].text = insert_zwsp("รายละเอียดกิจกรรม")
         hdr_cells[4].text = insert_zwsp("ชั่วโมง")
-        
+
         # Center align headers and make bold
         for cell in hdr_cells:
             cell.paragraphs[0].alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -445,19 +461,19 @@ def generate_docx_in_memory(student_id, academic_year=2569):
                 run.font.name = font_name
                 run.font.bold = True
                 run.font.size = Pt(14)
-                
+
         # Populate rows
         for idx, d in enumerate(approved_deeds, 1):
             row_cells = table.add_row().cells
             row_cells[0].text = str(idx)
             row_cells[1].text = d.get('activityDate', '')
-            
+
             category_id = d.get('categoryId', 0)
             category_name = get_category_name(category_id)
             row_cells[2].text = insert_zwsp(category_name)
             row_cells[3].text = insert_zwsp(d.get('description', ''))
             row_cells[4].text = f"{float(d.get('hours', 0)):.1f}"
-            
+
             # Formats
             for col_idx, cell in enumerate(row_cells):
                 p = cell.paragraphs[0]
@@ -471,24 +487,24 @@ def generate_docx_in_memory(student_id, academic_year=2569):
                 for run in p.runs:
                     run.font.name = font_name
                     run.font.size = Pt(13)
-                    
+
         # Column Widths
         widths = [Cm(1.2), Cm(2.8), Cm(3.8), Cm(6.5), Cm(1.7)]
         for row in table.rows:
             for idx, width in enumerate(widths):
                 row.cells[idx].width = width
-                
+
     # Signatures
     p_sig_space = doc.add_paragraph()
     p_sig_space.paragraph_format.space_before = Pt(40)
-    
+
     table_sig = doc.add_table(rows=1, cols=2)
     table_sig.autofit = False
-    
+
     sig_cells = table_sig.rows[0].cells
     sig_cells[0].width = Cm(8.0)
     sig_cells[1].width = Cm(8.0)
-    
+
     p_sig_left = sig_cells[0].paragraphs[0]
     p_sig_left.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_sig_left.add_run(insert_zwsp(
@@ -499,7 +515,7 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     for run in p_sig_left.runs:
         run.font.name = font_name
         run.font.size = Pt(14)
-        
+
     p_sig_right = sig_cells[1].paragraphs[0]
     p_sig_right.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p_sig_right.add_run(insert_zwsp(
@@ -510,13 +526,210 @@ def generate_docx_in_memory(student_id, academic_year=2569):
     for run in p_sig_right.runs:
         run.font.name = font_name
         run.font.size = Pt(14)
-        
+
     # Save to buffer
     buffer = io.BytesIO()
     doc.save(buffer)
     buffer.seek(0)
     return buffer
 
+
+def get_env_config(key, default=''):
+    val = os.environ.get(key)
+    if val:
+        return val
+    env_file = os.path.join(BASE_DIR, '.env')
+    if os.path.exists(env_file):
+        try:
+            with open(env_file, 'r', encoding='utf-8') as f:
+                for line in f:
+                    line = line.strip()
+                    if line.startswith(f"{key}="):
+                        return line.split('=', 1)[1].strip(' "\'')
+        except Exception:
+            pass
+    return default
+
+def send_telegram_request(method, payload):
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    if not token:
+        return {}
+    url = f"https://api.telegram.org/bot{token}/{method}"
+    data = json.dumps(payload).encode('utf-8')
+    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
+    ctx = ssl.create_default_context()
+    try:
+        with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except Exception as e:
+        print("TELEGRAM_REQUEST_FAILED")
+        return {}
+
+def send_telegram_photo(photo_path, caption, reply_markup=None):
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    chat_id = get_env_config('TELEGRAM_CHAT_ID')
+    if not token or not chat_id:
+        return False
+    url = f"https://api.telegram.org/bot{token}/sendPhoto"
+    boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
+    body = bytearray()
+
+    # chat_id
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode('utf-8'))
+    # caption
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode('utf-8'))
+    # parse_mode
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
+    # reply_markup
+    if reply_markup:
+        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
+
+    # photo file
+    try:
+        with open(photo_path, 'rb') as f:
+            file_bytes = f.read()
+        filename = os.path.basename(photo_path)
+        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{filename}\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
+        body.extend(file_bytes)
+        body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
+
+        req = urllib.request.Request(url, data=bytes(body), headers={
+            'Content-Type': f'multipart/form-data; boundary={boundary}',
+            'Content-Length': str(len(body))
+        })
+        ctx = ssl.create_default_context()
+        with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
+            res = json.loads(resp.read().decode('utf-8'))
+            return res.get('ok', False)
+    except Exception as e:
+        print("TELEGRAM_PHOTO_FAILED")
+        return False
+
+def notify_deed_submission_telegram(deed_data):
+    """Send interactive Telegram notification for newly submitted deed."""
+    try:
+        token = get_env_config('TELEGRAM_BOT_TOKEN')
+        chat_id = get_env_config('TELEGRAM_CHAT_ID')
+        if not token or not chat_id:
+            return False
+
+        student_id = str(deed_data.get('studentId') or deed_data.get('student_id') or '').strip()
+        deed_id = str(deed_data.get('id') or '').strip()
+
+        # Authoritative student identity resolution from students master database
+        s_map = load_students_map()
+        stu_obj = s_map.get(student_id, {})
+        full_authoritative_name = ''
+        if stu_obj and stu_obj.get('first_name'):
+            rank = stu_obj.get('rank', 'นพอ.')
+            fn = stu_obj.get('first_name', '')
+            ln = stu_obj.get('last_name', '')
+            full_authoritative_name = f"{rank} {fn} {ln}".strip()
+
+        raw_student_name = deed_data.get('student_name') or deed_data.get('studentName') or ''
+        if not full_authoritative_name and raw_student_name and 'รหัส' not in raw_student_name:
+            full_authoritative_name = raw_student_name
+
+        student_name = full_authoritative_name or f"นพอ. ({student_id})"
+        class_year = str(stu_obj.get('class_year') or deed_data.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
+        year_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
+        year_level = str(stu_obj.get('year_level') or deed_data.get('year_level') or year_map.get(class_year, '1'))
+        year_name = f"ชั้นปีที่ {year_level} (รุ่น {class_year})"
+
+        cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 7)
+        cat_emoji_map = {
+            1: ('บริจาคโลหิต/เกล็ดเลือด/พลาสมา', '🩸'),
+            2: ('โครงการภายนอก (คำสั่ง วพอ.)', '🏛️'),
+            3: ('ช่วยเหลืองานภายใน วพอ.', '🏥'),
+            4: ('เข้าอบรมที่ วพอ. จัดให้', '📚'),
+            5: ('ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', '🤝'),
+            6: ('ทำนุบำรุงศาสนสถาน', '🛕'),
+            7: ('งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)', '🧹'),
+            8: ('กิจกรรมจงรักภักดีต่อสถาบัน', '👑'),
+            9: ('ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', '⭐'),
+        }
+        cat_name, cat_emoji = cat_emoji_map.get(cat_id, (CATEGORIES_NAME_MAP.get(cat_id, 'กิจกรรมความดี'), '📌'))
+
+        hours = deed_data.get('hours', 0)
+        activity_date = deed_data.get('activityDate') or deed_data.get('event_date') or time.strftime('%Y-%m-%d')
+        desc = deed_data.get('description') or deed_data.get('title') or ''
+        location = deed_data.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
+        approver = deed_data.get('approver') or deed_data.get('approved_by') or 'ผู้ตรวจที่ได้รับมอบหมาย'
+
+        base_url = get_env_config('SYSTEM_URL', 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend').rstrip('/')
+        if not base_url.endswith('/frontend'):
+            base_url += '/frontend'
+
+        q_params = urllib.parse.urlencode({
+            'id': deed_id,
+            'studentId': student_id,
+            'name': student_name,
+            'year': class_year,
+            'cat': cat_id,
+            'catName': cat_name,
+            'hours': hours,
+            'date': activity_date,
+            'desc': desc,
+            'loc': location,
+            'appr': approver,
+            'status': 'pending'
+        })
+        approve_url = f"{base_url}/approve_sign.html?{q_params}"
+        slip_url = f"{base_url}/deed_slip.html?{q_params}"
+
+        reply_markup = {
+            'inline_keyboard': [
+                [
+                    {'text': '✅ อนุมัติด่วน', 'callback_data': f"approve_{deed_id}_{student_id}"},
+                    {'text': '❌ ปฏิเสธ', 'callback_data': f"reject_{deed_id}_{student_id}"}
+                ],
+                [
+                    {'text': '✍️ ตรวจสอบ & ลงนาม ↗️', 'url': approve_url},
+                    {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': slip_url}
+                ]
+            ]
+        }
+
+        html_msg = (
+            f"🔔 <b>แจ้งเตือนการขออนุมัติความดี (วพอ. 2569)</b>\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"👤 <b>ผู้ขอ:</b> {student_name}\n"
+            f"🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> ({year_name})\n"
+            f"📂 <b>หมวดที่ {cat_id}:</b> {cat_emoji} {cat_name}\n"
+            f"⏱ <b>จำนวน:</b> <b>{hours} ชั่วโมง</b>\n"
+            f"📅 <b>วันที่:</b> {activity_date}\n"
+            f"📍 <b>สถานที่:</b> {location}\n"
+            f"📝 <b>รายละเอียด:</b> {desc}\n"
+            f"👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> {approver}\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>"
+        )
+
+        photo_sent = False
+        img_rel = deed_data.get('imageUrl') or ''
+        if img_rel and not img_rel.startswith('data:'):
+            img_full = os.path.join(FRONTEND_DIR, img_rel)
+            if os.path.exists(img_full):
+                photo_sent = send_telegram_photo(img_full, html_msg, reply_markup)
+
+        if not photo_sent:
+            response = send_telegram_request('sendMessage', {
+                'chat_id': chat_id,
+                'text': html_msg,
+                'parse_mode': 'HTML',
+                'reply_markup': reply_markup
+            })
+            if not response or response.get('ok') is not True:
+                return False
+        print("TELEGRAM_DELIVERY_ACCEPTED")
+        return True
+    except Exception as e:
+        print(f"⚠️ Telegram deed notification error: {e}")
+        return False
+
+def calculate_cohort_no(sid_str):
+    """A missing official sequence cannot be inferred from a student ID."""
+    return None
 
 def load_students_map():
     for p in [os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
@@ -540,18 +753,45 @@ def save_or_update_deed_in_db(student_id, deed_data):
     class_year = student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69')
     category_id = deed_data.get('categoryId') or deed_data.get('category_id') or 7
 
-    # Ensure deed has real student identity info
-    if not deed_data.get('student_name'):
-        s_map = load_students_map()
-        s = s_map.get(student_id)
-        if s:
-            deed_data['student_name'] = f"{s.get('rank', 'นพอ.')} {s.get('first_name', '')} {s.get('last_name', '')}".strip()
-            deed_data['studentName'] = deed_data['student_name']
-            deed_data['student_rank'] = s.get('rank', 'นพอ.')
-            deed_data['student_first_name'] = s.get('first_name', '')
-            deed_data['student_last_name'] = s.get('last_name', '')
-            deed_data['class_year'] = str(s.get('class_year', class_year))
-            if s.get('position'): deed_data['student_position'] = s.get('position')
+    # Ensure deed has real authoritative student identity info
+    s_map = load_students_map()
+    s = s_map.get(student_id)
+    if s:
+        real_rank = s.get('rank', 'นพอ.')
+        real_fn = s.get('first_name', '')
+        real_ln = s.get('last_name', '')
+        real_full = f"{real_rank} {real_fn} {real_ln}".strip()
+        real_cy = str(s.get('class_year', class_year))
+        real_yl = str(s.get('year_level', '1'))
+        real_pos = s.get('position', '')
+        real_no = s.get('no') or calculate_cohort_no(student_id)
+
+        deed_data['student_name'] = real_full
+        deed_data['studentName'] = real_full
+        deed_data['student_rank'] = real_rank
+        deed_data['student_first_name'] = real_fn
+        deed_data['student_last_name'] = real_ln
+        deed_data['student_no'] = real_no
+        deed_data['class_year'] = real_cy
+        deed_data['year_level'] = real_yl
+        if real_pos:
+            deed_data['student_position'] = real_pos
+
+        student_obj = deed_data.get('student')
+        if not isinstance(student_obj, dict):
+            student_obj = {}
+        student_obj['student_id'] = student_id
+        student_obj['no'] = real_no
+        student_obj['rank'] = real_rank
+        student_obj['first_name'] = real_fn
+        student_obj['last_name'] = real_ln
+        student_obj['full_name'] = real_full
+        student_obj['class_year'] = real_cy
+        student_obj['year_level'] = real_yl
+        if real_pos:
+            student_obj['position'] = real_pos
+        student_obj['role'] = 'student'
+        deed_data['student'] = student_obj
 
     # 1. Save directly into records/
     target_dir = os.path.join(
@@ -629,21 +869,18 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return super().translate_path(path)
 
     def get_auth_context(self):
-        cookies = parse_cookie_header(self.headers.get('Cookie'))
-        return {
-            'role': self.headers.get('X-GoodDeeds-Role') or cookies.get('gooddeeds_role') or '',
-            'student_id': self.headers.get('X-GoodDeeds-Student-Id') or cookies.get('gooddeeds_student_id') or '',
-            'username': self.headers.get('X-GoodDeeds-Username') or cookies.get('gooddeeds_username') or '',
-        }
+        # Browser headers/cookies are claims, not authentication. Local preview
+        # has no identity session; Cloudflare owns verification and scoped RBAC.
+        return {'role': '', 'student_id': '', 'username': ''}
 
     def send_json_response(self, status_code, payload):
+        body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
         self.send_response(status_code)
         self.send_header('Content-type', 'application/json')
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Content-Length', str(len(body)))
+        self.send_header('Cache-Control', 'no-store')
         self.end_headers()
-        self.wfile.write(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
+        self.wfile.write(body)
 
     def deny_json(self, message='Forbidden'):
         self.send_json_response(403, {'status': 'error', 'message': message})
@@ -661,21 +898,74 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return False
 
     def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header('Access-Control-Allow-Origin', '*')
-        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, DELETE')
-        self.send_header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-GoodDeeds-Role, X-GoodDeeds-Student-Id, X-GoodDeeds-Username')
-        self.send_header('Access-Control-Max-Age', '86400')
-        self.end_headers()
+        self.send_json_response(405, {'status': 'error', 'code': 'METHOD_NOT_ALLOWED'})
+
+    def do_POST(self):
+        # This old server is a static preview, not the authenticated gateway.
+        self.close_connection = True
+        self.send_json_response(403, {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'})
 
     def do_GET(self):
+        if urlparse(self.path).path == '/api/health':
+            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False, 'productionWriteEnabled': False})
+            return
+        super().do_GET()
+
+    def send_head(self):
+        # Used by both GET and HEAD. Resolve before checking so encoded paths,
+        # aliases, dot segments and symlinks cannot bypass the private boundary.
+        target = os.path.realpath(self.translate_path(self.path))
+        root = os.path.realpath(FRONTEND_DIR)
+        try:
+            relative = os.path.relpath(target, root).replace(os.sep, '/')
+            inside = os.path.commonpath([root, target]) == root
+        except ValueError:
+            inside, relative = False, ''
+        if relative == '.':
+            target = os.path.join(root, 'index.html')
+            relative = 'index.html'
+        public_asset = (
+            '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
+        ) or (
+            relative.startswith('secure-pilot/') and relative.count('/') == 1
+            and (relative.endswith(('.html', '.css', '.js')) or relative in {
+                'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
+            })
+        ) or (
+            relative.startswith('photos/chibi/') and relative.count('/') == 2
+            and relative.endswith('.png')
+        )
+        if not inside or not public_asset or not os.path.isfile(target):
+            self.send_error(403, 'Authenticated gateway required')
+            return None
+        return super().send_head()
+
+    def end_headers(self):
+        self.send_header('X-Content-Type-Options', 'nosniff')
+        self.send_header('Referrer-Policy', 'no-referrer')
+        super().end_headers()
+
+    def log_message(self, format, *args):
+        # Do not log URLs/query strings containing student or LINE identifiers.
+        pass
+
+    def legacy_get_unsupported(self):
         parsed_path = urlparse(self.path)
         query_params = {}
         if parsed_path.query:
             query_params = {k: v[0] for k, v in parse_qs(parsed_path.query).items()}
-            
+
+        if parsed_path.path == '/api/health':
+            self.send_json_response(200, {
+                'status': 'ok',
+                'service': 'rtafnc-gooddeeds-server',
+                'academic_year': 2569,
+                'timestamp': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+            })
+            return
+
         if parsed_path.path == '/api/get_student':
-            student_id = query_params.get('studentId')
+            student_id = query_params.get('studentId') or query_params.get('student_id') or query_params.get('id')
             if not student_id:
                 self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId'})
                 return
@@ -684,6 +974,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
             if s:
                 safe_s = {
                     'student_id': s.get('student_id'),
+                    'no': s.get('no') or calculate_cohort_no(student_id),
                     'rank': s.get('rank', 'นพอ.'),
                     'first_name': s.get('first_name', ''),
                     'last_name': s.get('last_name', ''),
@@ -691,7 +982,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'class_year': s.get('class_year', ''),
                     'year_level': s.get('year_level', ''),
                     'position': s.get('position', ''),
-                    'role': s.get('role', 'student')
+                    'role': s.get('role', 'student'),
+                    'line_user_id': s.get('line_user_id', ''),
+                    'line_display_name': s.get('line_display_name', '')
                 }
                 self.send_json_response(200, safe_s)
             else:
@@ -711,6 +1004,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 sid_str = str(s.get('student_id'))
                 safe_list.append({
                     'student_id': s.get('student_id'),
+                    'no': s.get('no') or calculate_cohort_no(sid_str),
                     'rank': s.get('rank', 'นพอ.'),
                     'first_name': s.get('first_name', ''),
                     'last_name': s.get('last_name', ''),
@@ -719,9 +1013,24 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'year_level': s.get('year_level', ''),
                     'position': s.get('position', ''),
                     'role': s.get('role', 'student'),
+                    'line_user_id': s.get('line_user_id', ''),
+                    'line_display_name': s.get('line_display_name', ''),
                     'total_hours': hours_map.get(sid_str, 0)
                 })
             self.send_json_response(200, safe_list)
+            return
+
+        elif parsed_path.path == '/api/line_mappings':
+            self.send_json_response(200, get_all_line_mappings())
+            return
+
+        elif parsed_path.path == '/api/get_line_user':
+            line_uid = query_params.get('lineUserId', '')
+            res = find_user_by_line_id(line_uid)
+            if res:
+                self.send_json_response(200, {'status': 'found', **res})
+            else:
+                self.send_json_response(200, {'status': 'not_found'})
             return
 
         elif parsed_path.path == '/api/get_deeds':
@@ -731,19 +1040,18 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b"Missing studentId parameter")
                 return
-                
+
             try:
                 deeds = get_deeds_for_student(student_id)
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps(deeds, ensure_ascii=False).encode('utf-8'))
             except Exception as e:
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
-                
+
         elif parsed_path.path == '/api/get_all_deeds':
             if not self.require_staff():
                 return
@@ -752,14 +1060,13 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 deeds = get_all_deeds()
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(json.dumps(deeds, ensure_ascii=False).encode('utf-8'))
             except Exception as e:
                 self.send_response(500)
                 self.end_headers()
                 self.wfile.write(str(e).encode('utf-8'))
-                
+
         elif parsed_path.path == '/api/export_docx':
             student_id = query_params.get('studentId')
             year_param = query_params.get('academicYear', '2569')
@@ -767,7 +1074,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 academic_year = int(year_param)
             except ValueError:
                 academic_year = 2569
-                
+
             if not student_id:
                 self.send_response(400)
                 self.end_headers()
@@ -779,7 +1086,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write("นักเรียนสามารถส่งออกรายงานได้เฉพาะของตัวเองเท่านั้น".encode('utf-8'))
                 return
-                
+
             try:
                 docx_buffer = generate_docx_in_memory(student_id, academic_year=academic_year)
                 if not docx_buffer:
@@ -787,11 +1094,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(b"Student not found")
                     return
-                    
+
                 self.send_response(200)
                 self.send_header('Content-type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document')
                 self.send_header('Content-Disposition', f'attachment; filename="report_{student_id}_{academic_year}.docx"')
-                self.send_header('Access-Control-Allow-Origin', '*')
                 self.end_headers()
                 self.wfile.write(docx_buffer.getvalue())
             except Exception as e:
@@ -803,13 +1109,12 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.send_header('Content-Type', 'text/event-stream')
             self.send_header('Cache-Control', 'no-cache')
             self.send_header('Connection', 'keep-alive')
-            self.send_header('Access-Control-Allow-Origin', '*')
             self.end_headers()
-            
+
             q = queue.Queue()
             with clients_lock:
                 clients.append(q)
-                
+
             try:
                 while True:
                     try:
@@ -832,13 +1137,13 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.path = self.path[9:]
             super().do_GET()
 
-    def do_POST(self):
+    def legacy_post_unsupported(self):
         parsed_path = urlparse(self.path)
-        
+
         if parsed_path.path == '/api/submit_deed':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
-            
+
             try:
                 deed_data = json.loads(post_data.decode('utf-8'))
                 student = deed_data.get('student', {})
@@ -897,14 +1202,19 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 print(f"📥 Saved PENDING deed [{deed_id}] for student {student_id}")
                 broadcast_event("deed_submitted", {"studentId": student_id, "deedId": deed_id})
                 sync_to_google_drive_bg()
+                try:
+                    notify_deed_submission_line(student_id, deed_data)
+                except Exception as _ne:
+                    pass
+                threading.Thread(target=notify_deed_submission_telegram, args=(deed_data,), daemon=True).start()
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error submitting deed: {e}")
-                
+
         elif parsed_path.path == '/api/approve_deed':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
-            
+
             try:
                 payload = json.loads(post_data.decode('utf-8'))
                 student_id = str(payload.get('studentId') or '').strip()
@@ -949,17 +1259,21 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 print(f"❇️ Updated deed [{deed_id}] for {student_id} to {status} by {teacher_name}")
                 broadcast_event("deed_approved", {"studentId": student_id, "deedId": deed_id, "status": status})
                 sync_to_google_drive_bg()
+                try:
+                    notify_deed_status_line(student_id, deed_data, status, teacher_name)
+                except Exception as _ne:
+                    pass
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error updating deed: {e}")
-                
+
         elif parsed_path.path == '/api/update_student':
             if not self.require_staff():
                 return
 
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
-            
+
             try:
                 payload = json.loads(post_data.decode('utf-8'))
                 student_id = payload.get('studentId')
@@ -969,18 +1283,18 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 class_year = int(payload.get('classYear', 69))
                 email = payload.get('email', '')
                 position = payload.get('position', 'นักเรียนพยาบาล')
-                
+
                 # Update in frontend/data/students.json
                 frontend_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')
                 frontend_js_path = os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js')
                 root_json_path = os.path.join(BASE_DIR, 'data', 'students.json')
                 root_js_path = os.path.join(BASE_DIR, 'data', 'students_data.js')
-                
+
                 students_list = []
                 if os.path.exists(frontend_json_path):
                     with open(frontend_json_path, 'r', encoding='utf-8') as f:
                         students_list = json.load(f)
-                
+
                 # Find student and update
                 updated = False
                 for s in students_list:
@@ -999,7 +1313,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         else: s['year_level'] = 5
                         updated = True
                         break
-                        
+
                 if not updated:
                     new_student = {
                         'student_id': student_id,
@@ -1016,14 +1330,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         'role': 'student'
                     }
                     students_list.append(new_student)
-                
+
                 # Sort
                 students_list.sort(key=lambda x: (x.get('class_year', 69), x.get('student_id', '')))
-                
+
                 # Write back to frontend/data/students.json
                 with open(frontend_json_path, 'w', encoding='utf-8') as f:
                     json.dump(students_list, f, ensure_ascii=False, indent=2)
-                    
+
                 # Write back to frontend/data/students_data.js
                 with open(frontend_js_path, 'w', encoding='utf-8') as f:
                     f.write("// Auto-generated student data - DO NOT EDIT MANUALLY\n")
@@ -1031,7 +1345,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     f.write("const STUDENTS_DATA = ")
                     json.dump(students_list, f, ensure_ascii=False, indent=2)
                     f.write(";\n")
-                    
+
                 # Sync write to root data/ folder if paths exist
                 if os.path.exists(os.path.dirname(root_json_path)):
                     with open(root_json_path, 'w', encoding='utf-8') as f:
@@ -1041,7 +1355,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         f.write("const STUDENTS_DATA = ")
                         json.dump(students_list, f, ensure_ascii=False, indent=2)
                         f.write(";\n")
-                
+
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
                 self.end_headers()
@@ -1052,7 +1366,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"👤 Updated student profile for {student_id}")
                 broadcast_event("student_updated", {"studentId": student_id})
-                
+
             except Exception as e:
                 self.send_response(500)
                 self.send_header('Content-type', 'application/json')
@@ -1060,7 +1374,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 response = {'status': 'error', 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"❌ Error updating student: {e}")
-        elif self.path == '/api/bind_line':
+        elif parsed_path.path == '/api/bind_line':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             try:
@@ -1069,51 +1383,54 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 line_user_id = payload.get('lineUserId')
                 line_name = payload.get('lineDisplayName', '')
                 line_pic = payload.get('linePictureUrl', '')
-                
+
                 if student_id and line_user_id:
-                    # 1. Store strictly in private backend storage (never in git or public frontend)
-                    private_map_path = os.path.join(BASE_DIR, 'data', 'private', 'line_mappings.json')
-                    mappings = {}
-                    if os.path.exists(private_map_path):
-                        try:
-                            with open(private_map_path, 'r', encoding='utf-8') as f:
-                                mappings = json.load(f)
-                        except Exception:
-                            mappings = {}
-                    
-                    mappings[str(student_id)] = {
-                        'student_id': str(student_id),
-                        'line_user_id': line_user_id,
-                        'line_display_name': line_name,
-                        'line_picture_url': line_pic,
-                        'updated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-                    }
-                    
-                    with open(private_map_path, 'w', encoding='utf-8') as f:
-                        json.dump(mappings, f, ensure_ascii=False, indent=2)
-
-                    print(f"🔒 Bound LINE ID safely in private backend ({line_user_id[:8]}... - {line_name}) for student {student_id}")
+                    res = save_student_line_binding(student_id, line_user_id, line_name, line_pic)
+                    broadcast_event("student_updated", {"studentId": student_id, "lineUserId": line_user_id})
                     sync_to_google_drive_bg()
-
-                self.send_response(200)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({'status': 'success'}).encode('utf-8'))
+                    self.send_json_response(200, res)
+                else:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or lineUserId'})
             except Exception as e:
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
-                self.wfile.write(json.dumps({'status': 'error', 'message': str(e)}).encode('utf-8'))
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
+        elif parsed_path.path == '/api/telegram_webhook':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                from telegram_bot_listener import process_callback_query
+                if 'callback_query' in payload:
+                    threading.Thread(target=process_callback_query, args=(payload['callback_query'],), daemon=True).start()
+                self.send_json_response(200, {'ok': True})
+            except Exception as e:
+                self.send_json_response(500, {'ok': False, 'error': str(e)})
         else:
             self.send_response(404)
             self.end_headers()
 
+def start_telegram_bot_listener_thread():
+    # Static preview must never start an unverified review/data publishing daemon.
+    return False
+    token = get_env_config('TELEGRAM_BOT_TOKEN')
+    if not token:
+        print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener disabled.")
+        return
+    try:
+        from telegram_bot_listener import start_listener_in_background
+        start_listener_in_background()
+        print("🤖 Telegram Bot Listener daemon thread launched successfully.")
+    except Exception as e:
+        print(f"⚠️ Could not launch Telegram Bot Listener: {e}")
+
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
-    server_address = ('', port)
+    server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print(f"🚀 Starting custom server on port {port}...")
     print(f"📂 Serving static files from {BASE_DIR}")
     print(f"📁 Saving records to {RECORDS_DIR}")
+
+    # Production write is false: preview startup has no notification/review worker.
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:

@@ -16,17 +16,48 @@ const CONFIG = {
   MIN_HOURS_YEAR: 50,
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
-  DEFAULT_DRIVE_FOLDER_ID: '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx',
-  TELEGRAM_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
-  TELEGRAM_CHAT_ID: '-4839151586',
+  get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
+  get TELEGRAM_TOKEN() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || ''; },
+  get TELEGRAM_CHAT_ID() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
+
+function productionWritesEnabled() {
+  return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
+}
 
 const SHEETS = {
   STUDENTS: 'Main_2569',
   DEEDS: 'Deeds_2569',
   SETTINGS: 'Settings'
 };
+
+// Positional legacy writers must verify their complete contract before effects.
+// The mapped eight-column staging ledger is deliberately rejected here.
+const LEGACY_DEED_HEADERS = [
+  'Deed ID', 'รหัสนักเรียน', 'หมวดหมู่ ID', 'จำนวนชั่วโมง', 'วันที่ทำกิจกรรม',
+  'รายละเอียด', 'สถานที่', 'รูปหลักฐาน URL', 'ผู้ตรวจประเมิน', 'สถานะ', 'วันที่ส่งเรื่อง'
+];
+const LEGACY_CATEGORY_HEADERS = [
+  'หมวด 1 บริจาคโลหิต', 'หมวด 2 โครงการภายนอก', 'หมวด 3 ช่วยงานภายใน',
+  'หมวด 4 อบรม', 'หมวด 5 ช่วยชุมชน', 'หมวด 6 ศาสนสถาน',
+  'หมวด 7 งานฟรีทั่วไป', 'หมวด 8 จงรักภักดี', 'หมวด 9 บทบาทพิเศษ'
+];
+function legacyColumnsMatch_(headers, expected) {
+  return Array.isArray(headers) && Object.keys(expected).every(index => {
+    const name = expected[index];
+    return headers[Number(index)] === name && headers.filter(value => value === name).length === 1;
+  });
+}
+function legacyMasterColumnsMatch_(headers) {
+  const expected = {1: 'รหัสประจำตัว', 15: 'รวมชั่วโมงสะสม'};
+  LEGACY_CATEGORY_HEADERS.forEach((name, index) => { expected[index + 6] = name; });
+  return legacyColumnsMatch_(headers, expected);
+}
+function legacySheetLiteral_(value) {
+  const text = String(value == null ? '' : value);
+  return /^[=+@-]/.test(text) ? "'" + text : text;
+}
 
 // ==================== SHEET HELPERS ====================
 function getSS() {
@@ -70,27 +101,26 @@ function doGet(e) {
     if (action === 'ping') {
       return jsonResponse({
         status: 'success',
+        service: 'rtafnc-gooddeeds-legacy-gas',
         message: 'GoodDeeds 69 Cloud Engine Active 🟢',
+        productionWriteEnabled: productionWritesEnabled(),
         time: new Date().toISOString()
       });
     }
-    if (action === 'getStudents') return jsonResponse(getStudents());
-    if (action === 'getStudent') return jsonResponse(getStudent(param.studentId));
-    if (action === 'getDeeds') return jsonResponse(getDeeds(param.studentId));
     if (action === 'getSettings') return jsonResponse(getSettings());
-    if (action === 'setupFolders') return jsonResponse(setupAllStudentFolders());
-
-    return jsonResponse({
-      status: 'success',
-      message: 'GoodDeeds 69 Cloud Engine Active 🟢',
-      time: new Date().toISOString()
-    });
+    return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   } catch (err) {
     return jsonResponse({ status: 'error', error: err.toString() });
   }
 }
 
 function doPost(e) {
+  if (e && e.parameter && /^cloudflare/.test(String(e.parameter.action || ''))) {
+    if (typeof cloudflareLegacyReadHandle_ !== 'function') {
+      return jsonResponse({ ok: false, error: 'ADAPTER_NOT_INSTALLED' });
+    }
+    return cloudflareLegacyReadHandle_(e);
+  }
   if (!e || !e.postData || !e.postData.contents) {
     return jsonResponse({ status: 'error', message: 'No post data received' });
   }
@@ -104,125 +134,162 @@ function doPost(e) {
 
   // Handle Telegram Interactive Inline Callback Buttons
   if (data.callback_query) {
-    return jsonResponse(handleTelegramCallback(data.callback_query));
+    return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));
   }
 
-  const action = data.action || '';
-  try {
-    if (action === 'submit_deed' || action === 'addDeed') return jsonResponse(addDeed(data));
-    if (action === 'approveDeed' || action === 'updateDeedStatus') return jsonResponse(approveDeed(data));
-    if (action === 'rejectDeed') return jsonResponse(rejectDeed(data));
-    if (action === 'uploadImage' || data.base64) return jsonResponse(uploadImage(data));
-    if (action === 'init_all_students') return jsonResponse(initAllStudents(data.students || []));
-    if (action === 'bind_line') return jsonResponse(bindLineAccount(data));
-
-    return jsonResponse({ status: 'error', message: 'Unknown action: ' + action });
-  } catch (err) {
-    return jsonResponse({ status: 'error', error: err.toString() });
-  }
+  // Retired public legacy transport. Internal functions remain for controlled
+  // migration and the authenticated Telegram path; browser roles are not auth.
+  return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
 }
 
 // ==================== DEED LOGIC ====================
 function addDeed(payload) {
-  const deed = payload.deed || payload;
-  const student = deed.student || {};
+  const deed = payload && (payload.deed || payload);
+  if (!deed || typeof deed !== 'object' || Array.isArray(deed)) return { status: 'error', code: 'invalid_deed' };
+  const student = deed.student && typeof deed.student === 'object' ? deed.student : {};
   const studentId = String(deed.studentId || student.student_id || '').trim();
-  const hours = parseFloat(deed.hours || 0);
-  const catId = parseInt(deed.categoryId || deed.category_id || 1);
+  const hours = legacyDecimal_(deed.hours);
+  const catId = legacyDecimal_(deed.categoryId === undefined ? deed.category_id : deed.categoryId);
   const deedId = deed.id || ('deed_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
-  const desc = deed.description || deed.title || 'กิจกรรมจิตอาสา';
+  const desc = deed.description || deed.title || '';
+  if (!/^\d{7}$/.test(studentId) || !Number.isInteger(catId) || catId < 1 || catId > 9 ||
+      !Number.isFinite(hours) || hours < 0.5 || hours > 24 || !Number.isInteger(hours * 2) ||
+      typeof deedId !== 'string' || !/^[A-Za-z0-9._:-]{3,120}$/.test(deedId) ||
+      typeof desc !== 'string' || !desc.trim() || desc.length > 1200) return { status: 'error', code: 'invalid_deed' };
   const activityDate = deed.activityDate || deed.event_date || new Date().toISOString().split('T')[0];
   const location = deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
-  const approver = deed.approver || deed.approved_by || 'ร.อ.อนุชิต ทำจะดี (Bird)';
-
-  // 1. Handle image upload to Google Drive if base64 provided
-  let imageUrl = deed.imageUrl || '';
-  if (deed.imageData && deed.imageData.startsWith('data:image')) {
-    const uploadRes = uploadImage({
-      base64: deed.imageData,
-      studentId: studentId,
-      studentName: student.first_name ? `${student.first_name} ${student.last_name || ''}` : '',
-      activityName: desc
-    });
-    if (uploadRes && uploadRes.url) {
-      imageUrl = uploadRes.url;
-    }
-  }
-
-  // 2. Append to Deeds Sheet
-  const sheet = getOrCreateSheet(SHEETS.DEEDS, [
-    'Deed ID', 'รหัสนักเรียน', 'หมวดหมู่ ID', 'จำนวนชั่วโมง', 'วันที่ทำกิจกรรม',
-    'รายละเอียด', 'สถานที่', 'รูปหลักฐาน URL', 'ผู้ตรวจประเมิน', 'สถานะ', 'วันที่ส่งเรื่อง'
-  ]);
-
-  if (sheet) {
-    sheet.appendRow([
-      deedId,
-      studentId,
-      catId,
-      hours,
-      activityDate,
-      desc,
-      location,
-      imageUrl,
-      approver,
-      'pending',
-      new Date()
-    ]);
-  }
-
-  // 3. Notify Admins via Telegram
+  const approver = deed.approver || deed.approved_by || 'ผู้ตรวจ';
+  if (typeof activityDate !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(activityDate) ||
+      !Number.isFinite(Date.parse(activityDate)) || new Date(activityDate).toISOString().slice(0, 10) !== activityDate ||
+      typeof location !== 'string' || location.length > 500 ||
+      typeof approver !== 'string' || approver.length > 180) return { status: 'error', code: 'invalid_deed' };
+  let imageUrl = String(deed.imageUrl || ''), attemptedWrite = false;
+  let lock, locked = false;
   try {
-    notifyTelegramNewDeed({
-      id: deedId,
-      studentId: studentId,
-      studentName: student.first_name ? `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim() : `นพอ. (${studentId})`,
-      classYear: student.class_year || studentId.substring(0, 2) || '69',
-      category: catId,
-      hours: hours,
-      date: activityDate,
-      desc: desc,
-      location: location,
-      imageUrl: imageUrl,
-      approver: approver
-    });
-  } catch (te) {
-    console.error('Telegram notification error:', te);
+    lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    locked = true;
+    const ss = getSS(), sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
+    if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
+    const values = sheet.getDataRange().getValues();
+    if (!legacyColumnsMatch_(values[0], LEGACY_DEED_HEADERS)) return { status: 'error', code: 'ledger_schema_incompatible' };
+    if (values.slice(1).some(row => String(row[0]) === deedId)) return { status: 'error', code: 'deed_identity_conflict' };
+    const master = ss.getSheetByName(SHEETS.STUDENTS);
+    if (!master) return { status: 'error', code: 'student_not_found' };
+    const students = master.getDataRange().getValues();
+    if (!legacyMasterColumnsMatch_(students[0])) return { status: 'error', code: 'master_schema_incompatible' };
+    if (students.slice(1).filter(row => String(row[1]) === studentId).length !== 1) return { status: 'error', code: 'student_identity_ambiguous' };
+    // No file upload, empty-sheet creation or notification precedes storage validation.
+    if (deed.imageData) {
+      if (typeof deed.imageData !== 'string' || !deed.imageData.startsWith('data:image')) return { status: 'error', code: 'evidence_invalid' };
+      const uploaded = uploadImage({base64: deed.imageData, studentId: studentId,
+        studentName: String(student.first_name || ''), activityName: desc});
+      if (!uploaded || uploaded.status !== 'success' || !uploaded.url) return { status: 'error', code: 'evidence_upload_failed' };
+      imageUrl = uploaded.url;
+    }
+    attemptedWrite = true;
+    sheet.appendRow([deedId, studentId, catId, hours, legacySheetLiteral_(activityDate),
+      legacySheetLiteral_(desc), legacySheetLiteral_(location), legacySheetLiteral_(imageUrl),
+      legacySheetLiteral_(approver), 'pending', new Date()]);
+    SpreadsheetApp.flush();
+  } catch (_) {
+    return { status: 'error', code: attemptedWrite ? 'submission_requires_reconciliation' : 'submission_failed', deedId: deedId };
+  } finally {
+    if (locked) lock.releaseLock();
   }
-
-  return {
-    status: 'success',
-    deedId: deedId,
-    imageUrl: imageUrl,
-    message: 'Deed recorded successfully'
-  };
+  try {
+    let resolvedName = '';
+    const ss = getSS(), masterSheet = ss ? ss.getSheetByName(SHEETS.STUDENTS) : null;
+    if (masterSheet) {
+      const mRows = masterSheet.getDataRange().getValues();
+      const matchingRows = mRows.filter((r, i) => i > 0 && String(r[1]).trim() === String(studentId).trim());
+      const foundRow = matchingRows.length === 1 ? matchingRows[0] : null;
+      if (foundRow) {
+        const rRank = String(foundRow[2] || 'นพอ.').trim();
+        const rFn = String(foundRow[3] || '').trim();
+        const rLn = String(foundRow[4] || '').trim();
+        const rFull = `${rFn} ${rLn}`.trim(); // Column F is cohort, not full name.
+        resolvedName = rFull.startsWith('นพอ.') ? rFull : `${rRank} ${rFull}`.trim();
+      }
+    }
+    if (!resolvedName) {
+      if (student && student.first_name && !String(student.first_name).startsWith('รหัส')) {
+        resolvedName = `${student.rank || 'นพอ.'} ${student.first_name} ${student.last_name || ''}`.trim();
+      } else {
+        resolvedName = `นพอ. (${studentId})`;
+      }
+    }
+    notifyTelegramNewDeed({id: deedId, studentId: studentId,
+      studentName: resolvedName,
+      classYear: student.class_year || studentId.substring(0, 2) || '69', category: catId, hours: hours,
+      date: activityDate, desc: desc, location: location, imageUrl: imageUrl, approver: approver});
+  } catch (_) {
+    console.error('LEGACY_NOTIFICATION_UNCONFIRMED');
+  }
+  return { status: 'success', deedId: deedId, imageUrl: imageUrl, message: 'Deed recorded successfully' };
 }
 
 function approveDeed(data) {
-  const deedId = String(data.deedId || data.id || '');
-  const studentId = String(data.studentId || '');
-  const approverName = data.approvedBy || data.teacherName || 'ร.อ.อนุชิต ทำจะดี';
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return { status: 'error', code: 'invalid_review' };
+  const deedId = data.deedId || data.id;
   const status = data.status || 'approved';
-  const rejectReason = data.rejectReason || '';
-
-  const sheet = getOrCreateSheet(SHEETS.DEEDS);
-  if (sheet) {
+  if (typeof deedId !== 'string' || !/^[A-Za-z0-9._:-]{3,120}$/.test(deedId) || !['approved', 'rejected'].includes(status)) {
+    return { status: 'error', code: 'invalid_review' };
+  }
+  let lock, locked = false, attemptedWrite = false;
+  try {
+    lock = LockService.getScriptLock();
+    lock.waitLock(20000);
+    locked = true;
+    const ss = getSS();
+    const sheet = ss && ss.getSheetByName(SHEETS.DEEDS);
+    if (!sheet) return { status: 'error', code: 'ledger_unavailable' };
     const values = sheet.getDataRange().getValues();
-    for (let i = 1; i < values.length; i++) {
-      if (String(values[i][0]) === deedId) {
-        sheet.getRange(i + 1, 10).setValue(status); // Status Col
-        sheet.getRange(i + 1, 9).setValue(approverName); // Approver Col
-        break;
-      }
+    if (!legacyColumnsMatch_(values[0], LEGACY_DEED_HEADERS)) return { status: 'error', code: 'ledger_schema_incompatible' };
+    const matches = values.map((row, i) => i > 0 && String(row[0]) === deedId ? i : -1).filter(i => i >= 0);
+    if (!matches.length) return { status: 'error', code: 'deed_not_found' };
+    if (matches.length !== 1) return { status: 'error', code: 'deed_identity_ambiguous' };
+    const index = matches[0];
+    const row = values[index];
+    const studentId = String(row[1]);
+    if (data.studentId && String(data.studentId) !== studentId) return { status: 'error', code: 'student_mismatch' };
+    if (row[9] === status) return { status: 'success', deedId, newStatus: status, duplicate: true };
+    // 'approving' marks an uncertain cross-sheet write. Never auto-retry its hours.
+    if (row[9] === 'approving') return { status: 'error', code: 'review_requires_reconciliation', deedId };
+    if (row[9] !== 'pending') return { status: 'error', code: 'review_conflict' };
+    const category = legacyDecimal_(row[2]);
+    const hours = legacyDecimal_(row[3]);
+    if (!Number.isInteger(category) || category < 1 || category > 9 || !Number.isFinite(hours) || hours < 0.5 || hours > 24 || !Number.isInteger(hours * 2) || !/^\d{7}$/.test(studentId)) {
+      return { status: 'error', code: 'invalid_stored_deed' };
+    }
+    let applyMasterUpdate;
+    if (status === 'approved') {
+      const master = ss.getSheetByName(SHEETS.STUDENTS);
+      if (!master) return { status: 'error', code: 'student_not_found' };
+      try { applyMasterUpdate = prepareMasterStudentHoursUpdate_(master, studentId, category, hours); }
+      catch (_) { return { status: 'error', code: 'master_requires_reconciliation' }; }
+    }
+    // Mark uncertainty before the first attempted mutation, including rejection.
+    // A provider may persist a setValue/flush even when that call throws.
+    attemptedWrite = true;
+    if (status === 'approved') {
+      sheet.getRange(index + 1, 10).setValue('approving');
+      SpreadsheetApp.flush();
+      applyMasterUpdate();
+      SpreadsheetApp.flush();
+    }
+    sheet.getRange(index + 1, 9).setValue(String(data.approvedBy || 'ผู้ตรวจ').slice(0, 120));
+    sheet.getRange(index + 1, 10).setValue(status);
+    SpreadsheetApp.flush();
+    return { status: 'success', deedId, newStatus: status };
+  } catch (_) {
+    return { status: 'error', code: attemptedWrite ? 'review_requires_reconciliation' : 'review_failed', deedId };
+  } finally {
+    if (locked) {
+      try { lock.releaseLock(); }
+      catch (_) { console.warn('LEGACY_REVIEW_LOCK_RELEASE_UNCONFIRMED'); }
     }
   }
-
-  // Update Master Student Hours if approved
-  if (status === 'approved' && data.categoryId && data.hours) {
-    updateMasterStudentHours(studentId, parseInt(data.categoryId), parseFloat(data.hours));
-  }
-
-  return { status: 'success', deedId: deedId, newStatus: status };
 }
 
 function rejectDeed(data) {
@@ -258,10 +325,15 @@ function getDeeds(studentId) {
   return deeds;
 }
 
+function calculateCohortNo(sid) {
+  // Sequence comes from the stored Master field, never private ID ranges.
+  return '-';
+}
+
 // ==================== STUDENTS & SETTINGS ====================
 function getStudents() {
   const cache = CacheService.getScriptCache();
-  const cached = cache.get('students_api_v3');
+  const cached = cache.get('students_api_v4_mapped_identity');
   if (cached) {
     return JSON.parse(cached);
   }
@@ -270,35 +342,46 @@ function getStudents() {
   if (!sheet) return [];
   const data = sheet.getDataRange().getValues();
   if (data.length <= 1) return [];
+  if (!legacyMasterColumnsMatch_(data[0]) || !legacyColumnsMatch_(data[0], {0:'ลำดับ',2:'ยศ',3:'ชื่อ',4:'นามสกุล',5:'ชั้นปี (รุ่น)'})) throw new Error('MASTER_SCHEMA_INCOMPATIBLE');
 
   const students = [];
+  const identities = new Set();
   for (let i = 1; i < data.length; i++) {
     const sid = String(data[i][1] || '').trim();
     if (!sid || sid === 'undefined') continue;
+    if (!/^\d{7}$/.test(sid) || identities.has(sid)) throw new Error('MASTER_IDENTITY_REQUIRES_RECONCILIATION');
+    identities.add(sid);
+
+    const noRaw = String(data[i][0] || '').replace(/\*/g, '').trim();
+    const cohortNo = /^\d+$/.test(noRaw) && Number(noRaw)>0 ? Number(noRaw) : '-';
+    const rank = String(data[i][2] || 'นพอ.').trim();
+    const firstName = String(data[i][3] || '').trim();
+    const lastName = String(data[i][4] || '').trim();
+    const fullNameRaw = `${firstName} ${lastName}`.trim();
+    const fullName = fullNameRaw.startsWith('นพอ.') ? fullNameRaw : `${rank} ${fullNameRaw}`.trim();
 
     const classYearRaw = String(data[i][5] || '');
     const classYear = classYearRaw.replace(/รุ่น\s*/, '').trim();
-    let yearLevel = '1';
-    if (classYear === '69') yearLevel = '1';
-    else if (classYear === '68') yearLevel = '2';
-    else if (classYear === '67') yearLevel = '3';
-    else if (classYear === '66') yearLevel = '4';
+    const yearLevel = ({'69':'1','68':'2','67':'3','66':'4'})[classYear] || '';
+    const totalHours = legacyDecimal_(data[i][15]);
+    if (!Number.isFinite(totalHours) || totalHours<0) throw new Error('MASTER_TOTAL_REQUIRES_RECONCILIATION');
 
     students.push({
       student_id: sid,
-      rank: String(data[i][2] || 'นพอ.'),
-      first_name: String(data[i][3] || ''),
-      last_name: String(data[i][4] || ''),
-      full_name: `${data[i][2] || 'นพอ.'} ${data[i][3] || ''} ${data[i][4] || ''}`.trim(),
+      no: cohortNo,
+      rank: rank,
+      first_name: firstName,
+      last_name: lastName,
+      full_name: fullName,
       class_year: classYear,
       year_level: yearLevel,
       role: 'student',
-      total_hours: parseFloat(data[i][15] || 0)
+      total_hours: totalHours
     });
   }
 
   const jsonStr = JSON.stringify(students);
-  cache.put('students_api_v3', jsonStr, 300); // 5 mins cache
+  cache.put('students_api_v4_mapped_identity', jsonStr, 300); // 5 mins cache
   return students;
 }
 
@@ -316,24 +399,34 @@ function getSettings() {
   };
 }
 
-function updateMasterStudentHours(studentId, catId, addedHours) {
-  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
-  if (!sheet) return;
+function legacyDecimal_(value) {
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string' && /^\d+(?:\.\d+)?$/.test(value.trim())) return Number(value.trim());
+  return NaN;
+}
+
+// Prepare validation BEFORE the ledger transition; never overwrite formulas.
+function prepareMasterStudentHoursUpdate_(sheet, studentId, catId, addedHours) {
   const data = sheet.getDataRange().getValues();
-  const catCol = 6 + catId; // Cols G..O
+  if (!legacyMasterColumnsMatch_(data[0])) throw new Error('master_schema_incompatible');
+  const matches = data.map((row,i) => i > 0 && String(row[1]) === String(studentId) ? i : -1).filter(i => i >= 0);
+  if (matches.length !== 1) throw new Error('master_identity_requires_reconciliation');
+  const index = matches[0], catCol = 6 + catId;
+  const categoryCell = sheet.getRange(index + 1, catCol), totalCell = sheet.getRange(index + 1, 16);
+  const categoryFormula = categoryCell.getFormula(), totalFormula = totalCell.getFormula();
+  const categoryHours = legacyDecimal_(data[index][catCol - 1]), totalHours = legacyDecimal_(data[index][15]);
+  if ((!categoryFormula && (!Number.isFinite(categoryHours) || categoryHours < 0 || !Number.isFinite(categoryHours + addedHours))) || (!totalFormula && (!Number.isFinite(totalHours) || totalHours < 0 || !Number.isFinite(totalHours + addedHours)))) throw new Error('master_total_requires_reconciliation');
+  return function () {
+    if (!categoryFormula) categoryCell.setValue(categoryHours + addedHours);
+    if (!totalFormula) totalCell.setValue(totalHours + addedHours);
+    // Policy/result and historical carry-forward are never recomputed here.
+  };
+}
 
-  for (let i = 1; i < data.length; i++) {
-    if (String(data[i][1]) === String(studentId)) {
-      const currentCatHours = parseFloat(data[i][catCol - 1] || 0);
-      sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
-
-      const row = i + 1;
-      sheet.getRange(row, 16).setFormula('=SUM(G' + row + ':O' + row + ')');
-      sheet.getRange(row, 17).setValue('50 ชม./ปี');
-      sheet.getRange(row, 18).setFormula('=IF(P' + row + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")');
-      break;
-    }
-  }
+function updateMasterStudentHours(studentId, catId, addedHours) {
+  const ss = getSS(), sheet = ss && ss.getSheetByName(SHEETS.STUDENTS);
+  if (!sheet || !Number.isInteger(catId) || catId < 1 || catId > 9 || !Number.isFinite(addedHours) || addedHours < 0.5 || addedHours > 24 || !Number.isInteger(addedHours * 2)) throw new Error('master_update_invalid');
+  prepareMasterStudentHoursUpdate_(sheet, studentId, catId, addedHours)();
 }
 
 // ==================== IMAGE UPLOAD (GOOGLE DRIVE) ====================
@@ -352,7 +445,12 @@ function uploadImage(data) {
 
   if (studentId) {
     const classYear = studentId.substring(0, 2);
-    const genFolderName = '0' + (5 - (70 - parseInt(classYear))) + '_ชั้นปี (รุ่น ' + classYear + ')';
+    const genYearLevel = 70 - parseInt(classYear);
+    let genFolderName = '0' + genYearLevel + '_ชั้นปีที่ ' + genYearLevel + ' (รุ่น ' + classYear + ')';
+    if (genYearLevel === 5) genFolderName = '05_ศิษย์เก่า (รุ่น 65)';
+    else if (genYearLevel === 6) genFolderName = '06_ศิษย์เก่า (รุ่น 64)';
+    else if (genYearLevel < 1 || genYearLevel > 6) genFolderName = '0' + genYearLevel + '_รุ่น ' + classYear;
+
     const genFolders = targetFolder.getFoldersByName(genFolderName);
     targetFolder = genFolders.hasNext() ? genFolders.next() : targetFolder.createFolder(genFolderName);
 
@@ -363,8 +461,8 @@ function uploadImage(data) {
   }
 
   const file = targetFolder.createFile(blob);
-  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  const fileUrl = 'https://lh3.googleusercontent.com/d/' + file.getId();
+  file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
+  const fileUrl = file.getUrl(); // Access remains private; secure evidence API is required for students.
   return { status: 'success', fileId: file.getId(), url: fileUrl };
 }
 
@@ -400,57 +498,172 @@ function notifyTelegramNewDeed(d) {
   });
 }
 
-function handleTelegramCallback(cb) {
-  const cbId = cb.id;
-  const data = cb.data || '';
-  const message = cb.message;
-  const isApprove = data.startsWith('approve_');
-  const isReject = data.startsWith('reject_');
-
-  if (!isApprove && !isReject) return { status: 'ignored' };
-
-  const parts = data.split('_');
-  const deedId = parts[1] || '';
-  const studentId = parts[2] || '';
-  const approver = cb.from ? `${cb.from.first_name} ${cb.from.last_name || ''}`.trim() : 'อาจารย์ใน Telegram';
-
-  // 1. Answer Telegram Alert
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/answerCallbackQuery`, {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify({
-      callback_query_id: cbId,
-      text: isApprove ? '✅ อนุมัติบันทึกความดีเรียบร้อยแล้ว!' : '❌ ปฏิเสธบันทึกความดีเรียบร้อยแล้ว!',
-      show_alert: true
-    })
-  });
-
-  // 2. Update DB
-  approveDeed({
-    deedId: deedId,
-    studentId: studentId,
-    status: isApprove ? 'approved' : 'rejected',
-    approvedBy: approver
-  });
-
-  // 3. Edit Telegram Buttons
-  if (message) {
-    const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${deedId}&studentId=${studentId}`;
-    UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/editMessageReplyMarkup`, {
-      method: 'post',
-      contentType: 'application/json',
-      payload: JSON.stringify({
-        chat_id: message.chat.id,
-        message_id: message.message_id,
-        reply_markup: {
-          inline_keyboard: [
-            [{ text: isApprove ? `✅ อนุมัติแล้ว (${approver})` : '❌ ปฏิเสธแล้ว', callback_data: `done_${deedId}` }],
-            [{ text: '📄 พิมพ์ใบบันทึกความดี (PDF Slip)', url: slipUrl }]
-          ]
-        }
-      })
+// Apps Script cannot inspect Telegram's secret header. A high-entropy query
+// key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
+function handleTelegramCallback(cb, suppliedKey) {
+  if (!productionWritesEnabled()) return { status: 'error', code: 'PRODUCTION_WRITE_DISABLED' };
+  const props = PropertiesService.getScriptProperties();
+  const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
+  if (expected.length < 32 || String(suppliedKey || '') !== expected) return { status: 'error', code: 'webhook_unauthorized' };
+  const allowed = (props.getProperty('TELEGRAM_APPROVER_IDS') || '').split(',').map(x => x.trim()).filter(Boolean);
+  if (!cb || !cb.from || !allowed.includes(String(cb.from.id)) || !cb.message || String(cb.message.chat.id) !== String(props.getProperty('TELEGRAM_CHAT_ID') || '')) {
+    return { status: 'error', code: 'reviewer_forbidden' };
+  }
+  // Greedy middle group preserves deed IDs such as deed_123_abcd.
+  const match = /^(approve|reject)_(.+)_(\d{7})$/.exec(String(cb.data || ''));
+  if (!match) return { status: 'ignored' };
+  let result;
+  try {
+    result = approveDeed({ deedId: match[2], studentId: match[3], status: match[1] === 'approve' ? 'approved' : 'rejected', approvedBy: 'telegram:' + cb.from.id });
+  } catch (error) {
+    result = { status: 'error', code: 'review_write_failed' };
+  }
+  const saved = result.status === 'success';
+  // A notification failure never rolls back or repeats the persisted approval.
+  try {
+    UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/answerCallbackQuery', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ callback_query_id: cb.id, text: saved ? 'บันทึกผลการตรวจแล้ว' : 'ยังบันทึกผลไม่ได้ กรุณาให้ผู้ดูแลตรวจสอบ', show_alert: true })
     });
+    if (saved) UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/editMessageReplyMarkup', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ chat_id: cb.message.chat.id, message_id: cb.message.message_id, reply_markup: { inline_keyboard: [] } })
+    });
+  } catch (error) { console.warn('Telegram delivery failed after review; inspect backend state.'); }
+  return result;
+}
+
+// ==================== BIND LINE & CLOUD SYNC ====================
+function bindLineAccount(data) {
+  const studentId = String(data.studentId || data.student_id || '').trim();
+  const lineUserId = String(data.lineUserId || data.line_user_id || '').trim();
+  const lineDisplayName = String(data.lineDisplayName || data.line_display_name || '').trim();
+  const linePictureUrl = String(data.linePictureUrl || data.line_picture_url || '').trim();
+
+  if (!studentId || !lineUserId) {
+    return { status: 'error', message: 'Missing studentId or lineUserId' };
   }
 
-  return { status: 'success' };
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+
+  const values = sheet.getDataRange().getValues();
+  let found = false;
+  for (let i = 1; i < values.length; i++) {
+    if (String(values[i][1]).trim() === studentId) {
+      sheet.getRange(i + 1, 20).setValue(lineUserId);
+      sheet.getRange(i + 1, 21).setValue(lineDisplayName);
+      sheet.getRange(i + 1, 22).setValue(new Date());
+      found = true;
+      break;
+    }
+  }
+
+  return {
+    status: 'success',
+    studentId: studentId,
+    lineUserId: lineUserId,
+    foundInSheet: found,
+    message: 'LINE account bound successfully'
+  };
+}
+
+function initAllStudents(studentList) {
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS, [
+    'ลำดับ', 'รหัสประจำตัว', 'ยศ', 'ชื่อ', 'นามสกุล', 'ชั้นปี (รุ่น)',
+    'หมวด 1 บริจาคโลหิต', 'หมวด 2 โครงการภายนอก', 'หมวด 3 ช่วยงานภายใน', 'หมวด 4 อบรม',
+    'หมวด 5 ช่วยชุมชน/มูลนิธิ', 'หมวด 6 ศาสนสถาน', 'หมวด 7 งานฟรีทั่วไป', 'หมวด 8 จงรักภักดี',
+    'หมวด 9 บทบาทพิเศษ', 'รวมชั่วโมงสะสม', 'เกณฑ์ขั้นต่ำ (50 ชม.)', 'สถานะการประเมิน (Grade)',
+    'ระดับความดี (Level)', 'LINE User ID', 'ชื่อ LINE', 'อัปเดตล่าสุด'
+  ]);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+
+  if (studentList && studentList.length > 0) {
+    const lastRow = sheet.getLastRow();
+    if (lastRow > 1) {
+      sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
+    }
+    const rowsToAppend = [];
+    for (let sIdx = 0; sIdx < studentList.length; sIdx++) {
+      const st = studentList[sIdx];
+      const sId = String(st.student_id || '').trim();
+      const rowNum = sIdx + 2;
+      const cat = st.categories || [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+      rowsToAppend.push([
+        sIdx + 1,
+        sId,
+        st.rank || 'นพอ.',
+        st.first_name || '',
+        st.last_name || '',
+        'รุ่น ' + (st.class_year || '69'),
+        cat[0] || 0,
+        cat[1] || 0,
+        cat[2] || 0,
+        cat[3] || 0,
+        cat[4] || 0,
+        cat[5] || 0,
+        cat[6] || 0,
+        cat[7] || 0,
+        cat[8] || 0,
+        '=SUM(G' + rowNum + ':O' + rowNum + ')',
+        '50 ชม./ปี',
+        '=IF(P' + rowNum + '>=50, "ผ่านเกณฑ์ ✅", "ยังไม่ผ่าน ❌")',
+        st.level_title || 'Lv.1 ปีกทองฝึกหัด',
+        st.line_user_id || '',
+        st.line_display_name || '',
+        new Date()
+      ]);
+    }
+    if (rowsToAppend.length > 0) {
+      sheet.getRange(2, 1, rowsToAppend.length, rowsToAppend[0].length).setValues(rowsToAppend);
+    }
+    return { status: 'success', message: 'Populated ' + rowsToAppend.length + ' students with complete history' };
+  }
+  return { status: 'error', message: 'No students provided' };
+}
+
+// ==================== GOOGLE DRIVE FOLDER SETUP ====================
+function getOrCreateSubFolder(parent, name) {
+  const folders = parent.getFoldersByName(name);
+  if (folders.hasNext()) {
+    return folders.next();
+  }
+  return parent.createFolder(name);
+}
+
+function setupAllStudentFolders() {
+  const root = DriveApp.getFolderById(CONFIG.DEFAULT_DRIVE_FOLDER_ID);
+  const sheet = getOrCreateSheet(SHEETS.STUDENTS);
+  if (!sheet) return { status: 'error', message: 'Cannot access students sheet' };
+  const data = sheet.getDataRange().getValues();
+
+  const yearFolders = {
+    'รุ่น 69': getOrCreateSubFolder(root, '01_ชั้นปีที่ 1 (รุ่น 69)'),
+    'รุ่น 68': getOrCreateSubFolder(root, '02_ชั้นปีที่ 2 (รุ่น 68)'),
+    'รุ่น 67': getOrCreateSubFolder(root, '03_ชั้นปีที่ 3 (รุ่น 67)'),
+    'รุ่น 66': getOrCreateSubFolder(root, '04_ชั้นปีที่ 4 (รุ่น 66)'),
+    'รุ่น 65': getOrCreateSubFolder(root, '05_ศิษย์เก่า (รุ่น 65)'),
+    'รุ่น 64': getOrCreateSubFolder(root, '06_ศิษย์เก่า (รุ่น 64)')
+  };
+
+  let created = 0;
+  for (let i = 1; i < data.length; i++) {
+    const sid = String(data[i][1] || '').trim();
+    if (!sid) continue;
+    const rank = String(data[i][2] || 'นพอ.');
+    const fname = String(data[i][3] || '');
+    const lname = String(data[i][4] || '');
+    const cyear = String(data[i][5] || 'รุ่น 69');
+
+    const parentFolder = yearFolders[cyear] || root;
+    const folderName = sid + ' - ' + rank + ' ' + fname + ' ' + lname;
+    const sFolder = getOrCreateSubFolder(parentFolder, folderName);
+
+    getOrCreateSubFolder(sFolder, '01_หลักฐานภาพถ่ายความดี');
+    getOrCreateSubFolder(sFolder, '02_เอกสารรับรอง_Word_PDF');
+    created++;
+  }
+
+  return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
 }

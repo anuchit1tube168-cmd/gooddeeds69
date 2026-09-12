@@ -8,6 +8,9 @@ const LiffHelper = {
     liffId: localStorage.getItem('gooddeeds_liff_id') || '2010948179-Ympqt2bT',
     isInitialized: false,
     profile: null,
+    verifiedSession: null,
+    connectionState: "idle",
+    gateway: null,
 
     async init(customLiffId = '') {
         if (customLiffId) {
@@ -50,9 +53,8 @@ const LiffHelper = {
             if (liff.isLoggedIn()) {
                 try {
                     this.profile = await liff.getProfile();
-                    console.log('👤 LINE Profile Loaded:', this.profile);
-                    this.bindCurrentStudentProfile();
-                    this.handleAutoLogin();
+                    // LINE profile is for display only; verify its token on the server.
+                    await this.handleAutoLogin();
                 } catch (pe) {
                     console.warn('⚠️ Could not get LINE profile:', pe);
                 }
@@ -69,202 +71,74 @@ const LiffHelper = {
         return typeof liff !== 'undefined' && liff.isInClient && liff.isInClient();
     },
 
-    login() {
-        if (typeof liff !== 'undefined' && liff.isLoggedIn && !liff.isLoggedIn()) {
-            liff.login();
-        } else if (typeof liff !== 'undefined') {
-            liff.login();
+    async login() {
+        const needsInit = !this.isInitialized;
+        if (needsInit && !(await this.init())) return false;
+        if (typeof liff === 'undefined') return false;
+        if (liff.isLoggedIn()) {
+            if (needsInit && this.verifiedSession) return true;
+            return this.handleAutoLogin(true);
         }
+        liff.login();
+        return false;
     },
 
-    logout() {
-        if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) {
-            liff.logout();
-            window.location.reload();
+    async logout() {
+        this.verifiedSession = null;
+        if (this.gateway) {
+            try { await this.gateway.logout(); }
+            catch (_) { this.connectionState = 'error'; this.updateProfileUI(); return false; }
         }
+        this.profile = null; this.connectionState = 'idle';
+        if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) liff.logout();
+        this.updateProfileUI();
+        return true;
     },
 
-    bindCurrentStudentProfile() {
-        if (!this.profile) return;
-        const lineUserId = this.profile.userId;
-        const lineName = this.profile.displayName || 'LINE User';
-        const linePic = this.profile.pictureUrl || '';
-
-        // Save mapping
-        const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
-        
-        if (typeof App !== 'undefined' && App.getCurrentUser) {
-            const currentUser = App.getCurrentUser();
-            if (currentUser) {
-                const userKey = currentUser.student_id || currentUser.username || 'admin';
-                mappings[lineUserId] = userKey;
-                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
-
-                // Save profile details
-                const profileData = App.getProfile(userKey) || {};
-                profileData.lineUserId = lineUserId;
-                profileData.lineDisplayName = lineName;
-                profileData.linePictureUrl = linePic;
-                App.updateProfile(profileData);
-                console.log('🔗 Bound LINE Profile to User:', userKey, lineName, currentUser.role);
-
-                // Always Send Telegram Notification & Sync Cloud
-                try {
-                    let displayName = '';
-                    let roleTitle = '';
-                    if (currentUser.role === 'admin') {
-                        displayName = currentUser.name || 'ผู้ดูแลระบบ (Admin)';
-                        roleTitle = '🛡️ บัญชี: ผู้ดูแลระบบ (Super Admin)';
-                    } else if (currentUser.role === 'teacher') {
-                        displayName = currentUser.name || 'อาจารย์ผู้ควบคุม';
-                        roleTitle = '👩‍🏫 บัญชี: อาจารย์ผู้ควบคุม (Teacher)';
-                    } else {
-                        displayName = `${currentUser.rank || 'นพอ.'} ${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim();
-                        roleTitle = `🎫 รหัส นพอ.: <code>${currentUser.student_id}</code> (รุ่น ${currentUser.class_year || '69'})`;
-                    }
-
-                    const settings = App.getSettings();
-                    const tgToken = (settings.telegramToken && !settings.telegramToken.includes('AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k'))
-                        ? settings.telegramToken 
-                        : '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s';
-                    const tgChat = settings.adminChatId || '-4839151586';
-
-                    if (tgToken && tgChat) {
-                        App.sendTelegram(tgChat, 
-                            `🔗 <b>ผูกบัญชี LINE สำเร็จ (เปิดผ่าน LIFF SMART DBS)!</b>\n` +
-                            `━━━━━━━━━━━━━━━━━━\n` +
-                            `👤 LINE: <b>${lineName}</b>\n` +
-                            `📛 ชื่อ: <b>${displayName}</b>\n` +
-                            `${roleTitle}\n` +
-                            `🆔 LINE User ID: <code>${lineUserId}</code>\n` +
-                            `✅ บันทึกข้อมูลเข้าสู่ระบบเรียบร้อยแล้ว`
-                        );
-                    }
-                } catch (tge) {
-                    console.warn('⚠️ Telegram notify error:', tge);
-                }
-
-                // Sync to Google Apps Script (Cloud Google Sheets) if configured
-                const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (App.getSettings ? App.getSettings().gasUrl : '');
-                if (gasUrl) {
-                    fetch(gasUrl, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'bind_line',
-                            studentId: currentUser.student_id || currentUser.username,
-                            lineUserId,
-                            lineDisplayName: lineName,
-                            linePictureUrl: linePic
-                        })
-                    }).then(() => console.log('☁️ Synced LINE ID to Google Apps Script'))
-                      .catch(err => console.warn('⚠️ GAS Sync Error:', err));
-                }
-
-                // Sync to backend if available
-                if (App.canUseBackendApi && App.canUseBackendApi()) {
-                    fetch('/api/bind_line', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', ...(App.getAuthHeaders ? App.getAuthHeaders() : {}) },
-                        body: JSON.stringify({
-                            studentId: currentUser.student_id || currentUser.username,
-                            lineUserId,
-                            lineDisplayName: lineName,
-                            linePictureUrl: linePic
-                        })
-                    }).catch(err => console.warn('⚠️ Bind LINE sync error:', err));
-                }
-            }
-        }
+    async bindCurrentStudentProfile() {
+        // Compatibility entrypoint: verification does not create a student binding.
+        return this.handleAutoLogin();
     },
 
-    handleAutoLogin() {
-        if (!this.profile) return;
-        // Suppress auto-login if user explicitly logged out or wants to switch accounts
+    async handleAutoLogin(interactive = false) {
+        this.verifiedSession = null;
+        const loggedOut = ['gooddeeds_logged_out', 'gooddeeds_auto_login_disabled'].some(key => localStorage.getItem(key) === 'true') || sessionStorage.getItem('gooddeeds_logged_out') === 'true';
+        if (!interactive && (loggedOut || new URLSearchParams(window.location.search).has('logout'))) return false;
+        const config = window.GOODDEED_GATEWAY_CONFIG;
+        if (!config?.origin || typeof window.createGoodDeedGatewayClient !== 'function') {
+            this.connectionState = 'unavailable'; this.updateProfileUI(); return false;
+        }
+        this.gateway ||= window.createGoodDeedGatewayClient(config);
+        this.connectionState = 'checking'; this.updateProfileUI();
         try {
-            const urlParams = (typeof window !== 'undefined' && window.location) ? new URLSearchParams(window.location.search) : null;
-            const isLogoutParam = urlParams && (urlParams.get('logout') === 'true' || urlParams.get('logout') === '1');
-            const isLoggedOutSession = typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true';
-            const isLoggedOutLocal = typeof localStorage !== 'undefined' && (
-                localStorage.getItem('gooddeeds_logged_out') === 'true' || 
-                localStorage.getItem('gooddeeds_auto_login_disabled') === 'true'
-            );
-
-            if (isLogoutParam || isLoggedOutSession || isLoggedOutLocal) {
-                console.log('ℹ️ User explicitly logged out. Auto-login suppressed to allow switching accounts or admin login.');
-                return;
-            }
-        } catch (e) {}
-
-        const lineUserId = this.profile.userId;
-        const mappings = JSON.parse(localStorage.getItem('gooddeeds_line_mappings') || '{}');
-        const userKey = mappings[lineUserId];
-
-        if (userKey && typeof App !== 'undefined') {
-            // 1. Check if mapped to staff (Teacher / Admin)
-            if (userKey === 'admin' || userKey === 'anuchit' || userKey === 'bird' || userKey === 'teacher') {
-                const staffAccounts = App.getStaffAccounts ? App.getStaffAccounts() : [];
-                const staff = staffAccounts.find(t => t.username === userKey) || {
-                    username: userKey,
-                    role: (userKey === 'teacher') ? 'teacher' : 'admin',
-                    name: (userKey === 'anuchit' || userKey === 'bird') ? 'ร.อ.อนุชิต ทำจะดี (Bird)' : 'ผู้ดูแลระบบ'
-                };
-                console.log('🚀 LIFF Auto-login for staff:', staff.username);
-                if (App.setSession) {
-                    App.setSession(staff.role, staff);
-                }
-                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-                    const target = (window.location.pathname.indexOf('/frontend/') !== -1) ? 'teacher-dashboard.html' : 'frontend/teacher-dashboard.html';
-                    window.location.href = target;
-                    return;
-                }
-            }
-
-            // 2. Check if mapped to student
-            const student = App.getStudentById ? App.getStudentById(userKey) : (App.findStudent ? App.findStudent(userKey) : null);
-            if (student) {
-                console.log('🚀 LIFF Auto-login for student:', student.student_id);
-                if (App.setSession) {
-                    App.setSession('student', student);
-                }
-                if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/')) {
-                    const target = (window.location.pathname.indexOf('/frontend/') !== -1) ? 'student-dashboard.html' : 'frontend/student-dashboard.html';
-                    window.location.href = target;
-                    return;
-                }
-            } else {
-                // Invalid or outdated mapping, clear it
-                delete mappings[lineUserId];
-                localStorage.setItem('gooddeeds_line_mappings', JSON.stringify(mappings));
-            }
-        }
+            const token = typeof liff !== 'undefined' && liff.getIDToken ? liff.getIDToken() : null;
+            const result = await this.gateway.verifyLine(token);
+            this.verifiedSession = result;
+            this.connectionState = result.studentLinked ? 'verified' : 'pending';
+            // No App.setSession, role guessing, roster lookup or mapping export.
+            return true;
+        } catch (_) { this.connectionState = 'error'; return false; }
+        finally { this.updateProfileUI(); }
     },
 
     updateProfileUI() {
         const titleEl = document.getElementById('line-liff-title');
         const detailEl = document.getElementById('line-liff-detail');
         const btnEl = document.getElementById('btn-line-connect');
-
         if (!titleEl || !detailEl) return;
-
-        if (this.profile) {
-            titleEl.textContent = `🟢 เชื่อมต่อบัญชี LINE: ${this.profile.displayName}`;
-            titleEl.style.color = '#4ade80';
-            detailEl.textContent = `LINE User ID: ${this.profile.userId.slice(0, 10)}... (เชื่อมต่อข้อมูลเรียบร้อย)`;
-            if (btnEl) {
-                btnEl.textContent = '✅ เชื่อมต่อแล้ว';
-                btnEl.style.background = 'rgba(74, 222, 128, 0.2)';
-                btnEl.style.color = '#4ade80';
-                btnEl.style.border = '1px solid rgba(74, 222, 128, 0.4)';
-            }
-        } else if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) {
-            titleEl.textContent = '🟢 เข้าใช้งานผ่าน LINE LIFF';
-            detailEl.textContent = 'กดปุ่มเพื่อดึงข้อมูลโปรไฟล์ LINE';
-        } else {
-            titleEl.textContent = '📱 เชื่อมต่อบัญชี LINE Official Account';
-            detailEl.textContent = 'กดปุ่มเพื่อล็อกอินและรับแจ้งเตือนผ่าน LINE';
-        }
+        const messages = {
+            idle:['เชื่อมต่อบัญชี LINE', 'เข้าสู่ LINE เพื่อให้ระบบตรวจสอบบัญชีของคุณ', 'ตรวจสอบบัญชี'],
+            checking:['กำลังตรวจสอบบัญชี', 'กรุณารอสักครู่', 'กำลังตรวจสอบ…'],
+            verified:['ยืนยันบัญชี LINE แล้ว', 'ระบบยืนยันการเชื่อมบัญชีนักเรียนแล้ว สถานะการรับแจ้งเตือนต้องตรวจแยกต่างหาก', 'ตรวจสอบอีกครั้ง'],
+            pending:['ยืนยัน LINE แล้ว รอเชื่อมบัญชีนักเรียน', 'ติดต่อผู้ดูแลเพื่อตรวจสอบสิทธิ์และเชื่อมบัญชี', 'ตรวจสอบอีกครั้ง'],
+            unavailable:['การยืนยันบัญชียังไม่พร้อม', 'กรุณาติดต่อผู้ดูแลเพื่อเปิดใช้งานการยืนยันบัญชี', 'ตรวจสอบอีกครั้ง'],
+            error:['ยังยืนยันบัญชีไม่ได้', 'ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง ข้อมูลในเครื่องไม่ใช้แทนการยืนยันบัญชี', 'ลองอีกครั้ง']
+        };
+        const message = messages[this.connectionState] || messages.idle;
+        titleEl.textContent = message[0]; detailEl.textContent = message[1];
+        titleEl.style.color = this.connectionState === 'verified' ? '#146c43' : '';
+        detailEl.setAttribute('role', 'status'); detailEl.setAttribute('aria-live', 'polite');
+        if (btnEl) { btnEl.textContent = message[2]; btnEl.disabled = this.connectionState === 'checking'; }
     },
 
     // ---------- FLEX MESSAGE TEMPLATES ----------
@@ -480,6 +354,13 @@ window.addEventListener('load', () => {
     if (isLanding && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
         try {
             LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
+        } catch(e) {}
+    } else {
+        // Automatically check and update LINE connection status card if on profile or dashboard
+        try {
+            if (typeof LiffHelper !== 'undefined' && LiffHelper.updateProfileUI) {
+                LiffHelper.updateProfileUI();
+            }
         } catch(e) {}
     }
 });

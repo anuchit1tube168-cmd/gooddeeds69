@@ -23,6 +23,7 @@ const allowedTemplate=/^data\/templates\/[^/]+\.(?:csv|json)$/i;
 const disallowedFile=/\.(?:xlsx?|xlsm|ods|pdf|docx?|rtf|pptx?|zip|7z|rar|db|sqlite3?|sql|parquet|avro)$/i;
 const suspiciousDataPath=/(?:^|\/)(?:private|exports?|backups?|students?|people|persons?|patients?|health-records?|counselling|advisor-mapping|identity-data)(?:\/|$)/i;
 const rules=[
+  {name:'line_channel_secret_literal',re:/(?:LINE_CHANNEL_ACCESS_TOKEN|LINE_TOKEN|lineToken|channelAccessToken)[\s\S]{0,160}?['\"][A-Za-z0-9+/]{80,}={0,2}['\"]/g},
   {name:'student_id_context_literal',re:/(?:student[_ -]?id|รหัส(?:นักเรียน|นพอ\.?))\s*[:=,\t ]+['\"]?\d{7}\b/gi},
   {name:'legacy_student_id_literal',re:/\b(?:66|67|68|69)\d{5}\b/g},
   {name:'line_user_id_literal',re:/\bU[0-9a-f]{32}\b/gi},
@@ -60,3 +61,4 @@ if(failed){
   process.exit(1);
 }
 console.log(`PII guard passed (${MODE} mode): ${files.length} file(s) inspected.`);
+

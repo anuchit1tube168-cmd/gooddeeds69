@@ -11,7 +11,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="style.css?v=3301">
+    <link rel="stylesheet" href="style.css?v=3580">
     <style>
         .qa-container {
             max-width: 860px;
@@ -502,66 +502,17 @@
     <!-- TOAST -->
     <div class="toast-container" id="toast-container"></div>
 
-    <script src="data/students_data.js?v=3400"></script>
-    <script src="data/deeds_data.js?v=3400"></script>
-    <script src="data/app_settings.js?v=3400"></script>
-    <script src="app.js?v=3400"></script>
+    <script src="data/students_data.js?v=3580"></script>
+    <script src="data/deeds_data.js?v=3580"></script>
+    <script src="data/app_settings.js?v=3580"></script>
+    <script src="app.js?v=3580"></script>
     <script>
         let currentUser = null;
         let qaData = [];
         let activeFilter = 'all';
 
-        const DEFAULT_QA = [
-            {
-                id: 'qa_ann_welcome',
-                title: '📢 ยินดีต้อนรับสู่กระดานถาม-ตอบความดีจิตอาสา ปีการศึกษา 2569',
-                category: 'ประกาศ',
-                content: 'กระดานนี้เปิดให้นักเรียนพยาบาลทุกชั้นปีสอบถามข้อสงสัยเกี่ยวกับเกณฑ์ชั่วโมงจิตอาสา การบันทึกความดี และการแนบหลักฐาน\n\nอาจารย์และ Admin จะตอบคำถามให้เร็วที่สุดครับ 🙏\n\nเกณฑ์ขั้นต่ำ: 50 ชั่วโมงต่อปีการศึกษา',
-                author: 'ผู้ดูแลระบบ (Admin)',
-                authorId: 'admin',
-                role: 'admin',
-                isAnnouncement: true,
-                pinned: true,
-                createdAt: '2026-08-15T08:00:00Z',
-                answers: []
-            },
-            {
-                id: 'qa_1',
-                title: 'บริจาคโลหิต / เกล็ดเลือด / พลาสมา ได้ครั้งละกี่ชั่วโมง?',
-                category: 'บริจาคโลหิต',
-                content: 'ขอสอบถามอาจารย์ค่ะ ถ้าไปบริจาคโลหิตหรือพลาสมาที่สภากาชาด จะได้รับการบันทึกกี่ชั่วโมงคะ และต้องแนบหลักฐานอะไรบ้าง?',
-                author: 'นพอ. ตัวอย่าง (รุ่น 68)',
-                authorId: '6900001',
-                role: 'student',
-                createdAt: '2026-08-18T10:00:00Z',
-                answers: [
-                    {
-                        author: 'อาจารย์ผู้ควบคุม (Teacher)',
-                        role: 'teacher',
-                        content: 'บริจาคโลหิตหรือพลาสมาได้รับการบันทึกครั้งละ 4 ชั่วโมง สูงสุด 16 ชม./ภาค โดยให้แนบรูปถ่ายใบนัด/ใบเสร็จรับรอง หรือรูปถ่ายสมุดประจำตัวผู้บริจาคโลหิตครับ ✅',
-                        createdAt: '2026-08-18T14:30:00Z'
-                    }
-                ]
-            },
-            {
-                id: 'qa_2',
-                title: 'เกณฑ์ชั่วโมงขั้นต่ำประจำปีการศึกษา 2569 คือเท่าไหร่?',
-                category: 'ทั่วไป',
-                content: 'นักเรียนทุกชั้นปีต้องสะสมชั่วโมงจิตอาสาขั้นต่ำคนละเท่าไหร่จึงจะถือว่าผ่านเกณฑ์คะ?',
-                author: 'นพอ. ทดสอบ (รุ่น 68)',
-                authorId: '6900002',
-                role: 'student',
-                createdAt: '2026-08-19T09:15:00Z',
-                answers: [
-                    {
-                        author: 'ผู้ดูแลระบบ (Admin)',
-                        role: 'admin',
-                        content: 'เกณฑ์ขั้นต่ำคือ 50 ชั่วโมงต่อปีการศึกษาครับ (หรือเฉลี่ย 25 ชม./ภาคการศึกษา) หากสะสมครบระบบจะออกเกียรติบัตรผ่านเกณฑ์ให้อัตโนมัติครับ 🏆',
-                        createdAt: '2026-08-19T11:00:00Z'
-                    }
-                ]
-            }
-        ];
+        // Historical seeds archived privately; real saved posts remain untouched.
+        const DEFAULT_QA = [];
 
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');

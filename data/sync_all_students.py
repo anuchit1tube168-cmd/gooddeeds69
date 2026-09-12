@@ -111,13 +111,14 @@ def extract_settings_from_sheet(ws):
     return settings
 
 def main():
+    raise RuntimeError("Legacy public roster/settings export disabled; use the reviewed private pipeline")
     all_students = {}
     app_settings = {
-        "admin": {"username": "admin", "password": "admin69", "role": "admin", "name": "ผู้ดูแลระบบ"},
-        "teacher": {"username": "teacher", "password": "teacher69", "role": "teacher", "name": "อาจารย์"},
+        "admin": {"username": "admin", "password": "", "role": "admin", "name": "ผู้ดูแลระบบ"},
+        "teacher": {"username": "teacher", "password": "", "role": "teacher", "name": "อาจารย์"},
         "telegram": {
-            "bot_token": "8087838067:AAEejIlFni8e9DWVxKpRomTFlmjxYJVNJ0k",
-            "chat_id": "-4839151586"
+            "bot_token": "",
+            "chat_id": ""
         },
         "config": {
             "academic_year": 2569,
