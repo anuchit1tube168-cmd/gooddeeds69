@@ -1339,12 +1339,12 @@
 
     <!-- SCRIPT INCLUDES -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3580"></script>
-    <script src="data/students_photos.js?v=3580"></script>
-    <script src="data/deeds_data.js?v=3580"></script>
-    <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=3580"></script>
-    <script src="chibi3d.js?v=3580"></script>
+    <script src="data/students_data.js?v=3593"></script>
+    <script src="data/students_photos.js?v=3593"></script>
+    <script src="data/deeds_data.js?v=3593"></script>
+    <script src="data/app_settings.js?v=3593"></script>
+    <script src="app.js?v=3593"></script>
+    <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260911"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -1402,6 +1402,23 @@
                 });
             }
         }
+
+        window.loadDashboardData = init;
+
+        // Auto-refresh when deeds are updated in real-time
+        window.addEventListener('deeds_updated', (e) => {
+            console.log('⚡ Real-time deeds_updated event received:', e && e.detail);
+            if (currentUser && currentUser.student_id) {
+                summary = App.getStudentSummary(currentUser.student_id);
+                renderHero();
+                renderStatusBanner();
+                renderChibiHero();
+                renderStats();
+                renderCategories();
+                renderInteractiveTable();
+                renderRecentDeeds();
+            }
+        });
 
                 function renderHero() {
             // Name & ID

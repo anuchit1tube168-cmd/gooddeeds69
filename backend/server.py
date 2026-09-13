@@ -1457,16 +1457,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
-    token = get_env_config('TELEGRAM_BOT_TOKEN')
-    if not token:
-        print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener disabled.")
-        return
-    try:
-        from telegram_bot_listener import start_listener_in_background
-        start_listener_in_background()
-        print("🤖 Telegram Bot Listener daemon thread launched successfully.")
-    except Exception as e:
-        print(f"⚠️ Could not launch Telegram Bot Listener: {e}")
+    # Production write is false: preview startup has no notification/review worker.
+    return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
     server_address = ('127.0.0.1', port)

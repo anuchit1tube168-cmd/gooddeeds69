@@ -282,10 +282,10 @@
     </div>
 
     <div class="toast-container" id="toast-container"></div>
-    <script src="data/students_data.js?v=3580"></script>
-    <script src="data/deeds_data.js?v=3580"></script>
-    <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=3580"></script>
+    <script src="data/students_data.js?v=3593"></script>
+    <script src="data/deeds_data.js?v=3593"></script>
+    <script src="data/app_settings.js?v=3593"></script>
+    <script src="app.js?v=3593"></script>
     <script>
         let currentUser = null;
         let allDeeds = [];
@@ -330,6 +330,14 @@
                 renderDeeds();
             }
         });
+        window.loadDashboardData = () => {
+            if (currentUser) {
+                allDeeds = App.getDeeds(currentUser.student_id)
+                    .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+                renderSummary();
+                renderDeeds();
+            }
+        };
 
         function renderSummary() {
             const s = App.getStudentSummary(currentUser.student_id);

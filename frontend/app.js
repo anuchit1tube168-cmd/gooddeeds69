@@ -783,6 +783,9 @@ const App = {
                 const deeds = await res.json();
                 this.saveDeeds(studentId, deeds);
                 console.log(`🔄 Synced ${deeds.length} deeds from backend for ${studentId}`);
+                if (typeof window !== 'undefined') {
+                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deeds } }));
+                }
                 return deeds;
             }
         } catch (e) {
@@ -827,12 +830,13 @@ const App = {
 
                     Object.entries(byStudent).forEach(([sid, deeds]) => {
                         const current = this.getDeeds(sid);
+                        const mergedMap = new Map();
+                        current.forEach(d => mergedMap.set(String(d.id), d));
                         deeds.forEach(d => {
-                            const idx = current.findIndex(x => String(x.id) === String(d.id));
-                            if (idx >= 0) { current[idx] = { ...current[idx], ...d }; }
-                            else { current.unshift(d); }
+                            const existing = mergedMap.get(String(d.id)) || {};
+                            mergedMap.set(String(d.id), { ...existing, ...d });
                         });
-                        this.saveDeeds(sid, current);
+                        this.saveDeeds(sid, this.deduplicateDeeds(Array.from(mergedMap.values())));
                     });
 
                     // Set memory globals for instant fast access
@@ -841,7 +845,9 @@ const App = {
                     globalThis.IMPORTED_DEEDS = byStudent;
                     globalThis.DEEDS_DATA = deedsList;
 
-                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: deedsList.length } }));
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: deedsList.length } }));
+                    }
                     return deedsList;
                 }
             } catch (e) {
@@ -854,25 +860,15 @@ const App = {
     async syncDeedsFromCloud(studentId) {
         if (!studentId) return null;
         try {
+            if (this.canUseBackendApi()) {
+                return await this.syncDeedsWithBackend(studentId);
+            }
+
             const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
             let updatedDeeds = null;
 
-            // 1. Fetch latest deeds.json from GitHub raw with cache buster
-            try {
-                const rawUrl = `https://raw.githubusercontent.com/anuchit1tube168-cmd/gooddeeds69/main/frontend/data/deeds.json?t=${Date.now()}`;
-                const res = await fetch(rawUrl, { cache: 'no-store' });
-                if (res.ok) {
-                    const allDeeds = await res.json();
-                    if (Array.isArray(allDeeds)) {
-                        updatedDeeds = allDeeds.filter(d => String(d.student_id || d.studentId) === String(studentId));
-                    } else if (allDeeds && typeof allDeeds === 'object') {
-                        updatedDeeds = allDeeds[String(studentId)] || allDeeds[studentId] || [];
-                    }
-                }
-            } catch (e) {}
-
-            // 2. Fallback to GAS endpoint
-            if (!updatedDeeds && gasUrl) {
+            // Fallback to GAS endpoint
+            if (gasUrl) {
                 try {
                     const res = await fetch(`${gasUrl}?action=getDeeds&studentId=${studentId}`);
                     if (res.ok) {
@@ -887,20 +883,28 @@ const App = {
                 const currentLocal = Storage.get('deeds_' + studentId) || [];
                 let hasChanges = false;
 
-                currentLocal.forEach(localDeed => {
-                    const matched = updatedDeeds.find(u => String(u.id) === String(localDeed.id));
-                    if (matched && matched.status !== localDeed.status) {
-                        localDeed.status = matched.status;
-                        localDeed.approvedBy = matched.approved_by || matched.approvedBy || localDeed.approvedBy;
-                        localDeed.approved_by = matched.approved_by || matched.approvedBy || localDeed.approved_by;
-                        localDeed.approvedAt = matched.updated_at || matched.approvedAt || localDeed.approvedAt;
+                const mergedMap = new Map();
+                currentLocal.forEach(d => mergedMap.set(String(d.id), { ...d }));
+                updatedDeeds.forEach(u => {
+                    const key = String(u.id);
+                    if (mergedMap.has(key)) {
+                        const existing = mergedMap.get(key);
+                        if (existing.status !== u.status || existing.hours !== u.hours || (existing.approvedBy || existing.approved_by) !== (u.approvedBy || u.approved_by)) {
+                            hasChanges = true;
+                        }
+                        mergedMap.set(key, { ...existing, ...u });
+                    } else {
+                        mergedMap.set(key, u);
                         hasChanges = true;
                     }
                 });
 
-                if (hasChanges) {
-                    this.saveDeeds(studentId, currentLocal);
-                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId } }));
+                if (hasChanges || (currentLocal.length === 0 && updatedDeeds.length > 0)) {
+                    const mergedList = this.deduplicateDeeds(Array.from(mergedMap.values()));
+                    this.saveDeeds(studentId, mergedList);
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId } }));
+                    }
                 }
                 return updatedDeeds;
             }
@@ -933,7 +937,7 @@ const App = {
         });
 
         // Event listener
-        if (typeof onChangeCallback === 'function') {
+        if (typeof onChangeCallback === 'function' && typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
             window.addEventListener('deeds_updated', onChangeCallback);
         }
 
@@ -982,6 +986,9 @@ const App = {
         };
         deeds.push(newDeed);
         this.saveDeeds(studentId, deeds);
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deed: newDeed } }));
+        }
 
         // Sync to Google Apps Script (Cloud Google Sheets) if configured
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
@@ -1045,6 +1052,9 @@ const App = {
         deed.approvedAt = new Date().toISOString();
         deed.rejectReason = rejectReason;
         this.saveDeeds(studentId, deeds);
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deedId, status } }));
+        }
 
         // Update in memory DEEDS_DATA if present
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
@@ -2206,11 +2216,16 @@ function startRealtimeUpdates() {
                 if (user.role === 'teacher' || user.role === 'admin') {
                     await App.syncAllDeedsWithBackend();
                     if (typeof loadDashboardData === 'function') loadDashboardData();
+                    if (typeof loadData === 'function') loadData();
                     showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${data.studentId}`);
-                } else if (user.student_id === data.studentId) {
+                } else if (String(user.student_id) === String(data.studentId)) {
                     await App.syncDeedsWithBackend(data.studentId);
                     if (typeof loadDashboardData === 'function') loadDashboardData();
+                    if (typeof init === 'function') init();
                 }
+            }
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('deeds_updated', { detail: data }));
             }
         } catch (err) {
             console.error("Error processing deed_submitted event:", err);
@@ -2227,11 +2242,16 @@ function startRealtimeUpdates() {
                 if (user.role === 'teacher' || user.role === 'admin') {
                     await App.syncAllDeedsWithBackend();
                     if (typeof loadDashboardData === 'function') loadDashboardData();
-                } else if (user.student_id === data.studentId) {
+                    if (typeof loadData === 'function') loadData();
+                } else if (String(user.student_id) === String(data.studentId)) {
                     await App.syncDeedsWithBackend(data.studentId);
                     if (typeof loadDashboardData === 'function') loadDashboardData();
+                    if (typeof init === 'function') init();
                     showToast(`🎉 กิจกรรมจิตอาสาของคุณได้รับการอนุมัติแล้ว (${data.status})!`);
                 }
+            }
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('deeds_updated', { detail: data }));
             }
         } catch (err) {
             console.error("Error processing deed_approved event:", err);
@@ -2244,10 +2264,12 @@ function startRealtimeUpdates() {
             console.log("🔔 Real-time: Student roster updated:", data);
 
             const user = App.getCurrentUser();
-            if (user && user.student_id === data.studentId) {
+            if (user && String(user.student_id) === String(data.studentId)) {
                 showToast("👤 ข้อมูลส่วนตัวของคุณได้รับการอัปเดตแล้ว");
             }
             if (typeof loadDashboardData === 'function') loadDashboardData();
+            if (typeof loadData === 'function') loadData();
+            if (typeof init === 'function') init();
         } catch (err) {
             console.error("Error processing student_updated event:", err);
         }
@@ -2263,6 +2285,17 @@ function startRealtimeUpdates() {
             console.warn('Live updates unavailable; refresh to reconnect.');
         }
     };
+}
+
+// Cross-tab real-time sync for localStorage updates
+if (typeof window !== 'undefined' && typeof window.addEventListener === 'function') {
+    window.addEventListener('storage', (e) => {
+        if (e.key && (e.key.startsWith('gooddeeds_deeds_') || e.key.includes('deeds'))) {
+            if (typeof window.dispatchEvent === 'function') {
+                window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { key: e.key } }));
+            }
+        }
+    });
 }
 
 if (typeof document !== 'undefined') {
