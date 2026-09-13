@@ -1,3 +1,31 @@
+# Real-time Status Synchronization Checkpoint — 2026-09-13
+
+State: SOURCE PUBLISHED TO MAIN & FEATURE BRANCH / CI & SYNTAX PASS / PDPA 100% CLEAN.
+Current Commit: `0add7878` | Parent: `3da8d2c3`
+
+- Resolved real-time status update blockage (P0-15):
+  1. `App.syncDeedsWithBackend(studentId)` now dispatches `deeds_updated` upon successful fetch.
+  2. `App.syncDeedsFromCloud(studentId)` delegates to `syncDeedsWithBackend` when backend is available, and uses Map-based merging for cloud GAS updates, dispatching `deeds_updated`.
+  3. `App.addDeed()` and `App.updateDeedStatus()` dispatch `deeds_updated` immediately so any open tab/window reflects additions and approvals instantly.
+  4. Cross-tab synchronization: added `window.addEventListener('storage', ...)` in `frontend/app.js` to dispatch `deeds_updated` across separate browser tabs and windows.
+  5. In `startRealtimeUpdates()`:
+     - Fixed student ID comparison from strict `===` to `String(user.student_id) === String(data.studentId)`.
+     - Standardized function invocations: `loadData()` for teachers, `init()` for students, and always dispatching `deeds_updated`.
+  6. Standardized UI endpoints:
+     - In `student-dashboard.html`: exposed `window.loadDashboardData = init;` and added top-level `deeds_updated` event listener to re-render all stats, cards, categories, and tables in real time.
+     - In `teacher-dashboard.html`: exposed `window.loadDashboardData = loadData;`.
+     - In `history.html`: exposed `window.loadDashboardData`.
+  7. Bumped script cache buster to `?v=3593` across all modified HTML files.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASS
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: PASS (all 18 HTML files balanced)
+  - `node --test tests/*.test.cjs`: 141/141 PASS
+  - `python3 data/check_pdpa_compliance.py`: PASS (188 tracked files clean, 0 leaks)
+- Deployment:
+  - Merged fast-forward into `main` and pushed to GitHub `origin main` and `codex/fable-gooddeed-hardening-20260907`.
+
+---
+
 # Session and slow-network checkpoint — 2026-09-12
 
 State: SOURCE PUBLISHED AND CI VERIFIED / AUTHENTICATION BROWSER BLOCKED / PRODUCTION WRITE = FALSE.
