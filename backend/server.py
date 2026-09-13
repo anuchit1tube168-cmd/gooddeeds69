@@ -227,7 +227,7 @@ def validate_deed_submission(deed_data, student_id):
     try:
         cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 0)
         hours = float(deed_data.get('hours', 0))
-        act_date = deed_data.get('activityDate') or deed_data.get('event_date') or ''
+        act_date = deed_data.get('activityDate') or deed_data.get('event_date') or deed_data.get('deedDate') or deed_data.get('date') or ''
         desc = (deed_data.get('description') or deed_data.get('title') or '').strip()
         deed_id = str(deed_data.get('id', '')).strip()
 
@@ -901,15 +901,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.send_json_response(405, {'status': 'error', 'code': 'METHOD_NOT_ALLOWED'})
 
     def do_POST(self):
-        # This old server is a static preview, not the authenticated gateway.
-        self.close_connection = True
-        self.send_json_response(403, {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'})
+        self.legacy_post_unsupported()
 
     def do_GET(self):
-        if urlparse(self.path).path == '/api/health':
-            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False, 'productionWriteEnabled': False})
-            return
-        super().do_GET()
+        self.legacy_get_unsupported()
 
     def send_head(self):
         # Used by both GET and HEAD. Resolve before checking so encoded paths,
