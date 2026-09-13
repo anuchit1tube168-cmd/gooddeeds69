@@ -404,7 +404,7 @@ const App = {
             await this.ensureStudentsLoaded().catch(() => {});
         }
         return new Promise((resolve) => {
-            setTimeout(() => {
+            setTimeout(async () => {
                 const inputId = String(studentId || '').trim();
                 const inputPwd = String(password || '').trim();
 
@@ -421,6 +421,25 @@ const App = {
                     // Try removing common prefixes: นพอ., นพอ.(ช), นพอ.หญิง, etc.
                     const stripped = normalizedInput.replace(/^(นพอ\.?(\s*\([ชญ]\))?|นพอ\s*|ID:?|#)\s*/i, '').replace(/\s+/g, '');
                     student = this.findStudent(stripped);
+                }
+
+                // If still not found, query backend API directly as dynamic fallback
+                if (!student) {
+                    const cleanDigits = normalizedInput.replace(/[^\d]/g, '');
+                    if (cleanDigits.length >= 4) {
+                        try {
+                            const res = await fetch(`/api/get_student?studentId=${encodeURIComponent(cleanDigits)}`);
+                            if (res.ok) {
+                                const found = await res.json();
+                                if (found && found.student_id) {
+                                    student = found;
+                                    if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+                                        STUDENTS_DATA.push(student);
+                                    }
+                                }
+                            }
+                        } catch (e) {}
+                    }
                 }
 
                 if (!student) {

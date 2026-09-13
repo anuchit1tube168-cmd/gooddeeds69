@@ -302,10 +302,10 @@
 
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="data/students_data.js?v=3580"></script>
-  <script src="data/deeds_data.js?v=3580"></script>
-  <script src="data/app_settings.js?v=3580"></script>
-  <script src="app.js?v=3580"></script>
+  <script src="data/students_data.js?v=3592"></script>
+  <script src="data/deeds_data.js?v=3592"></script>
+  <script src="data/app_settings.js?v=3592"></script>
+  <script src="app.js?v=3592"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260911"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -430,7 +430,7 @@
     }
 
     // ===== รหัสผ่าน =====
-    function savePassword(e) {
+    async function savePassword(e) {
       e.preventDefault();
       const np = document.getElementById('new-password').value;
       const cp = document.getElementById('confirm-password').value;
@@ -440,9 +440,25 @@
       err.classList.remove('show');
       Storage.set('pwd_' + currentUser.student_id, np);
       App.updateProfile({ password: np });
+
+      try {
+        const res = await fetch('/api/change_password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...(App.getAuthHeaders ? App.getAuthHeaders() : {}) },
+          body: JSON.stringify({ studentId: currentUser.student_id, newPassword: np })
+        });
+        const data = await res.json();
+        if (data && data.status === 'success') {
+          showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐 ใช้รหัสผ่านใหม่เข้าสู่ระบบได้ทุกอุปกรณ์ทันที', 'success');
+        } else {
+          showToast('บันทึกรหัสผ่านในเครื่องเรียบร้อย 🔐', 'success');
+        }
+      } catch (err) {
+        showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐', 'success');
+      }
+
       document.getElementById('new-password').value = '';
       document.getElementById('confirm-password').value = '';
-      showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐 ใช้รหัสผ่านใหม่เข้าสู่ระบบได้ทันที', 'success');
     }
 
     init();

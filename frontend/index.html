@@ -373,7 +373,7 @@
                         <label class="checkbox-label">
                             <input type="checkbox" id="remember-student"> จดจำการเข้าสู่ระบบ
                         </label>
-                        <a href="#" class="link-text">ลืมรหัสผ่าน?</a>
+                        <a href="javascript:void(0)" onclick="showForgotPasswordHelp(event)" class="link-text">ลืมรหัสผ่าน?</a>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-student-login">
@@ -455,10 +455,10 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3580"></script>
-    <script src="data/deeds_data.js?v=3580"></script>
-    <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=3580"></script>
+    <script src="data/students_data.js?v=3592"></script>
+    <script src="data/deeds_data.js?v=3592"></script>
+    <script src="data/app_settings.js?v=3592"></script>
+    <script src="app.js?v=3592"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260911"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -504,6 +504,18 @@
             if (btn) btn.focus();
         }
 
+        function showForgotPasswordHelp(e) {
+            if (e) e.preventDefault();
+            const sid = document.getElementById('student-id').value.trim();
+            const cleanId = sid.replace(/[^\d]/g, '');
+            if (cleanId.length >= 4) {
+                document.getElementById('student-password').value = cleanId;
+                showToast('🔑 เติมรหัสผ่านเริ่มต้น (รหัส 7 หลัก) ให้แล้ว กดเข้าสู่ระบบได้เลยครับ', 'info');
+            } else {
+                showAlert('🔐 <b>คำแนะนำรหัสผ่าน นพอ.:</b><br>• ใช้ <b>รหัสนักเรียน 7 หลัก</b> (รหัสเริ่มต้น)<br>• หรือเลข <b>4 ตัวท้าย</b> ของรหัส<br>• หรือรหัส <b>1234</b>');
+            }
+        }
+
         async function handleLogin(e, role) {
             e.preventDefault();
             hideAlert();
@@ -534,7 +546,7 @@
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
                         setTimeout(() => window.location.href = 'student-dashboard.html', 800);
                     } else {
-                        showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
+                        showAlert((result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง') + '<br><small style="display:inline-block;margin-top:6px;opacity:0.9;">💡 คำแนะนำ: ใช้รหัส 7 หลัก หรือเลข 4 ตัวท้าย หรือ 1234 หรือคลิก "ลืมรหัสผ่าน?" ด้านล่าง</small>');
                         btn.disabled = false;
                         btn.innerHTML = '<span>🔓</span> เข้าสู่ระบบ';
                     }

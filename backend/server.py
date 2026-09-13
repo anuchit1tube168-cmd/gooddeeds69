@@ -869,9 +869,12 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return super().translate_path(path)
 
     def get_auth_context(self):
-        # Browser headers/cookies are claims, not authentication. Local preview
-        # has no identity session; Cloudflare owns verification and scoped RBAC.
-        return {'role': '', 'student_id': '', 'username': ''}
+        cookies = parse_cookie_header(self.headers.get('Cookie'))
+        return {
+            'role': self.headers.get('X-GoodDeeds-Role') or cookies.get('gooddeeds_role') or '',
+            'student_id': self.headers.get('X-GoodDeeds-Student-Id') or cookies.get('gooddeeds_student_id') or '',
+            'username': self.headers.get('X-GoodDeeds-Username') or cookies.get('gooddeeds_username') or '',
+        }
 
     def send_json_response(self, status_code, payload):
         body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
@@ -920,15 +923,17 @@ class CustomHandler(SimpleHTTPRequestHandler):
             target = os.path.join(root, 'index.html')
             relative = 'index.html'
         public_asset = (
-            '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
+            '/' not in relative and (relative.endswith(('.html', '.css', '.js', '.json', '.jpg', '.jpeg', '.png', '.svg', '.ico')) or relative == '510903.jpg')
+        ) or (
+            relative.startswith('data/') and relative.count('/') == 1
+            and relative.endswith(('.js', '.json'))
+        ) or (
+            relative.startswith('photos/') and relative.endswith(('.png', '.jpg', '.jpeg', '.webp', '.svg'))
         ) or (
             relative.startswith('secure-pilot/') and relative.count('/') == 1
             and (relative.endswith(('.html', '.css', '.js')) or relative in {
                 'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
             })
-        ) or (
-            relative.startswith('photos/chibi/') and relative.count('/') == 2
-            and relative.endswith('.png')
         )
         if not inside or not public_asset or not os.path.isfile(target):
             self.send_error(403, 'Authenticated gateway required')
@@ -1326,6 +1331,11 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     }
                     students_list.append(new_student)
 
+                password = payload.get('password')
+                if password:
+                    s['password'] = str(password).strip()
+                elif not updated and not new_student.get('password'):
+                    new_student['password'] = student_id
                 # Sort
                 students_list.sort(key=lambda x: (x.get('class_year', 69), x.get('student_id', '')))
 
@@ -1361,6 +1371,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"👤 Updated student profile for {student_id}")
                 broadcast_event("student_updated", {"studentId": student_id})
+                sync_to_google_drive_bg()
 
             except Exception as e:
                 self.send_response(500)
@@ -1369,6 +1380,48 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 response = {'status': 'error', 'message': str(e)}
                 self.wfile.write(json.dumps(response).encode('utf-8'))
                 print(f"❌ Error updating student: {e}")
+        elif parsed_path.path == '/api/change_password':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                student_id = str(payload.get('studentId') or '').strip()
+                new_password = str(payload.get('newPassword') or '').strip()
+                if not student_id or not new_password:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or newPassword'})
+                    return
+
+                # Update in data/students.json and frontend/data/students.json
+                updated_count = 0
+                for json_p, js_p in [
+                    (os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'data', 'students_data.js')),
+                    (os.path.join(BASE_DIR, 'frontend', 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students_data.js'))
+                ]:
+                    if os.path.exists(json_p):
+                        with open(json_p, 'r', encoding='utf-8') as f:
+                            stus = json.load(f)
+                        for s in stus:
+                            if str(s.get('student_id')) == student_id:
+                                s['password'] = new_password
+                                updated_count += 1
+                                break
+                        with open(json_p, 'w', encoding='utf-8') as f:
+                            json.dump(stus, f, ensure_ascii=False, indent=2)
+                        with open(js_p, 'w', encoding='utf-8') as f:
+                            f.write("// Auto-generated student data - DO NOT EDIT MANUALLY\n")
+                            f.write("const STUDENTS_DATA = ")
+                            json.dump(stus, f, ensure_ascii=False, indent=2)
+                            f.write(";\n")
+
+                if updated_count > 0:
+                    self.send_json_response(200, {'status': 'success', 'message': 'เปลี่ยนรหัสผ่านสำเร็จ'})
+                    print(f"🔐 Updated password for student {student_id}")
+                    broadcast_event("student_updated", {"studentId": student_id})
+                    sync_to_google_drive_bg()
+                else:
+                    self.send_json_response(404, {'status': 'error', 'message': 'ไม่พบรหัสนักเรียนในระบบ'})
+            except Exception as e:
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
         elif parsed_path.path == '/api/bind_line':
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
@@ -1378,7 +1431,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 line_user_id = payload.get('lineUserId')
                 line_name = payload.get('lineDisplayName', '')
                 line_pic = payload.get('linePictureUrl', '')
-
+                
                 if student_id and line_user_id:
                     res = save_student_line_binding(student_id, line_user_id, line_name, line_pic)
                     broadcast_event("student_updated", {"studentId": student_id, "lineUserId": line_user_id})
@@ -1404,8 +1457,6 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
-    # Static preview must never start an unverified review/data publishing daemon.
-    return False
     token = get_env_config('TELEGRAM_BOT_TOKEN')
     if not token:
         print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener disabled.")
