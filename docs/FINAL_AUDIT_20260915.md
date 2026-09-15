@@ -2,6 +2,8 @@
 
 Status: **NOT FINAL / NOT PRODUCTION VERIFIED**.
 
+Repair follow-up: owner authorized implementation after this audit. PR #5 now includes bounded login/password-change flow, V2 cancellation/read refresh fixes, honest Telegram delivery reporting with a review-page URL button, fractional-hour preservation, and restored Python boundaries. Local results are now 153/153 JavaScript and 23/23 Python, syntax PASS. The baseline findings below remain historical evidence; actual deployed login, Telegram approval and official totals remain unverified. See the latest WORK_STATE for patch limits.
+
 Reported incident: students cannot finish login, Telegram approval notifications are missing, and approved work does not appear in hours/scores.
 
 ## Evidence and limits

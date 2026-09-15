@@ -272,8 +272,10 @@ function submitDeed_(session, payload, requestId) {
     };
     append_(GD.SHEETS.RECORDS, record);
     audit_(session.memberId, 'deed.submitted', 'deed', record.recordId, { category: category, hours: hours }, requestId);
-    notifyTelegram_('📝 รายการความดีใหม่\nรหัส: ' + studentId + '\nประเภท: ' + category + '\nชั่วโมง: ' + hours + '\nเลขรายการ: ' + record.recordId);
-    return { deed: publicDeed_(record, session) };
+    const notification = notifyTelegram_('📝 มีรายการความดีใหม่รอตรวจ กรุณาเข้าสู่ระบบเพื่อตรวจรายละเอียด');
+    try { audit_(session.memberId, 'telegram.' + notification.status, 'deed', record.recordId, notification, requestId); }
+    catch (_) { notification.auditRecorded = false; }
+    return { deed: publicDeed_(record, session), notification: notification };
   } finally {
     lock.releaseLock();
   }
@@ -636,10 +638,26 @@ function notifyTelegram_(message) {
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('TELEGRAM_BOT_TOKEN');
   const chatId = props.getProperty('TELEGRAM_CHAT_ID');
-  if (!token || !chatId) return;
+  if (!token || !chatId) return { status: 'not_configured' };
+  const payload = { chat_id: chatId, text: message,
+    reply_markup: { inline_keyboard: [[{ text: 'เปิดหน้าตรวจรายการ',
+      url: GD.DEFAULT_ORIGIN + '/gooddeeds69/frontend/teacher-dashboard.html' }]] } };
   try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'post', contentType: 'application/json', payload: JSON.stringify({ chat_id: chatId, text: message }), muteHttpExceptions: true });
-  } catch (error) { console.error('Telegram: ' + error); }
+    const response = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      method: 'post', contentType: 'application/json', payload: JSON.stringify(payload), muteHttpExceptions: true
+    });
+    const code = response.getResponseCode();
+    let body;
+    try { body = JSON.parse(response.getContentText()); }
+    catch (_) { return { status: 'unknown', httpStatus: code }; }
+    if (code === 200 && body.ok === true && body.result && Number.isInteger(body.result.message_id)) {
+      return { status: 'sent' };
+    }
+    return { status: 'failed', httpStatus: code };
+  } catch (_) {
+    // A network timeout can occur after delivery. Never log a token-bearing URL or retry blindly.
+    return { status: 'unknown' };
+  }
 }
 
 function verifyLineIdToken_(idToken) {

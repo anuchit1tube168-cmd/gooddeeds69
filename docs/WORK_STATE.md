@@ -1,3 +1,22 @@
+# Incident repair continuation — 2026-09-15
+
+Draft PR #5, parent `b97a742a0c87c17894112d39647e4838f0eaaab4`; main rechecked at `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner authorized repair. Isolated partial checkout: publish only reviewed blobs on the remote parent tree.
+
+KEEP: current GAS V2 transport, existing gateway interface, ledger schema and LIFF endpoint. IMPROVE: bounded login, first-password-change flow, cancellation isolation, student refresh events, delivery status and fractional hours. REPLACE: reintroduced browser-claimed Python authorization with the prior static-preview boundary. MISSING: confirmed deployed GAS version, transport/browser E2E, server assigned scope, signature/review journal and official-total reconciliation.
+
+- Login no longer waits for a second deed-list call or silently retries password login after LINE binding failure. First-login password change has its own page, then requires login again. Pending requests are cancelled on clear/logout; replies require the expected frame, allowed Google origin and random request identity.
+- Student reads emit `deeds_updated`; malformed list responses and cross-owner rows cannot overwrite the cache. Cohort is no longer guessed from student-number digits.
+- Telegram checks HTTP plus API success, returns sent/failed/unknown/not_configured, and records the result through the existing audit sheet. A URL button opens the teacher review page; this is not callback approval or evidence of working assigned-scope enforcement. Notification text omits student details. Ambiguous delivery is not retried automatically. Audit failure is explicitly marked in the response. No durable retry worker was added.
+- Failed notification does not erase a persisted deed. UI warns against duplicate submission. Existing request-ID deduplication is tested; uncertain browser resubmission across separate requests remains unresolved.
+- Half-hour display values remain fractional. Student dashboard now states its loaded-record totals are not certified totals including carry-forward. No Main_2569 recalculation or migration occurred.
+- Restored only Python auth/GET/POST/static-asset boundary sections, preserving unrelated upstream edits.
+
+Verification: syntax PASS; JavaScript 153/153 (10 new synthetic regression cases); Python 23/23. These tests do not establish deployed provider behavior. DOCX optional dependency pythainlp remains unavailable; document rendering was not tested. Current live integration remains BLOCKED by the previously observed Apps Script browser restriction; no bypass or new production write was attempted.
+
+Next: review the updated PR, identify actual Apps Script editor/deployment revision and run controlled staging login/password/read/Telegram/review/totals UAT. Do not cut over based on local tests. The earlier audit below and FINAL_AUDIT_20260915.md describe the baseline; this checkpoint supersedes their local test failures only.
+
+---
+
 # Glass publication preparation — 2026-09-15
 
 Owner explicitly requested applying the glass theme to the live system. Reverified main at 3c8f94ba; patch only adds presentation and documentation. Included actual .top-nav selector on teacher/ranking pages. Syntax passes; previous 143 JS tests passed. Rendered Chrome QA remains unavailable due tool request-header policy failure. Publish with fast-forward only; check Pages asset and HTML references after deployment. No database, account or provider endpoint changes.
