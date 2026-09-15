@@ -1,3 +1,17 @@
+# Glass publication preparation — 2026-09-15
+
+Owner explicitly requested applying the glass theme to the live system. Reverified main at 3c8f94ba; patch only adds presentation and documentation. Included actual .top-nav selector on teacher/ranking pages. Syntax passes; previous 143 JS tests passed. Rendered Chrome QA remains unavailable due tool request-header policy failure. Publish with fast-forward only; check Pages asset and HTML references after deployment. No database, account or provider endpoint changes.
+
+---
+
+# macOS glass presentation — 2026-09-15
+
+Base: current main 3c8f94ba, isolated codex/mac-glass-20260915 branch. Owner reports runtime usable and requests a macOS glass treatment for login, teacher dashboard and ranking.
+
+Added scoped frontend/mac-glass.css loaded last by those three HTML pages, with dark navy translucent surfaces, segmented controls, readable fields, gold actions, focus rings, mobile layout and reduced motion/transparency/print fallbacks. Existing JS and backend untouched. Syntax PASS, existing JS tests 143/143 PASS, diff whitespace PASS. No rendered QA claim: Chrome tool failed twice loading request-header policy before navigation. No deployment or publication performed. Next: rendered desktop/mobile review when browser service recovers, then publish the presentation-only patch against fresh main. Prior roster/Telegram investigation remains separate and unresolved by styling.
+
+---
+
 # Real-time Status Synchronization Checkpoint — 2026-09-13
 
 State: SOURCE PUBLISHED TO MAIN & FEATURE BRANCH / CI & SYNTAX PASS / PDPA 100% CLEAN.

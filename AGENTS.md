@@ -131,3 +131,8 @@ Concurrent upstream reconciliation: five commits through `2bff70e2522f9c92d4dd49
 ## Session reliability continuation — 2026-09-12
 
 The real gateway view must allow logout during read refresh, preserve the client's CSRF token until its logout method captures it, and prevent stale async work from restoring data or unlocking a later operation. Navigation must retain a stale-data warning until a fresh read succeeds. Native abort exceptions have numeric DOM codes; normalize them to stable cancellation/timeout errors rather than passing them through as domain codes. Latest combined tests: 143 JS + 23 Python = 166. Browser-auth capability access was denied with a usage-limit reason; current provider/device QA remains blocked.
+
+
+## macOS glass UI — 2026-09-15
+
+The owner selected the existing GitHub Pages login, teacher dashboard and ranking for a macOS-style glass update. Use frontend/mac-glass.css scoped to body.mac-glass and loaded after page CSS. Preserve functional JS, account bindings and official data. Keep Sarabun, the college crest, navy and restrained gold, legible opaque input surfaces, 44px targets, visible focus, reduced-motion/transparency fallbacks and print compatibility. Do not use current source checks as rendered or production verification. Current Chrome policy-loading failure blocked visual QA; the patch is local, not deployed.
