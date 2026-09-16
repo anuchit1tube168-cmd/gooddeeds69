@@ -1,0 +1,35 @@
+name: Good Deed health now
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/gooddeed-health-now.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  health-now:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check production GAS health
+        shell: bash
+        run: |
+          set -euo pipefail
+          URL='https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec?action=health'
+          curl -fsSL --max-time 20 "$URL" -o /tmp/health.txt
+          python3 - <<'PY'
+          import json
+          s=open('/tmp/health.txt',encoding='utf-8').read().strip()
+          print('RAW_HEALTH=' + s[:500])
+          try:
+              d=json.loads(s)
+              print('HEALTH_KEYS=' + ','.join(sorted(d.keys())))
+              print('VERSION=' + str(d.get('version','')))
+              print('STATUS=' + str(d.get('status','')))
+              print('MESSAGE=' + str(d.get('message','')))
+          except Exception:
+              print('HEALTH_NOT_JSON')
+          PY
