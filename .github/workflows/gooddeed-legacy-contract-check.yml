@@ -22,7 +22,7 @@ jobs:
           set -euo pipefail
           curl -fsSL --max-time 30 "$GAS_URL?action=health" -o /tmp/health.txt
 
-          for action in diagnosticNoop getStudents getDeeds getSettings; do
+          for action in diagnosticNoop login getStudents getDeeds getSettings; do
             curl -sS -L --max-time 30 \
               -o "/tmp/post-$action.txt" \
               --data-urlencode "action=$action" \
@@ -52,12 +52,12 @@ jobs:
               if not isinstance(obj,dict):
                   print(f'{action}: type={type(obj).__name__}')
                   return
-              keys=','.join(sorted(obj.keys()))
-              print(f'{action}: dict keys={keys}')
+              print(f'{action}: dict keys=' + ','.join(sorted(obj.keys())))
               for k,v in obj.items():
                   if isinstance(v,list): print(f'{action}: listfield {k} count={len(v)}')
               if 'status' in obj: print(f'{action}: status={obj.get("status")}')
               if 'code' in obj: print(f'{action}: code={obj.get("code")}')
               if 'message' in obj: print(f'{action}: message={str(obj.get("message",""))[:160]}')
-          for a in ('diagnosticNoop','getStudents','getDeeds','getSettings'): summarize(a)
+              if 'error' in obj: print(f'{action}: error={str(obj.get("error",""))[:160]}')
+          for a in ('diagnosticNoop','login','getStudents','getDeeds','getSettings'): summarize(a)
           PY
