@@ -1,0 +1,26 @@
+name: Good Deed read-only live frontend check
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check-live-pages:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Check GitHub Pages URLs
+        shell: bash
+        run: |
+          set -euo pipefail
+          for url in \
+            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html' \
+            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/staff-login.html?role=teacher' \
+            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/secure-pilot/'; do
+            code=$(curl -L -sS --max-time 20 -o /dev/null -w '%{http_code}' "$url")
+            echo "HTTP $code $url"
+            test "$code" = '200'
+          done
