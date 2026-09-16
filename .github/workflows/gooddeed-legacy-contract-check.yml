@@ -16,40 +16,42 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Inspect production contract without logging PII
+      - name: Inspect production transport without logging private data
         shell: bash
         run: |
           set -euo pipefail
-          for action in getStudents getDeeds getSettings; do
-            curl -fsSL --max-time 30 "$GAS_URL?action=$action" -o "/tmp/$action.json"
+          for action in health getStudents getDeeds getSettings; do
+            curl -fsSL --max-time 30 "$GAS_URL?action=$action" -o "/tmp/$action.txt"
           done
-          curl -fsSL --max-time 30 -X POST "$GAS_URL" \
-            --data-urlencode 'action=login' \
-            --data-urlencode 'requestId=diag-invalid-login' \
+
+          code=$(curl -sS -L --max-time 30 \
+            -o /tmp/post-probe.txt -w '%{http_code}' \
+            --data-urlencode 'action=diagnosticNoop' \
+            --data-urlencode 'requestId=diag-transport-probe' \
             --data-urlencode 'origin=https://anuchit1tube168-cmd.github.io' \
-            --data-urlencode 'payload={"username":"0000000","password":"0000000"}' \
-            -o /tmp/post-login.txt
+            --data-urlencode 'payload={}' \
+            "$GAS_URL")
+          echo "POST_PROBE_HTTP=$code"
+
           python3 - <<'PY'
-          import json
-          for action in ('getStudents','getDeeds','getSettings'):
-              obj=json.load(open(f'/tmp/{action}.json', encoding='utf-8'))
-              if isinstance(obj,list):
-                  print(f'{action}: type=list count={len(obj)}')
-              elif isinstance(obj,dict):
-                  keys=','.join(sorted(obj.keys()))
-                  list_counts=[]
-                  for k,v in obj.items():
-                      if isinstance(v,list): list_counts.append(f'{k}={len(v)}')
-                  suffix=(' lists:' + ','.join(list_counts)) if list_counts else ''
-                  print(f'{action}: type=dict keys={keys}{suffix}')
-              else:
-                  print(f'{action}: type={type(obj).__name__}')
-          raw=open('/tmp/post-login.txt', encoding='utf-8').read().strip()
+          import json, re
+          for action in ('health','getStudents','getDeeds','getSettings'):
+              raw=open(f'/tmp/{action}.txt', encoding='utf-8').read().strip()
+              try:
+                  obj=json.loads(raw)
+                  if isinstance(obj,list): print(f'{action}: type=list count={len(obj)}')
+                  elif isinstance(obj,dict):
+                      print(f'{action}: type=dict keys=' + ','.join(sorted(obj.keys())))
+                      if action == 'health':
+                          print('health.service=' + str(obj.get('service','')))
+                          print('health.version=' + str(obj.get('version','')))
+                          print('health.message=' + str(obj.get('message','')))
+              except Exception:
+                  print(f'{action}: non_json prefix=' + re.sub(r'\s+',' ',raw[:100]))
+          raw=open('/tmp/post-probe.txt', encoding='utf-8').read().strip()
           try:
               obj=json.loads(raw)
-              print('POST_LOGIN type=dict keys=' + ','.join(sorted(obj.keys())) if isinstance(obj,dict) else 'POST_LOGIN type=' + type(obj).__name__)
-              if isinstance(obj,dict):
-                  print('POST_LOGIN status=' + str(obj.get('status','')) + ' code=' + str(obj.get('code','')) + ' ok=' + str(obj.get('ok','')))
+              print('POST_PROBE_JSON_KEYS=' + (','.join(sorted(obj.keys())) if isinstance(obj,dict) else type(obj).__name__))
           except Exception:
-              print('POST_LOGIN non_json prefix=' + raw[:80].replace('\n',' '))
+              print('POST_PROBE_MARKER=' + ('RTAFNC_GOODDEED' if 'RTAFNC_GOODDEED' in raw else 'HTML_OR_OTHER'))
           PY
