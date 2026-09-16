@@ -16,13 +16,19 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Inspect legacy action shapes without logging PII
+      - name: Inspect production contract without logging PII
         shell: bash
         run: |
           set -euo pipefail
           for action in getStudents getDeeds getSettings; do
             curl -fsSL --max-time 30 "$GAS_URL?action=$action" -o "/tmp/$action.json"
           done
+          curl -fsSL --max-time 30 -X POST "$GAS_URL" \
+            --data-urlencode 'action=login' \
+            --data-urlencode 'requestId=diag-invalid-login' \
+            --data-urlencode 'origin=https://anuchit1tube168-cmd.github.io' \
+            --data-urlencode 'payload={"username":"0000000","password":"0000000"}' \
+            -o /tmp/post-login.txt
           python3 - <<'PY'
           import json
           for action in ('getStudents','getDeeds','getSettings'):
@@ -38,4 +44,12 @@ jobs:
                   print(f'{action}: type=dict keys={keys}{suffix}')
               else:
                   print(f'{action}: type={type(obj).__name__}')
+          raw=open('/tmp/post-login.txt', encoding='utf-8').read().strip()
+          try:
+              obj=json.loads(raw)
+              print('POST_LOGIN type=dict keys=' + ','.join(sorted(obj.keys())) if isinstance(obj,dict) else 'POST_LOGIN type=' + type(obj).__name__)
+              if isinstance(obj,dict):
+                  print('POST_LOGIN status=' + str(obj.get('status','')) + ' code=' + str(obj.get('code','')) + ' ok=' + str(obj.get('ok','')))
+          except Exception:
+              print('POST_LOGIN non_json prefix=' + raw[:80].replace('\n',' '))
           PY
