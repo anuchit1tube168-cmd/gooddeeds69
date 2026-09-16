@@ -16,37 +16,26 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Check legacy read contract without logging PII
+      - name: Inspect legacy action shapes without logging PII
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL --max-time 30 "$GAS_URL?action=getStudents" -o /tmp/students.json
-          curl -fsSL --max-time 30 "$GAS_URL?action=getDeeds" -o /tmp/deeds.json
+          for action in getStudents getDeeds getSettings; do
+            curl -fsSL --max-time 30 "$GAS_URL?action=$action" -o "/tmp/$action.json"
+          done
           python3 - <<'PY'
-          import json, re
-          s=json.load(open('/tmp/students.json', encoding='utf-8'))
-          d=json.load(open('/tmp/deeds.json', encoding='utf-8'))
-          def unwrap(x, keys):
-              if isinstance(x, list): return x
-              if isinstance(x, dict):
-                  for k in keys:
-                      if isinstance(x.get(k), list): return x[k]
-              return None
-          students=unwrap(s, ['students','data','result'])
-          deeds=unwrap(d, ['deeds','data','result'])
-          assert students is not None, f'getStudents shape={type(s).__name__} keys={list(s)[:8] if isinstance(s,dict) else "n/a"}'
-          assert deeds is not None, f'getDeeds shape={type(d).__name__} keys={list(d)[:8] if isinstance(d,dict) else "n/a"}'
-          seven=0; explicit_pwd=0; id_equals_pwd=0; missing_pwd=0
-          for row in students:
-              if not isinstance(row, dict): continue
-              sid=str(row.get('student_id') or row.get('studentId') or row.get('id') or '').strip()
-              pwd=row.get('password')
-              if re.fullmatch(r'\d{7}', sid):
-                  seven += 1
-                  if pwd is None or str(pwd)=='' : missing_pwd += 1
-                  else:
-                      explicit_pwd += 1
-                      if str(pwd).strip()==sid: id_equals_pwd += 1
-          print(f'LEGACY_GET_STUDENTS_OK count={len(students)} seven_digit={seven} explicit_password={explicit_pwd} id_equals_password={id_equals_pwd} missing_password={missing_pwd}')
-          print(f'LEGACY_GET_DEEDS_OK count={len(deeds)}')
+          import json
+          for action in ('getStudents','getDeeds','getSettings'):
+              obj=json.load(open(f'/tmp/{action}.json', encoding='utf-8'))
+              if isinstance(obj,list):
+                  print(f'{action}: type=list count={len(obj)}')
+              elif isinstance(obj,dict):
+                  keys=','.join(sorted(obj.keys()))
+                  list_counts=[]
+                  for k,v in obj.items():
+                      if isinstance(v,list): list_counts.append(f'{k}={len(v)}')
+                  suffix=(' lists:' + ','.join(list_counts)) if list_counts else ''
+                  print(f'{action}: type=dict keys={keys}{suffix}')
+              else:
+                  print(f'{action}: type={type(obj).__name__}')
           PY
