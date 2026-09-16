@@ -148,3 +148,31 @@ test('legacy Telegram missing configuration and network errors return explicit s
   configured=true;const result=context.notifyTelegramNewDeed({});assert.equal(result.status,'unknown');
   assert.equal(JSON.stringify(result).includes('token-bearing-url'),false);assert.equal(calls,1);
 });
+
+test('actual handoff smoke test requires valid getMe and sendMessage API results',()=>{
+  for(const mode of ['denied','malformed','send-denied','sent']) {
+    const calls=[],logs=[];
+    const context=vm.createContext({console:{log:x=>logs.push(x)},PropertiesService:{getScriptProperties:()=>({getProperty:()=> 'synthetic'})},
+      UrlFetchApp:{fetch:(url,opts)=>{
+        calls.push(url.endsWith('/getMe')?'getMe':'sendMessage');
+        return {getResponseCode:()=>200,getContentText:()=>mode==='malformed'?'invalid':JSON.stringify(url.endsWith('/getMe')
+          ?{ok:mode!=='denied',result:{is_bot:true}}
+          :{ok:mode==='sent',result:{message_id:1}})};
+      }}});
+    vm.runInContext(fs.readFileSync('backend/CodeV2.gs','utf8'),context);
+    const result=context.testTelegramNotification();
+    assert.equal(result.ok,mode==='sent');
+    assert.equal(calls.length,['denied','malformed'].includes(mode)?1:2);
+    assert.equal(logs.join('').includes('synthetic'),false);
+  }
+});
+test('Telegram smoke test can diagnose missing config without initializing business storage',()=>{
+  const b=backend(200,'',false);
+  assert.equal(b.context.testTelegramNotification().status,'not_configured');assert.equal(b.sends.length,0);
+});
+test('actual handoff cannot bootstrap a password from knowledge of a student number',()=>{
+  const b=backend(200,'');
+  b.context.verifyPassword_=()=>true;
+  assert.equal(b.context.verifyOrInitializeStudentPassword_({studentId:sid,username:sid,role:'student'},sid,'synthetic'),false);
+  assert.equal(b.context.verifyOrInitializeStudentPassword_({passwordSalt:'stored',passwordHash:'stored'},'existing','synthetic'),true);
+});

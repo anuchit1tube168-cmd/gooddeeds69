@@ -1,3 +1,17 @@
+# Owner-provided actual source reconciliation — 2026-09-16
+
+Owner identified the original Drive source folder. Its release-handoff subfolder contains `CodeV2_2.3.2-login-sync-hotfix_20260915.gs`. This is concrete source evidence, not proof of installed deployment. Although the folder's September 5 README calls it a legacy snapshot, the September 15 handoff is newer and was inspected directly.
+
+Reconciled backend/CodeV2.gs with that handoff, versioned the proposed patch as 2.3.3-telegram-repair, preserved the existing Telegram editor smoke-test and review-notification feature, and repaired their result reporting. The smoke test now checks getMe API success and bot identity before one labelled message, uses the same repaired sender, and does not require unrelated business-storage setup or mutate student data.
+
+The handoff also regressed half-hour/student-ID validation, owner-bound deduplication and repeated-review invariants, and introduced password bootstrap from a student number without forced change. Retained the already-reviewed storage invariants and made the retained credential helper verify existing credentials only; missing credentials require authorized recovery. No passwords, official hours or actual accounts were changed.
+
+Verification: JS 159/159; syntax PASS; PII guard before publication. Python unchanged from 23/23. Three new tests exercise the actual handoff smoke test and credential helper. The repaired source is saved as a separate file alongside the original release handoff, preserving the owner's original file. Neither Drive upload nor GitHub commit deploys Apps Script. The active editor/deployment and real group receipt remain unverified.
+
+Next operator action: in the verified active Apps Script project, compare/install this matching patch, run the existing testTelegramNotification function, inspect sanitized output and group receipt, then deploy a new version only after controlled UAT. Do not run setup/migration or infer deployment from a Drive timestamp.
+
+---
+
 # Telegram incident continuation — 2026-09-16
 
 Continue PR #5 from `1ebdab40dcaccd9b2d6732ede988fa9aff9e7ee2`. Main remains `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner explicitly requested fixing missing Telegram notifications.
