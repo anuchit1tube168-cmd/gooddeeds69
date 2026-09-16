@@ -1,3 +1,17 @@
+# Telegram incident continuation — 2026-09-16
+
+Continue PR #5 from `1ebdab40dcaccd9b2d6732ede988fa9aff9e7ee2`. Main remains `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner explicitly requested fixing missing Telegram notifications.
+
+Live read-only evidence: located the existing RTAFNC ONE Good Deed workbook and the separate legacy official workbook through Drive. ConfigurationV2 declares systemVersion 2.5.0 and an unchanged-LIFF secure-pilot status; both main and its configured sourceCommit contain CodeV2 VERSION 2.3.1. These values do not identify the active Apps Script deployment. AuditTrailV2 action/time columns have no entries across their current 3000-row grid. No standalone Apps Script project was returned by the accessible Drive search; a container-bound project may still exist. No private cells, identities or service properties were published, and no workbook writes were made.
+
+Fixed the legacy sender as well as V2: return explicit delivery status, preserve numeric API error/retry-after values, never reflect raw Telegram descriptions or token-bearing exceptions. Legacy submission now returns notification status separately from persistence success. Legacy messages use plain, short, non-personal text and a URL button to authenticated teacher review; this avoids invalid user-authored HTML and oversized callback payloads. Existing historical callback handlers remain unchanged, but new legacy notifications do not offer quick callback approval. V2 remains URL-button only. This is a deliberate notification repair, not a completed approval integration or permission grant.
+
+Verification: JS 156/156, syntax PASS. Three new tests cover both sender diagnostics and legacy missing-config/network failures; previous persistence/deduplication tests still pass. Python was unchanged since its 23/23 pass. No live send, getMe, webhook change, deployed script edit or source merge occurred. Provider sendMessage requires API ok=true; retry_after is a wait hint, not permission to resend an uncertain message.
+
+Next external dependency: identify the bound Apps Script project through Extensions > Apps Script in the existing workbook, inspect the deployed code/version and Script Properties without exposing values, then apply only the matching sender changes to a verified staging deployment. Run a labelled test notice, check delivery acceptance and group receipt, then submit one synthetic deed and inspect audit/approval/official-total reconciliation. Do not bulk retry historical events or replace a possibly newer script with the repository snapshot.
+
+---
+
 # Incident repair continuation — 2026-09-15
 
 Draft PR #5, parent `b97a742a0c87c17894112d39647e4838f0eaaab4`; main rechecked at `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner authorized repair. Isolated partial checkout: publish only reviewed blobs on the remote parent tree.

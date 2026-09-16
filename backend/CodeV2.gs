@@ -653,7 +653,10 @@ function notifyTelegram_(message) {
     if (code === 200 && body.ok === true && body.result && Number.isInteger(body.result.message_id)) {
       return { status: 'sent' };
     }
-    return { status: 'failed', httpStatus: code };
+    const result = { status: body.ok === false ? 'failed' : 'unknown', httpStatus: code };
+    if (Number.isInteger(body.error_code)) result.errorCode = body.error_code;
+    if (body.parameters && Number.isInteger(body.parameters.retry_after) && body.parameters.retry_after > 0) result.retryAfterSeconds = body.parameters.retry_after;
+    return result;
   } catch (_) {
     // A network timeout can occur after delivery. Never log a token-bearing URL or retry blindly.
     return { status: 'unknown' };

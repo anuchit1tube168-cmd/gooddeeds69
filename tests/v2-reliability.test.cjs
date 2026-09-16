@@ -121,3 +121,30 @@ test('summary preserves half-hour values for records and the existing fallback',
   app.getDeeds=()=>[];app.getStudentById=()=>({total_hours:1.5});
   assert.equal(app.getStudentSummary(sid).totalHours,1.5);
 });
+
+for (const [path,fn] of [['backend/Code.gs','notifyTelegramNewDeed'],['backend/CodeV2.gs','notifyTelegram_']]) {
+  test(path + ' preserves safe rate-limit diagnostics without reflecting provider descriptions',()=>{
+    const sends=[];
+    const context=vm.createContext({PropertiesService:{getScriptProperties:()=>({getProperty:()=> 'synthetic'})},
+      UrlFetchApp:{fetch:(url,opts)=>{sends.push(JSON.parse(opts.payload));return {getResponseCode:()=>429,getContentText:()=>JSON.stringify({ok:false,error_code:429,description:'private diagnostic',parameters:{retry_after:30}})};}}});
+    vm.runInContext(fs.readFileSync(path,'utf8'),context);
+    const result=context[fn]({desc:'<invalid>&'.repeat(1000),studentName:'Private name'});
+    assert.equal(result.status,'failed');assert.equal(result.errorCode,429);assert.equal(result.retryAfterSeconds,30);
+    assert.equal(result.description,undefined);assert.equal(sends.length,1);
+    if(fn==='notifyTelegramNewDeed') {
+      assert.equal(sends[0].parse_mode,undefined);
+      assert.equal(sends[0].text.includes('Private name'),false);
+      assert.equal(sends[0].reply_markup.inline_keyboard[0][0].url.includes('?'),false);
+    }
+  });
+}
+
+test('legacy Telegram missing configuration and network errors return explicit states',()=>{
+  let configured=false, calls=0;
+  const context=vm.createContext({PropertiesService:{getScriptProperties:()=>({getProperty:()=>configured?'synthetic':''})},
+    UrlFetchApp:{fetch:()=>{calls++;throw Error('token-bearing-url');}}});
+  vm.runInContext(fs.readFileSync('backend/Code.gs','utf8'),context);
+  assert.equal(context.notifyTelegramNewDeed({}).status,'not_configured');assert.equal(calls,0);
+  configured=true;const result=context.notifyTelegramNewDeed({});assert.equal(result.status,'unknown');
+  assert.equal(JSON.stringify(result).includes('token-bearing-url'),false);assert.equal(calls,1);
+});
