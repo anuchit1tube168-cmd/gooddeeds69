@@ -16,48 +16,48 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Inspect production transport without logging private data
+      - name: Probe read-only legacy actions without logging private data
         shell: bash
         run: |
           set -euo pipefail
-          for action in health getStudents getDeeds getSettings; do
-            curl -fsSL --max-time 30 "$GAS_URL?action=$action" -o "/tmp/$action.txt"
-          done
+          curl -fsSL --max-time 30 "$GAS_URL?action=health" -o /tmp/health.txt
 
-          code=$(curl -sS -L --max-time 30 \
-            -o /tmp/post-probe.txt -w '%{http_code}' \
-            --data-urlencode 'action=diagnosticNoop' \
-            --data-urlencode 'requestId=diag-transport-probe' \
-            --data-urlencode 'origin=https://anuchit1tube168-cmd.github.io' \
-            --data-urlencode 'payload={}' \
-            "$GAS_URL")
-          echo "POST_PROBE_HTTP=$code"
+          for action in diagnosticNoop getStudents getDeeds getSettings; do
+            curl -sS -L --max-time 30 \
+              -o "/tmp/post-$action.txt" \
+              --data-urlencode "action=$action" \
+              --data-urlencode "requestId=diag-$action" \
+              --data-urlencode 'origin=https://anuchit1tube168-cmd.github.io' \
+              --data-urlencode 'payload={}' \
+              "$GAS_URL"
+          done
 
           python3 - <<'PY'
           import json, re
-          for action in ('health','getStudents','getDeeds','getSettings'):
-              raw=open(f'/tmp/{action}.txt', encoding='utf-8').read().strip()
+          h=json.load(open('/tmp/health.txt',encoding='utf-8'))
+          print('HEALTH_KEYS=' + ','.join(sorted(h.keys())))
+          print('HEALTH_MESSAGE=' + str(h.get('message',''))[:160])
+          print('HEALTH_VERSION=' + str(h.get('version','')))
+
+          def summarize(action):
+              raw=open(f'/tmp/post-{action}.txt',encoding='utf-8').read().strip()
               try:
                   obj=json.loads(raw)
-                  if isinstance(obj,list): print(f'{action}: type=list count={len(obj)}')
-                  elif isinstance(obj,dict):
-                      print(f'{action}: type=dict keys=' + ','.join(sorted(obj.keys())))
-                      if action == 'health':
-                          print('health.service=' + str(obj.get('service','')))
-                          print('health.version=' + str(obj.get('version','')))
-                          print('health.message=' + str(obj.get('message','')))
               except Exception:
-                  print(f'{action}: non_json prefix=' + re.sub(r'\s+',' ',raw[:100]))
-          raw=open('/tmp/post-probe.txt', encoding='utf-8').read().strip()
-          try:
-              obj=json.loads(raw)
-              if isinstance(obj,dict):
-                  print('POST_PROBE_JSON_KEYS=' + ','.join(sorted(obj.keys())))
-                  print('POST_PROBE_STATUS=' + str(obj.get('status','')))
-                  print('POST_PROBE_MESSAGE=' + str(obj.get('message',''))[:200])
-                  print('POST_PROBE_CODE=' + str(obj.get('code','')))
-              else:
-                  print('POST_PROBE_JSON_TYPE=' + type(obj).__name__)
-          except Exception:
-              print('POST_PROBE_MARKER=' + ('RTAFNC_GOODDEED' if 'RTAFNC_GOODDEED' in raw else 'HTML_OR_OTHER'))
+                  print(f'{action}: non_json marker=' + ('RTAFNC_GOODDEED' if 'RTAFNC_GOODDEED' in raw else 'HTML_OR_OTHER'))
+                  return
+              if isinstance(obj,list):
+                  print(f'{action}: list count={len(obj)}')
+                  return
+              if not isinstance(obj,dict):
+                  print(f'{action}: type={type(obj).__name__}')
+                  return
+              keys=','.join(sorted(obj.keys()))
+              print(f'{action}: dict keys={keys}')
+              for k,v in obj.items():
+                  if isinstance(v,list): print(f'{action}: listfield {k} count={len(v)}')
+              if 'status' in obj: print(f'{action}: status={obj.get("status")}')
+              if 'code' in obj: print(f'{action}: code={obj.get("code")}')
+              if 'message' in obj: print(f'{action}: message={str(obj.get("message",""))[:160]}')
+          for a in ('diagnosticNoop','getStudents','getDeeds','getSettings'): summarize(a)
           PY
