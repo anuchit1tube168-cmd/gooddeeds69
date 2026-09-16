@@ -23,14 +23,38 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
     };
   }
 
+  function disableLegacyCredentialHelpers() {
+    // Never expose or auto-fill legacy staff credentials on a production page.
+    root.quickLoginAdmin = function () {
+      if (typeof root.showAlert === 'function') root.showAlert('บัญชีตัวอย่างถูกปิดใช้งานบนระบบจริง กรุณาใช้บัญชีที่ผู้ดูแลออกให้');
+    };
+    root.quickLoginAnuchit = root.quickLoginAdmin;
+
+    // Student ID is an identity key, not a password. First-login credentials are
+    // provisioned server-side and must be delivered privately by the administrator.
+    root.showForgotPasswordHelp = function (event) {
+      if (event) event.preventDefault();
+      if (typeof root.showAlert === 'function') {
+        root.showAlert('หากยังไม่มีรหัสผ่านหรือจำรหัสผ่านไม่ได้ กรุณาติดต่อผู้ดูแลระบบเพื่อรับรหัสชั่วคราวใหม่');
+      }
+    };
+  }
+
   function hardenLoginUi() {
     try {
       var studentPassword = document.getElementById('student-password');
       if (studentPassword) {
-        studentPassword.placeholder = 'รหัสนักเรียน 7 หลักสำหรับการเข้าใช้ครั้งแรก';
+        studentPassword.value = '';
+        studentPassword.placeholder = 'รหัสผ่านที่ได้รับจากผู้ดูแลระบบ';
+        studentPassword.setAttribute('autocomplete', 'current-password');
       }
+
       var teacherPassword = document.getElementById('teacher-password');
-      if (teacherPassword) teacherPassword.value = '';
+      if (teacherPassword) {
+        teacherPassword.value = '';
+        teacherPassword.placeholder = 'รหัสผ่าน';
+        teacherPassword.setAttribute('autocomplete', 'current-password');
+      }
 
       document.querySelectorAll('button[onclick*="quickLogin"]').forEach(function (button) {
         button.removeAttribute('onclick');
@@ -39,18 +63,6 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
         button.title = 'ปิดใช้งานบัญชีตัวอย่างบน Production';
         button.style.opacity = '0.45';
       });
-
-      // Replace the legacy helper with the only supported first-login rule.
-      root.showForgotPasswordHelp = function (event) {
-        if (event) event.preventDefault();
-        var sid = String((document.getElementById('student-id') || {}).value || '').replace(/\D/g, '');
-        if (sid.length === 7) {
-          if (studentPassword) studentPassword.value = sid;
-          if (typeof root.showToast === 'function') root.showToast('ใช้รหัสนักเรียน 7 หลักเป็นรหัสเริ่มต้น แล้วกดเข้าสู่ระบบ', 'info');
-        } else if (typeof root.showAlert === 'function') {
-          root.showAlert('กรุณากรอกรหัสนักเรียน 7 หลักก่อน หรือ ติดต่อผู้ดูแลระบบ');
-        }
-      };
 
       // Remove any values inserted by legacy URL shortcuts after all load handlers.
       if (teacherPassword) teacherPassword.value = '';
@@ -63,8 +75,8 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
       if (!alertMessage || !root.MutationObserver) return;
       var sanitize = function () {
         var text = String(alertMessage.textContent || '');
-        if (/4\s*ตัวท้าย|1234|123456|teacher69|admin69/i.test(text)) {
-          alertMessage.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง — นักเรียนเข้าใช้ครั้งแรกด้วยรหัสนักเรียน 7 หลักเท่านั้น';
+        if (/4\s*ตัวท้าย|1234|123456|teacher69|admin69|รหัส\s*7\s*หลัก\s*เป็นรหัส/i.test(text)) {
+          alertMessage.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง — กรุณาใช้รหัสผ่านที่ออกโดยระบบ หรือ ติดต่อผู้ดูแลระบบ';
         }
       };
       sanitize();
@@ -73,6 +85,7 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
   }
 
   function applyGuard() {
+    disableLegacyCredentialHelpers();
     hardenLoginUi();
     failClosedWhenSecureGatewayMissing();
     sanitizeLegacyHints();
@@ -81,6 +94,8 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
   if (document.readyState === 'complete') setTimeout(applyGuard, 0);
   else root.addEventListener('load', function () { setTimeout(applyGuard, 0); }, { once: true });
 
-  // Covers slow/failed script loads without affecting a healthy secure gateway.
+  // Covers slow/failed script loads and legacy load handlers without affecting a
+  // healthy secure gateway. These retries only harden the UI; they perform no writes.
+  setTimeout(applyGuard, 600);
   setTimeout(applyGuard, 1500);
 })();
