@@ -1,4 +1,4 @@
-name: Good Deed legacy production contract check
+name: Good Deed live notification probe
 
 on:
   pull_request:
@@ -16,13 +16,12 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Probe read-only legacy actions without logging private data
+      - name: Probe notification actions without real credentials or deed writes
         shell: bash
         run: |
           set -euo pipefail
           curl -fsSL --max-time 30 "$GAS_URL?action=health" -o /tmp/health.txt
-
-          for action in diagnosticNoop login getStudents getDeeds getSettings; do
+          for action in testTelegram submit_deed addDeed; do
             curl -sS -L --max-time 30 \
               -o "/tmp/post-$action.txt" \
               --data-urlencode "action=$action" \
@@ -31,33 +30,35 @@ jobs:
               --data-urlencode 'payload={}' \
               "$GAS_URL"
           done
-
           python3 - <<'PY'
-          import json, re
+          import json,re,html
           h=json.load(open('/tmp/health.txt',encoding='utf-8'))
           print('HEALTH_KEYS=' + ','.join(sorted(h.keys())))
           print('HEALTH_MESSAGE=' + str(h.get('message',''))[:160])
           print('HEALTH_VERSION=' + str(h.get('version','')))
-
           def summarize(action):
               raw=open(f'/tmp/post-{action}.txt',encoding='utf-8').read().strip()
+              # JSON legacy response
               try:
                   obj=json.loads(raw)
+                  print(f'{action}: JSON keys=' + (','.join(sorted(obj.keys())) if isinstance(obj,dict) else type(obj).__name__))
+                  if isinstance(obj,dict):
+                      for k in ('ok','status','code','message','error'):
+                          if k in obj: print(f'{action}: {k}=' + str(obj.get(k))[:180])
+                  return
               except Exception:
-                  print(f'{action}: non_json marker=' + ('RTAFNC_GOODDEED' if 'RTAFNC_GOODDEED' in raw else 'HTML_OR_OTHER'))
-                  return
-              if isinstance(obj,list):
-                  print(f'{action}: list count={len(obj)}')
-                  return
-              if not isinstance(obj,dict):
-                  print(f'{action}: type={type(obj).__name__}')
-                  return
-              print(f'{action}: dict keys=' + ','.join(sorted(obj.keys())))
-              for k,v in obj.items():
-                  if isinstance(v,list): print(f'{action}: listfield {k} count={len(v)}')
-              if 'status' in obj: print(f'{action}: status={obj.get("status")}')
-              if 'code' in obj: print(f'{action}: code={obj.get("code")}')
-              if 'message' in obj: print(f'{action}: message={str(obj.get("message",""))[:160]}')
-              if 'error' in obj: print(f'{action}: error={str(obj.get("error",""))[:160]}')
-          for a in ('diagnosticNoop','login','getStudents','getDeeds','getSettings'): summarize(a)
+                  pass
+              # V2 bridge HTML: extract parent.postMessage({...}, ...)
+              m=re.search(r'parent\.postMessage\((\{.*?\}),',raw,re.S)
+              if m:
+                  try:
+                      obj=json.loads(m.group(1))
+                      print(f'{action}: BRIDGE keys=' + ','.join(sorted(obj.keys())))
+                      for k in ('ok','error'):
+                          if k in obj: print(f'{action}: {k}=' + str(obj.get(k))[:180])
+                      return
+                  except Exception:
+                      pass
+              print(f'{action}: OTHER prefix=' + re.sub(r'\s+',' ',raw[:160]))
+          for a in ('testTelegram','submit_deed','addDeed'): summarize(a)
           PY
