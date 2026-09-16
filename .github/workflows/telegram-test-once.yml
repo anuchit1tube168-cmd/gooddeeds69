@@ -1,0 +1,46 @@
+name: Telegram notification test once
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/telegram-test-once.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Send safe Telegram test
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -z "${TELEGRAM_BOT_TOKEN:-}" ] || [ -z "${TELEGRAM_CHAT_ID:-}" ]; then
+            echo "TELEGRAM_SECRETS_NOT_CONFIGURED"
+            exit 2
+          fi
+          body=$(python3 - <<'PY'
+          import json, datetime
+          print(json.dumps({
+            "chat_id": __import__('os').environ['TELEGRAM_CHAT_ID'],
+            "text": "✅ TEST RTAFNC Good Deed\nGitHub ↔ Drive project notification test\nNo student data changed\nUTC: " + datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }, ensure_ascii=False))
+          PY
+          )
+          code=$(curl -sS -o /tmp/tg.json -w '%{http_code}' \
+            -H 'Content-Type: application/json' \
+            -d "$body" \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage")
+          python3 - <<'PY'
+          import json
+          obj=json.load(open('/tmp/tg.json', encoding='utf-8'))
+          print('TELEGRAM_OK=' + str(bool(obj.get('ok'))))
+          print('MESSAGE_SENT=' + str(bool(obj.get('result',{}).get('message_id'))))
+          PY
+          test "$code" = "200"
