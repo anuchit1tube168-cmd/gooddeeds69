@@ -51,7 +51,13 @@ jobs:
           raw=open('/tmp/post-probe.txt', encoding='utf-8').read().strip()
           try:
               obj=json.loads(raw)
-              print('POST_PROBE_JSON_KEYS=' + (','.join(sorted(obj.keys())) if isinstance(obj,dict) else type(obj).__name__))
+              if isinstance(obj,dict):
+                  print('POST_PROBE_JSON_KEYS=' + ','.join(sorted(obj.keys())))
+                  print('POST_PROBE_STATUS=' + str(obj.get('status','')))
+                  print('POST_PROBE_MESSAGE=' + str(obj.get('message',''))[:200])
+                  print('POST_PROBE_CODE=' + str(obj.get('code','')))
+              else:
+                  print('POST_PROBE_JSON_TYPE=' + type(obj).__name__)
           except Exception:
               print('POST_PROBE_MARKER=' + ('RTAFNC_GOODDEED' if 'RTAFNC_GOODDEED' in raw else 'HTML_OR_OTHER'))
           PY
