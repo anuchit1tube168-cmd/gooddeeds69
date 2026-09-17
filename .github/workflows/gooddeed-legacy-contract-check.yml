@@ -1,4 +1,4 @@
-name: Good Deed live notification probe
+name: Good Deed Telegram action discovery
 
 on:
   pull_request:
@@ -16,14 +16,14 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
     steps:
-      - name: Probe notification actions without real credentials or deed writes
+      - name: Probe notification-only action names
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL --max-time 30 "$GAS_URL?action=health" -o /tmp/health.txt
-          for action in testTelegram submit_deed addDeed; do
+          actions=(testTelegram testTelegramNotification telegram_test testNotification sendTestTelegram send_telegram_test test_telegram)
+          for action in "${actions[@]}"; do
             curl -sS -L --max-time 30 \
-              -o "/tmp/post-$action.txt" \
+              -o "/tmp/$action.txt" \
               --data-urlencode "action=$action" \
               --data-urlencode "requestId=diag-$action" \
               --data-urlencode 'origin=https://anuchit1tube168-cmd.github.io' \
@@ -31,34 +31,22 @@ jobs:
               "$GAS_URL"
           done
           python3 - <<'PY'
-          import json,re,html
-          h=json.load(open('/tmp/health.txt',encoding='utf-8'))
-          print('HEALTH_KEYS=' + ','.join(sorted(h.keys())))
-          print('HEALTH_MESSAGE=' + str(h.get('message',''))[:160])
-          print('HEALTH_VERSION=' + str(h.get('version','')))
-          def summarize(action):
-              raw=open(f'/tmp/post-{action}.txt',encoding='utf-8').read().strip()
-              # JSON legacy response
+          import json,re
+          actions=['testTelegram','testTelegramNotification','telegram_test','testNotification','sendTestTelegram','send_telegram_test','test_telegram']
+          for action in actions:
+              raw=open(f'/tmp/{action}.txt',encoding='utf-8').read().strip()
               try:
                   obj=json.loads(raw)
-                  print(f'{action}: JSON keys=' + (','.join(sorted(obj.keys())) if isinstance(obj,dict) else type(obj).__name__))
-                  if isinstance(obj,dict):
-                      for k in ('ok','status','code','message','error'):
-                          if k in obj: print(f'{action}: {k}=' + str(obj.get(k))[:180])
-                  return
+                  print(action + ': ' + ', '.join(f'{k}={str(obj.get(k))[:140]}' for k in ('ok','status','code','message','error') if isinstance(obj,dict) and k in obj))
+                  continue
               except Exception:
                   pass
-              # V2 bridge HTML: extract parent.postMessage({...}, ...)
               m=re.search(r'parent\.postMessage\((\{.*?\}),',raw,re.S)
               if m:
                   try:
                       obj=json.loads(m.group(1))
-                      print(f'{action}: BRIDGE keys=' + ','.join(sorted(obj.keys())))
-                      for k in ('ok','error'):
-                          if k in obj: print(f'{action}: {k}=' + str(obj.get(k))[:180])
-                      return
-                  except Exception:
-                      pass
-              print(f'{action}: OTHER prefix=' + re.sub(r'\s+',' ',raw[:160]))
-          for a in ('testTelegram','submit_deed','addDeed'): summarize(a)
+                      print(action + ': bridge ' + ', '.join(f'{k}={str(obj.get(k))[:140]}' for k in ('ok','error') if k in obj))
+                      continue
+                  except Exception: pass
+              print(action + ': OTHER')
           PY
