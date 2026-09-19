@@ -49,3 +49,11 @@ For the current light UI, use `docs/GOOD_DEED_UX.md` and `docs/GOOD_DEED_ARCHITE
 Before a UI edit, identify whether it belongs in shared presentation, the authenticated self-read view, or the disconnected demo controller. Reuse these modules. Memory drafts, local file progress and synthetic signatures are not working backend integrations. Preserve review revisions and require per-record confirmation in the demo; keep real write routes gated by their server contract.
 
 For a denied runtime operation, record that exact action/cause and continue independent work. Do not retry through another browser/host/deployment to evade the denial. A controller double or a screenshot from an earlier revision cannot prove the current rendered interface. Save the next unresolved task in WORK_STATE so a model switch resumes it rather than rebuilding the app.
+
+## Login and notification incident check
+
+When the public login page loads but users cannot continue, inspect the rendered form and console before changing credentials. Execute security/config assets in an isolated VM regression test so an IIFE root-binding or load-order failure cannot silently disable the secure client. After changing an asset, bump the owning HTML cache key and verify that a healthy V2 client is retained while a missing client fails closed.
+
+Treat the public page, repository source and Apps Script Web App as three separate states. Acceptance for the existing V2 Web App starts with both: GET health identifies the expected V2 service/version, and a synthetic invalid POST login reaches the application contract rather than returning HTTP 405. Do not run setup/bootstrap to repair a deployment mismatch.
+
+For Telegram recovery, configure only new server-side Script Properties, never migrate or print old values. A successful test requires API acceptance plus a received labelled message. Submission persistence precedes notification; `unknown` delivery is a reconciliation state, not permission to resubmit or resend blindly.

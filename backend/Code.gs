@@ -197,6 +197,7 @@ function addDeed(payload) {
   } finally {
     if (locked) lock.releaseLock();
   }
+  let notification = { status: 'unknown' };
   try {
     let resolvedName = '';
     const ss = getSS(), masterSheet = ss ? ss.getSheetByName(SHEETS.STUDENTS) : null;
@@ -219,14 +220,14 @@ function addDeed(payload) {
         resolvedName = `นพอ. (${studentId})`;
       }
     }
-    notifyTelegramNewDeed({id: deedId, studentId: studentId,
+    notification = notifyTelegramNewDeed({id: deedId, studentId: studentId,
       studentName: resolvedName,
       classYear: student.class_year || studentId.substring(0, 2) || '69', category: catId, hours: hours,
       date: activityDate, desc: desc, location: location, imageUrl: imageUrl, approver: approver});
   } catch (_) {
     console.error('LEGACY_NOTIFICATION_UNCONFIRMED');
   }
-  return { status: 'success', deedId: deedId, imageUrl: imageUrl, message: 'Deed recorded successfully' };
+  return { status: 'success', deedId: deedId, imageUrl: imageUrl, notification: notification, message: 'Deed recorded successfully' };
 }
 
 function approveDeed(data) {
@@ -468,34 +469,30 @@ function uploadImage(data) {
 
 // ==================== TELEGRAM NOTIFICATION & CALLBACKS ====================
 function notifyTelegramNewDeed(d) {
-  const approveUrl = `${CONFIG.FRONTEND_URL}/approve_sign.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
-  const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
-
-  const text = `📋 <b>มีบันทึกความดีใหม่รอการอนุมัติ (วพอ. 2569)</b>\n━━━━━━━━━━━━━━━━━━━━━━━\n👤 <b>นักเรียน:</b> ${d.studentName}\n🎫 <b>รหัส นพอ.:</b> <code>${d.studentId}</code> | รุ่น ${d.classYear}\n📂 <b>หมวดที่ ${d.category}</b>\n⏱ <b>จำนวน:</b> ${d.hours} ชั่วโมง\n📅 <b>วันที่:</b> ${d.date}\n📍 <b>สถานที่:</b> ${d.location}\n📝 <b>รายละเอียด:</b> ${d.desc}\n\n👩‍🏫 <b>เสนอตรวจโดย:</b> ${d.approver}\n━━━━━━━━━━━━━━━━━━━━━━━\n<i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>`;
-
+  const token = CONFIG.TELEGRAM_TOKEN, chatId = CONFIG.TELEGRAM_CHAT_ID;
+  if (!token || !chatId) return { status: 'not_configured' };
+  // No user-authored HTML or personal details in URLs. Review requires sign-in.
   const payload = {
-    chat_id: CONFIG.TELEGRAM_CHAT_ID,
-    text: text,
-    parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: '✅ อนุมัติด่วน', callback_data: `approve_${d.id}_${d.studentId}` },
-          { text: '❌ ปฏิเสธ', callback_data: `reject_${d.id}_${d.studentId}` }
-        ],
-        [
-          { text: '✍️ ตรวจสอบ & ลงนาม', url: approveUrl },
-          { text: '📄 พิมพ์สลิป A4 (PDF)', url: slipUrl }
-        ]
-      ]
-    }
+    chat_id: chatId,
+    text: '📋 มีบันทึกความดีใหม่รอตรวจ กรุณาเข้าสู่ระบบเพื่อตรวจรายละเอียดและลงนาม',
+    reply_markup: { inline_keyboard: [[{
+      text: '✍️ เปิดหน้าตรวจรายการ', url: CONFIG.FRONTEND_URL + '/teacher-dashboard.html'
+    }]] }
   };
-
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload)
-  });
+  try {
+    const response = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      method: 'post', contentType: 'application/json', payload: JSON.stringify(payload), muteHttpExceptions: true
+    });
+    const httpStatus = response.getResponseCode();
+    let body;
+    try { body = JSON.parse(response.getContentText()); }
+    catch (_) { return { status: 'unknown', httpStatus: httpStatus }; }
+    if (httpStatus === 200 && body.ok === true && body.result && Number.isInteger(body.result.message_id)) return { status: 'sent' };
+    const result = { status: body.ok === false ? 'failed' : 'unknown', httpStatus: httpStatus };
+    if (Number.isInteger(body.error_code)) result.errorCode = body.error_code;
+    if (body.parameters && Number.isInteger(body.parameters.retry_after) && body.parameters.retry_after > 0) result.retryAfterSeconds = body.parameters.retry_after;
+    return result;
+  } catch (_) { return { status: 'unknown' }; }
 }
 
 // Apps Script cannot inspect Telegram's secret header. A high-entropy query

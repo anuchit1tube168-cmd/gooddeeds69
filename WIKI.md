@@ -1,3 +1,12 @@
+## กู้ระบบ Login และ Telegram — 19 กันยายน 2569
+
+พบข้อผิดพลาดจริงบนหน้าเว็บ: `gateway-config.js` เรียกตัว guard โดยไม่ส่ง `window` ทำให้สคริปต์หยุดและคำใบ้รหัสผ่านเก่ายังค้างอยู่ ชุดแก้เรียก guard ด้วย browser window, ล้างคำใบ้เก่า, คงการยืนยันตัวตน V2 แบบ fail-closed และเพิ่ม cache key ใหม่ ผล source test ผ่าน **161 JavaScript + 23 Python**
+
+ยังห้ามถือว่าระบบจริงผ่าน: Apps Script production ที่ตรวจเมื่อ 16 กันยายนตอบ POST login เป็น HTTP 405 และการเข้าหน้า editor รอบนี้ติด Google sign-in `502` จึงยังไม่ได้เปลี่ยน deployment หรือ Script Properties ใช้ token/chat ID ชุดใหม่ผ่าน Script Properties เท่านั้น ห้ามย้าย token เก่า ห้ามใส่ค่าใน GitHub/หน้าเว็บ/แชต และห้ามรัน setup/reset/migration กับชีตจริง
+
+ลำดับรับรองหลังอัปเดต Web App เดิม: V2 health → invalid login ไม่ใช่ 405 → บัญชีควบคุม login → ส่งความดีหนึ่งรายการ → Telegram มาครั้งเดียว → ผู้ตรวจที่มี scope อนุมัติ → นักเรียน refresh เห็นผล → ตรวจ audit และยอดไม่ซ้ำ
+
+---
 ## อัปเดตความต่อเนื่องของ session — 12 กันยายน 2569
 
 ผลรวมล่าสุด **143 JavaScript + 23 Python = 166 รายการผ่าน** รวมงาน readiness ที่เพิ่มมาล่าสุดแล้ว ออกจากระบบได้ระหว่างโหลดข้อมูลช้าและซ่อนข้อมูลทันที คำตอบเก่าจะไม่ย้อนกลับมาแสดง ส่วนคำเตือนข้อมูลไม่เป็นปัจจุบันจะคงอยู่แม้เปลี่ยนเมนู จนกว่าจะโหลดใหม่สำเร็จ
@@ -203,3 +212,16 @@ python3 scripts/verify_staging.py \
 ```
 
 The legacy GAS source identifies itself as `rtafnc-gooddeeds-legacy-gas`. The Worker health path/service must come from its verified contract; neither is invented by this script. URLs must use HTTPS without credentials/query/fragment. Exit zero means two matching read-only health observations; deployment ownership, active code version, bindings, persistence and E2E remain unverified. Output is sanitized and explicitly sets `deploymentVerified: false`. A mismatch is a failed observation, not a reason to weaken the checks or deploy another backend.
+
+
+## Telegram repair handoff — 2026-09-16
+
+Current repair source: draft PR #5. Not installed in Apps Script. The live workbook configuration says 2.5.0 while the referenced source says 2.3.1; identify the active editor and deployment before applying code.
+
+1. Open the existing Good Deed workbook, then **Extensions / ส่วนขยาย → Apps Script**. Record the editor URL and deployed version privately. Do not run setup/reset/migration.
+2. In that same project, check that Script Properties contain `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. Do not copy values into chat, GitHub or browser settings.
+3. Compare the active `notifyTelegram_` (V2) or `notifyTelegramNewDeed` (legacy) with the corresponding PR patch. These backends have competing entrypoints and must not be installed together.
+4. On the verified staging project, send a clearly labelled test notice to the authorized test destination. Inspect the sanitized result: `sent` requires HTTP acceptance and API success; `not_configured` requires server properties; `failed` includes numeric error details; `unknown` requires receipt/log reconciliation before a retry. `retryAfterSeconds` is a provider wait interval, not an automatic resend instruction.
+5. Verify group receipt, then one controlled submission. A saved deed stays saved even if notification fails; do not submit it again. New messages link to teacher review and require login; they do not grant approval rights or certify official hours.
+
+Contract reference: [Telegram request results](https://core.telegram.org/bots/api#making-requests) and [response parameters](https://core.telegram.org/bots/api#responseparameters). No real notification or account-secret validation has yet been performed in this incident session.
