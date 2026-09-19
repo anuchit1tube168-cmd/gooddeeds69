@@ -10,7 +10,7 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.3.1',
+  VERSION: '2.3.3-telegram-repair',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
@@ -161,6 +161,29 @@ function testLinePushToStudent(studentId) {
   return { ok: true, studentId: normalized };
 }
 
+/** Admin/editor utility: validate Telegram bot credentials and send one test message. */
+function testTelegramNotification() {
+  // Editor-only smoke test: one labelled message, no deed or account mutation.
+  // Do not require evidence-folder/password setup merely to diagnose Telegram.
+  const props = PropertiesService.getScriptProperties();
+  const token = props.getProperty('TELEGRAM_BOT_TOKEN');
+  const chatId = props.getProperty('TELEGRAM_CHAT_ID');
+  if (!token || !chatId) return { ok: false, status: 'not_configured' };
+  try {
+    const response = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/getMe', { muteHttpExceptions: true });
+    let me;
+    try { me = JSON.parse(response.getContentText()); }
+    catch (_) { return { ok: false, status: 'unknown', stage: 'getMe' }; }
+    if (response.getResponseCode() !== 200 || me.ok !== true || !me.result || me.result.is_bot !== true) {
+      return { ok: false, status: 'failed', stage: 'getMe', httpStatus: response.getResponseCode() };
+    }
+  } catch (_) { return { ok: false, status: 'unknown', stage: 'getMe' }; }
+  const notification = notifyTelegram_('ข้อความทดสอบระบบความดี — ไม่ใช่รายการของนักเรียน\nเวลา: ' + new Date().toISOString());
+  const result = Object.assign({ ok: notification.status === 'sent', stage: 'sendMessage' }, notification);
+  console.log(JSON.stringify(result));
+  return result;
+}
+
 function login_(payload, requestId) {
   const username = clean_(payload.username, 120).toLowerCase();
   const password = String(payload.password || '');
@@ -169,7 +192,8 @@ function login_(payload, requestId) {
   const member = findMember_(function(row) {
     return String(row.username).toLowerCase() === username || String(row.studentId).toLowerCase() === username;
   });
-  if (!member || !truthy_(member.active) || !verifyPassword_(password, member.passwordSalt, member.passwordHash)) {
+  const passwordOk = member && truthy_(member.active) && verifyOrInitializeStudentPassword_(member, password, requestId);
+  if (!passwordOk) {
     registerLoginFailure_(username);
     audit_('anonymous', 'login.failed', 'member', username, { reason: 'invalid_credentials' }, requestId);
     throw new Error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
@@ -201,7 +225,8 @@ function bindLineAndLogin_(payload, requestId) {
   const member = findMember_(function(row) {
     return String(row.username).toLowerCase() === username || String(row.studentId).toLowerCase() === username;
   });
-  if (!member || member.role !== 'student' || !truthy_(member.active) || !verifyPassword_(password, member.passwordSalt, member.passwordHash)) {
+  const passwordOk = member && member.role === 'student' && truthy_(member.active) && verifyOrInitializeStudentPassword_(member, password, requestId);
+  if (!passwordOk) {
     registerLoginFailure_(username);
     audit_('anonymous', 'line.bind.failed', 'member', username, { reason: 'invalid_credentials' }, requestId);
     throw new Error('ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
@@ -272,8 +297,10 @@ function submitDeed_(session, payload, requestId) {
     };
     append_(GD.SHEETS.RECORDS, record);
     audit_(session.memberId, 'deed.submitted', 'deed', record.recordId, { category: category, hours: hours }, requestId);
-    notifyTelegram_('📝 รายการความดีใหม่\nรหัส: ' + studentId + '\nประเภท: ' + category + '\nชั่วโมง: ' + hours + '\nเลขรายการ: ' + record.recordId);
-    return { deed: publicDeed_(record, session) };
+    const notification = notifyTelegram_('📝 มีรายการความดีใหม่รอตรวจ กรุณาเข้าสู่ระบบเพื่อตรวจรายละเอียด');
+    try { audit_(session.memberId, 'telegram.' + notification.status, 'deed', record.recordId, notification, requestId); }
+    catch (_) { notification.auditRecorded = false; }
+    return { deed: publicDeed_(record, session), notification: notification };
   } finally {
     lock.releaseLock();
   }
@@ -312,7 +339,10 @@ function reviewDeed_(session, payload, requestId) {
   const owner = findMember_(function(row) { return String(row.memberId) === String(reviewedRecord.memberId); });
   const lineNotified = owner && owner.lineUserId ? notifyLineReview_(String(owner.lineUserId), reviewedRecord, decision, note) : false;
   audit_(session.memberId, lineNotified ? 'line.review.sent' : 'line.review.skipped', 'deed', recordId, {}, requestId);
-  return { deed: publicDeed_(reviewedRecord, session), lineNotified: lineNotified };
+  const notification = notifyTelegram_('มีผลการตรวจรายการความดี กรุณาเข้าสู่ระบบเพื่อตรวจรายละเอียด');
+  try { audit_(session.memberId, 'telegram.review.' + notification.status, 'deed', recordId, notification, requestId); }
+  catch (_) { notification.auditRecorded = false; }
+  return { deed: publicDeed_(reviewedRecord, session), lineNotified: lineNotified, notification: notification };
 }
 
 function changePassword_(session, payload, token, requestId) {
@@ -636,10 +666,29 @@ function notifyTelegram_(message) {
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('TELEGRAM_BOT_TOKEN');
   const chatId = props.getProperty('TELEGRAM_CHAT_ID');
-  if (!token || !chatId) return;
+  if (!token || !chatId) return { status: 'not_configured' };
+  const payload = { chat_id: chatId, text: message,
+    reply_markup: { inline_keyboard: [[{ text: 'เปิดหน้าตรวจรายการ',
+      url: GD.DEFAULT_ORIGIN + '/gooddeeds69/frontend/teacher-dashboard.html' }]] } };
   try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'post', contentType: 'application/json', payload: JSON.stringify({ chat_id: chatId, text: message }), muteHttpExceptions: true });
-  } catch (error) { console.error('Telegram: ' + error); }
+    const response = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      method: 'post', contentType: 'application/json', payload: JSON.stringify(payload), muteHttpExceptions: true
+    });
+    const code = response.getResponseCode();
+    let body;
+    try { body = JSON.parse(response.getContentText()); }
+    catch (_) { return { status: 'unknown', httpStatus: code }; }
+    if (code === 200 && body.ok === true && body.result && Number.isInteger(body.result.message_id)) {
+      return { status: 'sent' };
+    }
+    const result = { status: body.ok === false ? 'failed' : 'unknown', httpStatus: code };
+    if (Number.isInteger(body.error_code)) result.errorCode = body.error_code;
+    if (body.parameters && Number.isInteger(body.parameters.retry_after) && body.parameters.retry_after > 0) result.retryAfterSeconds = body.parameters.retry_after;
+    return result;
+  } catch (_) {
+    // A network timeout can occur after delivery. Never log a token-bearing URL or retry blindly.
+    return { status: 'unknown' };
+  }
 }
 
 function verifyLineIdToken_(idToken) {
@@ -748,6 +797,14 @@ function spreadsheet_() { return SpreadsheetApp.openById(PropertiesService.getSc
 function ensureSetup_() { const p=PropertiesService.getScriptProperties(); if (!p.getProperty('SPREADSHEET_ID') || !p.getProperty('EVIDENCE_FOLDER_ID') || !p.getProperty('PASSWORD_PEPPER')) throw new Error('ระบบหลังบ้านยังไม่พร้อม กรุณารัน setupSystem()'); }
 function newPassword_(password) { const salt=Utilities.getUuid(); return { salt:salt, hash:hashPassword_(password,salt) }; }
 function verifyPassword_(password, salt, expected) { return constantTimeEqual_(hashPassword_(password,salt), String(expected || '')); }
+
+function verifyOrInitializeStudentPassword_(member, password, requestId) {
+  // Student numbers are identifiers, never proof of ownership or bootstrap passwords.
+  // Missing credentials require the existing authorized account-recovery process.
+  if (!member || !String(member.passwordSalt || '') || !String(member.passwordHash || '')) return false;
+  return verifyPassword_(password, member.passwordSalt, member.passwordHash);
+}
+
 function hashPassword_(password, salt) { const pepper=PropertiesService.getScriptProperties().getProperty('PASSWORD_PEPPER') || ''; return hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(salt)+'|'+String(password)+'|'+pepper, Utilities.Charset.UTF_8)); }
 function tokenHash_(token) { return hex_(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, String(token), Utilities.Charset.UTF_8)); }
 function hex_(bytes) { return bytes.map(function(byte) { const value=(byte<0?byte+256:byte).toString(16); return value.length===1?'0'+value:value; }).join(''); }
@@ -762,4 +819,3 @@ function safeError_(error) { const message=error&&error.message?String(error.mes
 function allowedOrigin_(origin) { const configured=PropertiesService.getScriptProperties().getProperty('ALLOWED_ORIGIN')||GD.DEFAULT_ORIGIN; return String(origin||'')===configured?configured:configured; }
 function bridge_(message,origin) { const json=JSON.stringify(message).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026'); const html='<!doctype html><meta charset="utf-8"><script>parent.postMessage('+json+','+JSON.stringify(origin)+');<\/script>'; return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL); }
 function json_(object) { return ContentService.createTextOutput(JSON.stringify(object)).setMimeType(ContentService.MimeType.JSON); }
-
