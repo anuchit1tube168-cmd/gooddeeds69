@@ -98,4 +98,4 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
   // healthy secure gateway. These retries only harden the UI; they perform no writes.
   setTimeout(applyGuard, 600);
   setTimeout(applyGuard, 1500);
-})();
+})(typeof window === 'undefined' ? this : window);
