@@ -1318,16 +1318,16 @@ const App = {
         const pending = deeds.filter(d => d.status === 'pending');
         const rejected = deeds.filter(d => d.status === 'rejected');
 
-        let totalHours = Math.round(approved.reduce((s, d) => s + (parseFloat(d.hours) || 0), 0));
+        let totalHours = approved.reduce((s, d) => s + (parseFloat(d.hours) || 0), 0);
         if (totalHours === 0 && approved.length === 0) {
             const stu = this.getStudentById(studentId);
             if (stu && stu.total_hours) {
-                totalHours = Math.round(parseFloat(stu.total_hours) || 0);
+                totalHours = (parseFloat(stu.total_hours) || 0);
             }
         }
         const byCategory = CATEGORIES.map(cat => ({
             ...cat,
-            hours: Math.round(approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + (parseFloat(d.hours) || 0), 0)),
+            hours: approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + (parseFloat(d.hours) || 0), 0),
             count: approved.filter(d => d.categoryId === cat.id).length,
         }));
 

@@ -459,9 +459,9 @@
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=3593"></script>
-    <script src="gateway-config.js?v=20260908"></script>
-  <script src="gateway-client.js?v=20260911"></script>
+    <script src="app.js?v=20260915-repair"></script>
+    <script src="gateway-config.js?v=20260919-login-guard"></script>
+  <script src="gateway-client.js?v=20260915-repair"></script>
   <script src="liff-sdk.js?v=20260908"></script>
     <script>
         // Tab switch
@@ -507,14 +507,7 @@
 
         function showForgotPasswordHelp(e) {
             if (e) e.preventDefault();
-            const sid = document.getElementById('student-id').value.trim();
-            const cleanId = sid.replace(/[^\d]/g, '');
-            if (cleanId.length >= 4) {
-                document.getElementById('student-password').value = cleanId;
-                showToast('🔑 เติมรหัสผ่านเริ่มต้น (รหัส 7 หลัก) ให้แล้ว กดเข้าสู่ระบบได้เลยครับ', 'info');
-            } else {
-                showAlert('🔐 <b>คำแนะนำรหัสผ่าน นพอ.:</b><br>• ใช้ <b>รหัสนักเรียน 7 หลัก</b> (รหัสเริ่มต้น)<br>• หรือเลข <b>4 ตัวท้าย</b> ของรหัส<br>• หรือรหัส <b>1234</b>');
-            }
+            showAlert('กรุณาติดต่อผู้ดูแลเพื่อยืนยันตัวตนและตั้งรหัสผ่านใหม่');
         }
 
         async function handleLogin(e, role) {
@@ -534,6 +527,10 @@
 
                 try {
                     const result = await App.loginStudent(sid, pwd);
+                    if (result.requiresPasswordChange) {
+                        window.location.href = 'change-password.html';
+                        return;
+                    }
                     if (result.success) {
                         try {
                             sessionStorage.removeItem('gooddeeds_logged_out');
@@ -547,7 +544,7 @@
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
                         setTimeout(() => window.location.href = 'student-dashboard.html', 800);
                     } else {
-                        showAlert((result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง') + '<br><small style="display:inline-block;margin-top:6px;opacity:0.9;">💡 คำแนะนำ: ใช้รหัส 7 หลัก หรือเลข 4 ตัวท้าย หรือ 1234 หรือคลิก "ลืมรหัสผ่าน?" ด้านล่าง</small>');
+                        showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
                         btn.innerHTML = '<span>🔓</span> เข้าสู่ระบบ';
                     }
@@ -569,6 +566,10 @@
 
                 try {
                     const result = await App.loginTeacher(user, pwd);
+                    if (result.requiresPasswordChange) {
+                        window.location.href = 'change-password.html';
+                        return;
+                    }
                     if (result.success) {
                         try {
                             sessionStorage.removeItem('gooddeeds_logged_out');

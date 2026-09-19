@@ -869,12 +869,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
         return super().translate_path(path)
 
     def get_auth_context(self):
-        cookies = parse_cookie_header(self.headers.get('Cookie'))
-        return {
-            'role': self.headers.get('X-GoodDeeds-Role') or cookies.get('gooddeeds_role') or '',
-            'student_id': self.headers.get('X-GoodDeeds-Student-Id') or cookies.get('gooddeeds_student_id') or '',
-            'username': self.headers.get('X-GoodDeeds-Username') or cookies.get('gooddeeds_username') or '',
-        }
+        # Browser headers/cookies are claims, not authentication. Local preview
+        # has no identity session; Cloudflare owns verification and scoped RBAC.
+        return {'role': '', 'student_id': '', 'username': ''}
 
     def send_json_response(self, status_code, payload):
         body = json.dumps(payload, ensure_ascii=False).encode('utf-8')
@@ -904,10 +901,15 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.send_json_response(405, {'status': 'error', 'code': 'METHOD_NOT_ALLOWED'})
 
     def do_POST(self):
-        self.legacy_post_unsupported()
+        # This old server is a static preview, not the authenticated gateway.
+        self.close_connection = True
+        self.send_json_response(403, {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'})
 
     def do_GET(self):
-        self.legacy_get_unsupported()
+        if urlparse(self.path).path == '/api/health':
+            self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False, 'productionWriteEnabled': False})
+            return
+        super().do_GET()
 
     def send_head(self):
         # Used by both GET and HEAD. Resolve before checking so encoded paths,
@@ -923,17 +925,15 @@ class CustomHandler(SimpleHTTPRequestHandler):
             target = os.path.join(root, 'index.html')
             relative = 'index.html'
         public_asset = (
-            '/' not in relative and (relative.endswith(('.html', '.css', '.js', '.json', '.jpg', '.jpeg', '.png', '.svg', '.ico')) or relative == '510903.jpg')
-        ) or (
-            relative.startswith('data/') and relative.count('/') == 1
-            and relative.endswith(('.js', '.json'))
-        ) or (
-            relative.startswith('photos/') and relative.endswith(('.png', '.jpg', '.jpeg', '.webp', '.svg'))
+            '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
         ) or (
             relative.startswith('secure-pilot/') and relative.count('/') == 1
             and (relative.endswith(('.html', '.css', '.js')) or relative in {
                 'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
             })
+        ) or (
+            relative.startswith('photos/chibi/') and relative.count('/') == 2
+            and relative.endswith('.png')
         )
         if not inside or not public_asset or not os.path.isfile(target):
             self.send_error(403, 'Authenticated gateway required')
