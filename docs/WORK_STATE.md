@@ -8,6 +8,8 @@ The admin settings page now loads the V2 client and exposes a server-only Telegr
 
 Runtime remains blocked at the provider boundary. Update the verified existing Apps Script project in place with the reviewed CodeV2 source, preserve the existing `/exec`, set only new server-side `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, then run `testTelegramNotification()` and require both `{ok:true,status:'sent',stage:'sendMessage'}` and the actual labelled group receipt. Do not run `setupSystem()`, `bootstrapOwnerAdmin()` or migration. Continue with one controlled account through login → one deed → one notification → assigned-scope review → student refresh → audit and official-total reconciliation. Production write/cutover remains FALSE until that evidence exists.
 
+Private aggregate-only workbook inspection found the immediate account blocker: `MembersV2` has 254 student rows (252 active), zero teacher/admin rows, zero complete password credentials and 23 existing LINE bindings. `GoodDeedRecordsV2` has 16 approved and 2 pending rows, with the latest submission at 2026-09-02T16:16:46Z; `AuditTrailV2` has no recorded action/time. No identity, hash or LINE ID was printed. The frontend now offers a dedicated LINE login that calls only `loginWithLine`; it never falls back to password/binding. This can recover access for already-bound students after the correct V2 deployment is active. Unbound students still require newly issued unique credentials or another verified ownership flow; student ID must not become a password. Current local verification: syntax PASS, JavaScript **168/168**, Python **23/23**.
+
 ---
 
 # Login/Telegram recovery continuation — 2026-09-19
