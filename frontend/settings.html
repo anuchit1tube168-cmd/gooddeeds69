@@ -40,6 +40,11 @@
                         เฉพาะใน Apps Script → Project Settings → Script Properties เท่านั้น
                         หน้านี้จะไม่อ่าน บันทึก หรือทดสอบ secret จาก browser
                     </div>
+                    <button class="btn btn-outline btn-sm" id="btn-test-telegram"
+                        onclick="testTelegramFromServer()" style="margin-top:12px">
+                        🧪 ทดสอบ Telegram ผ่านเซิร์ฟเวอร์
+                    </button>
+                    <div class="form-hint" id="telegram-test-status" role="status" aria-live="polite"></div>
                 </div>
 
                 <!-- LINE Notify Section -->
@@ -146,6 +151,8 @@
     <script src="data/deeds_data.js?v=3580"></script>
     <script src="data/app_settings.js?v=3580"></script>
   <script src="app.js?v=20260919-auth-boundary"></script>
+    <script src="gateway-config.js?v=20260919-login-guard"></script>
+    <script src="gateway-client.js?v=20260920-telegram-dispatch"></script>
     <script>
         function init() {
             const currentUser = App.requireAuth(['admin']);
@@ -175,6 +182,41 @@
             App.saveSettings(s);
             CONFIG.MIN_HOURS_PER_YEAR = s.minHours;
             showToast('บันทึกการตั้งค่าสำเร็จ ✅', 'success');
+        }
+
+        async function testTelegramFromServer() {
+            const currentUser = App.requireAuth(['admin']);
+            if (!currentUser) return;
+            const button = document.getElementById('btn-test-telegram');
+            const status = document.getElementById('telegram-test-status');
+            button.disabled = true;
+            status.textContent = 'กำลังตรวจ bot และส่งข้อความทดสอบหนึ่งครั้ง…';
+            try {
+                if (!window.GoodDeedV2 || typeof window.GoodDeedV2.call !== 'function') {
+                    throw new Error('ระบบเชื่อมต่อ V2 ยังไม่พร้อม');
+                }
+                const result = await window.GoodDeedV2.call('testTelegram', {});
+                if (result && result.status === 'sent') {
+                    status.textContent = 'ส่งสำเร็จ — กรุณาตรวจข้อความทดสอบในกลุ่ม Telegram';
+                    showToast('ส่งข้อความทดสอบ Telegram สำเร็จ ✅', 'success');
+                } else if (result && result.status === 'not_configured') {
+                    status.textContent = 'ยังไม่ได้ตั้งค่า Telegram ใน Script Properties';
+                    showToast('ยังไม่ได้ตั้งค่า Telegram ฝั่งเซิร์ฟเวอร์', 'warning');
+                } else if (result && result.status === 'failed') {
+                    status.textContent = 'Telegram ปฏิเสธคำขอ กรุณาตรวจ token/chat ID ฝั่งเซิร์ฟเวอร์';
+                    showToast('Telegram ปฏิเสธคำขอ', 'error');
+                } else {
+                    status.textContent = 'ยังยืนยันผลส่งไม่ได้ กรุณาตรวจกลุ่มและ Execution log ก่อนลองใหม่';
+                    showToast('ยังยืนยันผลส่งไม่ได้', 'warning');
+                }
+            } catch (error) {
+                status.textContent = error && error.message === 'ระบบเชื่อมต่อ V2 ยังไม่พร้อม'
+                    ? error.message
+                    : 'ทดสอบไม่สำเร็จ กรุณาเข้าสู่ระบบ admin ใหม่และตรวจ deployment';
+                showToast(status.textContent, 'error');
+            } finally {
+                button.disabled = false;
+            }
         }
 
         function resetSettings() {
