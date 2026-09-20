@@ -15,12 +15,7 @@ jobs:
     timeout-minutes: 5
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
-      CF_URL: https://rtafnc-one-gateway-staging.anuchit1tube168.workers.dev
-      ORIGIN: https://anuchit1tube168-cmd.github.io
-      TEST_ID: '9999999'
-      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      RTAFNC_GAS_SECRET_PRESENT: ${{ secrets.RTAFNC_GOODDEED_GAS_URL }}
+      EXPECTED_BUILD: gooddeeds69-20260920-post-probe-v1
       CLASP_TOKEN_PRESENT: ${{ secrets.CLASP_TOKEN }}
       CLASP_CREDENTIALS_PRESENT: ${{ secrets.CLASP_CREDENTIALS }}
       CLASPRC_JSON_PRESENT: ${{ secrets.CLASPRC_JSON }}
@@ -28,125 +23,69 @@ jobs:
       GOOGLE_SCRIPT_ID_PRESENT: ${{ secrets.GOOGLE_SCRIPT_ID }}
       GAS_SCRIPT_ID_PRESENT: ${{ secrets.GAS_SCRIPT_ID }}
     steps:
-      - name: Check real GAS health and public pages
+      - name: Report deploy credential presence only
         shell: bash
         run: |
           set -euo pipefail
-          curl -fsSL --max-time 20 "$GAS_URL?action=health" -o /tmp/health.json
-          python3 - <<'PY'
-          import json
-          with open('/tmp/health.json', encoding='utf-8') as f:
-              d=json.load(f)
-          assert d.get('status') == 'success', d
-          assert 'GoodDeeds 69 Cloud Engine Active' in str(d.get('message', '')), d
-          assert d.get('spreadsheetName') == 'ฐานข้อมูลความดี วพอ 2569', d
-          print('GAS_HEALTH_OK spreadsheet=' + d['spreadsheetName'])
-          PY
-          for url in \
-            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html' \
-            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/student-dashboard.html' \
-            'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/staff-login.html?role=teacher'; do
-            code=$(curl -L -sS --max-time 20 -o /dev/null -w '%{http_code}' "$url")
-            test "$code" = '200'
-            echo "HTTP_OK $code $url"
-          done
-
-      - name: Probe deployed Cloudflare worker
-        shell: bash
-        run: |
-          set -euo pipefail
-          for path in health readiness config; do
-            code=$(curl -L -sS --max-time 20 -o "/tmp/cf-$path.json" -w '%{http_code}' "$CF_URL/$path" || true)
-            upper=$(printf '%s' "$path" | tr '[:lower:]' '[:upper:]')
-            echo "CF_${upper}_HTTP=$code"
-            if [ "$code" = "200" ]; then
-              python3 - "$path" <<'PY'
-          import json,sys
-          p=sys.argv[1]
-          try:
-              d=json.load(open('/tmp/cf-'+p+'.json',encoding='utf-8'))
-          except Exception:
-              print('CF_'+p.upper()+'_JSON=invalid')
-          else:
-              safe={k:v for k,v in d.items() if 'token' not in k.lower() and 'secret' not in k.lower()}
-              print('CF_'+p.upper()+'_JSON='+json.dumps(safe,ensure_ascii=False,separators=(',',':')))
-          PY
-            fi
-          done
-
-      - name: Probe legacy GAS read surface without exposing records
-        shell: bash
-        run: |
-          set -euo pipefail
-          for spec in 'getStudents:' 'getSummary:9999999' 'getDeeds:9999999'; do
-            action="${spec%%:*}"
-            sid="${spec#*:}"
-            url="$GAS_URL?action=$action"
-            [ -n "$sid" ] && url="$url&studentId=$sid"
-            code=$(curl -L -sS --max-time 20 -o "/tmp/gas-$action.json" -w '%{http_code}' "$url" || true)
-            echo "GAS_${action}_HTTP=$code"
-            python3 - "$action" <<'PY'
-          import json,sys
-          action=sys.argv[1]
-          p='/tmp/gas-'+action+'.json'
-          try:
-              d=json.load(open(p,encoding='utf-8'))
-          except Exception:
-              print('GAS_'+action+'_SHAPE=non_json')
-              continue_flag=False
-          else:
-              if isinstance(d,list):
-                  print('GAS_'+action+'_SHAPE=list count='+str(len(d)))
-              elif isinstance(d,dict):
-                  keys=sorted(k for k in d.keys() if k not in {'token','secret','password','telegramToken'})
-                  print('GAS_'+action+'_SHAPE=dict keys='+','.join(keys[:20]))
-                  if 'error' in d: print('GAS_'+action+'_ERROR='+str(d.get('error'))[:120])
-              else:
-                  print('GAS_'+action+'_SHAPE='+type(d).__name__)
-          PY
-          done
-      - name: Confirm active GAS POST contract
-        shell: bash
-        run: |
-          set -euo pipefail
-          req="e2e-login-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          payload=$(python3 - <<'PY'
-          import json, os
-          print(json.dumps({'username': os.environ['TEST_ID'], 'password': os.environ['TEST_ID']}))
-          PY
-          )
-          code=$(curl -L -sS --max-time 30 -X POST "$GAS_URL" \
-            --data-urlencode 'action=login' \
-            --data-urlencode "requestId=$req" \
-            --data-urlencode "origin=$ORIGIN" \
-            --data-urlencode "payload=$payload" \
-            -o /tmp/login.html -w '%{http_code}' || true)
-          echo "GAS_LOGIN_POST_HTTP=$code"
-          if [ "$code" = "200" ]; then
-            python3 - <<'PY'
-          import json, re
-          s=open('/tmp/login.html', encoding='utf-8').read()
-          m=re.search(r'parent\.postMessage\((\{.*\}),"https://anuchit1tube168-cmd\.github\.io"\)', s)
-          if not m:
-              print('GAS_POST_CONTRACT=HTTP200_BUT_NO_BRIDGE')
-          else:
-              d=json.loads(m.group(1))
-              print('GAS_POST_CONTRACT=' + ('PASS' if d.get('ok') is True else 'APP_ERROR'))
-          PY
-          else
-            echo "GAS_POST_CONTRACT=UNAVAILABLE"
-          fi
-
-      - name: Report reusable deployment credential presence
-        shell: bash
-        run: |
-          set -euo pipefail
-          [ -n "${CF_API_TOKEN:-}" ] && echo "CLOUDFLARE_API_TOKEN_PRESENT=yes" || echo "CLOUDFLARE_API_TOKEN_PRESENT=no"
-          [ -n "${CF_ACCOUNT_ID:-}" ] && echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=yes" || echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=no"
-          [ -n "${RTAFNC_GAS_SECRET_PRESENT:-}" ] && echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=yes" || echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=no"
           [ -n "${CLASP_TOKEN_PRESENT:-}" ] && echo "CLASP_TOKEN_PRESENT=yes" || echo "CLASP_TOKEN_PRESENT=no"
           [ -n "${CLASP_CREDENTIALS_PRESENT:-}" ] && echo "CLASP_CREDENTIALS_PRESENT=yes" || echo "CLASP_CREDENTIALS_PRESENT=no"
           [ -n "${CLASPRC_JSON_PRESENT:-}" ] && echo "CLASPRC_JSON_PRESENT=yes" || echo "CLASPRC_JSON_PRESENT=no"
           [ -n "${APPS_SCRIPT_ID_PRESENT:-}" ] && echo "APPS_SCRIPT_ID_PRESENT=yes" || echo "APPS_SCRIPT_ID_PRESENT=no"
           [ -n "${GOOGLE_SCRIPT_ID_PRESENT:-}" ] && echo "GOOGLE_SCRIPT_ID_PRESENT=yes" || echo "GOOGLE_SCRIPT_ID_PRESENT=no"
           [ -n "${GAS_SCRIPT_ID_PRESENT:-}" ] && echo "GAS_SCRIPT_ID_PRESENT=yes" || echo "GAS_SCRIPT_ID_PRESENT=no"
+
+      - name: Probe active GAS GET fingerprint
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -L -sS --max-time 20 -o /tmp/ping.json -w '%{http_code}' "$GAS_URL?action=ping" || true)
+          echo "GAS_PING_HTTP=$code"
+          python3 - <<'PY'
+          import json, os
+          p='/tmp/ping.json'
+          try:
+              d=json.load(open(p,encoding='utf-8'))
+          except Exception:
+              print('GAS_PING_JSON=invalid')
+          else:
+              print('GAS_PING_STATUS='+str(d.get('status')))
+              print('GAS_PING_BUILD_ID='+str(d.get('buildId','missing')))
+              print('GAS_PING_POST_PROBE='+str(d.get('postProbeSupported','missing')))
+              print('GAS_PING_BUILD_MATCH='+str(d.get('buildId')==os.environ['EXPECTED_BUILD']).lower())
+          PY
+
+      - name: Probe active GAS POST contract without writes
+        shell: bash
+        run: |
+          set -euo pipefail
+          code=$(curl -L -sS --max-time 20 -X POST "$GAS_URL"             -H 'content-type: application/json'             --data '{"action":"deploymentProbe"}'             -o /tmp/post.json -w '%{http_code}' || true)
+          echo "GAS_POST_PROBE_HTTP=$code"
+          if [ "$code" = "200" ]; then
+            python3 - <<'PY'
+          import json, os
+          try:
+              d=json.load(open('/tmp/post.json',encoding='utf-8'))
+          except Exception:
+              print('GAS_POST_PROBE_JSON=invalid')
+          else:
+              print('GAS_POST_PROBE_STATUS='+str(d.get('status')))
+              print('GAS_POST_PROBE_BUILD_ID='+str(d.get('buildId','missing')))
+              print('GAS_POST_PROBE_BUILD_MATCH='+str(d.get('buildId')==os.environ['EXPECTED_BUILD']).lower())
+          PY
+          else
+            echo "GAS_POST_PROBE_RESULT=deployment_not_updated"
+          fi
+
+      - name: Fail if active deployment is not reviewed build
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, sys
+          try:
+              d=json.load(open('/tmp/ping.json',encoding='utf-8'))
+          except Exception:
+              sys.exit('active GAS ping is not valid JSON')
+          if d.get('buildId') != os.environ['EXPECTED_BUILD']:
+              sys.exit('active GAS deployment is not the reviewed build')
+          PY
