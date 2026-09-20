@@ -1,3 +1,15 @@
+## อัปเดต 20 กันยายน 2569 — ชุดแก้ Telegram 2.3.5
+
+ตรวจโฟลเดอร์จริงแล้ว: ลิงก์ `1Y6n...` เป็น snapshot รุ่นเก่าตาม Project Map ส่วน V2 workspace ปัจจุบันคือ `1oXiv...` และสมุดงาน V2 มีหัวตารางตรงกับ `MembersV2`, `GoodDeedRecordsV2`, `AuditTrailV2` ที่โค้ดต้องใช้ การเห็นไฟล์หรือชีตเหล่านี้ยังไม่ใช่หลักฐานว่า Apps Script Web App ใช้ revision เดียวกัน
+
+ชุด `2.3.5-secure-telegram-dispatch` เพิ่มคำสั่ง `testTelegram` ที่ขาดหาย โดยอนุญาตเฉพาะ session ของ admin และยังตรวจ `getMe` ก่อนส่งข้อความทดสอบหนึ่งครั้ง ไม่รับ token จาก browser ไม่ใช้ token เก่า และไม่แตะข้อมูลนักเรียน ผลตรวจ source: syntax ผ่าน, JavaScript **165/165**, Python **23/23** และไฟล์ที่แก้ไม่มี credential/ข้อมูลบุคคลใหม่ตามกฎตรวจเดิม (การสแกนทั้ง repo ยังพบ fixture เก่าที่อยู่นอกชุดแก้นี้)
+
+ขั้นตอนติดตั้งกับของจริง: เปิดสมุดงาน V2 ที่ยืนยันแล้ว → **ส่วนขยาย → Apps Script** → เทียบ project/deployment ก่อนวางเฉพาะ `CodeV2.gs` ชุดนี้ → ตั้งค่า token/chat ID ชุดใหม่ใน **Project Settings → Script Properties** → รัน `testTelegramNotification()` → ต้องเห็นทั้งผล `{ok:true,status:'sent',stage:'sendMessage'}` และข้อความทดสอบในกลุ่ม → **Deploy → Manage deployments → Edit → New version** โดยคง URL `/exec` เดิม ห้ามรัน `setupSystem()`, `bootstrapOwnerAdmin()` หรือ migration
+
+จากนั้นทดสอบบัญชีควบคุมเพียงหนึ่งบัญชีตามลำดับ: login → กรอกความดีหนึ่งรายการ → Telegram มาครั้งเดียว → ผู้ตรวจที่มีขอบเขตสิทธิ์อนุมัติ → นักเรียน refresh เห็นสถานะ → ตรวจ audit และยอดทางการไม่ซ้ำ หากผลแจ้งเตือนเป็น `unknown` ห้ามกดส่งรายการซ้ำ ให้ตรวจ receipt/log ก่อน
+
+---
+
 ## กู้ระบบ Login และ Telegram — 19 กันยายน 2569
 
 พบข้อผิดพลาดจริงบนหน้าเว็บ: `gateway-config.js` เรียกตัว guard โดยไม่ส่ง `window` ทำให้สคริปต์หยุดและคำใบ้รหัสผ่านเก่ายังค้างอยู่ ชุดแก้เรียก guard ด้วย browser window, ล้างคำใบ้เก่า, คงการยืนยันตัวตน V2 แบบ fail-closed และเพิ่ม cache key ใหม่ ผล source test ผ่าน **161 JavaScript + 23 Python**
