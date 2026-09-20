@@ -75,7 +75,7 @@ window.GOODDEED_GATEWAY_CONFIG = Object.freeze({origin:'', timeoutMs:15000});
       if (!alertMessage || !root.MutationObserver) return;
       var sanitize = function () {
         var text = String(alertMessage.textContent || '');
-        if (/4\s*ตัวท้าย|1234|123456|teacher69|admin69|รหัส\s*7\s*หลัก\s*เป็นรหัส/i.test(text)) {
+        if (/4\s*ตัวท้าย|รหัส\s*ตัวอย่าง|รหัส\s*เริ่มต้น|รหัส\s*7\s*หลัก\s*เป็นรหัส|ใช้รหัสนักเรียน/i.test(text)) {
           alertMessage.textContent = 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง — กรุณาใช้รหัสผ่านที่ออกโดยระบบ หรือ ติดต่อผู้ดูแลระบบ';
         }
       };
