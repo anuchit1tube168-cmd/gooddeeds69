@@ -16,12 +16,16 @@ jobs:
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
       EXPECTED_BUILD: gooddeeds69-20260920-post-probe-v1
+      CF_URL: https://rtafnc-one-gateway-staging.anuchit1tube168.workers.dev
       CLASP_TOKEN_PRESENT: ${{ secrets.CLASP_TOKEN }}
       CLASP_CREDENTIALS_PRESENT: ${{ secrets.CLASP_CREDENTIALS }}
       CLASPRC_JSON_PRESENT: ${{ secrets.CLASPRC_JSON }}
       APPS_SCRIPT_ID_PRESENT: ${{ secrets.APPS_SCRIPT_ID }}
       GOOGLE_SCRIPT_ID_PRESENT: ${{ secrets.GOOGLE_SCRIPT_ID }}
       GAS_SCRIPT_ID_PRESENT: ${{ secrets.GAS_SCRIPT_ID }}
+      CF_API_TOKEN_PRESENT: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID_PRESENT: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
     steps:
       - name: Report deploy credential presence only
         shell: bash
@@ -42,20 +46,15 @@ jobs:
           set -euo pipefail
           for path in health readiness config; do
             code=$(curl -L -sS --max-time 20 -o "/tmp/cf-$path.json" -w '%{http_code}' "$CF_URL/$path" || true)
-            echo "CF_${path^^}_HTTP=$code"
+            upper=$(printf '%s' "$path" | tr '[:lower:]' '[:upper:]')
+            echo "CF_${upper}_HTTP=$code"
             if [ "$code" = "200" ]; then
-              python3 - "$path" <<'PY'
-import json,sys
-p=sys.argv[1]
-try:
-    d=json.load(open('/tmp/cf-'+p+'.json',encoding='utf-8'))
-except Exception:
-    print('CF_'+p.upper()+'_JSON=invalid')
-else:
-    allow={'appEnv','productionCutover','productionWrite','authSessionEnabled','d1Bound','liffConfigured','adapterConfigured','stagingE2EEnabled','readGate','submitGate','reviewGate','activationGate','pilotGateConfigured','pilotGateEnforced','version','service','status'}
-    safe={k:v for k,v in d.items() if k in allow}
-    print('CF_'+p.upper()+'_SAFE='+json.dumps(safe,ensure_ascii=False,separators=(',',':')))
-PY
+              if jq -e . "/tmp/cf-$path.json" >/dev/null 2>&1; then
+                safe=$(jq -c '{status,service,version,appEnv,productionCutover,productionWrite,authSessionEnabled,d1Bound,liffConfigured,adapterConfigured,stagingE2EEnabled,readGate,submitGate,reviewGate,activationGate,pilotGateConfigured,pilotGateEnforced} | with_entries(select(.value != null))' "/tmp/cf-$path.json")
+                echo "CF_${upper}_SAFE=$safe"
+              else
+                echo "CF_${upper}_JSON=invalid"
+              fi
             fi
           done
 
@@ -65,38 +64,23 @@ PY
           set -euo pipefail
           code=$(curl -L -sS --max-time 20 -o /tmp/ping.json -w '%{http_code}' "$GAS_URL?action=ping" || true)
           echo "GAS_PING_HTTP=$code"
-          python3 - <<'PY'
-          import json, os
-          p='/tmp/ping.json'
-          try:
-              d=json.load(open(p,encoding='utf-8'))
-          except Exception:
-              print('GAS_PING_JSON=invalid')
-          else:
-              print('GAS_PING_STATUS='+str(d.get('status')))
-              print('GAS_PING_BUILD_ID='+str(d.get('buildId','missing')))
-              print('GAS_PING_POST_PROBE='+str(d.get('postProbeSupported','missing')))
-              print('GAS_PING_BUILD_MATCH='+str(d.get('buildId')==os.environ['EXPECTED_BUILD']).lower())
-          PY
+          if jq -e . /tmp/ping.json >/dev/null 2>&1; then
+            echo "GAS_PING_STATUS=$(jq -r '.status // "missing"' /tmp/ping.json)"
+            echo "GAS_PING_BUILD_ID=$(jq -r '.buildId // "missing"' /tmp/ping.json)"
+            echo "GAS_PING_POST_PROBE=$(jq -r '.postProbeSupported // "missing"' /tmp/ping.json)"
+          else
+            echo "GAS_PING_JSON=invalid"
+          fi
 
       - name: Probe active GAS POST contract without writes
         shell: bash
         run: |
           set -euo pipefail
-          code=$(curl -L -sS --max-time 20 -X POST "$GAS_URL"             -H 'content-type: application/json'             --data '{"action":"deploymentProbe"}'             -o /tmp/post.json -w '%{http_code}' || true)
+          code=$(curl -L -sS --max-time 20 -X POST "$GAS_URL" -H 'content-type: application/json' --data '{"action":"deploymentProbe"}' -o /tmp/post.json -w '%{http_code}' || true)
           echo "GAS_POST_PROBE_HTTP=$code"
-          if [ "$code" = "200" ]; then
-            python3 - <<'PY'
-          import json, os
-          try:
-              d=json.load(open('/tmp/post.json',encoding='utf-8'))
-          except Exception:
-              print('GAS_POST_PROBE_JSON=invalid')
-          else:
-              print('GAS_POST_PROBE_STATUS='+str(d.get('status')))
-              print('GAS_POST_PROBE_BUILD_ID='+str(d.get('buildId','missing')))
-              print('GAS_POST_PROBE_BUILD_MATCH='+str(d.get('buildId')==os.environ['EXPECTED_BUILD']).lower())
-          PY
+          if [ "$code" = "200" ] && jq -e . /tmp/post.json >/dev/null 2>&1; then
+            echo "GAS_POST_PROBE_STATUS=$(jq -r '.status // "missing"' /tmp/post.json)"
+            echo "GAS_POST_PROBE_BUILD_ID=$(jq -r '.buildId // "missing"' /tmp/post.json)"
           else
             echo "GAS_POST_PROBE_RESULT=deployment_not_updated"
           fi
@@ -105,12 +89,9 @@ PY
         shell: bash
         run: |
           set -euo pipefail
-          python3 - <<'PY'
-          import json, os, sys
-          try:
-              d=json.load(open('/tmp/ping.json',encoding='utf-8'))
-          except Exception:
-              sys.exit('active GAS ping is not valid JSON')
-          if d.get('buildId') != os.environ['EXPECTED_BUILD']:
-              sys.exit('active GAS deployment is not the reviewed build')
-          PY
+          actual=$(jq -r '.buildId // ""' /tmp/ping.json 2>/dev/null || true)
+          if [ "$actual" != "$EXPECTED_BUILD" ]; then
+            echo "ACTIVE_GAS_REVIEWED_BUILD=no"
+            exit 1
+          fi
+          echo "ACTIVE_GAS_REVIEWED_BUILD=yes"
