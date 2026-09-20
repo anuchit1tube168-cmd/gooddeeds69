@@ -33,6 +33,31 @@ jobs:
           [ -n "${APPS_SCRIPT_ID_PRESENT:-}" ] && echo "APPS_SCRIPT_ID_PRESENT=yes" || echo "APPS_SCRIPT_ID_PRESENT=no"
           [ -n "${GOOGLE_SCRIPT_ID_PRESENT:-}" ] && echo "GOOGLE_SCRIPT_ID_PRESENT=yes" || echo "GOOGLE_SCRIPT_ID_PRESENT=no"
           [ -n "${GAS_SCRIPT_ID_PRESENT:-}" ] && echo "GAS_SCRIPT_ID_PRESENT=yes" || echo "GAS_SCRIPT_ID_PRESENT=no"
+          [ -n "${CF_API_TOKEN_PRESENT:-}" ] && echo "CLOUDFLARE_API_TOKEN_PRESENT=yes" || echo "CLOUDFLARE_API_TOKEN_PRESENT=no"
+          [ -n "${CF_ACCOUNT_ID_PRESENT:-}" ] && echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=yes" || echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=no"
+
+      - name: Probe Cloudflare staging readiness
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in health readiness config; do
+            code=$(curl -L -sS --max-time 20 -o "/tmp/cf-$path.json" -w '%{http_code}' "$CF_URL/$path" || true)
+            echo "CF_${path^^}_HTTP=$code"
+            if [ "$code" = "200" ]; then
+              python3 - "$path" <<'PY'
+import json,sys
+p=sys.argv[1]
+try:
+    d=json.load(open('/tmp/cf-'+p+'.json',encoding='utf-8'))
+except Exception:
+    print('CF_'+p.upper()+'_JSON=invalid')
+else:
+    allow={'appEnv','productionCutover','productionWrite','authSessionEnabled','d1Bound','liffConfigured','adapterConfigured','stagingE2EEnabled','readGate','submitGate','reviewGate','activationGate','pilotGateConfigured','pilotGateEnforced','version','service','status'}
+    safe={k:v for k,v in d.items() if k in allow}
+    print('CF_'+p.upper()+'_SAFE='+json.dumps(safe,ensure_ascii=False,separators=(',',':')))
+PY
+            fi
+          done
 
       - name: Probe active GAS GET fingerprint
         shell: bash
