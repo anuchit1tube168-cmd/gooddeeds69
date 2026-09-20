@@ -125,8 +125,27 @@
       Object.entries(fields).forEach(([name, value]) => {
         const input = document.createElement('input'); input.type = 'hidden'; input.name = name; input.value = value; form.appendChild(input);
       });
-      let done = false;
-      const cleanup = () => { pendingCalls.delete(cancel); window.removeEventListener('message', onMessage); clearTimeout(timer); setTimeout(() => { form.remove(); frame.remove(); }, 0); };
+      let done = false, submitted = false, bridgeGraceTimer = null;
+      const cleanup = () => {
+        pendingCalls.delete(cancel);
+        window.removeEventListener('message', onMessage);
+        frame.removeEventListener('load', onFrameLoad);
+        clearTimeout(timer);
+        clearTimeout(bridgeGraceTimer);
+        setTimeout(() => { form.remove(); frame.remove(); }, 0);
+      };
+      const onFrameLoad = () => {
+        // Ignore the initial about:blank load. After submit, a healthy V2 bridge
+        // posts its response immediately; a Google 405/error page never does.
+        if (!submitted || done || !acceptAnyBridge) return;
+        clearTimeout(bridgeGraceTimer);
+        bridgeGraceTimer = setTimeout(() => {
+          if (done) return;
+          done = true;
+          cleanup();
+          reject(new Error('GAS_V2_BACKEND_UNAVAILABLE'));
+        }, 900);
+      };
       const onMessage = event => {
         if (done || current !== gasEpoch || event.source !== frame.contentWindow) return;
         if (!/^https:\/\/(?:script\.google\.com|[a-z0-9-]+\.googleusercontent\.com)$/.test(event.origin)) return;
@@ -141,8 +160,16 @@
       const cancel = () => { if (done) return; done = true; cleanup(); reject(new Error('REQUEST_CANCELLED')); };
       pendingCalls.add(cancel);
       window.addEventListener('message', onMessage);
+      frame.addEventListener('load', onFrameLoad);
       document.body.appendChild(frame); document.body.appendChild(form);
-      try { form.submit(); } catch (_) { done = true; cleanup(); reject(new Error('GAS_V2_CONNECTION_FAILED')); }
+      try {
+        submitted = true;
+        form.submit();
+      } catch (_) {
+        done = true;
+        cleanup();
+        reject(new Error('GAS_V2_CONNECTION_FAILED'));
+      }
     });
   }
 
