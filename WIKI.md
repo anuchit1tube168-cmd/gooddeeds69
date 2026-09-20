@@ -2,7 +2,7 @@
 
 ตรวจโฟลเดอร์จริงแล้ว: ลิงก์ `1Y6n...` เป็น snapshot รุ่นเก่าตาม Project Map ส่วน V2 workspace ปัจจุบันคือ `1oXiv...` และสมุดงาน V2 มีหัวตารางตรงกับ `MembersV2`, `GoodDeedRecordsV2`, `AuditTrailV2` ที่โค้ดต้องใช้ การเห็นไฟล์หรือชีตเหล่านี้ยังไม่ใช่หลักฐานว่า Apps Script Web App ใช้ revision เดียวกัน
 
-ชุด `2.3.5-secure-telegram-dispatch` เพิ่มคำสั่ง `testTelegram` ที่ขาดหาย โดยอนุญาตเฉพาะ session ของ admin และยังตรวจ `getMe` ก่อนส่งข้อความทดสอบหนึ่งครั้ง ไม่รับ token จาก browser ไม่ใช้ token เก่า และไม่แตะข้อมูลนักเรียน ผลตรวจ source: syntax ผ่าน, JavaScript **165/165**, Python **23/23** และไฟล์ที่แก้ไม่มี credential/ข้อมูลบุคคลใหม่ตามกฎตรวจเดิม (การสแกนทั้ง repo ยังพบ fixture เก่าที่อยู่นอกชุดแก้นี้)
+ชุด `2.3.5-secure-telegram-dispatch` เพิ่มคำสั่ง `testTelegram` ที่ขาดหาย โดยอนุญาตเฉพาะ session ของ admin และยังตรวจ `getMe` ก่อนส่งข้อความทดสอบหนึ่งครั้ง หน้า Settings มีปุ่มทดสอบผ่าน V2 server แล้ว แต่ไม่รับ/อ่าน/แสดง token ใน browser ไม่ใช้ token เก่า และไม่แตะข้อมูลนักเรียน ผลตรวจ source: syntax ผ่าน, JavaScript **166/166**, Python **23/23** และไฟล์ที่แก้ไม่มี credential/ข้อมูลบุคคลใหม่ตามกฎตรวจเดิม (การสแกนทั้ง repo ยังพบ fixture เก่าที่อยู่นอกชุดแก้นี้)
 
 ขั้นตอนติดตั้งกับของจริง: เปิดสมุดงาน V2 ที่ยืนยันแล้ว → **ส่วนขยาย → Apps Script** → เทียบ project/deployment ก่อนวางเฉพาะ `CodeV2.gs` ชุดนี้ → ตั้งค่า token/chat ID ชุดใหม่ใน **Project Settings → Script Properties** → รัน `testTelegramNotification()` → ต้องเห็นทั้งผล `{ok:true,status:'sent',stage:'sendMessage'}` และข้อความทดสอบในกลุ่ม → **Deploy → Manage deployments → Edit → New version** โดยคง URL `/exec` เดิม ห้ามรัน `setupSystem()`, `bootstrapOwnerAdmin()` หรือ migration
 
