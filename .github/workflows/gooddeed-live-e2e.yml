@@ -68,6 +68,37 @@ jobs:
             fi
           done
 
+      - name: Probe legacy GAS read surface without exposing records
+        shell: bash
+        run: |
+          set -euo pipefail
+          for spec in 'getStudents:' 'getSummary:9999999' 'getDeeds:9999999'; do
+            action="${spec%%:*}"
+            sid="${spec#*:}"
+            url="$GAS_URL?action=$action"
+            [ -n "$sid" ] && url="$url&studentId=$sid"
+            code=$(curl -L -sS --max-time 20 -o "/tmp/gas-$action.json" -w '%{http_code}' "$url" || true)
+            echo "GAS_${action}_HTTP=$code"
+            python3 - "$action" <<'PY'
+          import json,sys
+          action=sys.argv[1]
+          p='/tmp/gas-'+action+'.json'
+          try:
+              d=json.load(open(p,encoding='utf-8'))
+          except Exception:
+              print('GAS_'+action+'_SHAPE=non_json')
+              continue_flag=False
+          else:
+              if isinstance(d,list):
+                  print('GAS_'+action+'_SHAPE=list count='+str(len(d)))
+              elif isinstance(d,dict):
+                  keys=sorted(k for k in d.keys() if k not in {'token','secret','password','telegramToken'})
+                  print('GAS_'+action+'_SHAPE=dict keys='+','.join(keys[:20]))
+                  if 'error' in d: print('GAS_'+action+'_ERROR='+str(d.get('error'))[:120])
+              else:
+                  print('GAS_'+action+'_SHAPE='+type(d).__name__)
+          PY
+          done
       - name: Confirm active GAS POST contract
         shell: bash
         run: |
