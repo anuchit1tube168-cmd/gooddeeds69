@@ -11,6 +11,7 @@ Verification after the source repair: JavaScript **161/161**, Python **23/23**, 
 Next runtime sequence: update the existing Web App version while preserving its `/exec` URL and without `setupSystem()`/`bootstrapOwnerAdmin()`, run `testTelegramNotification()`, then one controlled login → deed submit → Telegram receipt → scoped review → student refresh → audit/reconciliation. Stop at the first failure and do not bulk retry a deed after an unknown notification result.
 
 ---
+
 # Owner-provided actual source reconciliation — 2026-09-16
 
 Owner identified the original Drive source folder. Its release-handoff subfolder contains `CodeV2_2.3.2-login-sync-hotfix_20260915.gs`. This is concrete source evidence, not proof of installed deployment. Although the folder's September 5 README calls it a legacy snapshot, the September 15 handoff is newer and was inspected directly.

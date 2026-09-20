@@ -122,16 +122,10 @@ function seedImportedDeeds() {
 seedImportedDeeds();
 
 
-const TEACHERS = [
-    { username: 'anuchit', password: 'anuchit2569', role: 'admin', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', isAdmin: true, isTeacher: true, title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน' },
-    { username: 'bird', password: 'bird2569', role: 'admin', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', isAdmin: true, isTeacher: true, title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน' },
-    { username: 'admin', password: 'admin69', role: 'admin', name: 'ผู้ดูแลระบบ', isAdmin: true, isTeacher: true },
-    { username: 'teacher', password: 'teacher69', role: 'teacher', name: 'อาจารย์ผู้ตรวจประเมิน', isTeacher: true },
-    ...((typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.admin && EXCEL_SETTINGS.teacher) ? [
-        EXCEL_SETTINGS.admin,
-        EXCEL_SETTINGS.teacher
-    ] : [])
-];
+// Production authentication is server-side only. Never restore browser-resident
+// staff accounts or passwords here; gateway-client.js replaces the fail-closed
+// methods below after the verified V2 transport loads.
+const TEACHERS = [];
 
 function normalizeThaiDigits(str) {
     if (!str) return '';
@@ -399,143 +393,12 @@ const App = {
         return session;
     },
 
-    async loginStudent(studentId, password) {
-        if (this.ensureStudentsLoaded) {
-            await this.ensureStudentsLoaded().catch(() => {});
-        }
-        return new Promise((resolve) => {
-            setTimeout(async () => {
-                const inputId = String(studentId || '').trim();
-                const inputPwd = String(password || '').trim();
-
-                if (!inputId) {
-                    resolve({ success: false, message: 'กรุณากรอกรหัสนักเรียน' });
-                    return;
-                }
-
-                // Clean and normalize ID
-                const normalizedInput = normalizeThaiDigits(inputId);
-                let student = this.findStudent(normalizedInput);
-
-                if (!student) {
-                    // Try removing common prefixes: นพอ., นพอ.(ช), นพอ.หญิง, etc.
-                    const stripped = normalizedInput.replace(/^(นพอ\.?(\s*\([ชญ]\))?|นพอ\s*|ID:?|#)\s*/i, '').replace(/\s+/g, '');
-                    student = this.findStudent(stripped);
-                }
-
-                // If still not found, query backend API directly as dynamic fallback
-                if (!student) {
-                    const cleanDigits = normalizedInput.replace(/[^\d]/g, '');
-                    if (cleanDigits.length >= 4) {
-                        try {
-                            const res = await fetch(`/api/get_student?studentId=${encodeURIComponent(cleanDigits)}`);
-                            if (res.ok) {
-                                const found = await res.json();
-                                if (found && found.student_id) {
-                                    student = found;
-                                    if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
-                                        STUDENTS_DATA.push(student);
-                                    }
-                                }
-                            }
-                        } catch (e) {}
-                    }
-                }
-
-                if (!student) {
-                    resolve({ success: false, message: 'ไม่พบรหัสนักเรียนในระบบ กรุณาตรวจสอบรหัส 7 หลัก หรือชื่อ-สกุล' });
-                    return;
-                }
-
-                const cleanId = String(student.student_id);
-                const localPwd = Storage.get('pwd_' + cleanId);
-                const profile = Storage.get('profile_' + cleanId) || {};
-                const profilePwd = profile.password;
-
-                // Build comprehensive set of valid passwords for seamless student access
-                const validPasswords = new Set([
-                    cleanId,                                   // 7-digit ID (e.g. XXXXXXX)
-                    student.password,                          // student.password from database
-                    localPwd,                                  // custom changed password
-                    profilePwd,                                // profile password
-                    cleanId.slice(-4),                         // last 4 digits
-                    cleanId.slice(-5),                         // last 5 digits
-                    '1234',                                    // universal easy pin
-                    '123456',                                  // universal easy pin
-                    '69',                                      // class year abbreviation
-                    '2569',                                    // academic year
-                    'rtafnc',                                  // college abbreviation
-                    'rtafnc69',                                // college abbreviation with year
-                    'gooddeeds',                               // system name
-                    'gooddeeds69',                             // system name with year
-                    'password',                                // standard default
-                    student.phone ? String(student.phone).trim() : '',
-                    student.nickname ? String(student.nickname).trim().toLowerCase() : ''
-                ].filter(Boolean).map(p => String(p).trim().toLowerCase()));
-
-                const normalizedPwd = normalizeThaiDigits(inputPwd).toLowerCase();
-
-                // Check match
-                const isMatch = validPasswords.has(normalizedPwd) ||
-                                validPasswords.has(inputPwd.toLowerCase()) ||
-                                validPasswords.has(inputPwd) ||
-                                (inputPwd === '') ||
-                                (inputPwd === cleanId);
-
-                if (!isMatch) {
-                    resolve({ success: false, message: 'รหัสผ่านไม่ถูกต้อง (ใช้รหัสนักเรียน 7 หลัก หรือ 1234)' });
-                    return;
-                }
-
-                try {
-                    localStorage.removeItem('gooddeeds_auto_login_disabled');
-                    localStorage.removeItem('gooddeeds_logged_out');
-                    sessionStorage.removeItem('gooddeeds_logged_out');
-                } catch(e) {}
-                const session = this.setSession('student', student);
-                if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
-                    LiffHelper.bindCurrentStudentProfile();
-                }
-                resolve({ success: true, user: session });
-            }, 300);
-        });
+    async loginStudent() {
+        return { success: false, message: 'ระบบยืนยันตัวตน V2 ยังไม่พร้อม กรุณาปิดหน้าแล้วเปิดใหม่จาก LINE OA' };
     },
 
-    loginTeacher(username, password) {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const u = String(username || '').trim();
-                const p = String(password || '').trim();
-                const teacher = this.getStaffAccounts().find(t => {
-                    if (t.username !== u) return false;
-                    if (t.password === p) return true;
-                    // Accept password aliases
-                    if ((u === 'anuchit' || u === 'bird') && (
-                        p === 'anuchit' || p === 'anuchit2569' || p === 'bird' || p === 'bird2569' ||
-                        p === 'admin' || p === 'admin69' || p === 'admin2569' || p === 'teacher' || p === 'teacher69' || p === 'teacher2569'
-                    )) return true;
-                    if (u === 'teacher' && (p === 'teacher' || p === 'teacher69' || p === 'teacher2569')) return true;
-                    if (u === 'admin' && (p === 'admin' || p === 'admin69' || p === 'admin2569')) return true;
-                    return false;
-                });
-                if (!teacher) {
-                    resolve({ success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' });
-                    return;
-                }
-                try {
-                    localStorage.removeItem('gooddeeds_auto_login_disabled');
-                    localStorage.removeItem('gooddeeds_logged_out');
-                    sessionStorage.removeItem('gooddeeds_logged_out');
-                } catch(e) {}
-                const session = { ...teacher, loginAt: Date.now(), token: 'teacher_' + Math.random().toString(36).slice(2) };
-                Storage.set('session', session);
-                this.syncAuthContext(session);
-                if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
-                    LiffHelper.bindCurrentStudentProfile();
-                }
-                resolve({ success: true, user: session });
-            }, 600);
-        });
+    async loginTeacher() {
+        return { success: false, message: 'ระบบยืนยันตัวตน V2 ยังไม่พร้อม กรุณารีโหลดหน้าเข้าสู่ระบบ' };
     },
 
     logout() {
@@ -638,38 +501,17 @@ const App = {
     },
 
     getStaffAccounts() {
-        const extraAccounts = Storage.get('staff_accounts') || [];
-        return [...TEACHERS, ...extraAccounts];
+        return [];
     },
 
-    saveStaffAccounts(accounts) {
-        const builtinUsernames = new Set(TEACHERS.map(t => t.username));
-        const cleanAccounts = (accounts || [])
-            .filter(a => a && a.username && a.password && (a.role === 'teacher' || a.role === 'admin'))
-            .filter(a => !builtinUsernames.has(a.username))
-            .map(a => ({
-                username: String(a.username).trim(),
-                password: String(a.password),
-                role: a.role,
-                name: String(a.name || a.username).trim(),
-            }));
-        Storage.set('staff_accounts', cleanAccounts);
+    saveStaffAccounts() {
+        Storage.remove('staff_accounts');
+        return false;
     },
 
-    addStaffAccount(account) {
-        const accounts = this.getStaffAccounts();
-        if (accounts.some(a => a.username === account.username)) {
-            return { success: false, message: 'มีชื่อผู้ใช้นี้อยู่แล้ว' };
-        }
-        const extraAccounts = Storage.get('staff_accounts') || [];
-        extraAccounts.push({
-            username: String(account.username || '').trim(),
-            password: String(account.password || ''),
-            role: account.role === 'admin' ? 'admin' : 'teacher',
-            name: String(account.name || account.username || '').trim(),
-        });
-        this.saveStaffAccounts(extraAccounts);
-        return { success: true };
+    addStaffAccount() {
+        Storage.remove('staff_accounts');
+        return { success: false, message: 'จัดการบัญชีผ่านระบบผู้ดูแล V2 เท่านั้น' };
     },
 
     requireAuth(allowedRoles = ['student', 'teacher', 'admin']) {
@@ -1531,22 +1373,29 @@ const App = {
 
     // ---------- SETTINGS ----------
     getSettings() {
-        const s = Storage.get('settings') || {};
-        const defaultLineToken = (typeof EXCEL_SETTINGS !== 'undefined' && EXCEL_SETTINGS.line?.channel_token)
-            ? EXCEL_SETTINGS.line.channel_token
-            : 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+        const s = { ...(Storage.get('settings') || {}) };
+        const hadBrowserSecrets = ['telegramToken','adminChatId','lineNotifyToken','lineChannelToken']
+            .some(key => Object.prototype.hasOwnProperty.call(s, key));
+        delete s.telegramToken;
+        delete s.adminChatId;
+        delete s.lineNotifyToken;
+        delete s.lineChannelToken;
+        if (hadBrowserSecrets) Storage.set('settings', s);
         return {
             academicYear: 2569,
             minHoursSemester: 25,
             minHoursYear: 50,
-            telegramToken: CONFIG.TELEGRAM_BOT_TOKEN,
-            lineNotifyToken: '',
-            lineChannelToken: defaultLineToken,
-            adminChatId: CONFIG.TELEGRAM_CHAT_ID,
             ...s
         };
     },
-    saveSettings(s) { Storage.set('settings', s); },
+    saveSettings(s) {
+        const safe = { ...(s || {}) };
+        delete safe.telegramToken;
+        delete safe.adminChatId;
+        delete safe.lineNotifyToken;
+        delete safe.lineChannelToken;
+        Storage.set('settings', safe);
+    },
 
     // ---------- FORM SLIP CANVAS GENERATOR FOR TELEGRAM ----------
     async generateDeedFormSlipBlob(deed, student) {
@@ -1817,21 +1666,8 @@ const App = {
     },
 
     // ---------- LINE NOTIFY ----------
-    async sendLineNotify(message) {
-        const settings = this.getSettings();
-        const token = settings.lineNotifyToken;
-        if (!token) return false;
-        try {
-            const res = await fetch('https://notify-api.line.me/api/notify', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': `application/x-www-form-urlencoded`,
-                },
-                body: `message=${encodeURIComponent(message)}`
-            });
-            return res.ok;
-        } catch { return false; }
+    async sendLineNotify() {
+        return false;
     },
 
     // ---------- NOTIFY ALL CHANNELS ----------
@@ -2309,4 +2145,3 @@ if (typeof document !== 'undefined') {
 
 // ========== EXPORT ============
 if (typeof module !== 'undefined') module.exports = { App, CATEGORIES, CONFIG };
-

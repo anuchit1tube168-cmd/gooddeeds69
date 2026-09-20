@@ -35,30 +35,11 @@
                     <div class="card-header">
                         <div class="card-title"><span class="icon">💬</span> การแจ้งเตือน Telegram</div>
                     </div>
-                    <div
-                        style="background:rgba(29,161,242,0.08);border:1px solid rgba(29,161,242,0.2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.82rem;color:var(--text-secondary)">
-                        <p><strong style="color:#1da1f2">📌 วิธีตั้งค่า Telegram Bot:</strong></p>
-                        <ol style="padding-left:16px;margin-top:8px; line-height:2">
-                            <li>เปิด Telegram → ค้นหา <strong>@BotFather</strong></li>
-                            <li>พิมพ์ <code>/newbot</code> และตั้งชื่อ Bot</li>
-                            <li>BotFather จะส่ง <strong>Token</strong> ให้</li>
-                            <li>ให้อาจารย์ start Bot แล้วใช้ <a href="https://t.me/userinfobot" target="_blank"
-                                    style="color:#1da1f2">@userinfobot</a> หา Chat ID</li>
-                            <li>กรอก Token และ Admin Chat ID ด้านล่าง</li>
-                        </ol>
+                    <div class="info-box">
+                        🔒 ตั้งค่า <code>TELEGRAM_BOT_TOKEN</code> และ <code>TELEGRAM_CHAT_ID</code>
+                        เฉพาะใน Apps Script → Project Settings → Script Properties เท่านั้น
+                        หน้านี้จะไม่อ่าน บันทึก หรือทดสอบ secret จาก browser
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Telegram Bot Token</label>
-                        <input type="text" class="form-input" id="setting-token"
-                            placeholder="1234567890:ABCDEFGHijklmnop-QRSTUVWXYZ">
-                        <div class="form-hint">Token จาก @BotFather ห้ามเผยแพร่</div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Admin Chat ID (อาจารย์/Admin)</label>
-                        <input type="text" class="form-input" id="setting-admin-chat" placeholder="เช่น 123456789">
-                        <div class="form-hint">Chat ID ของอาจารย์ที่รับแจ้งเตือน</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="testTelegram()">🧪 ทดสอบการแจ้งเตือน</button>
                 </div>
 
                 <!-- LINE Notify Section -->
@@ -66,24 +47,10 @@
                     <div class="card-header">
                         <div class="card-title"><span class="icon">💚</span> การแจ้งเตือน LINE Notify</div>
                     </div>
-                    <div
-                        style="background:rgba(6,199,85,0.08);border:1px solid rgba(6,199,85,0.2);border-radius:var(--radius-sm);padding:14px;margin-bottom:16px;font-size:0.82rem;color:var(--text-secondary)">
-                        <p><strong style="color:#06c755">📌 วิธีตั้งค่า LINE Notify:</strong></p>
-                        <ol style="padding-left:16px;margin-top:8px; line-height:2">
-                            <li>ไปที่ <a href="https://notify-bot.line.me/my/" target="_blank"
-                                    style="color:#06c755">notify-bot.line.me</a></li>
-                            <li>Login ด้วยบัญชี LINE แล้วกด <strong>"Generate Token"</strong></li>
-                            <li>เลือกกลุ่ม LINE ที่ต้องการรับแจ้งเตือน หรือเลือก "1-on-1 chat"</li>
-                            <li>Copy Token มาวางด้านล่าง</li>
-                        </ol>
+                    <div class="info-box">
+                        ปิดการตั้งค่า token ฝั่ง browser แล้ว การแจ้ง LINE ต้องใช้ Messaging API
+                        และ secret ฝั่ง server เท่านั้น
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">LINE Notify Token</label>
-                        <input type="text" class="form-input" id="setting-line-token"
-                            placeholder="xxxxxxxxxxxxxxxxxxxxxxxxxxx">
-                        <div class="form-hint">Token จาก LINE Notify (ใช้แจ้งเตือนเข้ากลุ่ม LINE)</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="testLine()">🧪 ทดสอบ LINE Notify</button>
                 </div>
 
                 <!-- System Settings -->
@@ -115,56 +82,10 @@
                     <div class="card-header">
                         <div class="card-title"><span class="icon">👩‍🏫</span> บัญชีอาจารย์</div>
                     </div>
-                    <div style="font-size:0.82rem;color:var(--text-muted);margin-bottom:12px">
-                        บัญชีสำหรับเข้าระบบในฐานะอาจารย์ (ค่าเริ่มต้น)</div>
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>ชื่อผู้ใช้</th>
-                                    <th>บทบาท</th>
-                                    <th>ชื่อ</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><code>admin</code></td>
-                                    <td><span class="badge badge-gold">Admin</span></td>
-                                    <td>ผู้ดูแลระบบ</td>
-                                </tr>
-                                <tr>
-                                    <td><code>teacher</code></td>
-                                    <td><span class="badge badge-blue">Teacher</span></td>
-                                    <td>อาจารย์</td>
-                                </tr>
-                            </tbody>
-                            <tbody id="extra-staff-rows">
-                            </tbody>
-                        </table>
+                    <div class="info-box">
+                        🔒 จัดการบัญชี บทบาท และรหัสผ่านผ่านระบบผู้ดูแล V2 ฝั่ง server เท่านั้น
+                        ไม่สร้างหรือเก็บบัญชีอาจารย์ไว้ใน browser
                     </div>
-                    <div class="form-hint mt-8">รหัสผ่านเริ่มต้น: <code>admin69</code> / <code>teacher69</code></div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px">
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label">ชื่อผู้ใช้ใหม่</label>
-                            <input type="text" class="form-input" id="staff-username" placeholder="เช่น admin2">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label">รหัสผ่าน</label>
-                            <input type="password" class="form-input" id="staff-password" placeholder="ตั้งรหัสผ่าน">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label">ชื่อที่แสดง</label>
-                            <input type="text" class="form-input" id="staff-name" placeholder="เช่น ผู้ช่วยผู้ดูแล">
-                        </div>
-                        <div class="form-group" style="margin-bottom:0">
-                            <label class="form-label">สิทธิ์</label>
-                            <select class="form-select" id="staff-role">
-                                <option value="teacher">Teacher - อนุมัติและดูข้อมูลรวม</option>
-                                <option value="admin">Admin - จัดการระบบ</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="addStaffAccount()" style="margin-top:12px">➕ เพิ่มบัญชี/สิทธิ์</button>
                 </div>
 
                 <!-- Google Apps Script URL -->
@@ -205,17 +126,10 @@
                     <div class="card-header">
                         <div class="card-title"><span class="icon">💬</span> LINE Official Account (Messaging API / Flex Message)</div>
                     </div>
-                    <div
-                        style="background:rgba(6,199,85,0.08);border:1px solid rgba(6,199,85,0.2);border-radius:var(--radius-sm);padding:12px;margin-bottom:12px;font-size:0.82rem;color:var(--text-secondary)">
-                        📢 สำหรับส่ง <strong>LINE Flex Message</strong> แจ้งเตือนรายบุคคล (Push) หรือส่งหานักเรียนทุกคน (Broadcast)
+                    <div class="info-box">
+                        🔒 Channel Access Token ต้องอยู่ใน Apps Script Script Properties เท่านั้น
+                        การทดสอบและการส่งข้อความต้องทำผ่านฟังก์ชันฝั่ง server ที่ตรวจสิทธิ์แล้ว
                     </div>
-                    <div class="form-group">
-                        <label class="form-label">Channel Access Token (Long-lived)</label>
-                        <input type="password" class="form-input" id="setting-line-channel-token"
-                            placeholder="วาง Channel Access Token จาก LINE Developers Console">
-                        <div class="form-hint">รับได้ที่ LINE Developers → Messaging API → Channel access token</div>
-                    </div>
-                    <button class="btn btn-outline btn-sm" onclick="testLineMessagingApi()">🧪 ทดสอบส่ง Flex Message (Broadcast)</button>
                 </div>
 
                 <!-- Save Button -->
@@ -231,190 +145,36 @@
     <script src="data/students_data.js?v=3580"></script>
     <script src="data/deeds_data.js?v=3580"></script>
     <script src="data/app_settings.js?v=3580"></script>
-  <script src="app.js?v=3580"></script>
+  <script src="app.js?v=20260919-auth-boundary"></script>
     <script>
         function init() {
             const currentUser = App.requireAuth(['admin']);
             if (!currentUser) return;
-            const settings = App.getSettings();
-            document.getElementById('setting-token').value = settings.telegramToken || '';
-            document.getElementById('setting-admin-chat').value = settings.adminChatId || '';
-            document.getElementById('setting-line-token').value = settings.lineNotifyToken || '';
+            const settings = { ...App.getSettings() };
+            // Remove browser-resident provider credentials left by older releases.
+            delete settings.telegramToken;
+            delete settings.adminChatId;
+            delete settings.lineNotifyToken;
+            delete settings.lineChannelToken;
+            App.saveSettings(settings);
+            App.saveStaffAccounts([]);
             document.getElementById('setting-min-hours').value = settings.minHours || 36;
             document.getElementById('setting-year').value = settings.academicYear || 2569;
             document.getElementById('setting-gas-url').value = settings.gasUrl || '';
             document.getElementById('setting-liff-id').value = settings.liffId || localStorage.getItem('gooddeeds_liff_id') || '';
-            document.getElementById('setting-line-channel-token').value = settings.lineChannelToken || '';
-            renderStaffAccounts();
-        }
-
-        function renderStaffAccounts() {
-            const rows = document.getElementById('extra-staff-rows');
-            const extra = Storage.get('staff_accounts') || [];
-            rows.innerHTML = extra.map((account, index) => `
-                <tr>
-                    <td><code>${account.username}</code></td>
-                    <td><span class="badge ${account.role === 'admin' ? 'badge-gold' : 'badge-blue'}">${account.role === 'admin' ? 'Admin' : 'Teacher'}</span></td>
-                    <td>
-                        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-                            <span>${account.name || account.username}</span>
-                            <button class="btn btn-danger btn-sm" onclick="removeStaffAccount(${index})">ลบ</button>
-                        </div>
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function addStaffAccount() {
-            const username = document.getElementById('staff-username').value.trim();
-            const password = document.getElementById('staff-password').value;
-            const name = document.getElementById('staff-name').value.trim();
-            const role = document.getElementById('staff-role').value;
-            if (!username || !password) {
-                showToast('กรุณากรอกชื่อผู้ใช้และรหัสผ่าน', 'warning');
-                return;
-            }
-            const result = App.addStaffAccount({ username, password, name, role });
-            if (!result.success) {
-                showToast(result.message || 'ไม่สามารถเพิ่มบัญชีได้', 'error');
-                return;
-            }
-            document.getElementById('staff-username').value = '';
-            document.getElementById('staff-password').value = '';
-            document.getElementById('staff-name').value = '';
-            document.getElementById('staff-role').value = 'teacher';
-            renderStaffAccounts();
-            showToast('เพิ่มบัญชีเรียบร้อย ✅', 'success');
-        }
-
-        function removeStaffAccount(index) {
-            const extra = Storage.get('staff_accounts') || [];
-            extra.splice(index, 1);
-            App.saveStaffAccounts(extra);
-            renderStaffAccounts();
-            showToast('ลบบัญชีแล้ว', 'info');
         }
 
         function saveSettings() {
             const s = {
-                telegramToken: document.getElementById('setting-token').value.trim(),
-                adminChatId: document.getElementById('setting-admin-chat').value.trim(),
-                lineNotifyToken: document.getElementById('setting-line-token').value.trim(),
                 minHours: parseInt(document.getElementById('setting-min-hours').value) || 36,
                 academicYear: parseInt(document.getElementById('setting-year').value) || 2569,
                 gasUrl: document.getElementById('setting-gas-url').value.trim(),
-                liffId: document.getElementById('setting-liff-id').value.trim(),
-                lineChannelToken: document.getElementById('setting-line-channel-token').value.trim(),
+                liffId: document.getElementById('setting-liff-id').value.trim()
             };
             if (s.liffId) localStorage.setItem('gooddeeds_liff_id', s.liffId);
             App.saveSettings(s);
             CONFIG.MIN_HOURS_PER_YEAR = s.minHours;
             showToast('บันทึกการตั้งค่าสำเร็จ ✅', 'success');
-        }
-
-        async function testTelegram() {
-            const token = document.getElementById('setting-token').value.trim();
-            const chatId = document.getElementById('setting-admin-chat').value.trim();
-            if (!token || !chatId) { showToast('กรุณากรอก Token และ Chat ID ก่อน', 'warning'); return; }
-            App.saveSettings({ ...App.getSettings(), telegramToken: token, adminChatId: chatId });
-            const ok = await App.sendTelegram(chatId, `🧪 <b>ทดสอบการแจ้งเตือน</b>\nระบบบันทึกความดี วพอ.พอ. ✅`);
-            if (ok) showToast('ส่งข้อความ Telegram สำเร็จ! 🎉', 'success');
-            else showToast('ไม่สามารถส่งได้ — ตรวจสอบ Token และ Chat ID', 'error');
-        }
-
-        async function testLine() {
-            const token = document.getElementById('setting-line-token').value.trim();
-            if (!token) { showToast('กรุณากรอก LINE Notify Token ก่อน', 'warning'); return; }
-            App.saveSettings({ ...App.getSettings(), lineNotifyToken: token });
-            const ok = await App.sendLineNotify('\n🧪 ทดสอบ LINE Notify\nระบบบันทึกความดี วพอ.พอ. ✅');
-            if (ok) showToast('ส่ง LINE Notify สำเร็จ! 🎉', 'success');
-            else showToast('ไม่สามารถส่งได้ — ตรวจสอบ Token (CORS อาจบล็อกจาก browser)', 'error');
-        }
-
-        async function testLineMessagingApi() {
-            const token = document.getElementById('setting-line-channel-token').value.trim();
-            if (!token) { showToast('กรุณากรอก Channel Access Token ก่อน', 'warning'); return; }
-            App.saveSettings({ ...App.getSettings(), lineChannelToken: token });
-
-            showToast('กำลังส่งทดสอบ Flex Message...', 'info');
-            try {
-                const flexPayload = {
-                    type: "flex",
-                    altText: "🧪 ทดสอบระบบส่งข้อความ LINE Flex Message วพอ.พอ.",
-                    contents: {
-                        type: "bubble",
-                        size: "mega",
-                        header: {
-                            type: "box",
-                            layout: "vertical",
-                            backgroundColor: "#0a192f",
-                            paddingAll: "20px",
-                            contents: [
-                                { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
-                                { type: "text", text: "🧪 ทดสอบการเชื่อมต่อ LINE OA", color: "#ffffff", size: "md", weight: "bold", margin: "xs" }
-                            ]
-                        },
-                        body: {
-                            type: "box",
-                            layout: "vertical",
-                            contents: [
-                                { type: "text", text: "ข้อความนี้ถูกส่งจากระบบบันทึกความดีจิตอาสา วพอ.พอ. ปีการศึกษา 2569", size: "sm", color: "#111111", wrap: true },
-                                { type: "separator", margin: "lg" },
-                                {
-                                    type: "box",
-                                    layout: "horizontal",
-                                    margin: "lg",
-                                    contents: [
-                                        {
-                                            type: "box",
-                                            layout: "vertical",
-                                            contents: [
-                                                { type: "text", text: "สถานะการเชื่อมต่อ", size: "xs", color: "#888888" },
-                                                { type: "text", text: "✅ เชื่อมต่อสำเร็จ", size: "sm", weight: "bold", color: "#22c55e" }
-                                            ]
-                                        }
-                                    ]
-                                }
-                            ]
-                        },
-                        footer: {
-                            type: "box",
-                            layout: "vertical",
-                            contents: [
-                                {
-                                    type: "button",
-                                    action: {
-                                        type: "uri",
-                                        label: "🌐 เปิดเข้าระบบบันทึกความดี",
-                                        uri: "https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html"
-                                    },
-                                    style: "primary",
-                                    color: "#0a192f"
-                                }
-                            ]
-                        }
-                    }
-                };
-
-                const resp = await fetch('https://api.line.me/v2/bot/message/broadcast', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify({ messages: [flexPayload] })
-                });
-
-                if (resp.ok) {
-                    showToast('🎉 ส่งทดสอบ LINE Flex Message สำเร็จเรียบร้อย!', 'success');
-                } else {
-                    const err = await resp.json().catch(() => ({}));
-                    showToast(`⚠️ LINE API แจ้งเตือน: ${err.message || resp.statusText}`, 'error');
-                }
-            } catch (e) {
-                console.error('Test Line OA error:', e);
-                showToast('🚀 สั่งส่งข้อมูลไปยัง LINE Official Account เรียบร้อย!', 'success');
-            }
         }
 
         function resetSettings() {
