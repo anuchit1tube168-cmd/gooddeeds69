@@ -10,7 +10,7 @@
  */
 
 const GD = Object.freeze({
-  VERSION: '2.3.3-telegram-repair',
+  VERSION: '2.3.5-secure-telegram-dispatch',
   CHANNEL: 'RTAFNC_GOODDEED',
   DEFAULT_ORIGIN: 'https://anuchit1tube168-cmd.github.io',
   SESSION_TTL: 21600,
@@ -70,6 +70,10 @@ function dispatch_(action, payload, token, requestId) {
   if (action === 'getEvidence') return getEvidence_(session, payload, requestId);
   if (action === 'listMembers') return listMembers_(session);
   if (action === 'createMember') return createMember_(session, payload, requestId);
+  if (action === 'testTelegram') {
+    if (session.role !== 'admin') throw new Error('ไม่มีสิทธิ์ทดสอบการแจ้งเตือน');
+    return testTelegramNotification();
+  }
   throw new Error('ไม่รู้จักคำสั่งที่ส่งมา');
 }
 
@@ -163,7 +167,7 @@ function testLinePushToStudent(studentId) {
 
 /** Admin/editor utility: validate Telegram bot credentials and send one test message. */
 function testTelegramNotification() {
-  // Editor-only smoke test: one labelled message, no deed or account mutation.
+  // One labelled message, no deed or account mutation. The Web App route is admin-only.
   // Do not require evidence-folder/password setup merely to diagnose Telegram.
   const props = PropertiesService.getScriptProperties();
   const token = props.getProperty('TELEGRAM_BOT_TOKEN');
