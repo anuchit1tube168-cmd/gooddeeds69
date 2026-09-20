@@ -11,6 +11,8 @@
  */
 
 // ==================== CONFIGURATION ====================
+const GAS_BUILD_ID = 'gooddeeds69-20260920-post-probe-v1';
+
 const CONFIG = {
   MIN_HOURS_SEMESTER: 25,
   MIN_HOURS_YEAR: 50,
@@ -104,6 +106,8 @@ function doGet(e) {
         service: 'rtafnc-gooddeeds-legacy-gas',
         message: 'GoodDeeds 69 Cloud Engine Active 🟢',
         productionWriteEnabled: productionWritesEnabled(),
+        buildId: GAS_BUILD_ID,
+        postProbeSupported: true,
         time: new Date().toISOString()
       });
     }
@@ -130,6 +134,17 @@ function doPost(e) {
     data = JSON.parse(e.postData.contents);
   } catch (err) {
     data = e.parameter || {};
+  }
+
+  // Safe deployment probe: proves this deployed revision accepts POST without any data write.
+  if (data && data.action === 'deploymentProbe') {
+    return jsonResponse({
+      status: 'success',
+      service: 'rtafnc-gooddeeds-legacy-gas',
+      buildId: GAS_BUILD_ID,
+      productionWriteEnabled: productionWritesEnabled(),
+      time: new Date().toISOString()
+    });
   }
 
   // Handle Telegram Interactive Inline Callback Buttons
