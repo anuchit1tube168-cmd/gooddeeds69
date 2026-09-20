@@ -217,6 +217,27 @@
     const originalGetAllPending = App.getAllPendingDeeds ? App.getAllPendingDeeds.bind(App) : () => [];
     const originalGetAllSummary = App.getAllStudentsSummary ? App.getAllStudentsSummary.bind(App) : () => [];
 
+    App.loginStudentWithLine = async function() {
+      clearV2(); const current = gasEpoch;
+      try {
+        const idToken = await lineIdToken();
+        if (current !== gasEpoch) throw new Error('REQUEST_CANCELLED');
+        if (!idToken) throw new Error('กรุณาเปิดระบบผ่าน LINE และเข้าสู่บัญชี LINE ก่อน');
+        const data = await gasCall('loginWithLine', { idToken }, '');
+        if (typeof data.sessionToken !== 'string' || !data.sessionToken || !data.user || data.user.role !== 'student' || !/^\d{7}$/.test(String(data.user.studentId || ''))) {
+          throw new Error('บัญชี LINE นี้ไม่ใช่บัญชีนักเรียนที่พร้อมใช้งาน');
+        }
+        if (current !== gasEpoch) throw new Error('REQUEST_CANCELLED');
+        if (data.user.mustChangePassword) throw new Error('บัญชีนี้ต้องตั้งรหัสผ่านใหม่ กรุณาใช้รหัสชั่วคราวที่ได้รับจากผู้ดูแล');
+        setToken(data.sessionToken);
+        const user = normalizeUser(data.user); App.setSession('student', user);
+        return { success: true, user };
+      } catch (e) {
+        if (current === gasEpoch) clearV2();
+        return { success: false, message: e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบด้วย LINE ไม่สำเร็จ' };
+      }
+    };
+
     App.loginStudent = async function(studentId, password) {
       const sid = String(studentId || '').replace(/\D/g, '');
       if (!/^\d{7}$/.test(sid)) return { success: false, message: 'รหัสนักเรียนต้องเป็นตัวเลข 7 หลัก' };
