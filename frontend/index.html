@@ -340,6 +340,11 @@
                     <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
                         วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
                     </div>
+                    <button type="button" class="btn btn-full btn-sm" id="btn-line-login"
+                        onclick="handleLineLogin()"
+                        style="background:#06c755; color:#ffffff; font-weight:700; margin-bottom:8px;">
+                        <span>LINE</span> เข้าสู่ระบบด้วย LINE ที่ผูกแล้ว
+                    </button>
                     <a href="https://line.me/R/ti/p/@586diwio" target="_blank" class="btn btn-full btn-sm" style="background:#06c755; color:#ffffff; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:8px; padding:10px;">
                         <span>💬</span> ติดต่อ LINE OA: @586diwio
                     </a>
@@ -444,7 +449,7 @@
     <script src="data/app_settings.js?v=3593"></script>
     <script src="app.js?v=20260919-auth-boundary"></script>
     <script src="gateway-config.js?v=20260919-login-guard"></script>
-  <script src="gateway-client.js?v=20260915-repair"></script>
+  <script src="gateway-client.js?v=20260920-line-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
     <script>
         // Tab switch
@@ -475,6 +480,27 @@
         function showForgotPasswordHelp(e) {
             if (e) e.preventDefault();
             showAlert('กรุณาติดต่อผู้ดูแลเพื่อยืนยันตัวตนและตั้งรหัสผ่านใหม่');
+        }
+
+        async function handleLineLogin() {
+            hideAlert();
+            const btn = document.getElementById('btn-line-login');
+            if (typeof liff !== 'undefined' && liff.isLoggedIn && !liff.isLoggedIn()) {
+                liff.login();
+                return;
+            }
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> กำลังตรวจสอบ LINE...';
+            try {
+                const result = await App.loginStudentWithLine();
+                if (!result.success) throw new Error(result.message || 'เข้าสู่ระบบด้วย LINE ไม่สำเร็จ');
+                showToast('เข้าสู่ระบบด้วย LINE สำเร็จ 🎉', 'success');
+                setTimeout(() => window.location.href = 'student-dashboard.html', 500);
+            } catch (error) {
+                showAlert(error.message || 'เข้าสู่ระบบด้วย LINE ไม่สำเร็จ');
+                btn.disabled = false;
+                btn.innerHTML = '<span>LINE</span> เข้าสู่ระบบด้วย LINE ที่ผูกแล้ว';
+            }
         }
 
         async function handleLogin(e, role) {
