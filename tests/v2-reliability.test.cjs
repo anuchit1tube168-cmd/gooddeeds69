@@ -32,6 +32,19 @@ function client(respond) {
 }
 const login = (mustChangePassword=false) => ({sessionToken:'synthetic-session',user:{role:'student',studentId:sid,mustChangePassword}});
 
+test('a previously linked student can login with a verified LINE token without a password',async()=>{
+  const c=client((f,r)=>{ assert.equal(f.action,'loginWithLine');assert.equal(f.payload.includes('synthetic-id-token'),true);r(login()); });
+  c.context.liff={ready:Promise.resolve(),isLoggedIn:()=>true,getIDToken:()=>'synthetic-id-token'};
+  const result=await c.app.loginStudentWithLine();
+  assert.equal(result.success,true);assert.equal(c.requests.length,1);assert.equal(c.saved.length,1);
+});
+test('LINE-only login never falls back to a password or binding action',async()=>{
+  const c=client((f,r)=>r('บัญชี LINE นี้ยังไม่ผูกกับนักเรียน',false));
+  c.context.liff={ready:Promise.resolve(),isLoggedIn:()=>true,getIDToken:()=>'synthetic-id-token'};
+  const result=await c.app.loginStudentWithLine();
+  assert.equal(result.success,false);assert.deepEqual(c.requests.map(x=>x.action),['loginWithLine']);assert.equal(c.saved.length,0);
+});
+
 test('login returns without waiting for a separate deed read',async()=>{
   const c=client((f,r)=>r(login()));
   assert.equal((await c.app.loginStudent(sid,'synthetic')).success,true);
