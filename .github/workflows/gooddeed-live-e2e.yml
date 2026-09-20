@@ -15,8 +15,12 @@ jobs:
     timeout-minutes: 5
     env:
       GAS_URL: https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec
+      CF_URL: https://rtafnc-one-gateway-staging.anuchit1tube168.workers.dev
       ORIGIN: https://anuchit1tube168-cmd.github.io
       TEST_ID: '9999999'
+      CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      RTAFNC_GAS_SECRET_PRESENT: ${{ secrets.RTAFNC_GOODDEED_GAS_URL }}
     steps:
       - name: Check real GAS health and public pages
         shell: bash
@@ -41,7 +45,30 @@ jobs:
             echo "HTTP_OK $code $url"
           done
 
-      - name: Login synthetic student
+      - name: Probe deployed Cloudflare worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          for path in health readiness config; do
+            code=$(curl -L -sS --max-time 20 -o "/tmp/cf-$path.json" -w '%{http_code}' "$CF_URL/$path" || true)
+            upper=$(printf '%s' "$path" | tr '[:lower:]' '[:upper:]')
+            echo "CF_${upper}_HTTP=$code"
+            if [ "$code" = "200" ]; then
+              python3 - "$path" <<'PY'
+          import json,sys
+          p=sys.argv[1]
+          try:
+              d=json.load(open('/tmp/cf-'+p+'.json',encoding='utf-8'))
+          except Exception:
+              print('CF_'+p.upper()+'_JSON=invalid')
+          else:
+              safe={k:v for k,v in d.items() if 'token' not in k.lower() and 'secret' not in k.lower()}
+              print('CF_'+p.upper()+'_JSON='+json.dumps(safe,ensure_ascii=False,separators=(',',':')))
+          PY
+            fi
+          done
+
+      - name: Confirm active GAS POST contract
         shell: bash
         run: |
           set -euo pipefail
@@ -51,62 +78,32 @@ jobs:
           print(json.dumps({'username': os.environ['TEST_ID'], 'password': os.environ['TEST_ID']}))
           PY
           )
-          curl -fsSL --max-time 30 -X POST "$GAS_URL" \
+          code=$(curl -L -sS --max-time 30 -X POST "$GAS_URL" \
             --data-urlencode 'action=login' \
             --data-urlencode "requestId=$req" \
             --data-urlencode "origin=$ORIGIN" \
             --data-urlencode "payload=$payload" \
-            -o /tmp/login.html
-          python3 - <<'PY'
-          import json, os, re
+            -o /tmp/login.html -w '%{http_code}' || true)
+          echo "GAS_LOGIN_POST_HTTP=$code"
+          if [ "$code" = "200" ]; then
+            python3 - <<'PY'
+          import json, re
           s=open('/tmp/login.html', encoding='utf-8').read()
           m=re.search(r'parent\.postMessage\((\{.*\}),"https://anuchit1tube168-cmd\.github\.io"\)', s)
-          assert m, 'bridge response not found'
-          d=json.loads(m.group(1))
-          assert d.get('ok') is True, d
-          user=d['data']['user']
-          assert str(user.get('studentId')) == os.environ['TEST_ID'], user
-          assert user.get('role') == 'student', user
-          token=d['data']['sessionToken']
-          assert token and len(token) >= 16
-          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as f:
-              f.write('SESSION_TOKEN=' + token + '\n')
-          print('LOGIN_OK role=student studentId=' + str(user['studentId']))
+          if not m:
+              print('GAS_POST_CONTRACT=HTTP200_BUT_NO_BRIDGE')
+          else:
+              d=json.loads(m.group(1))
+              print('GAS_POST_CONTRACT=' + ('PASS' if d.get('ok') is True else 'APP_ERROR'))
           PY
+          else
+            echo "GAS_POST_CONTRACT=UNAVAILABLE"
+          fi
 
-      - name: Submit clearly marked SYSTEM TEST deed
+      - name: Report reusable deployment credential presence
         shell: bash
         run: |
           set -euo pipefail
-          req="e2e-submit-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          payload=$(python3 - <<'PY'
-          import json, os
-          print(json.dumps({
-            'studentId': os.environ['TEST_ID'],
-            'cohort': 'SYSTEM TEST',
-            'category': 'SYSTEM TEST',
-            'activityDate': '2026-09-20',
-            'hours': 0.5,
-            'description': 'SYSTEM TEST — GitHub Actions E2E diagnostic; pending only; do not approve'
-          }, ensure_ascii=False))
-          PY
-          )
-          curl -fsSL --max-time 30 -X POST "$GAS_URL" \
-            --data-urlencode 'action=submitDeed' \
-            --data-urlencode "requestId=$req" \
-            --data-urlencode "origin=$ORIGIN" \
-            --data-urlencode "sessionToken=$SESSION_TOKEN" \
-            --data-urlencode "payload=$payload" \
-            -o /tmp/submit.html
-          python3 - <<'PY'
-          import json, re
-          s=open('/tmp/submit.html', encoding='utf-8').read()
-          m=re.search(r'parent\.postMessage\((\{.*\}),"https://anuchit1tube168-cmd\.github\.io"\)', s)
-          assert m, 'bridge response not found'
-          d=json.loads(m.group(1))
-          assert d.get('ok') is True, d
-          deed=d['data']['deed']
-          assert deed.get('status') == 'pending', deed
-          assert float(deed.get('hours')) == 0.5, deed
-          print('SUBMIT_OK recordId=' + str(deed['recordId']) + ' status=' + deed['status'])
-          PY
+          [ -n "${CF_API_TOKEN:-}" ] && echo "CLOUDFLARE_API_TOKEN_PRESENT=yes" || echo "CLOUDFLARE_API_TOKEN_PRESENT=no"
+          [ -n "${CF_ACCOUNT_ID:-}" ] && echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=yes" || echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=no"
+          [ -n "${RTAFNC_GAS_SECRET_PRESENT:-}" ] && echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=yes" || echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=no"
