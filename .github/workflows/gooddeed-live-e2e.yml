@@ -21,6 +21,12 @@ jobs:
       CF_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CF_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       RTAFNC_GAS_SECRET_PRESENT: ${{ secrets.RTAFNC_GOODDEED_GAS_URL }}
+      CLASP_TOKEN_PRESENT: ${{ secrets.CLASP_TOKEN }}
+      CLASP_CREDENTIALS_PRESENT: ${{ secrets.CLASP_CREDENTIALS }}
+      CLASPRC_JSON_PRESENT: ${{ secrets.CLASPRC_JSON }}
+      APPS_SCRIPT_ID_PRESENT: ${{ secrets.APPS_SCRIPT_ID }}
+      GOOGLE_SCRIPT_ID_PRESENT: ${{ secrets.GOOGLE_SCRIPT_ID }}
+      GAS_SCRIPT_ID_PRESENT: ${{ secrets.GAS_SCRIPT_ID }}
     steps:
       - name: Check real GAS health and public pages
         shell: bash
@@ -138,3 +144,9 @@ jobs:
           [ -n "${CF_API_TOKEN:-}" ] && echo "CLOUDFLARE_API_TOKEN_PRESENT=yes" || echo "CLOUDFLARE_API_TOKEN_PRESENT=no"
           [ -n "${CF_ACCOUNT_ID:-}" ] && echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=yes" || echo "CLOUDFLARE_ACCOUNT_ID_PRESENT=no"
           [ -n "${RTAFNC_GAS_SECRET_PRESENT:-}" ] && echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=yes" || echo "RTAFNC_GOODDEED_GAS_URL_PRESENT=no"
+          [ -n "${CLASP_TOKEN_PRESENT:-}" ] && echo "CLASP_TOKEN_PRESENT=yes" || echo "CLASP_TOKEN_PRESENT=no"
+          [ -n "${CLASP_CREDENTIALS_PRESENT:-}" ] && echo "CLASP_CREDENTIALS_PRESENT=yes" || echo "CLASP_CREDENTIALS_PRESENT=no"
+          [ -n "${CLASPRC_JSON_PRESENT:-}" ] && echo "CLASPRC_JSON_PRESENT=yes" || echo "CLASPRC_JSON_PRESENT=no"
+          [ -n "${APPS_SCRIPT_ID_PRESENT:-}" ] && echo "APPS_SCRIPT_ID_PRESENT=yes" || echo "APPS_SCRIPT_ID_PRESENT=no"
+          [ -n "${GOOGLE_SCRIPT_ID_PRESENT:-}" ] && echo "GOOGLE_SCRIPT_ID_PRESENT=yes" || echo "GOOGLE_SCRIPT_ID_PRESENT=no"
+          [ -n "${GAS_SCRIPT_ID_PRESENT:-}" ] && echo "GAS_SCRIPT_ID_PRESENT=yes" || echo "GAS_SCRIPT_ID_PRESENT=no"
