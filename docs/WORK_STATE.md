@@ -1,3 +1,78 @@
+# Runtime source reconciliation and Telegram dispatch — 2026-09-20
+
+Owner asked to continue the live login → submit → notify → review repair and authorized testing, while explicitly prohibiting reuse of old tokens or credentials. The supplied Drive folder `1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx` was inspected read-only. Its own `PROJECT_MAP_2569_ระบบบันทึกความดี` identifies it as the legacy Git snapshot and points to current secure/V2 workspace `1oXiv8XNPcjpenZrPb3ik6yPPFNj25SwG`. The connected V2 workbook `1BV-TaZqTCXD-UerIjLLh93MPQwlIe4dzNpPimQZzOLE` exists and its `MembersV2`, `GoodDeedRecordsV2` and `AuditTrailV2` headers match the reviewed CodeV2 contract. This confirms storage shape only; it does not identify the active Apps Script deployment.
+
+Compared private Drive `CodeV2.gs` version `2.3.4-telegram-dispatch-fix` with the reviewed PR source. The Drive revision added the missing `testTelegram` dispatch but also dropped comma handling from CSV escaping. Reconciled only the valid change into version `2.3.5-secure-telegram-dispatch`: an authenticated server session is required, only `admin` may invoke the Web App test action, the test still validates `getMe` before exactly one labelled `sendMessage`, and the existing safe CSV/password/unknown-delivery behavior remains intact. No provider secret, real account or student row was read or changed.
+
+The admin settings page now loads the V2 client and exposes a server-only Telegram test button. It sends only the authenticated `testTelegram` action, accepts no provider credential in the browser and reports only bounded delivery states. Verification after reconciliation: syntax PASS; JavaScript **166/166**; Python **23/23**. The six changed paths contain no new credential or personal-data literals under the existing guard rules. A repo-wide `full` guard remains blocked by inherited fixtures already present outside this change, so it is not reported as a clean production-history result. A fresh read-only health request to the public Apps Script `/exec` timed out before an HTTP response in this environment. Earlier Google sign-in attempts already returned `502`, so the same blocked browser path was not repeated. No Apps Script editor, Script Property, deployment, real login, deed, review or Telegram message was changed or exercised.
+
+Runtime remains blocked at the provider boundary. Update the verified existing Apps Script project in place with the reviewed CodeV2 source, preserve the existing `/exec`, set only new server-side `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`, then run `testTelegramNotification()` and require both `{ok:true,status:'sent',stage:'sendMessage'}` and the actual labelled group receipt. Do not run `setupSystem()`, `bootstrapOwnerAdmin()` or migration. Continue with one controlled account through login → one deed → one notification → assigned-scope review → student refresh → audit and official-total reconciliation. Production write/cutover remains FALSE until that evidence exists.
+
+Private aggregate-only workbook inspection found the immediate account blocker: `MembersV2` has 254 student rows (252 active), zero teacher/admin rows, zero complete password credentials and 23 existing LINE bindings. `GoodDeedRecordsV2` has 16 approved and 2 pending rows, with the latest submission at 2026-09-02T16:16:46Z; `AuditTrailV2` has no recorded action/time. No identity, hash or LINE ID was printed. The frontend now offers a dedicated LINE login that calls only `loginWithLine`; it never falls back to password/binding. This can recover access for already-bound students after the correct V2 deployment is active. Unbound students still require newly issued unique credentials or another verified ownership flow; student ID must not become a password. Current local verification: syntax PASS, JavaScript **168/168**, Python **23/23**.
+
+---
+
+# Login/Telegram recovery continuation — 2026-09-19
+
+Owner authorized repair using the new version and explicitly prohibited copying old tokens, passwords or secrets. Current GitHub `main` was rechecked at `9301711979a3c6495111592447b6a7d8ccd11518`; draft PR #5 remains at `f31f3c451b51172d8da6f6270931615bc29682d7` and is eight commits behind main. The canonical private Drive root remains `1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx`.
+
+Live public-page evidence reproduced a new login blocker in `frontend/gateway-config.js`: the guard IIFE accepted `root` but was invoked with no argument. At page load it threw `TypeError: Cannot read properties of undefined (reading 'addEventListener')`, so the safety/UI guard stopped and the live form retained legacy password hints. The repair invokes the guard with the actual browser window, keeps the secure V2 path fail-closed, clears old hints and bumps the HTML cache key. Two regression tests prove the guard executes and does not replace a healthy V2 client.
+
+The production Apps Script URL could not be inspected from the current cloud browser (`ERR_BLOCKED_BY_CLIENT` on the redirected Google content page). Opening the verified spreadsheet reached Google sign-in but returned a provider `502 Bad Gateway`, so no Apps Script editor, Script Properties or deployment was changed. This is not evidence that Google or the deployment is down. No live credential was entered, no token was read, and no data/setup/migration function was run.
+
+Verification after the source repair: JavaScript **161/161**, Python **23/23**, syntax PASS. These are local synthetic/static checks only. The known September 16 runtime mismatch still requires the existing Apps Script Web App deployment to be updated in place: GET health must identify V2 and invalid POST login must return an application response rather than HTTP 405. New server-side values for `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` must be provisioned privately; absence must remain `not_configured`. Do not migrate legacy tokens or expose values in GitHub/chat.
+
+Next runtime sequence: update the existing Web App version while preserving its `/exec` URL and without `setupSystem()`/`bootstrapOwnerAdmin()`, run `testTelegramNotification()`, then one controlled login → deed submit → Telegram receipt → scoped review → student refresh → audit/reconciliation. Stop at the first failure and do not bulk retry a deed after an unknown notification result.
+
+---
+
+# Owner-provided actual source reconciliation — 2026-09-16
+
+Owner identified the original Drive source folder. Its release-handoff subfolder contains `CodeV2_2.3.2-login-sync-hotfix_20260915.gs`. This is concrete source evidence, not proof of installed deployment. Although the folder's September 5 README calls it a legacy snapshot, the September 15 handoff is newer and was inspected directly.
+
+Reconciled backend/CodeV2.gs with that handoff, versioned the proposed patch as 2.3.3-telegram-repair, preserved the existing Telegram editor smoke-test and review-notification feature, and repaired their result reporting. The smoke test now checks getMe API success and bot identity before one labelled message, uses the same repaired sender, and does not require unrelated business-storage setup or mutate student data.
+
+The handoff also regressed half-hour/student-ID validation, owner-bound deduplication and repeated-review invariants, and introduced password bootstrap from a student number without forced change. Retained the already-reviewed storage invariants and made the retained credential helper verify existing credentials only; missing credentials require authorized recovery. No passwords, official hours or actual accounts were changed.
+
+Verification: JS 159/159; syntax PASS; PII guard before publication. Python unchanged from 23/23. Three new tests exercise the actual handoff smoke test and credential helper. The repaired source is saved as a separate file alongside the original release handoff, preserving the owner's original file. Neither Drive upload nor GitHub commit deploys Apps Script. The active editor/deployment and real group receipt remain unverified.
+
+Next operator action: in the verified active Apps Script project, compare/install this matching patch, run the existing testTelegramNotification function, inspect sanitized output and group receipt, then deploy a new version only after controlled UAT. Do not run setup/migration or infer deployment from a Drive timestamp.
+
+---
+
+# Telegram incident continuation — 2026-09-16
+
+Continue PR #5 from `1ebdab40dcaccd9b2d6732ede988fa9aff9e7ee2`. Main remains `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner explicitly requested fixing missing Telegram notifications.
+
+Live read-only evidence: located the existing RTAFNC ONE Good Deed workbook and the separate legacy official workbook through Drive. ConfigurationV2 declares systemVersion 2.5.0 and an unchanged-LIFF secure-pilot status; both main and its configured sourceCommit contain CodeV2 VERSION 2.3.1. These values do not identify the active Apps Script deployment. AuditTrailV2 action/time columns have no entries across their current 3000-row grid. No standalone Apps Script project was returned by the accessible Drive search; a container-bound project may still exist. No private cells, identities or service properties were published, and no workbook writes were made.
+
+Fixed the legacy sender as well as V2: return explicit delivery status, preserve numeric API error/retry-after values, never reflect raw Telegram descriptions or token-bearing exceptions. Legacy submission now returns notification status separately from persistence success. Legacy messages use plain, short, non-personal text and a URL button to authenticated teacher review; this avoids invalid user-authored HTML and oversized callback payloads. Existing historical callback handlers remain unchanged, but new legacy notifications do not offer quick callback approval. V2 remains URL-button only. This is a deliberate notification repair, not a completed approval integration or permission grant.
+
+Verification: JS 156/156, syntax PASS. Three new tests cover both sender diagnostics and legacy missing-config/network failures; previous persistence/deduplication tests still pass. Python was unchanged since its 23/23 pass. No live send, getMe, webhook change, deployed script edit or source merge occurred. Provider sendMessage requires API ok=true; retry_after is a wait hint, not permission to resend an uncertain message.
+
+Next external dependency: identify the bound Apps Script project through Extensions > Apps Script in the existing workbook, inspect the deployed code/version and Script Properties without exposing values, then apply only the matching sender changes to a verified staging deployment. Run a labelled test notice, check delivery acceptance and group receipt, then submit one synthetic deed and inspect audit/approval/official-total reconciliation. Do not bulk retry historical events or replace a possibly newer script with the repository snapshot.
+
+---
+
+# Incident repair continuation — 2026-09-15
+
+Draft PR #5, parent `b97a742a0c87c17894112d39647e4838f0eaaab4`; main rechecked at `70aa2472ecbc75bee1f1311e22c3646341955ee8`. Owner authorized repair. Isolated partial checkout: publish only reviewed blobs on the remote parent tree.
+
+KEEP: current GAS V2 transport, existing gateway interface, ledger schema and LIFF endpoint. IMPROVE: bounded login, first-password-change flow, cancellation isolation, student refresh events, delivery status and fractional hours. REPLACE: reintroduced browser-claimed Python authorization with the prior static-preview boundary. MISSING: confirmed deployed GAS version, transport/browser E2E, server assigned scope, signature/review journal and official-total reconciliation.
+
+- Login no longer waits for a second deed-list call or silently retries password login after LINE binding failure. First-login password change has its own page, then requires login again. Pending requests are cancelled on clear/logout; replies require the expected frame, allowed Google origin and random request identity.
+- Student reads emit `deeds_updated`; malformed list responses and cross-owner rows cannot overwrite the cache. Cohort is no longer guessed from student-number digits.
+- Telegram checks HTTP plus API success, returns sent/failed/unknown/not_configured, and records the result through the existing audit sheet. A URL button opens the teacher review page; this is not callback approval or evidence of working assigned-scope enforcement. Notification text omits student details. Ambiguous delivery is not retried automatically. Audit failure is explicitly marked in the response. No durable retry worker was added.
+- Failed notification does not erase a persisted deed. UI warns against duplicate submission. Existing request-ID deduplication is tested; uncertain browser resubmission across separate requests remains unresolved.
+- Half-hour display values remain fractional. Student dashboard now states its loaded-record totals are not certified totals including carry-forward. No Main_2569 recalculation or migration occurred.
+- Restored only Python auth/GET/POST/static-asset boundary sections, preserving unrelated upstream edits.
+
+Verification: syntax PASS; JavaScript 153/153 (10 new synthetic regression cases); Python 23/23. These tests do not establish deployed provider behavior. DOCX optional dependency pythainlp remains unavailable; document rendering was not tested. Current live integration remains BLOCKED by the previously observed Apps Script browser restriction; no bypass or new production write was attempted.
+
+Next: review the updated PR, identify actual Apps Script editor/deployment revision and run controlled staging login/password/read/Telegram/review/totals UAT. Do not cut over based on local tests. The earlier audit below and FINAL_AUDIT_20260915.md describe the baseline; this checkpoint supersedes their local test failures only.
+
+---
+
 # Glass publication preparation — 2026-09-15
 
 Owner explicitly requested applying the glass theme to the live system. Reverified main at 3c8f94ba; patch only adds presentation and documentation. Included actual .top-nav selector on teacher/ranking pages. Syntax passes; previous 143 JS tests passed. Rendered Chrome QA remains unavailable due tool request-header policy failure. Publish with fast-forward only; check Pages asset and HTML references after deployment. No database, account or provider endpoint changes.

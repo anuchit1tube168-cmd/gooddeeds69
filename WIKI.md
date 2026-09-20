@@ -1,3 +1,27 @@
+## อัปเดต 20 กันยายน 2569 — ชุดแก้ Telegram 2.3.5
+
+ตรวจโฟลเดอร์จริงแล้ว: ลิงก์ `1Y6n...` เป็น snapshot รุ่นเก่าตาม Project Map ส่วน V2 workspace ปัจจุบันคือ `1oXiv...` และสมุดงาน V2 มีหัวตารางตรงกับ `MembersV2`, `GoodDeedRecordsV2`, `AuditTrailV2` ที่โค้ดต้องใช้ การเห็นไฟล์หรือชีตเหล่านี้ยังไม่ใช่หลักฐานว่า Apps Script Web App ใช้ revision เดียวกัน
+
+ชุด `2.3.5-secure-telegram-dispatch` เพิ่มคำสั่ง `testTelegram` ที่ขาดหาย โดยอนุญาตเฉพาะ session ของ admin และยังตรวจ `getMe` ก่อนส่งข้อความทดสอบหนึ่งครั้ง หน้า Settings มีปุ่มทดสอบผ่าน V2 server แล้ว แต่ไม่รับ/อ่าน/แสดง token ใน browser ไม่ใช้ token เก่า และไม่แตะข้อมูลนักเรียน ผลตรวจ source: syntax ผ่าน, JavaScript **166/166**, Python **23/23** และไฟล์ที่แก้ไม่มี credential/ข้อมูลบุคคลใหม่ตามกฎตรวจเดิม (การสแกนทั้ง repo ยังพบ fixture เก่าที่อยู่นอกชุดแก้นี้)
+
+ขั้นตอนติดตั้งกับของจริง: เปิดสมุดงาน V2 ที่ยืนยันแล้ว → **ส่วนขยาย → Apps Script** → เทียบ project/deployment ก่อนวางเฉพาะ `CodeV2.gs` ชุดนี้ → ตั้งค่า token/chat ID ชุดใหม่ใน **Project Settings → Script Properties** → รัน `testTelegramNotification()` → ต้องเห็นทั้งผล `{ok:true,status:'sent',stage:'sendMessage'}` และข้อความทดสอบในกลุ่ม → **Deploy → Manage deployments → Edit → New version** โดยคง URL `/exec` เดิม ห้ามรัน `setupSystem()`, `bootstrapOwnerAdmin()` หรือ migration
+
+จากนั้นทดสอบบัญชีควบคุมเพียงหนึ่งบัญชีตามลำดับ: login → กรอกความดีหนึ่งรายการ → Telegram มาครั้งเดียว → ผู้ตรวจที่มีขอบเขตสิทธิ์อนุมัติ → นักเรียน refresh เห็นสถานะ → ตรวจ audit และยอดทางการไม่ซ้ำ หากผลแจ้งเตือนเป็น `unknown` ห้ามกดส่งรายการซ้ำ ให้ตรวจ receipt/log ก่อน
+
+ผลตรวจแบบนับจำนวนจาก V2 workbook: มีนักเรียน 254 บัญชี (active 252) แต่ไม่มี password credential ทั้ง 254 บัญชี, มี LINE ผูกแล้ว 23 บัญชี และไม่มี teacher/admin จึงยืนยันได้ว่าหน้ารหัสผ่านเดิมเข้าไม่ได้จริง ชุดแก้เพิ่มปุ่ม **เข้าสู่ระบบด้วย LINE ที่ผูกแล้ว** ซึ่งเรียก `loginWithLine` โดยตรงและไม่ย้อนกลับไปใช้รหัสผ่านหรือผูกบัญชีอัตโนมัติ สำหรับ 231 บัญชีที่ยังไม่ผูก LINE ต้องออก credential ใหม่แบบรายบุคคลหรือใช้ขั้นตอนยืนยันเจ้าของที่เชื่อถือได้ ห้ามใช้รหัสนักเรียนเป็นรหัสผ่าน
+
+---
+
+## กู้ระบบ Login และ Telegram — 19 กันยายน 2569
+
+พบข้อผิดพลาดจริงบนหน้าเว็บ: `gateway-config.js` เรียกตัว guard โดยไม่ส่ง `window` ทำให้สคริปต์หยุดและคำใบ้รหัสผ่านเก่ายังค้างอยู่ ชุดแก้เรียก guard ด้วย browser window, ล้างคำใบ้เก่า, คงการยืนยันตัวตน V2 แบบ fail-closed และเพิ่ม cache key ใหม่ ผล source test ผ่าน **161 JavaScript + 23 Python**
+
+ยังห้ามถือว่าระบบจริงผ่าน: Apps Script production ที่ตรวจเมื่อ 16 กันยายนตอบ POST login เป็น HTTP 405 และการเข้าหน้า editor รอบนี้ติด Google sign-in `502` จึงยังไม่ได้เปลี่ยน deployment หรือ Script Properties ใช้ token/chat ID ชุดใหม่ผ่าน Script Properties เท่านั้น ห้ามย้าย token เก่า ห้ามใส่ค่าใน GitHub/หน้าเว็บ/แชต และห้ามรัน setup/reset/migration กับชีตจริง
+
+ลำดับรับรองหลังอัปเดต Web App เดิม: V2 health → invalid login ไม่ใช่ 405 → บัญชีควบคุม login → ส่งความดีหนึ่งรายการ → Telegram มาครั้งเดียว → ผู้ตรวจที่มี scope อนุมัติ → นักเรียน refresh เห็นผล → ตรวจ audit และยอดไม่ซ้ำ
+
+---
+
 ## อัปเดตความต่อเนื่องของ session — 12 กันยายน 2569
 
 ผลรวมล่าสุด **143 JavaScript + 23 Python = 166 รายการผ่าน** รวมงาน readiness ที่เพิ่มมาล่าสุดแล้ว ออกจากระบบได้ระหว่างโหลดข้อมูลช้าและซ่อนข้อมูลทันที คำตอบเก่าจะไม่ย้อนกลับมาแสดง ส่วนคำเตือนข้อมูลไม่เป็นปัจจุบันจะคงอยู่แม้เปลี่ยนเมนู จนกว่าจะโหลดใหม่สำเร็จ
@@ -203,3 +227,16 @@ python3 scripts/verify_staging.py \
 ```
 
 The legacy GAS source identifies itself as `rtafnc-gooddeeds-legacy-gas`. The Worker health path/service must come from its verified contract; neither is invented by this script. URLs must use HTTPS without credentials/query/fragment. Exit zero means two matching read-only health observations; deployment ownership, active code version, bindings, persistence and E2E remain unverified. Output is sanitized and explicitly sets `deploymentVerified: false`. A mismatch is a failed observation, not a reason to weaken the checks or deploy another backend.
+
+
+## Telegram repair handoff — 2026-09-16
+
+Current repair source: draft PR #5. Not installed in Apps Script. The live workbook configuration says 2.5.0 while the referenced source says 2.3.1; identify the active editor and deployment before applying code.
+
+1. Open the existing Good Deed workbook, then **Extensions / ส่วนขยาย → Apps Script**. Record the editor URL and deployed version privately. Do not run setup/reset/migration.
+2. In that same project, check that Script Properties contain `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID`. Do not copy values into chat, GitHub or browser settings.
+3. Compare the active `notifyTelegram_` (V2) or `notifyTelegramNewDeed` (legacy) with the corresponding PR patch. These backends have competing entrypoints and must not be installed together.
+4. On the verified staging project, send a clearly labelled test notice to the authorized test destination. Inspect the sanitized result: `sent` requires HTTP acceptance and API success; `not_configured` requires server properties; `failed` includes numeric error details; `unknown` requires receipt/log reconciliation before a retry. `retryAfterSeconds` is a provider wait interval, not an automatic resend instruction.
+5. Verify group receipt, then one controlled submission. A saved deed stays saved even if notification fails; do not submit it again. New messages link to teacher review and require login; they do not grant approval rights or certify official hours.
+
+Contract reference: [Telegram request results](https://core.telegram.org/bots/api#making-requests) and [response parameters](https://core.telegram.org/bots/api#responseparameters). No real notification or account-secret validation has yet been performed in this incident session.

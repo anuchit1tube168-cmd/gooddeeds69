@@ -25,6 +25,12 @@ test('browser settings cannot collect or transmit provider credentials', () => {
   assert.doesNotMatch(appSource, /[A-Za-z0-9+/]{120,}={0,2}/);
 });
 
+test('admin Telegram test uses the authenticated V2 server action without browser secrets', () => {
+  assert.match(settingsSource, /gateway-client\.js\?v=20260920-telegram-dispatch/);
+  assert.match(settingsSource, /GoodDeedV2\.call\(['"]testTelegram['"],\s*\{\}\)/);
+  assert.doesNotMatch(settingsSource, /telegramToken\s*[:=]|adminChatId\s*[:=]/);
+});
+
 test('base authentication fails closed until the V2 client replaces it', async () => {
   const values = new Map();
   const storage = {
