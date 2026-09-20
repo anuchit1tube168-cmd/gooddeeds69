@@ -170,6 +170,14 @@ test('Telegram smoke test can diagnose missing config without initializing busin
   const b=backend(200,'',false);
   assert.equal(b.context.testTelegramNotification().status,'not_configured');assert.equal(b.sends.length,0);
 });
+test('Telegram smoke test Web App action is restricted to an authenticated admin',()=>{
+  const b=backend(200,'{"ok":true,"result":{"is_bot":true,"message_id":1}}');
+  b.context.testTelegramNotification=()=>({ok:true,status:'sent',stage:'sendMessage'});
+  b.context.requireSession_=()=>({role:'teacher',mustChangePassword:false});
+  assert.throws(()=>b.context.dispatch_('testTelegram',{},'teacher-session','synthetic-request'),/ไม่มีสิทธิ์/);
+  b.context.requireSession_=()=>({role:'admin',mustChangePassword:false});
+  assert.equal(b.context.dispatch_('testTelegram',{},'admin-session','synthetic-request').status,'sent');
+});
 test('actual handoff cannot bootstrap a password from knowledge of a student number',()=>{
   const b=backend(200,'');
   b.context.verifyPassword_=()=>true;
