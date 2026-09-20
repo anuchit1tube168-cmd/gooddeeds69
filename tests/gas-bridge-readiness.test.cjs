@@ -32,3 +32,12 @@ test('student and teacher login surface a backend-upgrade message instead of wai
   assert.ok(matches.length >= 2, 'both student and staff login should report backend readiness failure');
   assert.doesNotMatch(source, /GAS_V2_BACKEND_UNAVAILABLE[^\n]*localStorage[^\n]*session/i);
 });
+
+
+test('stale Apps Script error pages are detected by iframe load and fail fast', () => {
+  assert.match(source, /frame\.addEventListener\('load', onFrameLoad\)/);
+  assert.match(source, /frame\.removeEventListener\('load', onFrameLoad\)/);
+  assert.match(source, /submitted = true;\s*form\.submit\(\)/);
+  assert.match(source, /bridgeGraceTimer = setTimeout/);
+  assert.match(source, /reject\(new Error\('GAS_V2_BACKEND_UNAVAILABLE'\)\)/);
+});
