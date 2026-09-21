@@ -6,7 +6,7 @@ const cp = require('node:child_process');
 const LEDGER_HEADERS = ['Deed ID','รหัสนักเรียน','หมวดหมู่ ID','จำนวนชั่วโมง','วันที่ทำกิจกรรม','รายละเอียด','สถานที่','รูปหลักฐาน URL','ผู้ตรวจประเมิน','สถานะ','วันที่ส่งเรื่อง'];
 const MASTER_HEADERS = ['ลำดับ','รหัสประจำตัว','ยศ','ชื่อ','นามสกุล','ชั้นปี (รุ่น)',...JSON.parse(fs.readFileSync('docs/staging-columns.example.json','utf8')).masterColumnMap.categoryHours,'รวมชั่วโมงสะสม','เกณฑ์ขั้นต่ำ','ผลการประเมิน (Grade)','ระดับความดี (Level)','LINE User ID','LINE Display Name','อัปเดตล่าสุด'];
 const TEST_STUDENT = ['99', '00001'].join('');
-const source = path => process.env.BASELINE === '1' ? cp.execFileSync('git', ['show', 'HEAD:' + path], {encoding:'utf8'}) : fs.readFileSync(path,'utf8');
+const source = path => fs.readFileSync(path,'utf8');
 
 function backend() {
   const ledger = [[...LEDGER_HEADERS], ['deed_123_abcd','9900001',6,1,'2026-09-06','Synthetic activity','','','','pending']];
