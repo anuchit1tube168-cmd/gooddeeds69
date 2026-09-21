@@ -11,7 +11,8 @@
  */
 
 // ==================== CONFIGURATION ====================
-const GAS_BUILD_ID = 'gooddeeds69-20260920-post-probe-v1';
+const GAS_BUILD_ID = 'gooddeeds69-20260921-emergency-lock-v1';
+const EMERGENCY_LOCKDOWN = true; // Incident containment: no Telegram, no legacy public data/password routes, no production writes.
 
 const CONFIG = {
   MIN_HOURS_SEMESTER: 25,
@@ -19,16 +20,18 @@ const CONFIG = {
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
   get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
-  get TELEGRAM_TOKEN() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || ''; },
-  get TELEGRAM_CHAT_ID() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || ''; },
+  get TELEGRAM_TOKEN() { return ''; },
+  get TELEGRAM_CHAT_ID() { return ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 
 function productionWritesEnabled() {
+  if (EMERGENCY_LOCKDOWN) return false;
   return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
 }
 
 function onlinePublicApiEnabled() {
+  if (EMERGENCY_LOCKDOWN) return false;
   return PropertiesService.getScriptProperties().getProperty('ONLINE_PUBLIC_API_ENABLED') === 'true';
 }
 
@@ -116,6 +119,7 @@ function doGet(e) {
       });
     }
     if (action === 'getSettings') return jsonResponse(getSettings());
+    if (EMERGENCY_LOCKDOWN) return jsonResponse({ status: 'error', code: 'EMERGENCY_LOCKDOWN' });
     if (action === 'getStudents') return jsonResponse(getStudents());
     if (action === 'getDeeds') {
       const sid = param.studentId || param.student_id || '';
@@ -168,6 +172,10 @@ function doPost(e) {
       productionWriteEnabled: productionWritesEnabled(),
       time: new Date().toISOString()
     });
+  }
+
+  if (EMERGENCY_LOCKDOWN) {
+    return jsonResponse({ status: 'error', code: 'EMERGENCY_LOCKDOWN' });
   }
 
   // Handle Telegram Interactive Inline Callback Buttons
@@ -524,6 +532,7 @@ function uploadImage(data) {
 
 // ==================== TELEGRAM NOTIFICATION & CALLBACKS ====================
 function notifyTelegramNewDeed(d) {
+  if (EMERGENCY_LOCKDOWN) return { status: 'disabled', reason: 'EMERGENCY_LOCKDOWN' };
   const approveUrl = `${CONFIG.FRONTEND_URL}/approve_sign.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
   const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
 
@@ -557,6 +566,7 @@ function notifyTelegramNewDeed(d) {
 // Apps Script cannot inspect Telegram's secret header. A high-entropy query
 // key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
 function handleTelegramCallback(cb, suppliedKey) {
+  if (EMERGENCY_LOCKDOWN) return { status: 'error', code: 'EMERGENCY_LOCKDOWN' };
   if (!productionWritesEnabled()) return { status: 'error', code: 'PRODUCTION_WRITE_DISABLED' };
   const props = PropertiesService.getScriptProperties();
   const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
