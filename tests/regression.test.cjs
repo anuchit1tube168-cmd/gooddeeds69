@@ -41,15 +41,15 @@ test('uncertain cross-sheet write cannot replay hours',()=>{
   assert.equal(r.code,'review_requires_reconciliation');assert.equal(r.deedId,'deed_123_abcd');
   assert.equal(b.ledger[1][9],'approving');assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_requires_reconciliation');
 });
-test('callback preserves underscore IDs and confirms only after persistence',()=>{
-  const b=backend();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.status,'success');assert.equal(b.ledger[1][9],'approved');assert.equal(b.master[1][11],6);assert.equal(b.messages.length,2);
+test('emergency lockdown rejects Telegram callback before persistence or provider effects',()=>{
+  const b=backend();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.code,'EMERGENCY_LOCKDOWN');assert.equal(b.ledger[1][9],'pending');assert.equal(b.master[1][11],5);assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
-test('callback rejects missing secret and unauthorized approver without side effects',()=>{
-  const b=backend();assert.equal(b.context.handleTelegramCallback(b.cb,'').code,'webhook_unauthorized');
-  b.cb.from.id=999;assert.equal(b.context.handleTelegramCallback(b.cb,'x'.repeat(32)).code,'reviewer_forbidden');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
+test('emergency lockdown takes precedence over callback secret and approver checks',()=>{
+  const b=backend();assert.equal(b.context.handleTelegramCallback(b.cb,'').code,'EMERGENCY_LOCKDOWN');
+  b.cb.from.id=999;assert.equal(b.context.handleTelegramCallback(b.cb,'x'.repeat(32)).code,'EMERGENCY_LOCKDOWN');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
-test('failed callback write does not remove review buttons or report success',()=>{
-  const b=backend();b.fail();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.status,'error');assert.equal(b.messages.length,1);assert.match(b.messages[0].text,/ยังบันทึกผลไม่ได้/);
+test('emergency lockdown never attempts callback storage or Telegram response',()=>{
+  const b=backend();b.fail();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.code,'EMERGENCY_LOCKDOWN');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
 
 function app(hostname) {
