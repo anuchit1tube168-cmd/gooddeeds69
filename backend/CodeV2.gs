@@ -1,4 +1,6 @@
-const GD_EMERGENCY_LOCKDOWN = true; // SECURITY INCIDENT: Telegram provider disabled until explicit owner re-enable.\n\n/**
+const GD_EMERGENCY_LOCKDOWN = true; // SECURITY INCIDENT: Telegram provider disabled until explicit owner re-enable.
+
+/**
  * RTAFNC Good Deed Online API v2
  * Frontend: GitHub Pages (static only)
  * Backend: Google Apps Script + private Google Sheets/Drive
