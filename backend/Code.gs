@@ -11,7 +11,8 @@
  */
 
 // ==================== CONFIGURATION ====================
-const GAS_BUILD_ID = 'gooddeeds69-20260920-post-probe-v1';
+const GAS_BUILD_ID = 'gooddeeds69-20260921-emergency-lock-v1';
+const EMERGENCY_LOCKDOWN = true; // Incident containment: no Telegram, no legacy public data/password routes, no production writes.
 
 const CONFIG = {
   MIN_HOURS_SEMESTER: 25,
@@ -19,16 +20,18 @@ const CONFIG = {
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
   get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
-  get TELEGRAM_TOKEN() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || ''; },
-  get TELEGRAM_CHAT_ID() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || ''; },
+  get TELEGRAM_TOKEN() { return ''; },
+  get TELEGRAM_CHAT_ID() { return ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 
 function productionWritesEnabled() {
+  if (EMERGENCY_LOCKDOWN) return false;
   return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
 }
 
 function onlinePublicApiEnabled() {
+  if (EMERGENCY_LOCKDOWN) return false;
   return PropertiesService.getScriptProperties().getProperty('ONLINE_PUBLIC_API_ENABLED') === 'true';
 }
 
@@ -116,6 +119,7 @@ function doGet(e) {
       });
     }
     if (action === 'getSettings') return jsonResponse(getSettings());
+    if (EMERGENCY_LOCKDOWN) return jsonResponse({ status: 'error', code: 'EMERGENCY_LOCKDOWN' });
     if (action === 'getStudents') return jsonResponse(getStudents());
     if (action === 'getDeeds') {
       const sid = param.studentId || param.student_id || '';
@@ -128,12 +132,8 @@ function doGet(e) {
       if (!student) return jsonResponse({ status: 'error', code: 'STUDENT_NOT_FOUND' });
       return jsonResponse(student);
     }
-    if (action === 'getPassword') {
-      const sid = param.studentId || param.student_id || '';
-      return jsonResponse({ status: 'success', password: getStudentPassword(sid) });
-    }
-    if (action === 'changePassword' || action === 'updatePassword') {
-      return jsonResponse(changePassword(param));
+    if (action === 'getPassword' || action === 'changePassword' || action === 'updatePassword') {
+      return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
     }
     return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   } catch (err) {
@@ -170,14 +170,18 @@ function doPost(e) {
     });
   }
 
+  if (EMERGENCY_LOCKDOWN) {
+    return jsonResponse({ status: 'error', code: 'EMERGENCY_LOCKDOWN' });
+  }
+
   // Handle Telegram Interactive Inline Callback Buttons
   if (data.callback_query) {
     return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));
   }
 
-  // Handle Password Changes
+  // Password mutation is retired from the legacy public transport.
   if (data.action === 'changePassword' || data.action === 'updatePassword') {
-    return jsonResponse(changePassword(data));
+    return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   }
 
   // Handle Online Public API for Deeds / Approval when explicitly enabled
@@ -524,6 +528,7 @@ function uploadImage(data) {
 
 // ==================== TELEGRAM NOTIFICATION & CALLBACKS ====================
 function notifyTelegramNewDeed(d) {
+  if (EMERGENCY_LOCKDOWN) return { status: 'disabled', reason: 'EMERGENCY_LOCKDOWN' };
   const approveUrl = `${CONFIG.FRONTEND_URL}/approve_sign.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
   const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
 
@@ -557,6 +562,7 @@ function notifyTelegramNewDeed(d) {
 // Apps Script cannot inspect Telegram's secret header. A high-entropy query
 // key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
 function handleTelegramCallback(cb, suppliedKey) {
+  if (EMERGENCY_LOCKDOWN) return { status: 'error', code: 'EMERGENCY_LOCKDOWN' };
   if (!productionWritesEnabled()) return { status: 'error', code: 'PRODUCTION_WRITE_DISABLED' };
   const props = PropertiesService.getScriptProperties();
   const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
@@ -724,67 +730,6 @@ function setupAllStudentFolders() {
   return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
 }
 
-// ==================== ONLINE PASSWORD MANAGEMENT ====================
-function changePassword(data) {
-  const studentId = String((data && (data.studentId || data.student_id)) || '').trim();
-  const newPassword = String((data && (data.newPassword || data.password)) || '').trim();
-  if (!studentId || !newPassword) {
-    return { status: 'error', message: 'Missing studentId or newPassword' };
-  }
-  if (!/^\d{7}$/.test(studentId)) {
-    return { status: 'error', message: 'Invalid student ID' };
-  }
-
-  const ss = getSS();
-  if (ss) {
-    const pwdSheet = getOrCreateSheet('Passwords', ['รหัสนักเรียน', 'รหัสผ่าน', 'วันที่อัปเดต']);
-    if (pwdSheet) {
-      const pData = pwdSheet.getDataRange().getValues();
-      let foundRow = -1;
-      for (let i = 1; i < pData.length; i++) {
-        if (String(pData[i][0]).trim() === studentId) {
-          foundRow = i + 1;
-          break;
-        }
-      }
-      if (foundRow > 0) {
-        pwdSheet.getRange(foundRow, 2).setValue(newPassword);
-        pwdSheet.getRange(foundRow, 3).setValue(new Date());
-      } else {
-        pwdSheet.appendRow([studentId, newPassword, new Date()]);
-      }
-    }
-  }
-
-  try {
-    CacheService.getScriptCache().put('pwd_' + studentId, newPassword, 21600);
-  } catch (e) {}
-
-  return { status: 'success', message: 'เปลี่ยนรหัสผ่านสำเร็จ 🔐' };
-}
-
-function getStudentPassword(studentId) {
-  studentId = String(studentId || '').trim();
-  if (!studentId) return null;
-  try {
-    const cached = CacheService.getScriptCache().get('pwd_' + studentId);
-    if (cached) return cached;
-  } catch (e) {}
-
-  const ss = getSS();
-  if (!ss) return null;
-  const pwdSheet = ss.getSheetByName('Passwords');
-  if (!pwdSheet) return null;
-  const pData = pwdSheet.getDataRange().getValues();
-  for (let i = 1; i < pData.length; i++) {
-    if (String(pData[i][0]).trim() === studentId) {
-      const pwd = String(pData[i][1] || '').trim();
-      try {
-        CacheService.getScriptCache().put('pwd_' + studentId, pwd, 21600);
-      } catch (e) {}
-      return pwd;
-    }
-  }
-  return null;
-}
-
+// ==================== LEGACY PASSWORD MANAGEMENT RETIRED ====================
+// Plaintext password read/write helpers were removed during the 2026-09-21 security incident.
+// Password changes must use the authenticated V2/Core flow with salted hashes and owner-controlled server-side secrets.

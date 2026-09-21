@@ -1468,6 +1468,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
+    # SECURITY_INCIDENT_TELEGRAM_DISABLED: do not start polling until owner-controlled secret rotation is complete.
+    return False
     # Re-enabled for local Telegram approval workflow per user instruction.
     try:
         import importlib
@@ -1490,7 +1492,7 @@ def start_telegram_bot_listener_thread():
         return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
-    os.environ.setdefault('ENABLE_LOCAL_API', 'true')
+    os.environ['ENABLE_LOCAL_API'] = 'false'  # SECURITY INCIDENT: legacy local API stays fail-closed
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print(f"🚀 Starting custom server on port {port}...")

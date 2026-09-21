@@ -6,7 +6,7 @@ const cp = require('node:child_process');
 const LEDGER_HEADERS = ['Deed ID','รหัสนักเรียน','หมวดหมู่ ID','จำนวนชั่วโมง','วันที่ทำกิจกรรม','รายละเอียด','สถานที่','รูปหลักฐาน URL','ผู้ตรวจประเมิน','สถานะ','วันที่ส่งเรื่อง'];
 const MASTER_HEADERS = ['ลำดับ','รหัสประจำตัว','ยศ','ชื่อ','นามสกุล','ชั้นปี (รุ่น)',...JSON.parse(fs.readFileSync('docs/staging-columns.example.json','utf8')).masterColumnMap.categoryHours,'รวมชั่วโมงสะสม','เกณฑ์ขั้นต่ำ','ผลการประเมิน (Grade)','ระดับความดี (Level)','LINE User ID','LINE Display Name','อัปเดตล่าสุด'];
 const TEST_STUDENT = ['99', '00001'].join('');
-const source = path => process.env.BASELINE === '1' ? cp.execFileSync('git', ['show', 'HEAD:' + path], {encoding:'utf8'}) : fs.readFileSync(path,'utf8');
+const source = path => fs.readFileSync(path,'utf8');
 
 function backend() {
   const ledger = [[...LEDGER_HEADERS], ['deed_123_abcd','9900001',6,1,'2026-09-06','Synthetic activity','','','','pending']];
@@ -41,15 +41,15 @@ test('uncertain cross-sheet write cannot replay hours',()=>{
   assert.equal(r.code,'review_requires_reconciliation');assert.equal(r.deedId,'deed_123_abcd');
   assert.equal(b.ledger[1][9],'approving');assert.equal(b.context.approveDeed({deedId:'deed_123_abcd'}).code,'review_requires_reconciliation');
 });
-test('callback preserves underscore IDs and confirms only after persistence',()=>{
-  const b=backend();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.status,'success');assert.equal(b.ledger[1][9],'approved');assert.equal(b.master[1][11],6);assert.equal(b.messages.length,2);
+test('emergency lockdown rejects Telegram callback before persistence or provider effects',()=>{
+  const b=backend();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.code,'EMERGENCY_LOCKDOWN');assert.equal(b.ledger[1][9],'pending');assert.equal(b.master[1][11],5);assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
-test('callback rejects missing secret and unauthorized approver without side effects',()=>{
-  const b=backend();assert.equal(b.context.handleTelegramCallback(b.cb,'').code,'webhook_unauthorized');
-  b.cb.from.id=999;assert.equal(b.context.handleTelegramCallback(b.cb,'x'.repeat(32)).code,'reviewer_forbidden');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
+test('emergency lockdown takes precedence over callback secret and approver checks',()=>{
+  const b=backend();assert.equal(b.context.handleTelegramCallback(b.cb,'').code,'EMERGENCY_LOCKDOWN');
+  b.cb.from.id=999;assert.equal(b.context.handleTelegramCallback(b.cb,'x'.repeat(32)).code,'EMERGENCY_LOCKDOWN');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
-test('failed callback write does not remove review buttons or report success',()=>{
-  const b=backend();b.fail();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.status,'error');assert.equal(b.messages.length,1);assert.match(b.messages[0].text,/ยังบันทึกผลไม่ได้/);
+test('emergency lockdown never attempts callback storage or Telegram response',()=>{
+  const b=backend();b.fail();const r=b.context.handleTelegramCallback(b.cb,'x'.repeat(32));assert.equal(r.code,'EMERGENCY_LOCKDOWN');assert.equal(b.writes.length,0);assert.equal(b.messages.length,0);
 });
 
 function app(hostname) {
