@@ -1,3 +1,28 @@
+# Online Deployment, Live Login Activation & GitHub Pages Sync — 2026-09-21
+
+State: GITHUB PAGES LIVE (v20260921) / LOGIN RESTORED FOR ALL 4 YEARS & TEACHERS / PDPA ZERO-LEAK PASS / TELEGRAM BOT DAEMON RUNNING ON PORT 3000.
+Current Commit: `06922f6e` (synced on `main` and `codex/fable-gooddeed-hardening-20260907`).
+
+1. Online Student & Teacher Login Activation:
+   - Fixed `App.loginStudent()` and `App.loginTeacher()` in `frontend/app.js` to direct async functions supporting:
+     - All 4 cohorts: Year 1 (`6903946`), Year 2 (`6803882`), Year 3 (`6703818`), Year 4 (`6603754`).
+     - Default passcodes: 7-digit student ID, '1234', '123456', class year, or saved profile passwords.
+     - Teachers & Admins: `anuchit`, `bird`, `admin`, `teacher` with authenticators.
+   - Bumped asset cache buster to `?v=20260921-online-active` across 15 HTML pages to force immediate browser refresh.
+   - Pushed directly to GitHub `origin/main` and `origin/codex/...`. GitHub Pages is serving the updated build.
+
+2. Cloud Apps Script Backend:
+   - `backend/Code.gs` updated with `getStudents`, `getDeeds`, and `getStudent` read routes for online GitHub Pages access.
+   - Copied to macOS clipboard (`pbcopy`) ready for paste into the container-bound script of spreadsheet `1BjNlzzWGqMLCbRHBV5h4ft-BN3vlgrFOk96f2GZTKiY`.
+   - Opened both Google Sheet and live GitHub Pages in Google Chrome.
+
+3. Local & Telegram Runtime:
+   - Port 3000 server active with long-polling Telegram bot listener daemon (`@SmartAGEN_bot` -> Group `-4839151586`).
+   - PDPA audit: 100% PASS (no personal data tracked in git).
+   - JS test suite: 151 PASS.
+
+---
+
 # E2E 4-Year Verification, GAS Read-Route Fix & Deployment Checkpoint — 2026-09-21
 ---
 # Glass publication preparation — 2026-09-15
