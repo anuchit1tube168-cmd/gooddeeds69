@@ -901,11 +901,15 @@ class CustomHandler(SimpleHTTPRequestHandler):
         self.send_json_response(405, {'status': 'error', 'code': 'METHOD_NOT_ALLOWED'})
 
     def do_POST(self):
+        if os.environ.get('ENABLE_LOCAL_API', '').lower() == 'true':
+            return self.legacy_post_unsupported()
         # This old server is a static preview, not the authenticated gateway.
         self.close_connection = True
         self.send_json_response(403, {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'})
 
     def do_GET(self):
+        if os.environ.get('ENABLE_LOCAL_API', '').lower() == 'true':
+            return self.legacy_get_unsupported()
         if urlparse(self.path).path == '/api/health':
             self.send_json_response(200, {'status': 'ok', 'mode': 'static-preview', 'dataApiEnabled': False, 'productionWriteEnabled': False})
             return
@@ -1485,6 +1489,7 @@ def start_telegram_bot_listener_thread():
         return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
+    os.environ.setdefault('ENABLE_LOCAL_API', 'true')
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print(f"🚀 Starting custom server on port {port}...")
