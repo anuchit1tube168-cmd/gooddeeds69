@@ -1,4 +1,19 @@
 # E2E 4-Year Verification, GAS Read-Route Fix & Deployment Checkpoint — 2026-09-21
+---
+# Glass publication preparation — 2026-09-15
+
+Owner explicitly requested applying the glass theme to the live system. Reverified main at 3c8f94ba; patch only adds presentation and documentation. Included actual .top-nav selector on teacher/ranking pages. Syntax passes; previous 143 JS tests passed. Rendered Chrome QA remains unavailable due tool request-header policy failure. Publish with fast-forward only; check Pages asset and HTML references after deployment. No database, account or provider endpoint changes.
+
+---
+
+# macOS glass presentation — 2026-09-15
+
+Base: current main 3c8f94ba, isolated codex/mac-glass-20260915 branch. Owner reports runtime usable and requests a macOS glass treatment for login, teacher dashboard and ranking.
+
+Added scoped frontend/mac-glass.css loaded last by those three HTML pages, with dark navy translucent surfaces, segmented controls, readable fields, gold actions, focus rings, mobile layout and reduced motion/transparency/print fallbacks. Existing JS and backend untouched. Syntax PASS, existing JS tests 143/143 PASS, diff whitespace PASS. No rendered QA claim: Chrome tool failed twice loading request-header policy before navigation. No deployment or publication performed. Next: rendered desktop/mobile review when browser service recovers, then publish the presentation-only patch against fresh main. Prior roster/Telegram investigation remains separate and unresolved by styling.
+
+---
+
 
 State: LOCAL SERVER RUNNING ON PORT 3000 / E2E 4-YEAR LIVE TESTS 100% PASS / CODE.GS CLOUD READ ROUTING ADDED / SYNTAX & PDPA 100% PASS.
 Current Branch: `codex/fable-gooddeed-hardening-20260907`
@@ -429,3 +444,51 @@ Added signed cloudflareCardSelf with explicit GOODDEED_MASTER_COLUMN_MAP. Total 
 Verified GitHub regression and pii-guard success on remote commit 8524d22bd2988293cc9daf7014d2a6cca2ef19c1. Reproduced two failures: list accepted blank hours via Number coercion; card accepted arrays/nondecimal strings as numeric values. Fixed explicit decimal parsing and list half-hour range validation; no stored data changed. 27 synthetic tests pass after the fix (two newly added cases failed before it), plus syntax and changed-file PII checks.
 
 Pilot config still points directly to GAS, so it does not exercise the signed Cloudflare path. No callable Apps Script project/deployment administration or external Cloudflare account tool was found in this session. Existing deployment URL alone does not identify the editor project/version or establish staging ownership. Need the actual Apps Script editor project link and staging deployment/schema evidence to verify runtime integration. UI, write flow, notifications and production remain unverified. Next: inspect that project read-only, map actual headers, then test signed gateway reads with a controlled staging identity; do not deploy this draft backend alone.
+
+
+## 2026-09-20 — live runtime recovery checkpoint
+
+Verified against the canonical Good Deed runtime and public staging gateway. This checkpoint supersedes earlier assumptions that source files implied deployment state.
+
+### GAS runtime
+- Canonical active Web App URL remains the one configured by the secure pilot.
+- Live GET ping/health responds HTTP 200 against spreadsheet `ฐานข้อมูลความดี วพอ 2569`.
+- Live POST requests still return HTTP 405.
+- PR #14 was merged to main at commit `03e54c543d60dd9c52a543737ba75e7c60d47553`.
+- `backend/Code.gs` now exposes non-writing deployment fingerprint `gooddeeds69-20260920-post-probe-v1` and POST `{"action":"deploymentProbe"}`.
+- Live deployment does not expose that fingerprint, therefore the active Apps Script deployment is stale/unreviewed relative to main.
+- No `CLASP_TOKEN`, clasp credentials, or Apps Script ID secrets are configured in this repo.
+- Drive search found no native Apps Script project or Script Editor URL for the active deployment. The V2 credentials folder is empty.
+- Required owner action remains: update the existing owned Web App deployment to the reviewed revision, preserving the deployment where possible and keeping `PRODUCTION_WRITE_ENABLED=false`.
+- P0 tracking: issue #11.
+
+### Cloudflare staging
+Live Worker `rtafnc-one-gateway-staging` is reachable:
+- `/health` HTTP 200
+- `/readiness` HTTP 200
+- `/config` HTTP 200
+- `productionCutover=false`
+- `authSessionEnabled=false`
+- `d1Bound=true`
+- `liffConfigured=true`
+- `adapterConfigured=false`
+- `stagingE2EEnabled=false`
+- `readGate=false`
+- `submitGate=false`
+- `reviewGate=false`
+- `activationGate=false`
+
+This state is safe but not usable for LIFF auth/read.
+
+A guarded auth/read/activation-only canary profile is already prepared in `rtafnc-one`; submit/review/production write remain disabled. Re-running canary workflow run `35488052023` queued job `106026804408` but the job failed before any step executed (`steps=[]`). Other workflows in that private repo show the same pre-job behavior. Track this separately as `rtafnc-one#22`; do not treat it as a canary code failure.
+
+### Current release order
+1. Restore Apps Script deployment to the reviewed build and verify GET buildId + POST deploymentProbe HTTP 200.
+2. Restore GitHub Actions runner execution (or another authorized Cloudflare deploy path) for `rtafnc-one`.
+3. Deploy staging auth/read/activation canary only.
+4. Verify readiness: auth/read/activation true; submit/review/productionWrite false.
+5. Perform controlled physical LIFF login + self-read with a pilot identity.
+6. Only then enable pilot submit, verify persistence + notification, then review.
+7. Production cutover/write remains FALSE until staged evidence and explicit owner approval.
+
+No student rows, hours, evidence, historical records, LINE bindings, Telegram secrets, or production writes were changed during this recovery checkpoint.

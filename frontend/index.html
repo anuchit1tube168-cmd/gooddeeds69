@@ -294,9 +294,10 @@
             text-decoration: none;
         }
     </style>
+    <link rel="stylesheet" href="mac-glass.css?v=20260915">
 </head>
 
-<body>
+<body class="mac-glass">
     <div class="login-wrapper">
         <!-- Logo -->
         <div class="login-header">
@@ -363,7 +364,7 @@
                         <label class="form-label">รหัสผ่าน <span class="required">*</span></label>
                         <div class="input-with-toggle">
                             <input type="password" class="form-input" id="student-password"
-                                placeholder="รหัส 7 หลัก หรือเลข 4 ตัวท้าย (เช่น 3976)" autocomplete="current-password">
+                                placeholder="รหัสผ่านที่ได้รับจากผู้ดูแลระบบ" autocomplete="current-password">
                             <button type="button" class="toggle-password"
                                 onclick="togglePwd('student-password', this)">👁️</button>
                         </div>
@@ -394,27 +395,10 @@
                     ℹ️ สำหรับอาจารย์และผู้ดูแลระบบ บัญชีจะได้รับจากผู้ดูแลระบบ
                 </div>
 
-                <div style="margin-bottom: 16px; padding: 12px 14px; background: rgba(201,162,39,0.1); border: 1px solid rgba(201,162,39,0.3); border-radius: 12px;">
-                    <div style="font-size: 0.82rem; color: var(--gold-light); margin-bottom: 10px; font-weight: 600; display: flex; align-items: center; justify-content: space-between;">
-                        <span>⭐ บัญชีหลัก (คลิกเพื่อกรอกอัตโนมัติ):</span>
-                        <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: normal;">Dual Role</span>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #1e3a8a, #0b2f64); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.82rem; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAnuchit()">
-                            <span style="font-weight: 700; white-space: nowrap;">👨‍✈️ ร.อ.อนุชิต (Bird)</span>
-                            <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 1px 6px; border-radius: 4px; font-size: 0.68rem; white-space: nowrap;">อาจารย์ &amp; แอดมิน</span>
-                        </button>
-                        <button type="button" class="btn btn-sm" style="background: linear-gradient(135deg, #374151, #1f2937); color: #fff; border: 1px solid rgba(201,162,39,0.5); border-radius: 8px; font-size: 0.82rem; padding: 8px 6px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" onclick="quickLoginAdmin()">
-                            <span style="font-weight: 700; white-space: nowrap;">🛡️ Super Admin</span>
-                            <span style="background: rgba(201,162,39,0.3); color: #ffd700; padding: 1px 6px; border-radius: 4px; font-size: 0.68rem; white-space: nowrap;">ผู้ดูแลระบบ</span>
-                        </button>
-                    </div>
-                </div>
-
                 <form id="form-teacher" onsubmit="handleLogin(event,'teacher')">
                     <div class="form-group">
                         <label class="form-label">ชื่อผู้ใช้ <span class="required">*</span></label>
-                        <input type="text" class="form-input" id="teacher-username" placeholder="username เช่น anuchit หรือ admin"
+                        <input type="text" class="form-input" id="teacher-username" placeholder="ชื่อผู้ใช้ที่ได้รับจากผู้ดูแลระบบ"
                             autocomplete="username">
                     </div>
                     <div class="form-group">
@@ -458,9 +442,9 @@
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=3593"></script>
-    <script src="gateway-config.js?v=20260908"></script>
-  <script src="gateway-client.js?v=20260911"></script>
+    <script src="app.js?v=20260919-auth-boundary"></script>
+    <script src="gateway-config.js?v=20260919-login-guard"></script>
+  <script src="gateway-client.js?v=20260920-backend-readiness"></script>
   <script src="liff-sdk.js?v=20260908"></script>
     <script>
         // Tab switch
@@ -488,32 +472,9 @@
             document.getElementById('login-alert').classList.remove('show');
         }
 
-        function quickLoginAnuchit() {
-            document.getElementById('teacher-username').value = 'anuchit';
-            document.getElementById('teacher-password').value = 'anuchit2569';
-            showToast('เลือกบัญชี ร.อ.อนุชิต ทำจะดี (Bird) เรียบร้อย', 'info');
-            const btn = document.getElementById('btn-teacher-login');
-            if (btn) btn.focus();
-        }
-
-        function quickLoginAdmin() {
-            document.getElementById('teacher-username').value = 'admin';
-            document.getElementById('teacher-password').value = 'admin69';
-            showToast('เลือกบัญชี ผู้ดูแลระบบ (Super Admin) เรียบร้อย', 'info');
-            const btn = document.getElementById('btn-teacher-login');
-            if (btn) btn.focus();
-        }
-
         function showForgotPasswordHelp(e) {
             if (e) e.preventDefault();
-            const sid = document.getElementById('student-id').value.trim();
-            const cleanId = sid.replace(/[^\d]/g, '');
-            if (cleanId.length >= 4) {
-                document.getElementById('student-password').value = cleanId;
-                showToast('🔑 เติมรหัสผ่านเริ่มต้น (รหัส 7 หลัก) ให้แล้ว กดเข้าสู่ระบบได้เลยครับ', 'info');
-            } else {
-                showAlert('🔐 <b>คำแนะนำรหัสผ่าน นพอ.:</b><br>• ใช้ <b>รหัสนักเรียน 7 หลัก</b> (รหัสเริ่มต้น)<br>• หรือเลข <b>4 ตัวท้าย</b> ของรหัส<br>• หรือรหัส <b>1234</b>');
-            }
+            showAlert('กรุณาติดต่อผู้ดูแลเพื่อยืนยันตัวตนและตั้งรหัสผ่านใหม่');
         }
 
         async function handleLogin(e, role) {
@@ -533,6 +494,10 @@
 
                 try {
                     const result = await App.loginStudent(sid, pwd);
+                    if (result.requiresPasswordChange) {
+                        window.location.href = 'change-password.html';
+                        return;
+                    }
                     if (result.success) {
                         try {
                             sessionStorage.removeItem('gooddeeds_logged_out');
@@ -546,7 +511,7 @@
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
                         setTimeout(() => window.location.href = 'student-dashboard.html', 800);
                     } else {
-                        showAlert((result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง') + '<br><small style="display:inline-block;margin-top:6px;opacity:0.9;">💡 คำแนะนำ: ใช้รหัส 7 หลัก หรือเลข 4 ตัวท้าย หรือ 1234 หรือคลิก "ลืมรหัสผ่าน?" ด้านล่าง</small>');
+                        showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
                         btn.innerHTML = '<span>🔓</span> เข้าสู่ระบบ';
                     }
@@ -568,6 +533,10 @@
 
                 try {
                     const result = await App.loginTeacher(user, pwd);
+                    if (result.requiresPasswordChange) {
+                        window.location.href = 'change-password.html';
+                        return;
+                    }
                     if (result.success) {
                         try {
                             sessionStorage.removeItem('gooddeeds_logged_out');
@@ -613,17 +582,8 @@
 
             // Auto-switch to teacher/admin tab if requested in URL
             const roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
-            if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff' || roleParam === 'bird' || roleParam === 'anuchit') {
+            if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff') {
                 switchTab('teacher');
-                const teacherUserInput = document.getElementById('teacher-username');
-                const teacherPwdInput = document.getElementById('teacher-password');
-                if (roleParam === 'bird' || roleParam === 'anuchit') {
-                    if (teacherUserInput) teacherUserInput.value = 'anuchit';
-                    if (teacherPwdInput) teacherPwdInput.value = 'anuchit2569';
-                } else if (roleParam === 'admin') {
-                    if (teacherUserInput && !teacherUserInput.value) teacherUserInput.value = 'admin';
-                    if (teacherPwdInput && !teacherPwdInput.value) teacherPwdInput.value = 'admin69';
-                }
             } else if (roleParam === 'student') {
                 switchTab('student');
             }
@@ -687,4 +647,3 @@
 </body>
 
 </html>
-

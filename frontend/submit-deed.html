@@ -544,9 +544,9 @@
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="chibi3d.js?v=3593"></script>
-    <script src="app.js?v=3593"></script>
+    <script src="app.js?v=20260919-auth-boundary"></script>
     <script src="gateway-config.js?v=20260908"></script>
-  <script src="gateway-client.js?v=20260911"></script>
+  <script src="gateway-client.js?v=20260920-backend-readiness"></script>
   <script src="liff-sdk.js?v=20260908"></script>
     <script>
         let currentUser = null;
@@ -943,6 +943,7 @@
             btn.disabled = false;
             btn.innerHTML = '<span>💾</span> บันทึกความดี';
             showSuccessModal(deed);
+            if (!notified) showToast('บันทึกแล้ว แต่ยังยืนยันการแจ้งผู้ตรวจไม่ได้ ไม่ต้องส่งรายการซ้ำ', 'warning');
         }
 
         function showSuccessModal(deed) {
