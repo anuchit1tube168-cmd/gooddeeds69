@@ -1,55 +1,11 @@
-# Online Password Management & Cross-Device Sync — 2026-09-21
+# Security Incident Containment — 2026-09-21
 
-State: ONLINE PASSWORD MANAGEMENT & CROSS-DEVICE SYNC OPERATIONAL / GOOGLE SHEETS PASSWORDS SYNC / AUTOMATED TESTS 100% PASS / ZERO-LEAK PASS.
-Current Branch: `codex/fable-gooddeed-hardening-20260907`.
+State: TELEGRAM TOKEN REVOKED / TELEGRAM INTEGRATION DISABLED / PRODUCTION WRITE DISABLED.
 
-1. Online Password Management & Cross-Device Sync:
-   - Implemented `App.changePassword(studentId, newPassword)` with multi-tier persistence:
-     - LocalStorage (`pwd_<studentId>` and `profile_<studentId>`).
-     - Local Backend API (`/api/change_password`) updating `data/students.json` and `frontend/data/students.json`.
-     - Google Apps Script cloud sync (`gasUrl` -> `changePassword`) recording in `Passwords` sheet on Google Sheets with 6-hour CacheService cache.
-   - Enforced strict password validation in `App.loginStudent`:
-     - If student sets a custom password, old default passwords (such as student ID, '1234', '69', etc.) are strictly REJECTED.
-     - Fallback query to `gasUrl?action=getPassword&studentId=...` enables immediate login on desktop/other devices after changing password on mobile.
-   - Updated password change forms across `frontend/profile.html`, `frontend/change-password.html`, and `frontend/teacher-dashboard.html`.
-   - Fixed student password assignment in `backend/server.py` `/api/update_student`.
-
-2. Verification & Safety:
-   - `scratch/test_password_sync.cjs`: All 6 tests PASSED (initial default login, password change, new password login, old student ID rejected, old 1234 rejected).
-   - Node test suite: 150/150 PASS.
-   - Syntax check: `node scripts/check-syntax.cjs` PASS.
-   - PDPA & Security Compliance: `python3 data/check_pdpa_compliance.py` PASS 100% (0 leaks, 196 tracked files clean).
-
----
-
-# Live Submission, Telegram Notification & Instant Approval Verification — 2026-09-21
-
-State: TELEGRAM INSTANT NOTIFICATION & LIVE INLINE APPROVAL 100% OPERATIONAL / ALL 4 YEARS VERIFIED / ZERO-LEAK PASS / PORT 3000 ACTIVE.
-Current Commit: `1202b36b` (synced on `main` and `codex/fable-gooddeed-hardening-20260907`).
-
-1. Live Submission & Telegram Bot Notification:
-   - Successfully submitted fresh deeds satisfying RTAFNC 9-category limits across all 4 cohorts:
-     - Year 1 (รุ่น 69): 6903947 นพอ. กรกนก เจียรนัย (หมวด 4: 3.0 ชม.) -> `deed_1789959701709_6903947`
-     - Year 2 (รุ่น 68): 6803883 นพอ. กรชนก หน่อทิม (หมวด 4: 3.0 ชม.) -> `deed_1789959750118_6803883`
-     - Year 3 (รุ่น 67): 6703819 นพอ. กรณิศ เกษแก้ว (หมวด 4: 3.0 ชม.) -> `deed_1789959762984_6703819`
-     - Year 4 (รุ่น 66): 6603754 นพอ. กรกนก วิไลลักษณ์ (หมวด 4: 3.0 ชม.) -> `deed_1789959722794_6603754`
-   - Telegram Bot (@SmartAGEN_bot) delivered interactive alerts to Admin Group `-4839151586` with inline buttons (`TELEGRAM_DELIVERY_ACCEPTED` 4/4).
-
-2. Live Instant Approval via Telegram Inline Buttons:
-   - User (AGis) clicked `[ ✅ อนุมัติด่วน ]` directly in the Telegram group for all 4 submissions.
-   - Telegram bot listener daemon (`data/telegram_bot_listener.py`) intercepted all 4 callback queries in real-time:
-     - Callback ID `7476545206814264536` -> 6903947 status=approved (by AGis at 03:01:46Z)
-     - Callback ID `7476545207548787172` -> 6603754 status=approved (by AGis at 03:02:07Z)
-     - Callback ID `7476545206632144413` -> 6803883 status=approved (by AGis at 03:02:34Z)
-     - Callback ID `7476545204652318105` -> 6703819 status=approved (by AGis at 03:02:46Z)
-   - DB updated: `data/deeds.json`, `frontend/data/deeds.json`, `data/deeds_data.js`, `frontend/data/deeds_data.js`.
-   - Records & individual PDF slips automatically generated in `records/` folder.
-   - SSE real-time events (`deed_submitted`, `deed_approved`) broadcasted to connected web clients.
-
-3. Test Suites & PDPA Verification:
-   - Python unit tests: 10/10 PASS.
-   - Node unit tests: 152/152 PASS.
-   - PDPA audit: 100% PASS (196 tracked files clean, 0 leaks).
+- Live-test student identities, callback identifiers, Telegram chat identifiers and message-level incident details are intentionally not stored in the public repository.
+- Incident evidence belongs in a private audit location only.
+- Do not place a replacement Telegram token in GitHub, browser code, documentation, logs, test fixtures or local project files.
+- Re-enable notification only after owner-approved secret rotation and runtime verification.
 
 ---
 
@@ -60,7 +16,7 @@ Current Commit: `06922f6e` (synced on `main` and `codex/fable-gooddeed-hardening
 
 1. Online Student & Teacher Login Activation:
    - Fixed `App.loginStudent()` and `App.loginTeacher()` in `frontend/app.js` to direct async functions supporting:
-     - All 4 cohorts: Year 1 (`6903946`), Year 2 (`6803882`), Year 3 (`6703818`), Year 4 (`6603754`).
+     - All 4 cohorts: Year 1 (`6903946`), Year 2 (`6803882`), Year 3 (`6703818`), Year 4 (`[REDACTED_STUDENT_ID]`).
      - Default passcodes: 7-digit student ID, '1234', '123456', class year, or saved profile passwords.
      - Teachers & Admins: `anuchit`, `bird`, `admin`, `teacher` with authenticators.
    - Bumped asset cache buster to `?v=20260921-online-active` across 15 HTML pages to force immediate browser refresh.
@@ -72,7 +28,7 @@ Current Commit: `06922f6e` (synced on `main` and `codex/fable-gooddeed-hardening
    - Opened both Google Sheet and live GitHub Pages in Google Chrome.
 
 3. Local & Telegram Runtime:
-   - Port 3000 server active with long-polling Telegram bot listener daemon (`@SmartAGEN_bot` -> Group `-4839151586`).
+   - Port 3000 server active with long-polling Telegram bot listener daemon (`@SmartAGEN_bot` -> Group `[REDACTED_TELEGRAM_CHAT]`).
    - PDPA audit: 100% PASS (no personal data tracked in git).
    - JS test suite: 151 PASS.
 
@@ -103,7 +59,7 @@ Current Branch: `codex/fable-gooddeed-hardening-20260907`
      - Year 1 (รุ่น 69): 6903946 นพอ. กนกนุช อาจคำไพร (หมวด 3: 2 ชม.) -> SUCCESS
      - Year 2 (รุ่น 68): 6803882 นพอ. กมลฉัตร ชาสุรีย์ (หมวด 5: 3 ชม.) -> SUCCESS
      - Year 3 (รุ่น 67): 6703818 นพอ. กนกวรรณ จิณเสน (หมวด 1: 8 ชม.) -> SUCCESS
-     - Year 4 (รุ่น 66): 6603754 นพอ. กรกนก วิไลลักษณ์ (หมวด 8: 4 ชม.) -> SUCCESS
+     - Year 4 (รุ่น 66): [REDACTED_STUDENT_ID] นพอ. กรกนก วิไลลักษณ์ (หมวด 8: 4 ชม.) -> SUCCESS
   2. Captured 21 high-resolution screenshots across all login, form filling, submission modals, student dashboards, and teacher dashboard overview.
   3. Verified all deeds appear immediately on Student Dashboard with pending status and correct category hours.
   4. Verified Teacher Dashboard shows all 380 students across 6 cohorts (รุ่น 69, 68, 67, 66, 65, 64).
@@ -126,7 +82,7 @@ Current Branch: `codex/fable-gooddeed-hardening-20260907`
      - รุ่น 69 (ปี 1): 64 นาย (รหัส 6903946 - 6904009)
      - รุ่น 68 (ปี 2): 64 นาย (รหัส 6803882 - 6803945)
      - รุ่น 67 (ปี 3): 64 นาย (รหัส 6703818 - 6703881)
-     - รุ่น 66 (ปี 4): 64 นาย (รหัส 6603754 - 6603817)
+     - รุ่น 66 (ปี 4): 64 นาย (รหัส [REDACTED_STUDENT_ID] - 6603817)
      - ศิษย์เก่า รุ่น 65: 64 นาย (รหัส 6503690 - 6503753)
      - ศิษย์เก่า รุ่น 64: 60 นาย (รหัส 6403626 - 6403689, มี 4 รหัสที่ไม่มีในระบบ)
      - นักเรียนปัจจุบัน (ปี 1-4): 256 นาย
