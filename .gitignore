@@ -63,3 +63,4 @@ auto_login.html
 frontend/auto_login.html
 *.DS_Store
 */.DS_Store
+node_modules/

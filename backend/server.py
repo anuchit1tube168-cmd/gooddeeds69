@@ -1350,6 +1350,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     f.write("const STUDENTS_DATA = ")
                     json.dump(students_list, f, ensure_ascii=False, indent=2)
                     f.write(";\n")
+                    f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
+                    f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
 
                 # Sync write to root data/ folder if paths exist
                 if os.path.exists(os.path.dirname(root_json_path)):
@@ -1360,6 +1362,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         f.write("const STUDENTS_DATA = ")
                         json.dump(students_list, f, ensure_ascii=False, indent=2)
                         f.write(";\n")
+                        f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
+                        f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
 
                 self.send_response(200)
                 self.send_header('Content-type', 'application/json')
@@ -1412,6 +1416,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
                             f.write("const STUDENTS_DATA = ")
                             json.dump(stus, f, ensure_ascii=False, indent=2)
                             f.write(";\n")
+                            f.write("if (typeof window !== 'undefined') { window.STUDENTS_DATA = STUDENTS_DATA; }\n")
+                            f.write("if (typeof globalThis !== 'undefined') { globalThis.STUDENTS_DATA = STUDENTS_DATA; }\n")
 
                 if updated_count > 0:
                     self.send_json_response(200, {'status': 'success', 'message': 'เปลี่ยนรหัสผ่านสำเร็จ'})
@@ -1457,8 +1463,26 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
-    # Production write is false: preview startup has no notification/review worker.
-    return False
+    # Re-enabled for local Telegram approval workflow per user instruction.
+    try:
+        import importlib
+        sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
+        import telegram_bot_listener as tbl
+        importlib.reload(tbl)
+        # Inject server functions for canonical persistence + SSE broadcast
+        tbl.save_or_update_deed_in_db = save_or_update_deed_in_db
+        tbl.broadcast_event = broadcast_event
+        tbl.load_students_map = load_students_map
+        t = tbl.start_listener_in_background()
+        if t:
+            print("🤖 Telegram Bot Listener thread started (long-polling).")
+            return True
+        else:
+            print("ℹ️ Telegram Bot Listener not started (no token or already running).")
+            return False
+    except Exception as e:
+        print(f"⚠️ Failed to start Telegram Bot Listener: {e}")
+        return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
     server_address = ('127.0.0.1', port)
@@ -1467,7 +1491,8 @@ def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000
     print(f"📂 Serving static files from {BASE_DIR}")
     print(f"📁 Saving records to {RECORDS_DIR}")
 
-    # Production write is false: preview startup has no notification/review worker.
+    # Start Telegram Bot Listener for approval via Telegram inline buttons
+    start_telegram_bot_listener_thread()
 
     try:
         httpd.serve_forever()

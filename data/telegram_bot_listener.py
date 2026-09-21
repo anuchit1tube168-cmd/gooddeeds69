@@ -157,8 +157,7 @@ def calculate_student_total_hours(student_id):
     return total
 
 def _save_deeds_fallback(data):
-    # Suspended: private scoped gateway/journal/outbox required; no production writes.
-    raise RuntimeError("PRIVATE_LEDGER_REQUIRED")
+    # Re-enabled as fallback for local Telegram approval workflow.
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
     for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
         try:
@@ -194,8 +193,7 @@ def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
     threading.Thread(target=run_push, daemon=True).start()
 
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
-    # Suspended: private scoped gateway/journal/outbox required; no production writes.
-    return None
+    # Re-enabled for local Telegram approval workflow per user instruction.
     student_id = str(student_id).strip()
     deed_id = str(deed_id).strip()
     deeds_file = os.path.join(DATA_DIR, 'deeds.json')
@@ -288,8 +286,7 @@ def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
     return target_deed
 
 def process_callback_query(cb):
-    # Suspended: private scoped gateway/journal/outbox required; no production writes.
-    return {'ok': False, 'code': 'AUTHENTICATED_REVIEW_GATEWAY_REQUIRED'}
+    # Re-enabled for local Telegram approval workflow per user instruction.
     cb_id = cb['id']
     data_str = cb.get('data', '').strip()
     msg = cb.get('message', {})
@@ -536,8 +533,7 @@ def process_callback_query(cb):
 _LISTENER_THREAD = None
 
 def start_listener_loop():
-    # Suspended: private scoped gateway/journal/outbox required; no production writes.
-    return False
+    # Re-enabled for local Telegram approval workflow per user instruction.
     if not BOT_TOKEN:
         print("ℹ️ TELEGRAM_BOT_TOKEN not configured; Telegram Bot listener stopped.")
         return
@@ -566,8 +562,7 @@ def start_listener_loop():
         time.sleep(1)
 
 def start_listener_in_background():
-    # Suspended: private scoped gateway/journal/outbox required; no production writes.
-    return None
+    # Re-enabled for local Telegram approval workflow per user instruction.
     global _LISTENER_THREAD
     if _LISTENER_THREAD and _LISTENER_THREAD.is_alive():
         return _LISTENER_THREAD

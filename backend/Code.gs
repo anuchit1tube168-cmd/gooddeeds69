@@ -108,6 +108,18 @@ function doGet(e) {
       });
     }
     if (action === 'getSettings') return jsonResponse(getSettings());
+    if (action === 'getStudents') return jsonResponse(getStudents());
+    if (action === 'getDeeds') {
+      const sid = param.studentId || param.student_id || '';
+      return jsonResponse(getDeeds(sid ? String(sid).trim() : null));
+    }
+    if (action === 'getStudent') {
+      const sid = param.studentId || param.student_id || param.id || '';
+      if (!/^\d{7}$/.test(String(sid).trim())) return jsonResponse({ status: 'error', code: 'INVALID_STUDENT_ID' });
+      const student = getStudent(String(sid).trim());
+      if (!student) return jsonResponse({ status: 'error', code: 'STUDENT_NOT_FOUND' });
+      return jsonResponse(student);
+    }
     return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   } catch (err) {
     return jsonResponse({ status: 'error', error: err.toString() });
