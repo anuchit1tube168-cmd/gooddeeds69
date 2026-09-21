@@ -420,26 +420,56 @@ const App = {
         const localPwd = Storage.get('pwd_' + cleanId);
         const profile = Storage.get('profile_' + cleanId) || {};
         const profilePwd = profile.password;
+        const studentPwd = student.password ? String(student.password).trim() : '';
 
-        const allowedSet = new Set([
-            cleanId,
-            student.password,
-            localPwd,
-            profilePwd,
-            '1234',
-            '123456',
-            '69',
-            '2569',
-            'rtafnc',
-            student.phone ? String(student.phone).trim() : '',
-            student.nickname ? String(student.nickname).trim().toLowerCase() : ''
-        ].filter(Boolean).map(p => String(p).trim().toLowerCase()));
+        // Check if student has an active custom password
+        const customPassword = (localPwd && localPwd !== cleanId) ? localPwd
+                              : ((profilePwd && profilePwd !== cleanId) ? profilePwd
+                              : ((studentPwd && studentPwd !== cleanId) ? studentPwd : null));
 
-        const normalizedPwd = normalizeThaiDigits(inputPwd).toLowerCase();
+        const normalizedPwd = normalizeThaiDigits(inputPwd);
+        let isMatch = false;
 
-        const isMatch = allowedSet.has(normalizedPwd) ||
-                        allowedSet.has(inputPwd.toLowerCase()) ||
-                        (inputPwd === cleanId);
+        if (customPassword) {
+            // Once a custom password is set, ONLY the custom password is accepted
+            isMatch = (inputPwd === customPassword ||
+                       inputPwd.toLowerCase() === customPassword.toLowerCase() ||
+                       normalizedPwd === customPassword ||
+                       normalizedPwd.toLowerCase() === customPassword.toLowerCase());
+        } else {
+            // Default initial login allowed set (before any password change)
+            const allowedSet = new Set([
+                cleanId,
+                '1234',
+                '123456',
+                '69',
+                '2569',
+                'rtafnc',
+                student.phone ? String(student.phone).trim() : '',
+                student.nickname ? String(student.nickname).trim().toLowerCase() : ''
+            ].filter(Boolean).map(p => String(p).trim().toLowerCase()));
+
+            isMatch = allowedSet.has(normalizedPwd.toLowerCase()) ||
+                      allowedSet.has(inputPwd.toLowerCase()) ||
+                      (inputPwd === cleanId);
+        }
+
+        // If not matched locally, check cloud GAS or server for newly updated password from another device
+        if (!isMatch) {
+            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+            if (gasUrl) {
+                try {
+                    const res = await fetch(`${gasUrl}?action=getPassword&studentId=${cleanId}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.password && (data.password === inputPwd || data.password.toLowerCase() === inputPwd.toLowerCase() || data.password === normalizedPwd)) {
+                            Storage.set('pwd_' + cleanId, data.password);
+                            isMatch = true;
+                        }
+                    }
+                } catch(e) {}
+            }
+        }
 
         if (!isMatch) {
             return { success: false, message: 'รหัสผ่านไม่ถูกต้อง (เริ่มต้นใช้รหัสนักเรียน 7 หลัก หรือ 1234)' };
@@ -1472,6 +1502,64 @@ const App = {
 
     getProfile(studentId) {
         return Storage.get('profile_' + studentId) || {};
+    },
+
+    async changePassword(studentId, newPassword) {
+        const sid = String(studentId || '').trim();
+        const np = String(newPassword || '').trim();
+        if (!sid || !np) return { success: false, message: 'กรุณากรอกรหัสผ่านใหม่' };
+
+        // 1. Save locally in Storage
+        Storage.set('pwd_' + sid, np);
+        const profile = Storage.get('profile_' + sid) || {};
+        Storage.set('profile_' + sid, { ...profile, password: np });
+
+        const session = Storage.get('session');
+        if (session && String(session.student_id) === sid) {
+            session.password = np;
+            Storage.set('session', session);
+        }
+
+        // Update in-memory STUDENTS_DATA if loaded
+        if (typeof STUDENTS_DATA !== 'undefined' && Array.isArray(STUDENTS_DATA)) {
+            const s = STUDENTS_DATA.find(st => String(st.student_id) === sid);
+            if (s) s.password = np;
+        }
+
+        // 2. Save to backend API (if server is active)
+        if (this.canUseBackendApi()) {
+            try {
+                await fetch(`${this.getApiBaseUrl()}/api/change_password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
+                    body: JSON.stringify({ studentId: sid, newPassword: np })
+                });
+            } catch (e) {}
+        }
+
+        // 3. Save to Google Apps Script (Cloud Google Sheets)
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl) {
+            try {
+                fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'changePassword',
+                        studentId: sid,
+                        newPassword: np
+                    })
+                }).then(() => console.log('☁️ Synced password change to Google Apps Script'))
+                  .catch(err => console.warn('⚠️ GAS changePassword error:', err));
+            } catch (e) {}
+        }
+
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('student_updated', { detail: { studentId: sid } }));
+        }
+
+        return { success: true, message: 'เปลี่ยนรหัสผ่านสำเร็จ 🔐' };
     },
 
     // ---------- SETTINGS ----------

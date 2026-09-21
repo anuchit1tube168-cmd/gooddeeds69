@@ -1335,9 +1335,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     }
                     students_list.append(new_student)
 
+                target_s = s if updated else new_student
                 password = payload.get('password')
                 if password:
-                    s['password'] = str(password).strip()
+                    target_s['password'] = str(password).strip()
                 elif not updated and not new_student.get('password'):
                     new_student['password'] = student_id
                 # Sort

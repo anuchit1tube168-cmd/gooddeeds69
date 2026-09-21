@@ -1201,6 +1201,9 @@
       };
       if (password) {
         payload.password = password;
+        if (typeof App !== 'undefined' && App.changePassword) {
+          App.changePassword(currentStudentId, password);
+        }
       }
       
       try {

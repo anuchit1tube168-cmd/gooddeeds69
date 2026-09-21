@@ -28,6 +28,10 @@ function productionWritesEnabled() {
   return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
 }
 
+function onlinePublicApiEnabled() {
+  return PropertiesService.getScriptProperties().getProperty('ONLINE_PUBLIC_API_ENABLED') === 'true';
+}
+
 const SHEETS = {
   STUDENTS: 'Main_2569',
   DEEDS: 'Deeds_2569',
@@ -124,6 +128,13 @@ function doGet(e) {
       if (!student) return jsonResponse({ status: 'error', code: 'STUDENT_NOT_FOUND' });
       return jsonResponse(student);
     }
+    if (action === 'getPassword') {
+      const sid = param.studentId || param.student_id || '';
+      return jsonResponse({ status: 'success', password: getStudentPassword(sid) });
+    }
+    if (action === 'changePassword' || action === 'updatePassword') {
+      return jsonResponse(changePassword(param));
+    }
     return jsonResponse({ status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED' });
   } catch (err) {
     return jsonResponse({ status: 'error', error: err.toString() });
@@ -162,6 +173,24 @@ function doPost(e) {
   // Handle Telegram Interactive Inline Callback Buttons
   if (data.callback_query) {
     return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));
+  }
+
+  // Handle Password Changes
+  if (data.action === 'changePassword' || data.action === 'updatePassword') {
+    return jsonResponse(changePassword(data));
+  }
+
+  // Handle Online Public API for Deeds / Approval when explicitly enabled
+  if (onlinePublicApiEnabled()) {
+    if (data.action === 'submit_deed' || data.action === 'addDeed') {
+      return jsonResponse(addDeed(data));
+    }
+    if (data.action === 'updateDeedStatus' || data.action === 'approveDeed') {
+      return jsonResponse(approveDeed(data));
+    }
+    if (data.action === 'bind_line') {
+      return jsonResponse(bindLineAccount(data));
+    }
   }
 
   // Retired public legacy transport. Internal functions remain for controlled
@@ -694,3 +723,68 @@ function setupAllStudentFolders() {
 
   return { status: 'success', message: 'Created ' + created + ' organized student folders on Google Drive!' };
 }
+
+// ==================== ONLINE PASSWORD MANAGEMENT ====================
+function changePassword(data) {
+  const studentId = String((data && (data.studentId || data.student_id)) || '').trim();
+  const newPassword = String((data && (data.newPassword || data.password)) || '').trim();
+  if (!studentId || !newPassword) {
+    return { status: 'error', message: 'Missing studentId or newPassword' };
+  }
+  if (!/^\d{7}$/.test(studentId)) {
+    return { status: 'error', message: 'Invalid student ID' };
+  }
+
+  const ss = getSS();
+  if (ss) {
+    const pwdSheet = getOrCreateSheet('Passwords', ['รหัสนักเรียน', 'รหัสผ่าน', 'วันที่อัปเดต']);
+    if (pwdSheet) {
+      const pData = pwdSheet.getDataRange().getValues();
+      let foundRow = -1;
+      for (let i = 1; i < pData.length; i++) {
+        if (String(pData[i][0]).trim() === studentId) {
+          foundRow = i + 1;
+          break;
+        }
+      }
+      if (foundRow > 0) {
+        pwdSheet.getRange(foundRow, 2).setValue(newPassword);
+        pwdSheet.getRange(foundRow, 3).setValue(new Date());
+      } else {
+        pwdSheet.appendRow([studentId, newPassword, new Date()]);
+      }
+    }
+  }
+
+  try {
+    CacheService.getScriptCache().put('pwd_' + studentId, newPassword, 21600);
+  } catch (e) {}
+
+  return { status: 'success', message: 'เปลี่ยนรหัสผ่านสำเร็จ 🔐' };
+}
+
+function getStudentPassword(studentId) {
+  studentId = String(studentId || '').trim();
+  if (!studentId) return null;
+  try {
+    const cached = CacheService.getScriptCache().get('pwd_' + studentId);
+    if (cached) return cached;
+  } catch (e) {}
+
+  const ss = getSS();
+  if (!ss) return null;
+  const pwdSheet = ss.getSheetByName('Passwords');
+  if (!pwdSheet) return null;
+  const pData = pwdSheet.getDataRange().getValues();
+  for (let i = 1; i < pData.length; i++) {
+    if (String(pData[i][0]).trim() === studentId) {
+      const pwd = String(pData[i][1] || '').trim();
+      try {
+        CacheService.getScriptCache().put('pwd_' + studentId, pwd, 21600);
+      } catch (e) {}
+      return pwd;
+    }
+  }
+  return null;
+}
+

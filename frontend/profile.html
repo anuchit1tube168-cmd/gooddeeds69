@@ -432,26 +432,20 @@
     // ===== รหัสผ่าน =====
     async function savePassword(e) {
       e.preventDefault();
-      const np = document.getElementById('new-password').value;
-      const cp = document.getElementById('confirm-password').value;
+      const np = document.getElementById('new-password').value.trim();
+      const cp = document.getElementById('confirm-password').value.trim();
       const err = document.getElementById('pwd-error');
       if (!np) { showToast('กรุณากรอกรหัสผ่านใหม่', 'warning'); return; }
+      if (np.length < 4) { showToast('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร', 'warning'); return; }
       if (np !== cp) { err.classList.add('show'); return; }
       err.classList.remove('show');
-      Storage.set('pwd_' + currentUser.student_id, np);
-      App.updateProfile({ password: np });
 
       try {
-        const res = await fetch('/api/change_password', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...(App.getAuthHeaders ? App.getAuthHeaders() : {}) },
-          body: JSON.stringify({ studentId: currentUser.student_id, newPassword: np })
-        });
-        const data = await res.json();
-        if (data && data.status === 'success') {
+        const result = await App.changePassword(currentUser.student_id, np);
+        if (result && result.success) {
           showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐 ใช้รหัสผ่านใหม่เข้าสู่ระบบได้ทุกอุปกรณ์ทันที', 'success');
         } else {
-          showToast('บันทึกรหัสผ่านในเครื่องเรียบร้อย 🔐', 'success');
+          showToast(result ? result.message : 'บันทึกรหัสผ่านเรียบร้อย 🔐', 'success');
         }
       } catch (err) {
         showToast('เปลี่ยนรหัสผ่านสำเร็จ 🔐', 'success');

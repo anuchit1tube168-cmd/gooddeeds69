@@ -1,3 +1,27 @@
+# Online Password Management & Cross-Device Sync — 2026-09-21
+
+State: ONLINE PASSWORD MANAGEMENT & CROSS-DEVICE SYNC OPERATIONAL / GOOGLE SHEETS PASSWORDS SYNC / AUTOMATED TESTS 100% PASS / ZERO-LEAK PASS.
+Current Branch: `codex/fable-gooddeed-hardening-20260907`.
+
+1. Online Password Management & Cross-Device Sync:
+   - Implemented `App.changePassword(studentId, newPassword)` with multi-tier persistence:
+     - LocalStorage (`pwd_<studentId>` and `profile_<studentId>`).
+     - Local Backend API (`/api/change_password`) updating `data/students.json` and `frontend/data/students.json`.
+     - Google Apps Script cloud sync (`gasUrl` -> `changePassword`) recording in `Passwords` sheet on Google Sheets with 6-hour CacheService cache.
+   - Enforced strict password validation in `App.loginStudent`:
+     - If student sets a custom password, old default passwords (such as student ID, '1234', '69', etc.) are strictly REJECTED.
+     - Fallback query to `gasUrl?action=getPassword&studentId=...` enables immediate login on desktop/other devices after changing password on mobile.
+   - Updated password change forms across `frontend/profile.html`, `frontend/change-password.html`, and `frontend/teacher-dashboard.html`.
+   - Fixed student password assignment in `backend/server.py` `/api/update_student`.
+
+2. Verification & Safety:
+   - `scratch/test_password_sync.cjs`: All 6 tests PASSED (initial default login, password change, new password login, old student ID rejected, old 1234 rejected).
+   - Node test suite: 150/150 PASS.
+   - Syntax check: `node scripts/check-syntax.cjs` PASS.
+   - PDPA & Security Compliance: `python3 data/check_pdpa_compliance.py` PASS 100% (0 leaks, 196 tracked files clean).
+
+---
+
 # Live Submission, Telegram Notification & Instant Approval Verification — 2026-09-21
 
 State: TELEGRAM INSTANT NOTIFICATION & LIVE INLINE APPROVAL 100% OPERATIONAL / ALL 4 YEARS VERIFIED / ZERO-LEAK PASS / PORT 3000 ACTIVE.
