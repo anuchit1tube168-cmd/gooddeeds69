@@ -6,6 +6,8 @@ test('security incident keeps legacy Telegram/local API/password surfaces fail-c
   const gas = fs.readFileSync('backend/Code.gs','utf8');
   const server = fs.readFileSync('backend/server.py','utf8');
   const listener = fs.readFileSync('data/telegram_bot_listener.py','utf8');
+  const lineBridge = fs.readFileSync('data/line_webhook_bot.py','utf8');
+  const codeV2 = fs.readFileSync('backend/CodeV2.gs','utf8');
 
   assert.match(gas, /const EMERGENCY_LOCKDOWN = true/);
   assert.doesNotMatch(gas, /password:\s*getStudentPassword/);
