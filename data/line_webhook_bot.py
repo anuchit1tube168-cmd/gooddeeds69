@@ -28,9 +28,10 @@ DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
 
 # === CONFIG ===
-LINE_CHANNEL_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
-TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN', '')
-TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID', '')
+EMERGENCY_LOCKDOWN = True  # SECURITY INCIDENT: do not run this legacy bridge.
+LINE_CHANNEL_TOKEN = ''
+TELEGRAM_BOT_TOKEN = ''
+TELEGRAM_CHAT_ID = ''
 WEBHOOK_PORT = 3001
 
 # === In-Memory: LINE userId → Telegram message mapping for replies ===
@@ -150,7 +151,9 @@ def get_line_profile(line_user_id):
 
 
 def send_telegram(text, reply_markup=None):
-    """Send message to Telegram admin group."""
+    """Disabled legacy Telegram bridge during security incident."""
+    if EMERGENCY_LOCKDOWN:
+        return {}
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
     payload = {
         'chat_id': TELEGRAM_CHAT_ID,
@@ -170,7 +173,9 @@ def send_telegram(text, reply_markup=None):
 
 
 def push_to_github_bg(msg="LINE bind update"):
-    """Push changes to GitHub in background."""
+    """Disabled: repository writes require explicit owner-approved workflow."""
+    if EMERGENCY_LOCKDOWN:
+        return False
     def run_push():
         try:
             subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True)
@@ -188,6 +193,11 @@ def push_to_github_bg(msg="LINE bind update"):
 
 class LineWebhookHandler(BaseHTTPRequestHandler):
     def do_POST(self):
+        if EMERGENCY_LOCKDOWN:
+            self.send_response(503)
+            self.end_headers()
+            self.wfile.write(b'EMERGENCY_LOCKDOWN')
+            return
         if self.path == '/webhook' or self.path == '/line/webhook':
             content_length = int(self.headers.get('Content-Length', 0))
             body = self.rfile.read(content_length)
@@ -634,4 +644,6 @@ def main():
 
 
 if __name__ == '__main__':
+    if EMERGENCY_LOCKDOWN:
+        raise SystemExit('line_webhook_bot disabled: EMERGENCY_LOCKDOWN')
     main()
