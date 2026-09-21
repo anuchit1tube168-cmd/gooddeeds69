@@ -56,12 +56,16 @@ def get_env_config(key, default=''):
             pass
     return default
 
-BOT_TOKEN = get_env_config('TELEGRAM_BOT_TOKEN')
-CHAT_ID = get_env_config('TELEGRAM_CHAT_ID')
+EMERGENCY_LOCKDOWN = True
+BOT_TOKEN = ''
+CHAT_ID = ''
 
 LOCK_FILE = '/tmp/gooddeeds_telegram_listener.pid'
 
 def check_and_acquire_lock():
+    if EMERGENCY_LOCKDOWN:
+        print('Telegram listener disabled: EMERGENCY_LOCKDOWN')
+        return False
     if os.path.exists(LOCK_FILE):
         try:
             with open(LOCK_FILE, 'r') as f:
@@ -92,6 +96,8 @@ def release_lock():
 atexit.register(release_lock)
 
 def send_telegram_request(method, payload):
+    if EMERGENCY_LOCKDOWN:
+        return {}
     if not BOT_TOKEN:
         return {}
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/{method}"
@@ -193,6 +199,8 @@ def push_updates_to_github_bg(msg="Auto-update deed status from Telegram"):
     threading.Thread(target=run_push, daemon=True).start()
 
 def update_deed_status_in_db(student_id, deed_id, new_status, approver_name):
+    if EMERGENCY_LOCKDOWN:
+        return None
     # Re-enabled for local Telegram approval workflow per user instruction.
     student_id = str(student_id).strip()
     deed_id = str(deed_id).strip()
