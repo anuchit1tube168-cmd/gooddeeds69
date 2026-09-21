@@ -1,4 +1,4 @@
-/**
+const GD_EMERGENCY_LOCKDOWN = true; // SECURITY INCIDENT: Telegram provider disabled until explicit owner re-enable.\n\n/**
  * RTAFNC Good Deed Online API v2
  * Frontend: GitHub Pages (static only)
  * Backend: Google Apps Script + private Google Sheets/Drive
@@ -633,9 +633,10 @@ function audit_(actorId, action, entityType, entityId, detail, requestId) {
 }
 
 function notifyTelegram_(message) {
+  if (GD_EMERGENCY_LOCKDOWN) return { status: 'disabled', reason: 'EMERGENCY_LOCKDOWN' };
   const props = PropertiesService.getScriptProperties();
-  const token = props.getProperty('TELEGRAM_BOT_TOKEN');
-  const chatId = props.getProperty('TELEGRAM_CHAT_ID');
+  const token = '';
+  const chatId = '';
   if (!token || !chatId) return;
   try {
     UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'post', contentType: 'application/json', payload: JSON.stringify({ chat_id: chatId, text: message }), muteHttpExceptions: true });
