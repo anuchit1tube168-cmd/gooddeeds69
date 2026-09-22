@@ -15,7 +15,10 @@ test('security incident keeps legacy Telegram/local API/password surfaces fail-c
 
   assert.match(server, /ENABLE_LOCAL_API'\] = 'false'/);
   assert.doesNotMatch(server, /setdefault\('ENABLE_LOCAL_API', 'true'\)/);
-  assert.match(server, /SECURITY_INCIDENT_TELEGRAM_DISABLED/);
+  assert.match(server, /TELEGRAM_RUNTIME_RETIRED/);
+  assert.doesNotMatch(server, /api\.telegram\.org\/bot/);
+  assert.doesNotMatch(server, /get_env_config\(['\"]TELEGRAM_BOT_TOKEN['\"]\)/);
+  assert.doesNotMatch(server, /get_env_config\(['\"]TELEGRAM_CHAT_ID['\"]\)/);
 
   // Retired runtimes must stay deleted rather than being revived in a disabled form.
   assert.equal(fs.existsSync('data/telegram_bot_listener.py'), false);
