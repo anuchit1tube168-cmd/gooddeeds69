@@ -164,7 +164,7 @@ function clearAuthCookie(name) {
 async function syncStudentsFromCloud() {
     try {
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-        if (!gasUrl) return;
+        if (!gasUrl || typeof fetch !== 'function') return;
         const resp = await fetch(gasUrl + '?action=getStudents');
         if (resp.ok) {
             const list = await resp.json();
@@ -829,6 +829,48 @@ const App = {
                 console.warn('Backend sync all deeds error:', e);
             }
         }
+
+        // Cloud Google Apps Script fetch for GitHub Pages & Online Deployment
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+        if (gasUrl && typeof fetch === 'function') {
+            try {
+                const res = await fetch(`${gasUrl}?action=getDeeds`);
+                if (res.ok) {
+                    const cloudDeeds = await res.json();
+                    if (Array.isArray(cloudDeeds) && cloudDeeds.length > 0) {
+                        const byStudent = {};
+                        cloudDeeds.forEach(d => {
+                            const sid = String(d.student_id || d.studentId);
+                            if (!byStudent[sid]) byStudent[sid] = [];
+                            byStudent[sid].push(d);
+                        });
+
+                        Object.entries(byStudent).forEach(([sid, deeds]) => {
+                            const current = this.getDeeds(sid);
+                            const mergedMap = new Map();
+                            current.forEach(d => mergedMap.set(String(d.id), d));
+                            deeds.forEach(d => {
+                                const existing = mergedMap.get(String(d.id)) || {};
+                                mergedMap.set(String(d.id), { ...existing, ...d });
+                            });
+                            this.saveDeeds(sid, this.deduplicateDeeds(Array.from(mergedMap.values())));
+                        });
+
+                        window.IMPORTED_DEEDS = byStudent;
+                        window.DEEDS_DATA = cloudDeeds;
+                        globalThis.IMPORTED_DEEDS = byStudent;
+                        globalThis.DEEDS_DATA = cloudDeeds;
+
+                        if (typeof window !== 'undefined') {
+                            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: cloudDeeds.length } }));
+                        }
+                        return cloudDeeds;
+                    }
+                }
+            } catch (err) {
+                console.warn('Cloud sync all deeds note:', err.message);
+            }
+        }
         return null;
     },
 
@@ -1381,7 +1423,7 @@ const App = {
         // 3. Fallback: Google Apps Script
         try {
             const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-            if (gasUrl) {
+            if (gasUrl && typeof fetch === 'function') {
                 const resp = await fetch(gasUrl + '?action=getStudents');
                 if (resp.ok) {
                     const list = await resp.json();

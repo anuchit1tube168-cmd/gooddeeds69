@@ -95,18 +95,17 @@
   const CHANNEL = 'RTAFNC_GOODDEED';
   const TOKEN_KEY = 'gd_v2_session_token';
   const GAS_TIMEOUT = 22000;
-  const GAS_PROBE_TIMEOUT = 5000;
+  const GAS_PROBE_TIMEOUT = 1000;
   const GAS_PROBE_TTL = 60000;
   const getEndpoint = () => (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? String(CONFIG.GAS_URL) : '';
   const getToken = () => { try { return sessionStorage.getItem(TOKEN_KEY) || ''; } catch (_) { return ''; } };
   const setToken = value => { try { value ? sessionStorage.setItem(TOKEN_KEY, value) : sessionStorage.removeItem(TOKEN_KEY); } catch (_) {} };
   let gasEpoch = 0;
-  let gasProbe = { endpoint: '', verifiedAt: 0 };
+  let gasProbe = { endpoint: '', verifiedAt: 0, failedAt: 0 };
   let gasProbePending = null;
   const pendingCalls = new Set();
   function clearV2() {
     gasEpoch++; setToken(''); pendingCalls.forEach(cancel => cancel());
-    try { localStorage.removeItem('gooddeeds_session'); } catch (_) {}
   }
   const rid = () => 'web-' + root.crypto.randomUUID();
 
@@ -177,14 +176,15 @@
     const endpoint = getEndpoint();
     if (!/^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(endpoint)) throw new Error('GAS_V2_NOT_CONFIGURED');
     if (gasProbe.endpoint === endpoint && Date.now() - gasProbe.verifiedAt < GAS_PROBE_TTL) return true;
+    if (gasProbe.endpoint === endpoint && Date.now() - gasProbe.failedAt < 30000) throw new Error('GAS_V2_BACKEND_UNAVAILABLE');
     if (!gasProbePending) {
       gasProbePending = gasBridgePost('__contract_probe__', {}, '', GAS_PROBE_TIMEOUT, true)
         .then(() => {
-          gasProbe = { endpoint, verifiedAt: Date.now() };
+          gasProbe = { endpoint, verifiedAt: Date.now(), failedAt: 0 };
           return true;
         })
         .catch(error => {
-          gasProbe = { endpoint: '', verifiedAt: 0 };
+          gasProbe = { endpoint: '', verifiedAt: 0, failedAt: Date.now() };
           if (error && error.message === 'REQUEST_CANCELLED') throw error;
           throw new Error('GAS_V2_BACKEND_UNAVAILABLE');
         })
@@ -270,12 +270,15 @@
   root.GoodDeedV2 = Object.freeze({ call: gasCall, getToken, clear: clearV2, syncDeeds });
 
   if (typeof App !== 'undefined' && App) {
+    const originalLoginStudent = App.loginStudent ? App.loginStudent.bind(App) : null;
+    const originalLoginTeacher = App.loginTeacher ? App.loginTeacher.bind(App) : null;
     const originalLogout = App.logout ? App.logout.bind(App) : null;
     const originalGetAllPending = App.getAllPendingDeeds ? App.getAllPendingDeeds.bind(App) : () => [];
     const originalGetAllSummary = App.getAllStudentsSummary ? App.getAllStudentsSummary.bind(App) : () => [];
     const originalAddDeed = App.addDeed ? App.addDeed.bind(App) : null;
     const originalUpdateDeedStatus = App.updateDeedStatus ? App.updateDeedStatus.bind(App) : null;
     const originalNotifyAdmins = App.notifyAdmins ? App.notifyAdmins.bind(App) : null;
+    const originalStartRealtimeSync = App.startRealtimeSync ? App.startRealtimeSync.bind(App) : null;
     const originalSyncDeedsFromCloud = App.syncDeedsFromCloud ? App.syncDeedsFromCloud.bind(App) : null;
     const originalSyncDeedsWithBackend = App.syncDeedsWithBackend ? App.syncDeedsWithBackend.bind(App) : null;
     const originalSyncAllDeedsWithBackend = App.syncAllDeedsWithBackend ? App.syncAllDeedsWithBackend.bind(App) : null;
@@ -297,7 +300,17 @@
         if (data.user.mustChangePassword) return { success: false, requiresPasswordChange: true, message: 'กรุณาเปลี่ยนรหัสผ่านก่อนใช้งาน' };
         const user = normalizeUser(data.user); App.setSession('student', user);
         return { success: true, user };
-      } catch (e) { if (current === gasEpoch) clearV2(); return { success: false, message: e.message === 'GAS_V2_BACKEND_UNAVAILABLE' ? 'ระบบหลังบ้านกำลังปรับรุ่น กรุณาลองใหม่ภายหลังหรือแจ้งผู้ดูแลระบบ' : e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบไม่สำเร็จ' }; }
+      } catch (e) {
+        if (current === gasEpoch) clearV2();
+        if (originalLoginStudent && (e.message === 'GAS_V2_BACKEND_UNAVAILABLE' || e.message === 'GAS_V2_TIMEOUT' || e.message === 'GAS_V2_NOT_CONFIGURED')) {
+          try {
+            const fallback = await originalLoginStudent(studentId, password);
+            if (fallback && fallback.success) return fallback;
+            if (fallback && fallback.message && !fallback.message.includes('ระบบหลังบ้านกำลังปรับรุ่น')) return fallback;
+          } catch (_) {}
+        }
+        return { success: false, message: e.message === 'GAS_V2_BACKEND_UNAVAILABLE' ? 'ระบบหลังบ้านกำลังปรับรุ่น กรุณาลองใหม่ภายหลังหรือแจ้งผู้ดูแลระบบ' : e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบไม่สำเร็จ' };
+      }
     };
 
     App.loginTeacher = async function(username, password) {
@@ -310,7 +323,17 @@
         if (data.user.mustChangePassword) return { success: false, requiresPasswordChange: true, message: 'กรุณาเปลี่ยนรหัสผ่านก่อนใช้งาน' };
         const user = normalizeUser(data.user); App.setSession(user.role, user);
         return { success: true, user };
-      } catch (e) { if (current === gasEpoch) clearV2(); return { success: false, message: e.message === 'GAS_V2_BACKEND_UNAVAILABLE' ? 'ระบบหลังบ้านกำลังปรับรุ่น กรุณาลองใหม่ภายหลังหรือแจ้งผู้ดูแลระบบ' : e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบไม่สำเร็จ' }; }
+      } catch (e) {
+        if (current === gasEpoch) clearV2();
+        if (originalLoginTeacher && (e.message === 'GAS_V2_BACKEND_UNAVAILABLE' || e.message === 'GAS_V2_TIMEOUT' || e.message === 'GAS_V2_NOT_CONFIGURED')) {
+          try {
+            const fallback = await originalLoginTeacher(username, password);
+            if (fallback && fallback.success) return fallback;
+            if (fallback && fallback.message && !fallback.message.includes('ระบบหลังบ้านกำลังปรับรุ่น')) return fallback;
+          } catch (_) {}
+        }
+        return { success: false, message: e.message === 'GAS_V2_BACKEND_UNAVAILABLE' ? 'ระบบหลังบ้านกำลังปรับรุ่น กรุณาลองใหม่ภายหลังหรือแจ้งผู้ดูแลระบบ' : e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบไม่สำเร็จ' };
+      }
     };
 
     App.syncDeedsFromCloud = async function(studentId) {
@@ -391,6 +414,9 @@
     };
 
     App.startRealtimeSync = function(studentId, callback) {
+      if (!getToken() && originalStartRealtimeSync) {
+        return originalStartRealtimeSync(studentId, callback);
+      }
       let stopped = false, busy = false;
       const poll = async () => { if (stopped || busy || !getToken()) return; busy = true; try { await syncDeeds(String(studentId || '')); if (typeof callback === 'function') callback(); } catch (_) {} finally { busy = false; } };
       poll(); const timer = setInterval(poll, 15000); return () => { stopped = true; clearInterval(timer); };
