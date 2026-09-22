@@ -802,7 +802,7 @@
   <script src="data/students_photos.js?v=3593"></script>
   <script src="data/deeds_data.js?v=3593"></script>
   <script src="data/app_settings.js?v=3593"></script>
-  <script src="app.js?v=20260919-auth-boundary"></script>
+  <script src="app.js?v=20260921-online-active"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260920-backend-readiness"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -891,10 +891,25 @@
       const fltAll = document.getElementById('flt-all');
       if (fltAll) fltAll.textContent = `ทั้งหมด (${allSummary.length})`;
 
+      const count69 = allSummary.filter(s => Number(s.class_year) === 69).length;
+      const count68 = allSummary.filter(s => Number(s.class_year) === 68).length;
+      const count67 = allSummary.filter(s => Number(s.class_year) === 67).length;
+      const count66 = allSummary.filter(s => Number(s.class_year) === 66).length;
+
+      const f69 = document.getElementById('flt-69'); if (f69) f69.textContent = `🌱 ปี 1 (รุ่น 69: ${count69})`;
+      const f68 = document.getElementById('flt-68'); if (f68) f68.textContent = `🌿 ปี 2 (รุ่น 68: ${count68})`;
+      const f67 = document.getElementById('flt-67'); if (f67) f67.textContent = `🌳 ปี 3 (รุ่น 67: ${count67})`;
+      const f66 = document.getElementById('flt-66'); if (f66) f66.textContent = `👑 ปี 4 (รุ่น 66: ${count66})`;
+
       const activeStudents = allSummary.filter(s => [69, 68, 67, 66].includes(Number(s.class_year)));
       const alumniStudents = allSummary.filter(s => ![69, 68, 67, 66].includes(Number(s.class_year)));
       const activePassed = activeStudents.filter(s => s.passed).length;
       const totalApproved = allSummary.reduce((a, s) => a + s.approvedCount, 0);
+
+      const fActive = document.getElementById('flt-active'); if (fActive) fActive.textContent = `🎓 ปี 1-4 ปัจจุบัน (${activeStudents.length})`;
+      const fAlumni = document.getElementById('flt-alumni'); if (fAlumni) fAlumni.textContent = `🎓 ศิษย์เก่า (${alumniStudents.length})`;
+      const fPass = document.getElementById('flt-pass'); if (fPass) fPass.textContent = `✅ ผ่านเกณฑ์ (${activePassed})`;
+      const fFail = document.getElementById('flt-fail'); if (fFail) fFail.textContent = `⚠️ ยังไม่ผ่าน (${activeStudents.length - activePassed})`;
 
       const kPend = document.getElementById('k-pending'); if (kPend) kPend.textContent = pendingDeeds.length;
       const kAppr = document.getElementById('k-approved'); if (kAppr) kAppr.textContent = totalApproved;
@@ -1186,6 +1201,9 @@
       };
       if (password) {
         payload.password = password;
+        if (typeof App !== 'undefined' && App.changePassword) {
+          App.changePassword(currentStudentId, password);
+        }
       }
       
       try {
@@ -1365,10 +1383,12 @@
     // ===== STATS =====
     function renderStats() {
       const years = [
+        { label: 'ชั้นปีที่ 1', sub: 'รุ่น 69', year: 69, col: '#10b981' },
         { label: 'ชั้นปีที่ 2', sub: 'รุ่น 68', year: 68, col: '#3b82f6' },
         { label: 'ชั้นปีที่ 3', sub: 'รุ่น 67', year: 67, col: '#8b5cf6' },
         { label: 'ชั้นปีที่ 4', sub: 'รุ่น 66', year: 66, col: '#22c55e' },
         { label: 'ศิษย์เก่า รุ่น 65', sub: 'SWD65', year: 65, col: '#f59e0b' },
+        { label: 'ศิษย์เก่า รุ่น 64', sub: 'SWD64', year: 64, col: '#ec4899' },
       ];
       const minH = CONFIG.MIN_HOURS_PER_YEAR;
 

@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 .env
 .env.*
+!.env.example
 scratch/
 good-deeds-system/
 graphify-8/
@@ -63,3 +64,4 @@ auto_login.html
 frontend/auto_login.html
 *.DS_Store
 */.DS_Store
+node_modules/

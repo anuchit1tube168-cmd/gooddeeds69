@@ -15,18 +15,17 @@ test('retired duplicate backend refuses public reads and writes without storage 
   }
 });
 
-test('Telegram transport exceptions never place credentials in logs', () => {
+test('Telegram containment never reads credentials or calls the provider', () => {
   const logs = [];
   const token = 'synthetic-private-credential';
   const context = vm.createContext({
     console: {error: value => logs.push(String(value))},
-    PropertiesService: {getScriptProperties: () => ({getProperty: key =>
-      key === 'TELEGRAM_BOT_TOKEN' ? token : 'synthetic-chat'})},
-    UrlFetchApp: {fetch: url => {throw new Error('Provider failed at ' + url);}}
+    PropertiesService: {getScriptProperties: () => assert.fail('credential access while disabled')},
+    UrlFetchApp: {fetch: () => assert.fail('provider access while disabled')}
   });
   vm.runInContext(fs.readFileSync('backend/CodeV2.gs', 'utf8'), context);
-  context.notifyTelegram_('synthetic notification');
-  assert.deepEqual(logs, ['TELEGRAM_REQUEST_FAILED']);
+  assert.equal(context.notifyTelegram_('synthetic notification').status, 'disabled');
+  assert.deepEqual(logs, []);
   assert.equal(logs.join('').includes(token), false);
 });
 

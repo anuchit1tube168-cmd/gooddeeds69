@@ -433,7 +433,7 @@
     <script src="data/teachers_data.js?v=3593"></script>
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
-    <script src="app.js?v=20260919-auth-boundary"></script>
+    <script src="app.js?v=20260921-online-active"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -656,6 +656,16 @@
             const params = new URLSearchParams(window.location.search);
             const deedId = params.get('id');
             const studentId = params.get('studentId');
+            const urlName = params.get('name') || '';
+            const urlCat = params.get('cat');
+            const urlCatName = params.get('catName');
+            const urlHours = params.get('hours');
+            const urlDate = params.get('date');
+            const urlDesc = params.get('desc') || params.get('description');
+            const urlLoc = params.get('loc') || params.get('location');
+            const urlStatus = params.get('status') || 'pending';
+            const urlAppr = params.get('appr') || params.get('approver');
+            const urlImg = params.get('img') || '';
 
             function str(v) { return v ? String(v).trim() : ''; }
 
@@ -678,6 +688,32 @@
                 } catch (e) {
                     console.warn('Could not fetch deed from backend:', e);
                 }
+            }
+
+            // 3. Fallback: construct deed from URL params (Telegram links include all details)
+            if (!currentDeed && deedId && studentId) {
+                currentDeed = {
+                    id: deedId,
+                    student_id: studentId,
+                    studentId: studentId,
+                    student_name: decodeURIComponent(urlName || ''),
+                    studentName: decodeURIComponent(urlName || ''),
+                    category_id: urlCat || '7',
+                    categoryId: urlCat || '7',
+                    category_name: urlCatName ? decodeURIComponent(urlCatName) : 'กิจกรรมจิตอาสา',
+                    categoryName: urlCatName ? decodeURIComponent(urlCatName) : 'กิจกรรมจิตอาสา',
+                    hours: parseFloat(urlHours) || 1,
+                    date: urlDate || new Date().toISOString().split('T')[0],
+                    activityDate: urlDate || new Date().toISOString().split('T')[0],
+                    description: urlDesc ? decodeURIComponent(urlDesc) : '',
+                    location: urlLoc ? decodeURIComponent(urlLoc) : '',
+                    status: urlStatus,
+                    approver: urlAppr ? decodeURIComponent(urlAppr) : '',
+                    imageUrl: urlImg || '',
+                    class_year: studentId.substring(0, 2),
+                    _fromUrlParams: true
+                };
+                console.log('📎 Constructed deed from URL params (Telegram link fallback)');
             }
 
             if (!currentDeed) {
