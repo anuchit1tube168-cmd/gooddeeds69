@@ -6,6 +6,35 @@ const js = read("frontend/view_cards.cloudflare.js");
 const runtimeConfig = read("functions/runtime-config.ts");
 const wrangler = read("wrangler.cards.jsonc");
 
+const appScriptV2 = read("backend/CodeV2.gs");
+const appScriptLegacy = read("backend/Code.gs");
+const envExample = read(".env.example");
+
+const telegramSecretBoundaryForbidden = [
+  "api.telegram.org/bot",
+  "getProperty('TELEGRAM_BOT_TOKEN')",
+  'getProperty("TELEGRAM_BOT_TOKEN")',
+  "getProperty('TELEGRAM_CHAT_ID')",
+  'getProperty("TELEGRAM_CHAT_ID")',
+  "TELEGRAM_BOT_TOKEN=",
+  "TELEGRAM_CHAT_ID="
+];
+
+for (const marker of telegramSecretBoundaryForbidden) {
+  if (appScriptV2.includes(marker) || envExample.includes(marker)) {
+    throw new Error(`Telegram secret/runtime must be Cloudflare-only: ${marker}`);
+  }
+}
+
+if (!appScriptV2.includes("function retireLegacyTelegramScriptProperties()")) {
+  throw new Error("missing Apps Script legacy Telegram-property retirement utility");
+}
+
+if (!appScriptLegacy.includes("const EMERGENCY_LOCKDOWN = true")) {
+  throw new Error("legacy Apps Script must remain emergency-locked");
+}
+
+
 const forbidden = [
   "style.css", "cloudflare-config.js", "2010948179-Ympqt2bT",
   "students_data.js", "students_photos.js", "deeds_data.js", "teachers_data.js",
