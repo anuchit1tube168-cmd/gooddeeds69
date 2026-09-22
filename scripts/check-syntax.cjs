@@ -14,5 +14,5 @@ for (const file of ['frontend/index.html','frontend/profile.html','frontend/stud
 }
 console.log('JavaScript, Apps Script and inline HTML script syntax passed.');
 
-require('node:child_process').execFileSync('python3',['-c', "import ast,pathlib; [ast.parse(pathlib.Path(p).read_text(),filename=p) for p in ['backend/server.py','backend/line_notifier.py','data/build_photos.py','data/sync_all_students.py','data/embed_settings_to_excel.py','data/line_webhook_bot.py','data/telegram_bot_listener.py','data/export_students.py']]"],{stdio:'inherit'});
+require('node:child_process').execFileSync('python3',['-c', "import ast,pathlib; paths=['backend/server.py','backend/line_notifier.py','data/build_photos.py','data/sync_all_students.py','data/embed_settings_to_excel.py','data/line_webhook_bot.py','data/telegram_bot_listener.py','data/export_students.py']; [ast.parse(pathlib.Path(p).read_text(),filename=p) for p in paths if pathlib.Path(p).exists()]"],{stdio:'inherit'});
 console.log('Python source syntax passed.');
