@@ -8,6 +8,7 @@ const wrangler = read("wrangler.cards.jsonc");
 
 const appScriptV2 = read("backend/CodeV2.gs");
 const appScriptLegacy = read("backend/Code.gs");
+const localServer = read("backend/server.py");
 const envExample = read(".env.example");
 
 const telegramSecretBoundaryForbidden = [
@@ -21,9 +22,14 @@ const telegramSecretBoundaryForbidden = [
 ];
 
 for (const marker of telegramSecretBoundaryForbidden) {
-  if (appScriptV2.includes(marker) || envExample.includes(marker)) {
+  if (appScriptV2.includes(marker) || localServer.includes(marker) || envExample.includes(marker)) {
     throw new Error(`Telegram secret/runtime must be Cloudflare-only: ${marker}`);
   }
+}
+
+if (localServer.includes("get_env_config('TELEGRAM_BOT_TOKEN')") ||
+    localServer.includes("get_env_config('TELEGRAM_CHAT_ID')")) {
+  throw new Error("local server must not read Telegram credentials");
 }
 
 if (!appScriptV2.includes("function retireLegacyTelegramScriptProperties()")) {
