@@ -431,3 +431,13 @@ A guarded auth/read/activation-only canary profile is already prepared in `rtafn
 7. Production cutover/write remains FALSE until staged evidence and explicit owner approval.
 
 No student rows, hours, evidence, historical records, LINE bindings, Telegram secrets, or production writes were changed during this recovery checkpoint.
+# Token handling checkpoint — 2026-09-22
+
+- Follow-up: full repository guard identified two embedded LINE token literals in `data/google_apps_script_backend.js`. Removed them without printing values and disabled that duplicate legacy file's unauthenticated web handlers. Issuer revocation remains required; no live deployment was altered.
+- Updated local verification: syntax checks and 155 JS tests pass. Full-repository PII guard still fails on pre-existing identity-pattern findings (including possible binary false positives); do not claim the repository or history is fully clean.
+
+- Base: `3637e9c3`; isolated branch `codex/token-boundary-20260922`.
+- Removed raw provider exception/stack logging from V2 request and Telegram failure paths. Added two synthetic regression tests and `docs/TOKEN_ROTATION_20260922.md`.
+- Validation: syntax checks passed; 154 JavaScript tests passed. These are local results, not production or revocation proof.
+- GitHub fetch failed with SSL connection timeout; no remote deployment or secret change performed. Drive connector previously failed with transport error.
+- Owner reports a replacement token is stored privately in an LLM; exact location and bot identity remain unresolved. Next: identify that location without displaying the secret, revoke old token at its issuer, verify replacement identity and the actual deployment, then install server-side.

@@ -50,7 +50,8 @@ function doPost(e) {
     const data = dispatch_(action, payload, token, requestId);
     return bridge_({ channel: GD.CHANNEL, requestId: requestId, ok: true, data: data }, origin);
   } catch (error) {
-    console.error(error && error.stack ? error.stack : error);
+    // Provider exceptions can contain credential-bearing URLs or request bodies.
+    console.error('GOODDEED_REQUEST_FAILED');
     return bridge_({ channel: GD.CHANNEL, requestId: requestId, ok: false, error: safeError_(error) }, origin);
   }
 }
@@ -639,7 +640,7 @@ function notifyTelegram_(message) {
   if (!token || !chatId) return;
   try {
     UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'post', contentType: 'application/json', payload: JSON.stringify({ chat_id: chatId, text: message }), muteHttpExceptions: true });
-  } catch (error) { console.error('Telegram: ' + error); }
+  } catch (error) { console.error('TELEGRAM_REQUEST_FAILED'); }
 }
 
 function verifyLineIdToken_(idToken) {
@@ -762,4 +763,3 @@ function safeError_(error) { const message=error&&error.message?String(error.mes
 function allowedOrigin_(origin) { const configured=PropertiesService.getScriptProperties().getProperty('ALLOWED_ORIGIN')||GD.DEFAULT_ORIGIN; return String(origin||'')===configured?configured:configured; }
 function bridge_(message,origin) { const json=JSON.stringify(message).replace(/</g,'\\u003c').replace(/>/g,'\\u003e').replace(/&/g,'\\u0026'); const html='<!doctype html><meta charset="utf-8"><script>parent.postMessage('+json+','+JSON.stringify(origin)+');<\/script>'; return HtmlService.createHtmlOutput(html).setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL); }
 function json_(object) { return ContentService.createTextOutput(JSON.stringify(object)).setMimeType(ContentService.MimeType.JSON); }
-

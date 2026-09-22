@@ -11,7 +11,14 @@
 
 var ROOT_FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
 
+// Retired unsafe copy: never expose rosters or accept unsigned writes.
 function doGet(e) {
+  return ContentService.createTextOutput(JSON.stringify({status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED'})).setMimeType(ContentService.MimeType.JSON);
+}
+function doPost(e) {
+  return ContentService.createTextOutput(JSON.stringify({status: 'error', code: 'AUTHENTICATED_GATEWAY_REQUIRED'})).setMimeType(ContentService.MimeType.JSON);
+}
+function legacyDoGetDisabled_(e) {
   var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'ping';
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   
@@ -92,7 +99,7 @@ function doGet(e) {
   })).setMimeType(ContentService.MimeType.JSON);
 }
 
-function doPost(e) {
+function legacyDoPostDisabled_(e) {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
   var params;
   try {
@@ -244,7 +251,7 @@ function doPost(e) {
   
   // 3. ส่ง LINE Message (Proxy ผ่าน Google Server แก้ CORS 100%)
   if (action === 'send_line_message') {
-    var lineToken = params.token || 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    var lineToken = ''; // Retired credential; this legacy entrypoint is disabled.
     var target = params.target || 'broadcast';
     var messages = params.messages || [];
     var to = params.to || '';
@@ -279,7 +286,7 @@ function doPost(e) {
   // 4. รับ LINE Webhook Events โดยตรงบน Google Cloud (ทำงาน 24 ชม. ไม่ต้องเปิดคอม)
   if (params && params.events) {
     var events = params.events || [];
-    var lineToken = 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    var lineToken = ''; // Retired credential; this legacy entrypoint is disabled.
     
     for (var evIdx = 0; evIdx < events.length; evIdx++) {
       var ev = events[evIdx];
