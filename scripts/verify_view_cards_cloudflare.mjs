@@ -22,7 +22,7 @@ const telegramSecretBoundaryForbidden = [
 ];
 
 for (const marker of telegramSecretBoundaryForbidden) {
-  if (appScriptV2.includes(marker) || localServer.includes(marker) || envExample.includes(marker)) {
+  if (appScriptV2.includes(marker) || appScriptLegacy.includes(marker) || localServer.includes(marker) || envExample.includes(marker)) {
     throw new Error(`Telegram secret/runtime must be Cloudflare-only: ${marker}`);
   }
 }
@@ -38,6 +38,9 @@ if (!appScriptV2.includes("function retireLegacyTelegramScriptProperties()")) {
 
 if (!appScriptLegacy.includes("const EMERGENCY_LOCKDOWN = true")) {
   throw new Error("legacy Apps Script must remain emergency-locked");
+}
+if (appScriptLegacy.includes("api.telegram.org/bot")) {
+  throw new Error("legacy Apps Script must not contain Telegram Bot API transport");
 }
 
 
