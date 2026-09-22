@@ -2121,7 +2121,8 @@ const App = {
         let clean = typeof key === 'string' ? key.trim() : '';
         if (clean.startsWith('./')) clean = clean.substring(2);
         if (clean.startsWith('/')) clean = clean.substring(1);
-        if (!clean.startsWith('photos/')) clean = 'photos/' + clean;
+        if (clean === '510903.jpg' || clean.endsWith('/510903.jpg')) return '510903.jpg';
+        if (!clean.startsWith('photos/') && !clean.startsWith('data/')) clean = 'photos/' + clean;
 
         // If on GitHub Pages or external origin, prepend Cloudflare tunnel / backend server URL
         const isExternal = typeof location !== 'undefined' && (location.hostname.includes('github.io') || (location.hostname !== 'localhost' && location.hostname !== '127.0.0.1'));
@@ -2134,15 +2135,42 @@ const App = {
     },
 };
 
-// ==================== TOAST GLOBAL ====================
+// ==================== TOAST & NOTIFICATION CHIME ====================
+function playNotificationChime() {
+    try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(587.33, now); // D5
+        osc.frequency.setValueAtTime(880.00, now + 0.1); // A5
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.linearRampToValueAtTime(0.12, now + 0.03);
+        gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(now);
+        osc.stop(now + 0.38);
+    } catch (e) {}
+}
+
 function showToast(message, type = 'success') {
-    const container = document.getElementById('toast-container');
-    if (!container) return;
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
     const icons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
     toast.innerHTML = `<span>${icons[type] || 'ℹ️'}</span><span>${message}</span>`;
     container.appendChild(toast);
+    playNotificationChime();
     setTimeout(() => { toast.style.opacity = '0'; toast.style.transform = 'translateX(50px)'; setTimeout(() => toast.remove(), 300); }, 3500);
 }
 
@@ -2241,11 +2269,12 @@ function startRealtimeUpdates() {
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
+                    showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${data.studentId}`);
                     await App.syncAllDeedsWithBackend();
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                     if (typeof loadData === 'function') loadData();
-                    showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${data.studentId}`);
                 } else if (String(user.student_id) === String(data.studentId)) {
+                    showToast(`🎉 กิจกรรมจิตอาสาของคุณได้รับการอนุมัติแล้ว (${data.status})!`);
                     await App.syncDeedsWithBackend(data.studentId);
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                     if (typeof init === 'function') init();
@@ -2267,14 +2296,15 @@ function startRealtimeUpdates() {
             const user = App.getCurrentUser();
             if (user) {
                 if (user.role === 'teacher' || user.role === 'admin') {
+                    showToast(`✅ รายการความดีของ นพอ. รหัส ${data.studentId} ได้รับการอัปเดต (${data.status || 'อนุมัติ'})`);
                     await App.syncAllDeedsWithBackend();
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                     if (typeof loadData === 'function') loadData();
                 } else if (String(user.student_id) === String(data.studentId)) {
+                    showToast(`🎉 กิจกรรมจิตอาสาของคุณได้รับการอนุมัติแล้ว (${data.status || 'อนุมัติ'})!`);
                     await App.syncDeedsWithBackend(data.studentId);
                     if (typeof loadDashboardData === 'function') loadDashboardData();
                     if (typeof init === 'function') init();
-                    showToast(`🎉 กิจกรรมจิตอาสาของคุณได้รับการอนุมัติแล้ว (${data.status})!`);
                 }
             }
             if (typeof window !== 'undefined') {
@@ -2299,6 +2329,16 @@ function startRealtimeUpdates() {
             if (typeof init === 'function') init();
         } catch (err) {
             console.error("Error processing student_updated event:", err);
+        }
+    });
+
+    eventSource.addEventListener('system_notification', (e) => {
+        try {
+            const data = JSON.parse(e.data);
+            console.log("🔔 Real-time: System notification received:", data);
+            showToast(data.message || '🔔 แจ้งเตือนจากระบบ', data.type || 'info');
+        } catch (err) {
+            console.error("Error processing system_notification event:", err);
         }
     });
 

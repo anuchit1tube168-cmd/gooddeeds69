@@ -10,6 +10,8 @@ from http.server import SimpleHTTPRequestHandler, HTTPServer, ThreadingHTTPServe
 from urllib.parse import urlparse, parse_qs
 import urllib.request
 import ssl
+import base64
+import html
 from http.cookies import SimpleCookie
 
 # Real-time event streams for connected clients
@@ -42,7 +44,35 @@ except ImportError as e:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
+DATA_DIR = os.path.join(BASE_DIR, 'data')
+TELEGRAM_MESSAGE_MAP_FILE = os.path.join(DATA_DIR, 'telegram_message_map.json')
 GDRIVE_DEST = os.environ.get('GOODDEED_PRIVATE_BACKUP_DIR', '')
+
+def save_telegram_message_mapping(deed_id, message_id):
+    if not deed_id or not message_id:
+        return
+    try:
+        mapping = {}
+        if os.path.exists(TELEGRAM_MESSAGE_MAP_FILE):
+            with open(TELEGRAM_MESSAGE_MAP_FILE, 'r', encoding='utf-8') as f:
+                mapping = json.load(f)
+        mapping[str(deed_id).strip()] = int(message_id)
+        with open(TELEGRAM_MESSAGE_MAP_FILE, 'w', encoding='utf-8') as f:
+            json.dump(mapping, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"⚠️ Error saving telegram message mapping: {e}")
+
+def get_telegram_message_id(deed_id):
+    if not deed_id:
+        return None
+    try:
+        if os.path.exists(TELEGRAM_MESSAGE_MAP_FILE):
+            with open(TELEGRAM_MESSAGE_MAP_FILE, 'r', encoding='utf-8') as f:
+                mapping = json.load(f)
+            return mapping.get(str(deed_id).strip())
+    except Exception:
+        pass
+    return None
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
@@ -561,11 +591,11 @@ def send_telegram_request(method, payload):
     try:
         with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
             return json.loads(resp.read().decode('utf-8'))
-    except Exception as e:
+    except Exception:
         print("TELEGRAM_REQUEST_FAILED")
         return {}
 
-def send_telegram_photo(photo_path, caption, reply_markup=None):
+def send_telegram_photo(photo_source, caption, reply_markup=None):
     token = get_env_config('TELEGRAM_BOT_TOKEN')
     chat_id = get_env_config('TELEGRAM_CHAT_ID')
     if not token or not chat_id:
@@ -576,19 +606,26 @@ def send_telegram_photo(photo_path, caption, reply_markup=None):
 
     # chat_id
     body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode('utf-8'))
-    # caption
-    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode('utf-8'))
+    # caption (cap safely to 1000 characters for Telegram limit)
+    safe_caption = str(caption or '')
+    if len(safe_caption) > 1000:
+        safe_caption = safe_caption[:997] + '...'
+    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{safe_caption}\r\n".encode('utf-8'))
     # parse_mode
     body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
     # reply_markup
     if reply_markup:
         body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
 
-    # photo file
+    # photo file or bytes
     try:
-        with open(photo_path, 'rb') as f:
-            file_bytes = f.read()
-        filename = os.path.basename(photo_path)
+        if isinstance(photo_source, (bytes, bytearray)):
+            file_bytes = photo_source
+            filename = 'evidence.jpg'
+        else:
+            with open(photo_source, 'rb') as f:
+                file_bytes = f.read()
+            filename = os.path.basename(photo_source)
         body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{filename}\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
         body.extend(file_bytes)
         body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
@@ -598,16 +635,17 @@ def send_telegram_photo(photo_path, caption, reply_markup=None):
             'Content-Length': str(len(body))
         })
         ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
+        with urllib.request.urlopen(req, timeout=25, context=ctx) as resp:
             res = json.loads(resp.read().decode('utf-8'))
-            return res.get('ok', False)
+            return res
     except Exception as e:
-        print("TELEGRAM_PHOTO_FAILED")
+        print(f"TELEGRAM_PHOTO_FAILED: {e}")
         return False
 
 def notify_deed_submission_telegram(deed_data):
-    """Send interactive Telegram notification for newly submitted deed."""
+    """Send interactive Telegram notification for newly submitted deed (always with photo/crest)."""
     try:
+        import os
         token = get_env_config('TELEGRAM_BOT_TOKEN')
         chat_id = get_env_config('TELEGRAM_CHAT_ID')
         if not token or not chat_id:
@@ -652,7 +690,7 @@ def notify_deed_submission_telegram(deed_data):
 
         hours = deed_data.get('hours', 0)
         activity_date = deed_data.get('activityDate') or deed_data.get('event_date') or time.strftime('%Y-%m-%d')
-        desc = deed_data.get('description') or deed_data.get('title') or ''
+        desc = deed_data.get('description') or deed_data.get('title') or '-'
         location = deed_data.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
         approver = deed_data.get('approver') or deed_data.get('approved_by') or 'ผู้ตรวจที่ได้รับมอบหมาย'
 
@@ -672,6 +710,7 @@ def notify_deed_submission_telegram(deed_data):
             'desc': desc,
             'loc': location,
             'appr': approver,
+            'img': deed_data.get('imageUrl') or '',
             'status': 'pending'
         })
         approve_url = f"{base_url}/approve_sign.html?{q_params}"
@@ -706,12 +745,67 @@ def notify_deed_submission_telegram(deed_data):
         )
 
         photo_sent = False
-        img_rel = deed_data.get('imageUrl') or ''
-        if img_rel and not img_rel.startswith('data:'):
-            img_full = os.path.join(FRONTEND_DIR, img_rel)
-            if os.path.exists(img_full):
-                photo_sent = send_telegram_photo(img_full, html_msg, reply_markup)
+        img_rel = deed_data.get('imageUrl') or deed_data.get('imageData') or ''
+        
+        send_photo_fn = globals().get('send_telegram_photo')
 
+        # 1. Try base64 evidence image
+        if send_photo_fn and img_rel and img_rel.startswith('data:image'):
+            try:
+                if ',' in img_rel:
+                    _, encoded = img_rel.split(',', 1)
+                    img_bytes = base64.b64decode(encoded)
+                    res = send_photo_fn(img_bytes, html_msg, reply_markup)
+                    if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                        photo_sent = True
+                        if isinstance(res, dict) and res.get('result', {}).get('message_id'):
+                            msg_id = res['result']['message_id']
+                            deed_data['telegram_message_id'] = msg_id
+                            save_telegram_message_mapping(deed_id, msg_id)
+                            try:
+                                save_or_update_deed_in_db(student_id, deed_data)
+                            except Exception:
+                                pass
+            except Exception as _e:
+                print(f"⚠️ Failed decoding base64 image: {_e}")
+
+        # 2. Try file path on disk
+        frontend_dir = globals().get('FRONTEND_DIR') or (os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'frontend') if '__file__' in globals() else 'frontend')
+        if send_photo_fn and not photo_sent and img_rel and not img_rel.startswith('data:'):
+            img_full = os.path.join(frontend_dir, img_rel)
+            if os.path.exists(img_full):
+                res = send_photo_fn(img_full, html_msg, reply_markup)
+                if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                    photo_sent = True
+                    if isinstance(res, dict) and res.get('result', {}).get('message_id'):
+                        msg_id = res['result']['message_id']
+                        deed_data['telegram_message_id'] = msg_id
+                        save_telegram_message_mapping(deed_id, msg_id)
+                        try:
+                            save_or_update_deed_in_db(student_id, deed_data)
+                        except Exception:
+                            pass
+
+        # 3. Fallback: ALWAYS send photo using official RTAFNC crest
+        if send_photo_fn and not photo_sent:
+            crest_thumb = os.path.join(frontend_dir, '510903_thumb.jpg')
+            crest_orig = os.path.join(frontend_dir, '510903.jpg')
+            chosen_crest = crest_thumb if os.path.exists(crest_thumb) else (crest_orig if os.path.exists(crest_orig) else None)
+            if chosen_crest:
+                res = send_photo_fn(chosen_crest, html_msg, reply_markup)
+                if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                    photo_sent = True
+                    if isinstance(res, dict) and res.get('result', {}).get('message_id'):
+                        msg_id = res['result']['message_id']
+                        deed_data['telegram_message_id'] = msg_id
+                        save_telegram_message_mapping(deed_id, msg_id)
+                        try:
+                            save_or_update_deed_in_db(student_id, deed_data)
+                        except Exception:
+                            pass
+
+        # 4. Text-only fallback if photo send completely failed
+        response = None
         if not photo_sent:
             response = send_telegram_request('sendMessage', {
                 'chat_id': chat_id,
@@ -719,12 +813,159 @@ def notify_deed_submission_telegram(deed_data):
                 'parse_mode': 'HTML',
                 'reply_markup': reply_markup
             })
-            if not response or response.get('ok') is not True:
-                return False
-        print("TELEGRAM_DELIVERY_ACCEPTED")
-        return True
+            if response and response.get('ok') is True and response.get('result', {}).get('message_id'):
+                msg_id = response['result']['message_id']
+                deed_data['telegram_message_id'] = msg_id
+                save_telegram_message_mapping(deed_id, msg_id)
+                try:
+                    save_or_update_deed_in_db(student_id, deed_data)
+                except Exception:
+                    pass
+
+        if photo_sent or (response and response.get('ok') is True):
+            print("TELEGRAM_DELIVERY_ACCEPTED")
+            return True
+        return False
     except Exception as e:
         print(f"⚠️ Telegram deed notification error: {e}")
+        return False
+
+def notify_deed_approval_telegram(student_id, deed_data, status, teacher_name):
+    """Send celebratory confirmation and emoji reaction to Telegram upon deed approval."""
+    try:
+        token = get_env_config('TELEGRAM_BOT_TOKEN')
+        chat_id = get_env_config('TELEGRAM_CHAT_ID')
+        if not token or not chat_id:
+            return False
+
+        s_map = load_students_map()
+        stu = s_map.get(str(student_id).strip(), {})
+        student_name = f"{stu.get('rank', 'นพอ.')} {stu.get('first_name', '')} {stu.get('last_name', '')}".strip()
+        if not student_name or student_name == 'นพอ.' or 'รหัส' in student_name:
+            student_name = deed_data.get('student_name') or deed_data.get('studentName') or f"นพอ. ({student_id})"
+        class_year = str(stu.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
+
+        deed_id = str(deed_data.get('id') or '')
+        cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 7)
+        cat_name = CATEGORIES_NAME_MAP.get(cat_id, 'กิจกรรมจิตอาสา')
+        hours = deed_data.get('hours', 0)
+        desc = deed_data.get('description') or deed_data.get('title') or '-'
+
+        total_hrs = 0.0
+        for d in get_deeds_for_student(student_id):
+            if d.get('status') == 'approved':
+                total_hrs += float(d.get('hours', 0))
+
+        base_url = get_env_config('SYSTEM_URL', 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend').rstrip('/')
+        if not base_url.endswith('/frontend'):
+            base_url += '/frontend'
+        encoded_name = urllib.parse.quote(student_name)
+        slip_url = f"{base_url}/deed_slip.html?id={deed_id}&studentId={student_id}&name={encoded_name}"
+        approve_sign_url = f"{base_url}/approve_sign.html?id={deed_id}&studentId={student_id}&name={encoded_name}&status={status}"
+
+        # 1. If original message exists, add emoji reaction 👍 and update buttons
+        tg_msg_id = deed_data.get('telegram_message_id') or get_telegram_message_id(deed_id)
+        if tg_msg_id:
+            try:
+                send_telegram_request('setMessageReaction', {
+                    'chat_id': chat_id,
+                    'message_id': tg_msg_id,
+                    'reaction': [{'type': 'emoji', 'emoji': '👍' if status == 'approved' else '❌'}]
+                })
+                send_telegram_request('editMessageReplyMarkup', {
+                    'chat_id': chat_id,
+                    'message_id': tg_msg_id,
+                    'reply_markup': {
+                        'inline_keyboard': [
+                            [{'text': f"✅ บันทึกอนุมัติแล้ว ({teacher_name})" if status == 'approved' else f"❌ ปฏิเสธ ({teacher_name})", 'callback_data': f"done_{deed_id}"}],
+                            [{'text': '📄 ดูใบบันทึกความดี (PDF Slip) ↗️', 'url': slip_url}]
+                        ]
+                    }
+                })
+            except Exception as _re:
+                print(f"⚠️ Telegram reaction/edit error on msg {tg_msg_id}: {_re}")
+
+        # 2. Build celebratory approval confirmation message
+        pass_badge = "✅ ผ่านเกณฑ์ขั้นต่ำ 50 ชม." if total_hrs >= 50 else "⏳ กำลังสะสมความดี"
+        msg_status = "🎉 <b>บันทึกอนุมัติและลงนามดิจิทัลเรียบร้อยแล้ว ✅</b>" if status == 'approved' else "❌ <b>ปฏิเสธคำขอการบันทึกความดี</b>"
+        reply_html = (
+            f"{msg_status}\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"👤 <b>นักเรียน:</b> {html.escape(student_name)}\n"
+            f"🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> | รุ่น {class_year}\n"
+            f"📂 <b>กิจกรรม:</b> {html.escape(cat_name)}\n"
+            f"⏱ <b>จำนวนชั่วโมง:</b> <b>{hours} ชม.</b>\n"
+            f"👨‍🏫 <b>ผู้ตรวจประเมิน:</b> {html.escape(teacher_name)}\n"
+            f"📊 <b>ชั่วโมงสะสมรวมล่าสุด:</b> <b>{total_hrs:.1f} / 400 ชม.</b> ({pass_badge})\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"✍️ <i>ประทับรับรองในระบบเรียบร้อยแล้ว</i>"
+        )
+
+        reply_markup = {
+            'inline_keyboard': [
+                [
+                    {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': slip_url},
+                    {'text': '✍️ ตรวจสอบ & ลงนาม ↗️', 'url': approve_sign_url}
+                ]
+            ]
+        }
+
+        # 3. Always send photo with the approval notification!
+        photo_sent = False
+
+        # Priority A: Live signature image drawn by approver
+        sig_data = deed_data.get('signature') or ''
+        if sig_data and sig_data.startswith('data:image'):
+            try:
+                _, encoded = sig_data.split(',', 1)
+                sig_bytes = base64.b64decode(encoded)
+                res = send_telegram_photo(sig_bytes, reply_html, reply_markup)
+                if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                    photo_sent = True
+            except Exception as _se:
+                print(f"⚠️ Failed sending signature photo: {_se}")
+
+        # Priority B: Deed evidence photo from disk or base64
+        if not photo_sent:
+            img_rel = deed_data.get('imageUrl') or deed_data.get('imageData') or ''
+            if img_rel and img_rel.startswith('data:image'):
+                try:
+                    _, encoded = img_rel.split(',', 1)
+                    img_bytes = base64.b64decode(encoded)
+                    res = send_telegram_photo(img_bytes, reply_html, reply_markup)
+                    if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                        photo_sent = True
+                except Exception:
+                    pass
+            elif img_rel and not img_rel.startswith('data:'):
+                img_full = os.path.join(FRONTEND_DIR, img_rel)
+                if os.path.exists(img_full):
+                    res = send_telegram_photo(img_full, reply_html, reply_markup)
+                    if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                        photo_sent = True
+
+        # Priority C: Official RTAFNC Crest photo (always exists)
+        if not photo_sent:
+            crest_thumb = os.path.join(FRONTEND_DIR, '510903_thumb.jpg')
+            crest_orig = os.path.join(FRONTEND_DIR, '510903.jpg')
+            chosen_crest = crest_thumb if os.path.exists(crest_thumb) else (crest_orig if os.path.exists(crest_orig) else None)
+            if chosen_crest:
+                res = send_telegram_photo(chosen_crest, reply_html, reply_markup)
+                if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                    photo_sent = True
+
+        # Priority D: Fallback text-only if photo sending completely failed
+        if not photo_sent:
+            send_telegram_request('sendMessage', {
+                'chat_id': chat_id,
+                'text': reply_html,
+                'parse_mode': 'HTML',
+                'reply_markup': reply_markup
+            })
+        print(f"📢 Telegram approval reaction & photo sent for deed {deed_id} ({status})")
+        return True
+    except Exception as e:
+        print(f"⚠️ Telegram deed approval notification error: {e}")
         return False
 
 def calculate_cohort_no(sid_str):
@@ -968,6 +1209,33 @@ class CustomHandler(SimpleHTTPRequestHandler):
             })
             return
 
+        if parsed_path.path == '/api/test_notification':
+            # Localhost-only endpoint for testing the SSE + Toast notification pipeline
+            event_type = query_params.get('type', 'deed_submitted')
+            student_id = query_params.get('studentId', '6903946')
+            deed_id = query_params.get('deedId', f'test_{int(time.time())}')
+            msg = query_params.get('msg', '')
+            allowed_types = ['deed_submitted', 'deed_approved', 'student_updated', 'system_notification']
+            if event_type not in allowed_types:
+                event_type = 'system_notification'
+            payload = {'studentId': student_id, 'deedId': deed_id}
+            if event_type == 'deed_approved':
+                payload['status'] = query_params.get('status', 'approved')
+            if event_type == 'system_notification':
+                payload['message'] = msg or '🔔 ทดสอบการแจ้งเตือนหน้าระบบ: เชื่อมต่อ Real-time SSE สำเร็จ 100%!'
+                payload['type'] = query_params.get('level', 'success')
+            elif msg:
+                payload['message'] = msg
+            broadcast_event(event_type, payload)
+            self.send_json_response(200, {
+                'status': 'ok',
+                'event': event_type,
+                'payload': payload,
+                'connectedClients': len(clients),
+                'message': f'ทดสอบแจ้งเตือนสำเร็จ! ส่ง {event_type} ไปยัง {len(clients)} client(s)'
+            })
+            return
+
         if parsed_path.path == '/api/get_student':
             student_id = query_params.get('studentId') or query_params.get('student_id') or query_params.get('id')
             if not student_id:
@@ -1136,9 +1404,51 @@ class CustomHandler(SimpleHTTPRequestHandler):
                         clients.remove(q)
             return
         else:
-            # Serve static files normally (support both /frontend/path and /path)
-            if self.path.startswith('/frontend/'):
-                self.path = self.path[9:]
+            # Serve static files, evidence photos and frontend assets when local server is active
+            clean_path = parsed_path.path
+            if clean_path.startswith('/frontend/'):
+                clean_path = clean_path[9:]
+            clean_path = clean_path.lstrip('/')
+            if not clean_path:
+                clean_path = 'index.html'
+
+            root = os.path.realpath(FRONTEND_DIR)
+            target = os.path.realpath(os.path.join(root, clean_path))
+            try:
+                inside = os.path.commonpath([root, target]) == root
+            except ValueError:
+                inside = False
+
+            if inside and os.path.isfile(target):
+                ext = os.path.splitext(target)[1].lower()
+                mime_types = {
+                    '.html': 'text/html; charset=utf-8',
+                    '.css': 'text/css; charset=utf-8',
+                    '.js': 'application/javascript; charset=utf-8',
+                    '.json': 'application/json; charset=utf-8',
+                    '.jpg': 'image/jpeg',
+                    '.jpeg': 'image/jpeg',
+                    '.png': 'image/png',
+                    '.webp': 'image/webp',
+                    '.gif': 'image/gif',
+                    '.svg': 'image/svg+xml',
+                    '.ico': 'image/x-icon'
+                }
+                content_type = mime_types.get(ext, 'application/octet-stream')
+                try:
+                    with open(target, 'rb') as f:
+                        content = f.read()
+                    self.send_response(200)
+                    self.send_header('Content-Type', content_type)
+                    self.send_header('Content-Length', str(len(content)))
+                    self.send_header('Cache-Control', 'public, max-age=3600')
+                    self.end_headers()
+                    self.wfile.write(content)
+                    return
+                except Exception:
+                    self.send_response(500)
+                    self.end_headers()
+                    return
             super().do_GET()
 
     def legacy_post_unsupported(self):
@@ -1267,6 +1577,10 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     notify_deed_status_line(student_id, deed_data, status, teacher_name)
                 except Exception as _ne:
                     pass
+                try:
+                    threading.Thread(target=notify_deed_approval_telegram, args=(student_id, deed_data, status, teacher_name), daemon=True).start()
+                except Exception as _te:
+                    print(f"⚠️ Telegram approval thread error: {_te}")
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error updating deed: {e}")
@@ -1453,6 +1767,13 @@ class CustomHandler(SimpleHTTPRequestHandler):
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
         elif parsed_path.path == '/api/telegram_webhook':
+            # Strict authorization guard: reject unauthenticated webhook calls
+            webhook_secret = os.environ.get('TELEGRAM_WEBHOOK_SECRET', '')
+            header_secret = self.headers.get('X-Telegram-Bot-Api-Secret-Token', '')
+            if not webhook_secret or header_secret != webhook_secret:
+                self.send_json_response(401, {'ok': False, 'error': 'Unauthorized: invalid or missing webhook secret'})
+                return
+
             content_length = int(self.headers.get('Content-Length', 0))
             post_data = self.rfile.read(content_length)
             try:
@@ -1478,6 +1799,7 @@ def start_telegram_bot_listener_thread():
         tbl.save_or_update_deed_in_db = save_or_update_deed_in_db
         tbl.broadcast_event = broadcast_event
         tbl.load_students_map = load_students_map
+        tbl.send_telegram_photo = globals().get('send_telegram_photo')
         t = tbl.start_listener_in_background()
         if t:
             print("🤖 Telegram Bot Listener thread started (long-polling).")

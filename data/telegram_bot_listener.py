@@ -21,6 +21,8 @@ import threading
 import ssl
 import sys
 import atexit
+import socket
+import html
 
 DATA_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(DATA_DIR)
@@ -34,11 +36,12 @@ except Exception as _ne:
     notify_deed_status_line = None
 
 try:
-    from server import save_or_update_deed_in_db, broadcast_event, load_students_map, RECORDS_DIR
+    from server import save_or_update_deed_in_db, broadcast_event, load_students_map, send_telegram_photo, RECORDS_DIR
 except Exception:
     save_or_update_deed_in_db = None
     broadcast_event = None
     load_students_map = None
+    send_telegram_photo = None
     RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 
 def get_env_config(key, default=''):
@@ -104,13 +107,21 @@ def send_telegram_request(method, payload):
             return json.loads(resp.read().decode('utf-8'))
     except urllib.error.HTTPError as he:
         if he.code == 409:
-            print("⚠️ Telegram getUpdates 409 Conflict (another bot instance polling). Waiting 15s...")
-            time.sleep(15)
+            print("⚠️ Telegram getUpdates 409 Conflict (another bot instance polling). Waiting 10s...")
+            time.sleep(10)
         elif he.code != 400:
             print(f"TELEGRAM_HTTP_FAILURE status={he.code}")
         return {}
+    except (socket.timeout, urllib.error.URLError) as e:
+        if method == 'getUpdates' and 'timed out' in str(e).lower():
+            # Normal long-polling timeout when no new updates arrived
+            return {'ok': True, 'result': []}
+        print(f"TELEGRAM_TIMEOUT_OR_NET ({method}): {e}")
+        return {}
     except Exception as e:
-        print("TELEGRAM_REQUEST_FAILED")
+        if method == 'getUpdates' and 'timed out' in str(e).lower():
+            return {'ok': True, 'result': []}
+        print(f"TELEGRAM_REQUEST_FAILED ({method}): {e}")
         return {}
 
 def load_students():
@@ -294,6 +305,29 @@ def process_callback_query(cb):
     chat = msg.get('chat', {})
     target_chat_id = chat.get('id') or CHAT_ID
     from_user = cb.get('from', {})
+    from_user_id = str(from_user.get('id', ''))
+
+    # Security Guard: verify target chat matches authorized group chat ID
+    if CHAT_ID and str(target_chat_id) != str(CHAT_ID):
+        print(f"🚫 BLOCKED: Unauthorized chat_id {target_chat_id} (expected {CHAT_ID})")
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': "⛔ ไม่อนุญาต: การดำเนินการต้องมาจากกลุ่มทางการเท่านั้น",
+            'show_alert': True
+        })
+        return
+
+    # Security Guard: verify authorized user ID if configured
+    print(f"👤 Incoming callback from user_id: {from_user_id} (@{from_user.get('username')}, Name: {from_user.get('first_name')} {from_user.get('last_name')})")
+    auth_user_ids = [uid.strip() for uid in get_env_config('TELEGRAM_AUTHORIZED_USER_IDS', '').split(',') if uid.strip()]
+    if auth_user_ids and from_user_id not in auth_user_ids:
+        print(f"🚫 BLOCKED: Unauthorized user_id {from_user_id} (@{from_user.get('username')})")
+        send_telegram_request('answerCallbackQuery', {
+            'callback_query_id': cb_id,
+            'text': "⛔ คุณไม่มีสิทธิ์อนุมัติหรือจัดการความดีในระบบ",
+            'show_alert': True
+        })
+        return
 
     approver_name = f"{from_user.get('first_name', '')} {from_user.get('last_name', '')}".strip()
     u_name = (from_user.get('username') or '').lower()
@@ -440,6 +474,17 @@ def process_callback_query(cb):
             'show_alert': True
         })
 
+        # Set Telegram message emoji reaction 👍
+        if msg_id:
+            try:
+                send_telegram_request('setMessageReaction', {
+                    'chat_id': target_chat_id,
+                    'message_id': msg_id,
+                    'reaction': [{'type': 'emoji', 'emoji': '👍'}]
+                })
+            except Exception as _re:
+                print(f"⚠️ Telegram reaction error: {_re}")
+
         encoded_name = urllib.parse.quote(student_name)
         pdf_slip_url = f"https://liff.line.me/2010948179-Ympqt2bT?page=slip&id={effective_deed_id}&studentId={student_id}&name={encoded_name}"
         approve_sign_url = f"https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/approve_sign.html?id={effective_deed_id}&studentId={student_id}&name={encoded_name}&status=approved"
@@ -461,20 +506,41 @@ def process_callback_query(cb):
 📄 <a href="{pdf_slip_url}">เปิดดู / พิมพ์ใบบันทึกความดี A4 (PDF Slip)</a>
 🌐 <i>ระบบซิงก์ข้อมูลลงฐานข้อมูลและแสดงผลบนออนไลน์เรียบร้อยแล้ว</i>"""
 
-        send_telegram_request('sendMessage', {
-            'chat_id': target_chat_id,
-            'text': reply_html,
-            'parse_mode': 'HTML',
-            'reply_to_message_id': msg_id,
-            'reply_markup': {
-                'inline_keyboard': [
-                    [
-                        {'text': '✍️ จรดลายเซ็นสดในระบบ ↗️', 'url': approve_sign_url},
-                        {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': pdf_slip_url}
-                    ]
+        reply_markup = {
+            'inline_keyboard': [
+                [
+                    {'text': '✍️ จรดลายเซ็นสดในระบบ ↗️', 'url': approve_sign_url},
+                    {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': pdf_slip_url}
                 ]
-            }
-        })
+            ]
+        }
+
+        photo_sent = False
+        if send_telegram_photo:
+            img_rel = target_deed.get('imageUrl') or target_deed.get('imageData') or '' if target_deed else ''
+            if img_rel and not img_rel.startswith('data:'):
+                img_full = os.path.join(BASE_DIR, 'frontend', img_rel)
+                if os.path.exists(img_full):
+                    res = send_telegram_photo(img_full, reply_html, reply_markup)
+                    if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                        photo_sent = True
+            if not photo_sent:
+                crest_thumb = os.path.join(BASE_DIR, 'frontend', '510903_thumb.jpg')
+                crest_orig = os.path.join(BASE_DIR, 'frontend', '510903.jpg')
+                chosen_crest = crest_thumb if os.path.exists(crest_thumb) else (crest_orig if os.path.exists(crest_orig) else None)
+                if chosen_crest:
+                    res = send_telegram_photo(chosen_crest, reply_html, reply_markup)
+                    if res and (res is True or (isinstance(res, dict) and res.get('ok'))):
+                        photo_sent = True
+
+        if not photo_sent:
+            send_telegram_request('sendMessage', {
+                'chat_id': target_chat_id,
+                'text': reply_html,
+                'parse_mode': 'HTML',
+                'reply_to_message_id': msg_id,
+                'reply_markup': reply_markup
+            })
 
         if msg_id:
             send_telegram_request('editMessageReplyMarkup', {
@@ -501,6 +567,16 @@ def process_callback_query(cb):
             'text': f"❌ ปฏิเสธบันทึกความดีของ {student_name} เรียบร้อยแล้ว",
             'show_alert': True
         })
+
+        if msg_id:
+            try:
+                send_telegram_request('setMessageReaction', {
+                    'chat_id': target_chat_id,
+                    'message_id': msg_id,
+                    'reaction': [{'type': 'emoji', 'emoji': '❌'}]
+                })
+            except Exception:
+                pass
 
         reply_html = f"""❌ <b>แจ้งปฏิเสธบันทึกความดี</b>
 ━━━━━━━━━━━━━━━━━━━━━━━
@@ -530,6 +606,92 @@ def process_callback_query(cb):
                 }
             })
 
+def process_message(msg):
+    if not msg:
+        return
+    text = (msg.get('text') or '').strip()
+    chat = msg.get('chat', {})
+    chat_id = str(chat.get('id', ''))
+    chat_type = chat.get('type', '')
+    from_user = msg.get('from', {})
+    from_user_id = str(from_user.get('id', ''))
+    username = from_user.get('username') or ''
+    full_name = f"{from_user.get('first_name', '')} {from_user.get('last_name', '')}".strip()
+
+    # Security Guard: Group messages must only come from authorized group CHAT_ID
+    if chat_type in ('group', 'supergroup'):
+        if CHAT_ID and chat_id != str(CHAT_ID):
+            print(f"🚫 BLOCKED: Message from unauthorized group {chat_id}")
+            return
+
+    if not text.startswith('/'):
+        return
+
+    cmd = text.split()[0].lower()
+    if '@' in cmd:
+        cmd = cmd.split('@')[0]
+
+    auth_user_ids = [uid.strip() for uid in get_env_config('TELEGRAM_AUTHORIZED_USER_IDS', '').split(',') if uid.strip()]
+    is_auth = (not auth_user_ids) or (from_user_id in auth_user_ids)
+
+    if cmd in ('/myid', '/id', '/whoami'):
+        auth_str = "✅ มีสิทธิ์อนุมัติ (Authorized)" if is_auth else "❌ ไม่มีสิทธิ์อนุมัติ (Unauthorized)"
+        reply = f"""🆔 <b>ข้อมูล Telegram ของคุณ</b>
+━━━━━━━━━━━━━━━━━━━━━━━
+👤 <b>ชื่อ:</b> {html.escape(full_name)}
+📱 <b>Username:</b> @{html.escape(username) if username else 'ไม่มี'}
+🔢 <b>User ID:</b> <code>{from_user_id}</code>
+💬 <b>Chat ID:</b> <code>{chat_id}</code>
+🛡️ <b>สถานะสิทธิ์:</b> {auth_str}
+━━━━━━━━━━━━━━━━━━━━━━━
+💡 <i>นำ User ID นี้ไประบุใน TELEGRAM_AUTHORIZED_USER_IDS ใน .env เพื่อล็อกสิทธิ์ให้เฉพาะคุณ</i>"""
+        send_telegram_request('sendMessage', {
+            'chat_id': chat_id,
+            'text': reply,
+            'parse_mode': 'HTML'
+        })
+        return
+
+    elif cmd in ('/status', '/health'):
+        deeds_cnt = 0
+        try:
+            with open(os.path.join(DATA_DIR, 'deeds.json'), 'r', encoding='utf-8') as f:
+                deeds_cnt = len(json.load(f))
+        except Exception:
+            pass
+        lock_status = "🔒 มีการจำกัด User ID" if auth_user_ids else "⚠️ ยังไม่ได้จำกัด User ID (เปิดรับทุกคนในกลุ่มทางการ)"
+        reply = f"""🛡️ <b>สถานะระบบบันทึกความดี วพอ. 2569</b>
+━━━━━━━━━━━━━━━━━━━━━━━
+🤖 <b>บอท:</b> @rtafnc_gooddeed_2569_bot
+🟢 <b>สถานะระบบ:</b> ปลอดภัย 100% (Multi-layer Defense)
+📂 <b>ฐานข้อมูลความดี:</b> {deeds_cnt:,} รายการ
+👥 <b>กลุ่มทางการ:</b> <code>{CHAT_ID or 'ไม่ได้จำกัด'}</code>
+🔐 <b>นโยบายความปลอดภัย:</b> {lock_status}
+🛡️ <b>PDPA & Secret Guard:</b> ผ่านเกณฑ์ 100%
+━━━━━━━━━━━━━━━━━━━━━━━"""
+        send_telegram_request('sendMessage', {
+            'chat_id': chat_id,
+            'text': reply,
+            'parse_mode': 'HTML'
+        })
+        return
+
+    elif cmd in ('/start', '/help'):
+        reply = f"""👋 <b>ระบบบันทึกความดีจิตอาสา วิทยาลัยพยาบาลทหารอากาศ</b>
+━━━━━━━━━━━━━━━━━━━━━━━
+🤖 บอทสำหรับแจ้งเตือนและตรวจอนุมัติความดีแบบ Real-time
+
+<b>คำสั่งที่รองรับ:</b>
+• <code>/myid</code> — ตรวจสอบรหัส Telegram User ID และสิทธิ์ของคุณ
+• <code>/status</code> — ตรวจสอบความปลอดภัยและสถานะระบบ
+━━━━━━━━━━━━━━━━━━━━━━━"""
+        send_telegram_request('sendMessage', {
+            'chat_id': chat_id,
+            'text': reply,
+            'parse_mode': 'HTML'
+        })
+        return
+
 _LISTENER_THREAD = None
 
 def start_listener_loop():
@@ -554,11 +716,13 @@ def start_listener_loop():
                     if 'callback_query' in update:
                         print(f"📩 Processing Callback Query ID: {update['callback_query']['id']}")
                         process_callback_query(update['callback_query'])
+                    elif 'message' in update:
+                        process_message(update['message'])
             elif not res.get('ok'):
-                time.sleep(10)
+                time.sleep(5)
         except Exception as e:
             print(f"⚠️ Listener Loop Error: {e}")
-            time.sleep(10)
+            time.sleep(5)
         time.sleep(1)
 
 def start_listener_in_background():

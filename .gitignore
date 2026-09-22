@@ -58,9 +58,12 @@ frontend/data/photos.json
 *.log
 data/*.log
 data/summary_*.json
+data/telegram_*.json
 bonus_merge_audit.txt
 auto_login.html
 frontend/auto_login.html
 *.DS_Store
 */.DS_Store
 node_modules/
+frontend/*_thumb.jpg
+data/cleanup_*.py

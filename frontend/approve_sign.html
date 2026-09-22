@@ -24,8 +24,9 @@
             min-height: 100vh;
             padding: 16px;
             display: flex;
-            justify-content: center;
-            align-items: flex-start;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
         }
 
         .approve-card {
@@ -237,9 +238,329 @@
             font-size: 0.95rem;
             margin-top: 6px;
         }
+
+        /* Top Action Bar */
+        .no-print-bar {
+            width: 100%;
+            max-width: 650px;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(201, 162, 39, 0.3);
+            border-radius: 12px;
+            padding: 10px 14px;
+            margin-bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+        }
+
+        .btn-toolbar {
+            font-family: 'Kanit', sans-serif;
+            font-size: 0.85rem;
+            padding: 7px 14px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+        }
+        .btn-toolbar:hover {
+            filter: brightness(1.15);
+            transform: translateY(-1px);
+        }
+
+        /* Modal for viewing photo full size */
+        .photo-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .photo-modal.active {
+            display: flex;
+        }
+        .photo-modal img {
+            max-width: 95vw;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+        }
+        .photo-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: #fff;
+            font-size: 36px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+            z-index: 10001;
+        }
+
+        /* Print Only Section (Hidden on Screen) */
+        .print-only {
+            display: none;
+        }
+
+        /* ========================================================
+           PRINT STYLES (@media print)
+           Transform approve_sign.html into a formal A4 white document
+           ======================================================== */
+        @media print {
+            @page {
+                size: A4 portrait;
+                margin: 10mm 14mm 10mm 14mm;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                box-shadow: none !important;
+                text-shadow: none !important;
+            }
+
+            body {
+                background: #ffffff !important;
+                color: #000000 !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                display: block !important;
+            }
+
+            .no-print,
+            .no-print-bar,
+            .photo-modal,
+            .role-tab,
+            #tab-teacher, #tab-parent, #tab-org, #tab-other,
+            .actions,
+            .sig-tools,
+            .canvas-box,
+            .sig-container,
+            .approver-input,
+            #approver-select,
+            #no-evidence-notice,
+            button {
+                display: none !important;
+            }
+
+            .approve-card {
+                width: 100% !important;
+                max-width: 100% !important;
+                background: #ffffff !important;
+                border: 2px double #0b2f64 !important;
+                border-radius: 4px !important;
+                padding: 12mm 14mm !important;
+                margin: 0 auto !important;
+                color: #000000 !important;
+                page-break-inside: avoid !important;
+            }
+
+            .header {
+                border-bottom: 2px solid #0b2f64 !important;
+                padding-bottom: 10px !important;
+                margin-bottom: 12px !important;
+                text-align: center !important;
+            }
+
+            .header img {
+                width: 68px !important;
+                height: 68px !important;
+                margin-bottom: 4px !important;
+            }
+
+            .header h1 {
+                font-size: 19px !important;
+                color: #0b2f64 !important;
+                font-weight: 700 !important;
+                margin-bottom: 2px !important;
+            }
+
+            .header p {
+                font-size: 14px !important;
+                color: #334155 !important;
+                font-weight: 500 !important;
+            }
+
+            .deed-details {
+                background: #f8fafc !important;
+                border: 1px solid #0b2f64 !important;
+                border-radius: 4px !important;
+                padding: 10px 14px !important;
+                margin-bottom: 12px !important;
+                font-size: 14px !important;
+                line-height: 1.8 !important;
+            }
+
+            .row {
+                border-bottom: 1px dashed #cbd5e1 !important;
+                padding: 3px 0 !important;
+            }
+            .row:last-child {
+                border-bottom: none !important;
+            }
+
+            .label {
+                color: #1e293b !important;
+                font-weight: 600 !important;
+            }
+
+            .val {
+                color: #000000 !important;
+                font-weight: 700 !important;
+            }
+
+            #deed-cat {
+                color: #0b2f64 !important;
+            }
+
+            #deed-hours {
+                color: #0b2f64 !important;
+                font-size: 1.15rem !important;
+            }
+
+            /* Print Evidence Photo */
+            .photo-preview {
+                background: #ffffff !important;
+                border: 1px solid #94a3b8 !important;
+                border-radius: 4px !important;
+                max-height: 290px !important;
+                height: 270px !important;
+                margin: 8px 0 !important;
+                overflow: hidden !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                page-break-inside: avoid !important;
+            }
+
+            .photo-preview img {
+                max-width: 98% !important;
+                max-height: 265px !important;
+                object-fit: contain !important;
+                display: block !important;
+            }
+
+            .print-caption {
+                display: block !important;
+                font-size: 13px !important;
+                color: #475569 !important;
+                text-align: center !important;
+                margin-top: 4px !important;
+                margin-bottom: 10px !important;
+            }
+
+            /* Print Signature Block */
+            .print-only {
+                display: block !important;
+            }
+
+            #print-signature-section {
+                margin-top: 14px !important;
+                page-break-inside: avoid !important;
+            }
+
+            .print-sig-container {
+                margin-left: auto !important;
+                width: fit-content !important;
+                min-width: 290px !important;
+                max-width: 350px !important;
+                display: flex !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                text-align: center !important;
+                font-size: 14px !important;
+                line-height: 1.6 !important;
+            }
+
+            .print-sig-title {
+                font-weight: 700 !important;
+                color: #000000 !important;
+                margin-bottom: 4px !important;
+            }
+
+            .print-sig-slot {
+                min-height: 48px !important;
+                height: 48px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                margin-bottom: -10px !important;
+                position: relative !important;
+                z-index: 2 !important;
+                width: 100% !important;
+            }
+
+            .print-sig-slot img {
+                max-height: 46px !important;
+                max-width: 180px !important;
+                object-fit: contain !important;
+            }
+
+            .print-sig-name {
+                margin-top: 4px !important;
+                font-weight: 600 !important;
+                color: #000000 !important;
+            }
+
+            .print-sig-name span {
+                border-bottom: 1px dotted #000 !important;
+                padding: 0 8px !important;
+                display: inline-block !important;
+                min-width: 200px !important;
+            }
+
+            .print-sig-role {
+                font-size: 13px !important;
+                color: #334155 !important;
+                margin-top: 2px !important;
+            }
+
+            .print-sig-date {
+                font-size: 13px !important;
+                color: #334155 !important;
+                margin-top: 4px !important;
+            }
+
+            .print-footer {
+                border-top: 1px solid #cbd5e1 !important;
+                margin-top: 14px !important;
+                padding-top: 6px !important;
+                font-size: 11px !important;
+                color: #64748b !important;
+                text-align: center !important;
+                page-break-inside: avoid !important;
+            }
+        }
     </style>
 </head>
 <body>
+
+    <!-- Top Action Bar for Teachers / Approvers -->
+    <div class="no-print-bar">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <a href="teacher-dashboard.html" class="btn-toolbar" style="background:rgba(255,255,255,0.12); color:#fff; text-decoration:none;">⬅️ แดชบอร์ด</a>
+            <span style="font-size:0.9rem; font-weight:600; color:#ffd700;">🔏 ตรวจอนุมัติ &amp; เซ็นชื่อ วพอ.</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+            <button type="button" class="btn-toolbar" onclick="openPhotoModal()" id="btn-zoom-preview" style="display:none; background:rgba(255,255,255,0.15); color:#fff;">🔍 ดูรูปเต็ม</button>
+            <button type="button" class="btn-toolbar" onclick="goToOfficialSlip()" style="background:#0369a1; color:#fff;">📄 สลิป A4</button>
+            <button type="button" class="btn-toolbar" onclick="prepareAndPrint()" style="background:linear-gradient(135deg, #0284c7, #0369a1); color:#fff; font-weight:700;">🖨️ พิมพ์เอกสาร / บันทึก PDF</button>
+        </div>
+    </div>
 
     <div class="approve-card">
         <div class="header">
@@ -275,9 +596,18 @@
             </div>
         </div>
 
-        <div style="font-size:0.85rem; color:#94a3b8; margin-bottom:4px;">🖼️ ภาพถ่ายหลักฐานที่แนบ:</div>
-        <div class="photo-preview">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="font-size:0.85rem; color:#94a3b8;">🖼️ ภาพถ่ายหลักฐานที่แนบ:</span>
+            <button type="button" onclick="openPhotoModal()" class="no-print" style="background:none; border:none; color:var(--gold); font-size:0.8rem; cursor:pointer; text-decoration:underline;">🔍 แตะเพื่อดูรูปขยาย</button>
+        </div>
+        <div class="photo-preview" onclick="openPhotoModal()" style="cursor:pointer;" title="คลิกเพื่อดูรูปภาพขนาดเต็ม">
             <img id="evidence-img" src="510903.jpg" alt="หลักฐาน">
+        </div>
+        <div class="print-caption" style="display:none;">
+            ภาพถ่ายหลักฐานการปฏิบัติกิจกรรมจิตอาสา (แนบโดยนักเรียน)
+        </div>
+        <div id="no-evidence-notice" style="display:none; font-size:0.8rem; color:#94a3b8; text-align:center; margin-top:6px; background:rgba(255,255,255,0.04); padding:6px 10px; border-radius:6px; border:1px dashed rgba(255,255,255,0.1);">
+            ℹ️ ผู้ขอไม่ได้แนบภาพถ่ายกิจกรรม (แสดงตราสัญลักษณ์ วพอ. เป็นภาพมาตรฐาน)
         </div>
 
         <!-- Approver Role & Name Selection -->
@@ -428,12 +758,45 @@
             <button class="btn-reject" onclick="handleAction('rejected')">❌ ไม่อนุมัติ</button>
             <button class="btn-approve" onclick="handleAction('approved')">✅ อนุมัติ & ประทับลายเซ็น</button>
         </div>
+
+        <!-- Formal Military Print Signature Block (Visible only when printed) -->
+        <div id="print-signature-section" class="print-only">
+            <div class="print-sig-container">
+                <div class="print-sig-title">ผู้รับรอง / ผู้ตรวจประเมินกิจกรรมจิตอาสา :</div>
+                <div class="print-sig-slot" id="print-sig-slot">
+                    <!-- Dynamic live cropped signature or dotted blank -->
+                </div>
+                <div class="print-sig-name">
+                    ( <span id="print-signer-name">......................................................................</span> )
+                </div>
+                <div class="print-sig-role" id="print-signer-role">
+                    อาจารย์ผู้ตรวจประเมิน วพอ.
+                </div>
+                <div class="print-sig-date" id="print-signer-date">
+                    วันที่ ......... เดือน ......................... พ.ศ. ๒๕๖๙
+                </div>
+            </div>
+        </div>
+
+        <!-- Print Official Footer -->
+        <div class="print-only print-footer">
+            เอกสารรับรองการปฏิบัติกิจกรรมความดีจิตอาสา — วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ ประจำปีการศึกษา ๒๕๖๙
+        </div>
     </div>
 
-    <script src="data/teachers_data.js?v=3593"></script>
-    <script src="data/students_data.js?v=3593"></script>
-    <script src="data/deeds_data.js?v=3593"></script>
-    <script src="app.js?v=20260921-online-active"></script>
+    <!-- Lightbox Modal for Full Size Photo Preview -->
+    <div id="photo-modal" class="photo-modal" onclick="closePhotoModal()">
+        <span class="photo-modal-close" onclick="closePhotoModal()">&times;</span>
+        <img id="photo-modal-img" src="" alt="หลักฐานขนาดเต็ม" onclick="event.stopPropagation()">
+        <div style="position:absolute; bottom:20px; color:#fff; font-size:0.85rem; background:rgba(0,0,0,0.65); padding:6px 16px; border-radius:20px; pointer-events:none;">
+            แตะพื้นที่ว่างเพื่อปิด
+        </div>
+    </div>
+
+    <script src="data/teachers_data.js?v=3594"></script>
+    <script src="data/students_data.js?v=3594"></script>
+    <script src="data/deeds_data.js?v=3594"></script>
+    <script src="app.js?v=20260921-print-ready"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -492,6 +855,111 @@
                 const tName = (document.getElementById('approver-name').value || '').trim();
                 return { role: 'teacher', name: tName || 'อาจารย์ผู้ตรวจประเมิน', display: tName || 'อาจารย์ผู้ตรวจประเมิน' };
             }
+        }
+
+        function openPhotoModal() {
+            const evidenceImg = document.getElementById('evidence-img');
+            if (!evidenceImg || !evidenceImg.src) return;
+            const modal = document.getElementById('photo-modal');
+            const modalImg = document.getElementById('photo-modal-img');
+            if (modal && modalImg) {
+                modalImg.src = evidenceImg.src;
+                modal.classList.add('active');
+            }
+        }
+
+        function closePhotoModal() {
+            const modal = document.getElementById('photo-modal');
+            if (modal) modal.classList.remove('active');
+        }
+
+        function updatePrintFields() {
+            const approverInfo = getApproverInfo();
+            const approverName = approverInfo.name || approverInfo.display || 'อาจารย์ผู้ตรวจประเมิน วพอ.';
+            
+            const printSignerName = document.getElementById('print-signer-name');
+            if (printSignerName) printSignerName.textContent = approverName;
+
+            const printSignerRole = document.getElementById('print-signer-role');
+            if (printSignerRole) {
+                if (currentApproverRole === 'parent') {
+                    printSignerRole.textContent = approverInfo.title ? `ผู้ปกครอง (${approverInfo.title})` : 'ผู้ปกครอง';
+                } else if (currentApproverRole === 'org') {
+                    printSignerRole.textContent = approverInfo.display || 'ผู้แทนหน่วยงาน / ผู้จัดกิจกรรม';
+                } else if (currentApproverRole === 'other') {
+                    printSignerRole.textContent = approverInfo.desc || 'ผู้รับรองกิจกรรม';
+                } else {
+                    if (approverName.includes('อนุชิต') || approverName.toLowerCase().includes('bird')) {
+                        printSignerRole.textContent = 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจประเมิน วพอ.';
+                    } else {
+                        printSignerRole.textContent = 'อาจารย์ผู้ตรวจประเมิน วพอ.';
+                    }
+                }
+            }
+
+            const printSigSlot = document.getElementById('print-sig-slot');
+            if (printSigSlot) {
+                printSigSlot.innerHTML = '';
+                let sigSrc = '';
+                if (hasSignature && canvas && !isCanvasBlank(canvas)) {
+                    sigSrc = cropCanvasToBoundingBox(canvas, 8);
+                } else if (currentDeed && (currentDeed.signatureKey || currentDeed.signature)) {
+                    const k = currentDeed.signatureKey || currentDeed.signature;
+                    sigSrc = (typeof App !== 'undefined' && App.getImage) ? App.getImage(k) : null;
+                    if (!sigSrc && typeof k === 'string' && k.startsWith('data:image')) sigSrc = k;
+                }
+
+                if (sigSrc) {
+                    const img = document.createElement('img');
+                    img.src = sigSrc;
+                    img.alt = 'ลายมือชื่อสด';
+                    printSigSlot.appendChild(img);
+                } else {
+                    printSigSlot.innerHTML = '<span style="font-family:monospace; color:#475569; letter-spacing:2px;">..........................................</span>';
+                }
+            }
+
+            const printSignerDate = document.getElementById('print-signer-date');
+            if (printSignerDate) {
+                const today = new Date();
+                const thMonths = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+                const dateStr = `วันที่ ${today.getDate()} เดือน ${thMonths[today.getMonth()]} พ.ศ. ${today.getFullYear() + 543}`;
+                printSignerDate.textContent = dateStr;
+            }
+        }
+
+        function prepareAndPrint() {
+            updatePrintFields();
+            setTimeout(() => {
+                window.print();
+            }, 150);
+        }
+
+        window.addEventListener('beforeprint', updatePrintFields);
+
+        function goToOfficialSlip() {
+            if (!currentDeed || !currentStudent) {
+                alert('กรุณารอโหลดข้อมูลความดีให้สมบูรณ์ก่อนเปิดสลิป');
+                return;
+            }
+            const approverInfo = getApproverInfo();
+            const slipParams = new URLSearchParams({
+                id: currentDeed.id,
+                studentId: currentStudent.student_id,
+                name: currentStudent.full_name || currentStudent.first_name || '',
+                year: currentStudent.class_year ? (currentStudent.year_level ? `${currentStudent.year_level} (รุ่น ${currentStudent.class_year})` : `รุ่น ${currentStudent.class_year}`) : '',
+                cat: currentDeed.categoryId || currentDeed.category_id || 3,
+                catName: currentDeed.category_name || '',
+                hours: currentDeed.hours || 1,
+                date: currentDeed.activityDate || '',
+                desc: currentDeed.description || currentDeed.title || '',
+                loc: currentDeed.location || '',
+                appr: approverInfo.display || '',
+                status: currentDeed.status || 'pending',
+                img: currentDeed.imageUrl || currentDeed.imageData || '',
+                sig: currentDeed.signatureKey || ''
+            });
+            window.open('deed_slip.html?' + slipParams.toString(), '_blank');
         }
 
         function initSignaturePad() {
@@ -820,15 +1288,26 @@
 
                 // Evidence Photo
                 const evidenceImg = document.getElementById('evidence-img');
+                const noEvidenceNotice = document.getElementById('no-evidence-notice');
+                const btnZoom = document.getElementById('btn-zoom-preview');
                 evidenceImg.onerror = function() {
                     this.onerror = null;
                     this.src = '510903.jpg';
+                    if (noEvidenceNotice) noEvidenceNotice.style.display = 'block';
+                    if (btnZoom) btnZoom.style.display = 'none';
                 };
-                const imgKey = currentDeed.imageUrl || currentDeed.imageData || (currentDeed.imageUrls && currentDeed.imageUrls[0]) || '';
-                if (imgKey) {
+                let imgKey = currentDeed.imageData || currentDeed.imageUrl || (currentDeed.imageUrls && currentDeed.imageUrls[0]) || '';
+                if (!imgKey && typeof App !== 'undefined' && App.getImage) {
+                    imgKey = App.getImage('img_' + currentDeed.id) || '';
+                }
+                if (imgKey && imgKey !== '510903.jpg') {
                     evidenceImg.src = (typeof App !== 'undefined' && App.resolveImageUrl) ? App.resolveImageUrl(imgKey) : imgKey;
+                    if (noEvidenceNotice) noEvidenceNotice.style.display = 'none';
+                    if (btnZoom) btnZoom.style.display = 'inline-flex';
                 } else {
                     evidenceImg.src = '510903.jpg';
+                    if (noEvidenceNotice) noEvidenceNotice.style.display = 'block';
+                    if (btnZoom) btnZoom.style.display = 'none';
                 }
 
                 // Approver Name & Role detection
@@ -942,6 +1421,7 @@
 
                 // Update deed
                 currentDeed.signatureKey = sigKey;
+                currentDeed.signature = sigDataUrl;
                 await App.updateDeedStatus(currentStudent.student_id, currentDeed.id, status, approverName, '', currentDeed);
 
                 alert(status === 'approved' ? `✅ อนุมัติและประทับลายมือชื่อสดเรียบร้อยแล้ว!\nผู้รับรอง: ${approverName}` : '❌ บันทึกสถานะปฏิเสธแล้ว');

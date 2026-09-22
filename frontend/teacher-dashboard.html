@@ -585,6 +585,7 @@
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <input type="text" class="form-input" style="width:200px;padding:8px 12px" id="pend-search"
               placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderPending()">
+            <button class="btn btn-outline btn-sm" onclick="testFrontendNotification()" title="ทดสอบสัญญาณแจ้งเตือน Real-time SSE บนหน้าระบบ">🔔 ทดสอบแจ้งเตือน</button>
             <button class="btn btn-success btn-sm" id="approve-all-btn" onclick="approveAll()">✅ อนุมัติทั้งหมด</button>
           </div>
         </div>
@@ -1031,6 +1032,17 @@
       await App.updateDeedStatus(studentId, deedId, 'approved', approverName);
       showToast('✅ อนุมัติความดีเรียบร้อยแล้ว', 'success');
       loadData();
+    }
+
+    async function testFrontendNotification() {
+      showToast('🔔 กำลังส่งสัญญาณทดสอบ Real-time ไปยังทุกหน้าจอ...', 'info');
+      try {
+        const res = await fetch('/api/test_notification?type=system_notification&msg=' + encodeURIComponent('🔔 ทดสอบการแจ้งเตือนหน้าระบบ: เชื่อมต่อ Real-time SSE สำเร็จ 100%!'));
+        const json = await res.json();
+        console.log('Test notification broadcasted:', json);
+      } catch (e) {
+        console.error('Test notification fetch error:', e);
+      }
     }
 
     async function approveAll() {
