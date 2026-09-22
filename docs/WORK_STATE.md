@@ -61,7 +61,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 **PRODUCTION WRITE = FALSE during incident containment.**
 
 ## Staging Update — 2026-09-22
-- Backend `Code.gs`: Telegram bot token & chat ID getters read dynamically from ScriptProperties (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`).
-- Backend `server.py`: Respects explicit operator environment override `ENABLE_LOCAL_API` while keeping default fail-closed.
-- Frontend `ranking.html`: Added Year 1 (รุ่น 69) and Alumni filters; bumped script cache bust version.
-- PDPA & secret compliance: 100% PASS, zero leaks. Local regression and gate tests: PASS.
+- Backend `Code.gs` & `data/google_apps_script_backend.js`: Implemented `getDeeds` / `getAllDeeds` for cross-device sync between student submission and teacher dashboard.
+- Telegram Bot: Configured live webhook to GAS endpoint; implemented `callback_query` handler answering `answerCallbackQuery` and `editMessageReplyMarkup` to eliminate the loading freeze on approve/reject.
+- Frontend `app.js` & dashboards: Enhanced `syncAllDeedsWithBackend` and `getAllPendingDeeds` to pull cloud deeds and cache bust to `v5-sync-react`.
+- PDPA & secret compliance: 100% PASS, zero leaks. Local regression and gate tests: 153/153 JS + 23 Python PASS.

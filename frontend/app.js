@@ -882,9 +882,10 @@ const App = {
                 const res = await fetch(`${gasUrl}?action=getDeeds`);
                 if (res.ok) {
                     const cloudDeeds = await res.json();
-                    if (Array.isArray(cloudDeeds) && cloudDeeds.length > 0) {
+                    const list = Array.isArray(cloudDeeds) ? cloudDeeds : (cloudDeeds && Array.isArray(cloudDeeds.deeds) ? cloudDeeds.deeds : (cloudDeeds && Array.isArray(cloudDeeds.data) ? cloudDeeds.data : null));
+                    if (list && list.length > 0) {
                         const byStudent = {};
-                        cloudDeeds.forEach(d => {
+                        list.forEach(d => {
                             const sid = String(d.student_id || d.studentId);
                             if (!byStudent[sid]) byStudent[sid] = [];
                             byStudent[sid].push(d);
@@ -902,14 +903,14 @@ const App = {
                         });
 
                         window.IMPORTED_DEEDS = byStudent;
-                        window.DEEDS_DATA = cloudDeeds;
+                        window.DEEDS_DATA = list;
                         globalThis.IMPORTED_DEEDS = byStudent;
-                        globalThis.DEEDS_DATA = cloudDeeds;
+                        globalThis.DEEDS_DATA = list;
 
                         if (typeof window !== 'undefined') {
-                            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: cloudDeeds.length } }));
+                            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: list.length } }));
                         }
-                        return cloudDeeds;
+                        return list;
                     }
                 }
             } catch (err) {
@@ -1569,6 +1570,29 @@ const App = {
                     deeds.filter(d => d.status === 'pending').forEach(d => {
                         pending.push({ ...d, student: stu });
                     });
+                }
+            });
+        }
+
+        // Also check window.DEEDS_DATA directly for newly synced cloud deeds
+        if (typeof window !== 'undefined' && Array.isArray(window.DEEDS_DATA)) {
+            const seenDeedIds = new Set(pending.map(p => String(p.id)));
+            window.DEEDS_DATA.filter(d => d.status === 'pending').forEach(d => {
+                if (!seenDeedIds.has(String(d.id))) {
+                    const sid = String(d.student_id || d.studentId || '');
+                    let stu = this.getStudentById(sid);
+                    if (!stu) {
+                        stu = {
+                            student_id: sid,
+                            rank: d.student_rank || 'นพอ.',
+                            first_name: d.student_first_name || d.student_name || ('รหัส ' + sid),
+                            last_name: d.student_last_name || '',
+                            full_name: d.student_name || d.studentName || ('นพอ. รหัส ' + sid),
+                            class_year: d.class_year || sid.substring(0, 2)
+                        };
+                    }
+                    pending.push({ ...d, student: stu });
+                    seenDeedIds.add(String(d.id));
                 }
             });
         }

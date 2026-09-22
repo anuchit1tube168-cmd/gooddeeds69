@@ -7,6 +7,9 @@
  * 2. สร้างโครงสร้างโฟลเดอร์รายบุคคลอัตโนมัติใน Google Drive (Root Folder: 1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx)
  * 3. บันทึก profile.json แยกในโฟลเดอร์ของนักเรียนแต่ละคน
  * 4. เก็บรูปภาพหลักฐานความดีลงในโฟลเดอร์ของนักเรียนคนนั้นโดยตรง
+ * 5. เชื่อมต่อ Telegram Bot แจ้งเตือนแบบโต้ตอบ (Interactive Callback Buttons) ทันที 24 ชั่วโมง
+ * 6. รองรับ Telegram Webhook ตอบกลับปุ่ม [อนุมัติด่วน] และ [ปฏิเสธ] อัตโนมัติทันที ไม่ค้าง Loading
+ * 7. รองรับ Cross-device Deed Sync ให้หน้าจออาจารย์และนักเรียนเห็นข้อมูลตรงกันตลอดเวลา
  */
 
 var ROOT_FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
@@ -21,7 +24,6 @@ function doGet(e) {
   }
   
   // ==================== GET STUDENTS (PDPA-SAFE API) ====================
-  // อ่านข้อมูลนักเรียนจาก Main_2569 sheet — ส่งเฉพาะข้อมูลที่จำเป็นสำหรับ Frontend
   if (action === 'getStudents') {
     try {
       var cache = CacheService.getScriptCache();
@@ -65,15 +67,70 @@ function doGet(e) {
       }
       
       var jsonStr = JSON.stringify(students);
-      // Cache for 5 minutes
       cache.put('students_api_v2', jsonStr, 300);
-      
       return ContentService.createTextOutput(jsonStr).setMimeType(ContentService.MimeType.JSON);
     } catch (err) {
       return ContentService.createTextOutput(JSON.stringify({ error: err.message })).setMimeType(ContentService.MimeType.JSON);
     }
   }
   
+  // ==================== GET DEEDS (CROSS-DEVICE SYNC) ====================
+  if (action === 'getDeeds' || action === 'getAllDeeds') {
+    try {
+      var dSheet = ss.getSheetByName('Deeds_2569');
+      if (!dSheet) {
+        return ContentService.createTextOutput(JSON.stringify([])).setMimeType(ContentService.MimeType.JSON);
+      }
+      var dValues = dSheet.getDataRange().getValues();
+      var deedsList = [];
+      var targetSid = (e && e.parameter && (e.parameter.studentId || e.parameter.student_id)) ? String(e.parameter.studentId || e.parameter.student_id).trim() : '';
+      
+      for (var dIdx = 1; dIdx < dValues.length; dIdx++) {
+        var row = dValues[dIdx];
+        var dId = String(row[0] || '').trim();
+        if (!dId) continue;
+        var sId = String(row[1] || '').trim();
+        if (targetSid && sId !== targetSid) continue;
+        
+        var cId = parseInt(row[2] || 1);
+        var hrs = parseFloat(row[3] || 0);
+        var aDate = row[4] ? (row[4] instanceof Date ? Utilities.formatDate(row[4], 'Asia/Bangkok', 'yyyy-MM-dd') : String(row[4])) : '';
+        var dDesc = String(row[5] || '');
+        var dStatus = String(row[6] || 'pending');
+        var sDate = row[7] ? (row[7] instanceof Date ? Utilities.formatDate(row[7], 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss') : String(row[7])) : '';
+        var appr = String(row[8] || '');
+        var apprAt = row[9] ? (row[9] instanceof Date ? Utilities.formatDate(row[9], 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss') : String(row[9])) : '';
+        var loc = String(row[10] || 'วิทยาลัยพยาบาลทหารอากาศ');
+        var imgUrl = String(row[11] || '');
+        
+        deedsList.push({
+          id: dId,
+          studentId: sId,
+          student_id: sId,
+          categoryId: cId,
+          category_id: cId,
+          hours: hrs,
+          activityDate: aDate,
+          event_date: aDate,
+          description: dDesc,
+          title: dDesc,
+          status: dStatus,
+          submittedAt: sDate,
+          approver: appr,
+          approved_by: appr,
+          approvedBy: appr,
+          approvedAt: apprAt,
+          location: loc,
+          imageUrl: imgUrl,
+          imageUrls: imgUrl ? [imgUrl] : []
+        });
+      }
+      return ContentService.createTextOutput(JSON.stringify(deedsList)).setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      return ContentService.createTextOutput(JSON.stringify({ status: 'error', error: err.message })).setMimeType(ContentService.MimeType.JSON);
+    }
+  }
+
   // ==================== GET SETTINGS (SAFE — NO TOKENS) ====================
   if (action === 'getSettings') {
     return ContentService.createTextOutput(JSON.stringify({
@@ -98,16 +155,42 @@ function doPost(e) {
   try {
     params = JSON.parse(e.postData.contents);
   } catch (err) {
-    params = e.parameter;
+    params = e.parameter || {};
   }
+
+  // 1. Handle Telegram Webhook Callback Query (Instant Button Reaction)
+  if (params && params.callback_query) {
+    return handleTelegramCallback(params.callback_query, ss);
+  }
+  
   var action = (params && params.action) ? params.action : '';
   
-  // 0. เริ่มต้นใส่รายชื่อนักเรียนทั้งหมด 380 คนลงในตาราง Master ทันที (พร้อมยอดยกมาจากปี 2568)
+  // 2. Set Telegram Configuration in Script Properties
+  if (action === 'set_telegram_config') {
+    var p = PropertiesService.getScriptProperties();
+    if (params.token) p.setProperty('TELEGRAM_BOT_TOKEN', String(params.token).trim());
+    if (params.chat_id) p.setProperty('TELEGRAM_CHAT_ID', String(params.chat_id).trim());
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      message: 'Telegram config saved in Script Properties successfully'
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // 3. Update Deed Status / Approve / Reject (Web & Teacher Dashboard)
+  if (action === 'updateDeedStatus' || action === 'approveDeed') {
+    return handleUpdateDeedStatus(params, ss);
+  }
+
+  // 4. Also support getDeeds via POST
+  if (action === 'getDeeds' || action === 'getAllDeeds') {
+    return doGet({ parameter: params });
+  }
+
+  // 5. Initial populate students
   if (action === 'init_all_students') {
     var studentList = params.students || [];
     var sheet = getOrCreateMasterSheet(ss);
     
-    // Clear old data rows if resetting
     var lastRow = sheet.getLastRow();
     if (lastRow > 1) {
       sheet.getRange(2, 1, lastRow - 1, sheet.getLastColumn()).clearContent();
@@ -153,23 +236,22 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Populated ' + rowsToAppend.length + ' students with complete history' })).setMimeType(ContentService.MimeType.JSON);
   }
   
-  // 1. ผูก LINE ID + อัปเดต Profile ใน Folder
+  // 6. ผูก LINE ID + อัปเดต Profile ใน Folder
   if (action === 'bind_line') {
     var studentId = String(params.studentId || '');
     var lineUserId = String(params.lineUserId || '');
     var lineDisplayName = String(params.lineDisplayName || '');
     var linePictureUrl = String(params.linePictureUrl || '');
     
-    // 1.1 Update Master Sheet
     var sheet = getOrCreateMasterSheet(ss);
     var data = sheet.getDataRange().getValues();
     var found = false;
     
     for (var i = 1; i < data.length; i++) {
-      if (String(data[i][1]) === studentId) { // Column B is Student ID
-        sheet.getRange(i + 1, 20).setValue(lineUserId); // Col T: LINE User ID
-        sheet.getRange(i + 1, 21).setValue(lineDisplayName); // Col U: LINE Display Name
-        sheet.getRange(i + 1, 22).setValue(new Date()); // Col V: Last Sync
+      if (String(data[i][1]) === studentId) {
+        sheet.getRange(i + 1, 20).setValue(lineUserId);
+        sheet.getRange(i + 1, 21).setValue(lineDisplayName);
+        sheet.getRange(i + 1, 22).setValue(new Date());
         found = true;
         break;
       }
@@ -195,7 +277,6 @@ function doPost(e) {
       ]);
     }
     
-    // 1.2 Update profile.json in Student Folder
     try {
       updateStudentProfileJson(studentId, {
         student_id: studentId,
@@ -211,40 +292,70 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Bound LINE ID & Synced Folder' })).setMimeType(ContentService.MimeType.JSON);
   }
   
-  // 2. บันทึกความดี (Submit Deed) + เก็บภาพลงโฟลเดอร์นักเรียน
+  // 7. บันทึกความดี (Submit Deed) + แจ้งเตือน Telegram อัตโนมัติทันที
   if (action === 'submit_deed') {
     var deed = params.deed || params;
-    var studentId = String(deed.studentId || (deed.student ? deed.student.student_id : ''));
+    var studentId = String(deed.studentId || (deed.student ? deed.student.student_id : '')).trim();
     var hours = parseFloat(deed.hours || 0);
-    var catId = parseInt(deed.categoryId || 1);
+    var catId = parseInt(deed.categoryId || deed.category_id || 1);
+    var deedId = deed.id || ('deed_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6));
+    var desc = deed.description || deed.title || '';
+    var actDate = deed.activityDate || deed.event_date || Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
+    var loc = deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
+    var imgUrl = deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || '';
+    var approver = deed.approver || deed.approved_by || 'ร.อ.อนุชิต ทำจะดี (Bird)';
     
-    // 2.1 บันทึกลงตาราง Deeds
+    // บันทึกลงตาราง Deeds_2569
     var deedSheet = getOrCreateSheet(ss, 'Deeds_2569', [
       'Deed ID', 'รหัสนักเรียน', 'หมวดหมู่ ID', 'จำนวนชั่วโมง', 'วันที่ทำกิจกรรม', 
-      'รายละเอียด', 'สถานะ', 'วันที่ส่งเรื่อง'
+      'รายละเอียด', 'สถานะ', 'วันที่ส่งเรื่อง', 'ผู้ตรวจประเมิน', 'วันที่อนุมัติ', 'สถานที่', 'รูปหลักฐาน URL'
     ]);
     
-    var deedId = deed.id || ('DEED-' + Date.now());
     deedSheet.appendRow([
       deedId,
       studentId,
       catId,
       hours,
-      deed.activityDate || '',
-      deed.description || '',
-      deed.status || 'pending',
-      new Date()
+      actDate,
+      desc,
+      'pending',
+      new Date(),
+      approver,
+      '',
+      loc,
+      imgUrl
     ]);
     
-    // 2.2 อัปเดตชั่วโมงสะสมใน Master Sheet
-    updateMasterStudentHours(ss, studentId, catId, hours);
+    // ส่งแจ้งเตือน Telegram ทันที
+    try {
+      sendTelegramDeedNotification(ss, {
+        id: deedId,
+        studentId: studentId,
+        student: deed.student,
+        studentName: deed.studentName || (deed.student ? (deed.student.rank + ' ' + deed.student.first_name + ' ' + deed.student.last_name) : ''),
+        classYear: deed.classYear || (deed.student ? deed.student.class_year : ''),
+        categoryId: catId,
+        hours: hours,
+        activityDate: actDate,
+        description: desc,
+        location: loc,
+        approver: approver,
+        imageUrl: imgUrl
+      });
+    } catch (te) {
+      Logger.log('Telegram notify error: ' + te.message);
+    }
     
-    return ContentService.createTextOutput(JSON.stringify({ status: 'success', message: 'Deed recorded and Master Sheet updated' })).setMimeType(ContentService.MimeType.JSON);
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      message: 'Deed recorded and Telegram notified',
+      deedId: deedId
+    })).setMimeType(ContentService.MimeType.JSON);
   }
   
-  // 3. ส่ง LINE Message (Proxy ผ่าน Google Server แก้ CORS 100%)
+  // 8. ส่ง LINE Message (Proxy ผ่าน Google Server)
   if (action === 'send_line_message') {
-    var lineToken = params.token || 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    var lineToken = params.token || PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN') || '';
     var target = params.target || 'broadcast';
     var messages = params.messages || [];
     var to = params.to || '';
@@ -276,10 +387,10 @@ function doPost(e) {
     }
   }
   
-  // 4. รับ LINE Webhook Events โดยตรงบน Google Cloud (ทำงาน 24 ชม. ไม่ต้องเปิดคอม)
+  // 9. LINE Webhook Events
   if (params && params.events) {
     var events = params.events || [];
-    var lineToken = 'vyXhnvU/stGL9mUrIPKB+30x6OwFuFsercCL0UwISHKcV+qn3VW7FYL1kTa8kgm/+GpjDU3s+F/DPaFJwyZK58Y7iNrNXidTBmbaJu7w5ReFAiBmFe+QJ6z6tytonZPqmtfuO9pSU8tnmfRTh2+uvwdB04t89/1O/w1cDnyilFU=';
+    var lineToken = PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN') || '';
     
     for (var evIdx = 0; evIdx < events.length; evIdx++) {
       var ev = events[evIdx];
@@ -290,7 +401,7 @@ function doPost(e) {
         var userText = String(ev.message.text || '').trim();
         var lowerText = userText.toLowerCase();
         
-        // 4.1 ถ้าพิมพ์รหัสนักเรียน 7 หลัก
+        // ถ้าพิมพ์รหัสนักเรียน 7 หลัก
         if (/^\d{7}$/.test(userText)) {
           var sheet = getOrCreateMasterSheet(ss);
           var data = sheet.getDataRange().getValues();
@@ -345,105 +456,6 @@ function doPost(e) {
           }
           continue;
         }
-        
-        // 4.2 เช็คชั่วโมงสะสม / ยอดคะแนน
-        if (lowerText.indexOf('ชั่วโมง') !== -1 || lowerText.indexOf('เช็ค') !== -1 || lowerText.indexOf('ยอด') !== -1 || lowerText.indexOf('ผ่าน') !== -1) {
-          var sheet = getOrCreateMasterSheet(ss);
-          var data = sheet.getDataRange().getValues();
-          var studentFound = null;
-          
-          for (var r = 1; r < data.length; r++) {
-            if (String(data[r][19]) === userId) {
-              studentFound = data[r];
-              break;
-            }
-          }
-          
-          if (studentFound) {
-            var sName = studentFound[2] + ' ' + studentFound[3] + ' ' + studentFound[4];
-            var totHours = parseFloat(studentFound[15] || 0);
-            var grade = studentFound[17] || (totHours >= 50 ? 'ผ่านเกณฑ์ ✅' : 'ยังไม่ผ่าน ❌');
-            
-            var flexMsg = {
-              type: "flex",
-              altText: "📊 สรุปชั่วโมงจิตอาสา - " + sName,
-              contents: {
-                type: "bubble",
-                size: "mega",
-                header: {
-                  type: "box", layout: "vertical", backgroundColor: "#0a192f", paddingAll: "20px",
-                  contents: [
-                    { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
-                    { type: "text", text: "📊 สรุปชั่วโมงจิตอาสารายบุคคล", color: "#ffffff", size: "md", weight: "bold", margin: "xs" }
-                  ]
-                },
-                body: {
-                  type: "box", layout: "vertical",
-                  contents: [
-                    { type: "text", text: sName, size: "sm", weight: "bold", color: "#0a192f" },
-                    { type: "text", text: "รหัส " + studentFound[1] + " | " + studentFound[5], size: "xs", color: "#64748b", margin: "xs" },
-                    { type: "separator", margin: "lg" },
-                    {
-                      type: "box", layout: "horizontal", margin: "lg",
-                      contents: [
-                        {
-                          type: "box", layout: "vertical",
-                          contents: [
-                            { type: "text", text: "ชั่วโมงสะสมรวม", size: "xs", color: "#888888" },
-                            { type: "text", text: totHours.toFixed(1) + " ชม.", size: "xl", weight: "bold", color: "#c9a227" }
-                          ]
-                        },
-                        {
-                          type: "box", layout: "vertical", alignItems: "flex-end",
-                          contents: [
-                            { type: "text", text: "ผลการประเมิน", size: "xs", color: "#888888" },
-                            { type: "text", text: grade, size: "sm", weight: "bold", color: (totHours >= 50 ? "#16a34a" : "#dc2626") }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                },
-                footer: {
-                  type: "box", layout: "vertical",
-                  contents: [{
-                    type: "button",
-                    action: { type: "uri", label: "📱 เปิดระบบบันทึกความดี", uri: "https://liff.line.me/2010948179-Ympqt2bT" },
-                    style: "primary", color: "#0a192f"
-                  }]
-                }
-              }
-            };
-            replyLineMessage(replyToken, [flexMsg], lineToken);
-          } else {
-            replyLineMessage(replyToken, [{ type: "text", text: "กรุณาพิมพ์ \"รหัสนักเรียน 7 หลัก\" เพื่อผูกบัญชีก่อนตรวจสอบชั่วโมงค่ะ 😊" }], lineToken);
-          }
-          continue;
-        }
-        
-        // 4.3 ถามเรื่องบริจาคเลือด
-        if (lowerText.indexOf('บริจาคเลือด') !== -1 || lowerText.indexOf('เลือด') !== -1 || lowerText.indexOf('โลหิต') !== -1) {
-          replyLineMessage(replyToken, [{
-            type: "text",
-            text: "🩸 เกณฑ์การบริจาคโลหิต (หมวด 1):\n━━━━━━━━━━━━━━━\n- ได้รับ 8 ชั่วโมง / ครั้ง\n- ต้องแนบรูปถ่ายใบรับรองหรือรูปขณะบริจาค\n- บันทึกในระบบและรออาจารย์อนุมัติค่ะ 🩺"
-          }], lineToken);
-          continue;
-        }
-        
-        // 4.4 ถามเกณฑ์ทั่วไป
-        if (lowerText.indexOf('เกณฑ์') !== -1 || lowerText.indexOf('กี่') !== -1) {
-          replyLineMessage(replyToken, [{
-            type: "text",
-            text: "📜 เกณฑ์จิตอาสา วพอ. 2569:\n━━━━━━━━━━━━━━━\n- ขั้นต่ำ 50 ชั่วโมง / ปีการศึกษา (25 ชม./เทอม)\n- แบ่งเป็น 9 หมวดกิจกรรม\n- สะสมครบจะได้รับเกียรติบัตรปีกทองค่ะ 🎖️"
-          }], lineToken);
-          continue;
-        }
-        
-        // Default response
-        replyLineMessage(replyToken, [{
-          type: "text",
-          text: "สวัสดีค่ะ บอทฟ้าใส ยินดีให้บริการค่ะ 🌸\n\n📌 สิ่งที่สามารถพิมพ์ถามได้:\n- พิมพ์ \"รหัสนักเรียน 7 หลัก\" เพื่อผูกบัญชี\n- พิมพ์ \"เช็คชั่วโมง\" เพื่อดูยอดสะสมและเกรด\n- พิมพ์ \"บริจาคเลือด\" เพื่อดูเกณฑ์หมวด 1\n- พิมพ์ \"เกณฑ์\" เพื่อดูข้อกำหนดชั่วโมงจิตอาสาค่ะ 😊"
-        }], lineToken);
       }
     }
     return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
@@ -452,7 +464,285 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unknown action' })).setMimeType(ContentService.MimeType.JSON);
 }
 
+// ==================== TELEGRAM WEBHOOK & CALLBACK HANDLER ====================
+
+function handleTelegramCallback(cq, ss) {
+  var cqId = cq.id;
+  var data = String(cq.data || '').trim();
+  var token = PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || '';
+  
+  var isApprove = data.indexOf('approve_') === 0;
+  var isReject = data.indexOf('reject_') === 0;
+  
+  // 1. ตอบกลับ callback query ทันที เพื่อไม่ให้ Telegram หมุน Loading ค้าง
+  if (token) {
+    try {
+      UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/answerCallbackQuery', {
+        method: 'post',
+        contentType: 'application/json',
+        payload: JSON.stringify({
+          callback_query_id: cqId,
+          text: isApprove ? '✅ อนุมัติความดีเรียบร้อยแล้ว!' : (isReject ? '❌ ปฏิเสธรายการความดีแล้ว' : 'รับข้อมูลเรียบร้อยแล้ว'),
+          show_alert: true
+        }),
+        muteHttpExceptions: true
+      });
+    } catch (e) {
+      Logger.log('answerCallbackQuery error: ' + e.message);
+    }
+  }
+  
+  // 2. ดำเนินการอนุมัติหรือปฏิเสธในฐานข้อมูล
+  if (isApprove || isReject) {
+    var parts = data.split('_');
+    var studentId = parts[parts.length - 1];
+    var deedId = parts.slice(1, parts.length - 1).join('_');
+    var newStatus = isApprove ? 'approved' : 'rejected';
+    var approverName = 'ร.อ.อนุชิต ทำจะดี (Bird)';
+    
+    var deedSheet = ss.getSheetByName('Deeds_2569');
+    var foundDeed = null;
+    if (deedSheet) {
+      var dData = deedSheet.getDataRange().getValues();
+      for (var r = 1; r < dData.length; r++) {
+        if (String(dData[r][0]) === String(deedId)) {
+          var prevStatus = String(dData[r][6] || 'pending');
+          deedSheet.getRange(r + 1, 7).setValue(newStatus);
+          deedSheet.getRange(r + 1, 9).setValue(approverName);
+          deedSheet.getRange(r + 1, 10).setValue(new Date());
+          foundDeed = {
+            studentId: String(dData[r][1] || studentId),
+            catId: parseInt(dData[r][2] || 1),
+            hours: parseFloat(dData[r][3] || 0),
+            prevStatus: prevStatus
+          };
+          break;
+        }
+      }
+    }
+    
+    // หากเป็นการอนุมัติใหม่ ให้อัปเดตชั่วโมงสะสมใน Master Sheet ทันที
+    if (isApprove && foundDeed && foundDeed.prevStatus !== 'approved') {
+      updateMasterStudentHours(ss, foundDeed.studentId, foundDeed.catId, foundDeed.hours);
+    }
+    
+    // 3. แก้ไขปุ่มบน Telegram ให้แสดงว่าอนุมัติแล้ว
+    if (token && cq.message && cq.message.chat && cq.message.message_id) {
+      try {
+        var newBtnText = isApprove ? '✅ อนุมัติแล้ว โดย ร.อ.อนุชิต' : '❌ ปฏิเสธแล้ว โดย ร.อ.อนุชิต';
+        UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/editMessageReplyMarkup', {
+          method: 'post',
+          contentType: 'application/json',
+          payload: JSON.stringify({
+            chat_id: cq.message.chat.id,
+            message_id: cq.message.message_id,
+            reply_markup: {
+              inline_keyboard: [
+                [
+                  {
+                    text: newBtnText,
+                    callback_data: 'done'
+                  }
+                ]
+              ]
+            }
+          }),
+          muteHttpExceptions: true
+        });
+      } catch (e) {
+        Logger.log('editMessageReplyMarkup error: ' + e.message);
+      }
+    }
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      deedId: deedId,
+      newStatus: newStatus
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+  
+  return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ==================== UPDATE DEED STATUS (WEB / TEACHER DASHBOARD) ====================
+
+function handleUpdateDeedStatus(params, ss) {
+  var deedId = String(params.deedId || params.id || '').trim();
+  var studentId = String(params.studentId || params.student_id || '').trim();
+  var newStatus = String(params.status || 'approved').trim();
+  var approver = String(params.approvedBy || params.approver || params.teacherName || 'ร.อ.อนุชิต ทำจะดี (Bird)').trim();
+  
+  var deedSheet = ss.getSheetByName('Deeds_2569');
+  if (!deedSheet) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Deeds_2569 sheet not found' })).setMimeType(ContentService.MimeType.JSON);
+  }
+  
+  var dData = deedSheet.getDataRange().getValues();
+  var updated = false;
+  
+  for (var r = 1; r < dData.length; r++) {
+    if (String(dData[r][0]) === deedId) {
+      var prevStatus = String(dData[r][6] || 'pending');
+      deedSheet.getRange(r + 1, 7).setValue(newStatus);
+      deedSheet.getRange(r + 1, 9).setValue(approver);
+      deedSheet.getRange(r + 1, 10).setValue(new Date());
+      
+      var sid = String(dData[r][1] || studentId);
+      var catId = parseInt(dData[r][2] || 1);
+      var hrs = parseFloat(dData[r][3] || 0);
+      
+      if (newStatus === 'approved' && prevStatus !== 'approved') {
+        updateMasterStudentHours(ss, sid, catId, hrs);
+      }
+      updated = true;
+      break;
+    }
+  }
+  
+  if (updated) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      deedId: deedId,
+      newStatus: newStatus,
+      approver: approver
+    })).setMimeType(ContentService.MimeType.JSON);
+  } else {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: 'Deed not found: ' + deedId
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== SEND TELEGRAM INTERACTIVE NOTIFICATION ====================
+
+function sendTelegramDeedNotification(ss, deed) {
+  var token = PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || '';
+  var chatId = PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || '';
+  if (!token || !chatId) {
+    Logger.log('Telegram token or chat ID not set in Script Properties');
+    return false;
+  }
+  
+  var studentId = String(deed.studentId || '').trim();
+  var deedId = String(deed.id || '').trim();
+  
+  // ตรวจสอบชื่อนักเรียนจาก Master Sheet หากไม่มี
+  var studentName = deed.studentName || '';
+  var classYear = String(deed.classYear || '');
+  if (!studentName || studentName.indexOf('รหัส') !== -1) {
+    var sInfo = getStudentInfoFromMaster(ss, studentId);
+    if (sInfo) {
+      studentName = sInfo.full_name;
+      classYear = sInfo.class_year;
+    }
+  }
+  if (!studentName) studentName = 'นพอ. (' + studentId + ')';
+  if (!classYear && studentId.length >= 2) classYear = studentId.substring(0, 2);
+  
+  var yearLevel = classYear === '69' ? '1' : (classYear === '68' ? '2' : (classYear === '67' ? '3' : (classYear === '66' ? '4' : '1')));
+  var yearName = 'ชั้นปีที่ ' + yearLevel + ' (รุ่น ' + classYear + ')';
+  
+  var catId = parseInt(deed.categoryId || 1);
+  var catNames = {
+    1: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา',
+    2: 'โครงการภายนอก (คำสั่ง วพอ.)',
+    3: 'ช่วยเหลืองานภายใน วพอ.',
+    4: 'เข้าอบรมที่ วพอ. จัดให้',
+    5: 'ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ',
+    6: 'ทำนุบำรุงศาสนสถาน',
+    7: 'งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)',
+    8: 'กิจกรรมจงรักภักดีต่อสถาบัน',
+    9: 'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)'
+  };
+  var catEmojis = {
+    1: '🩸', 2: '🏛️', 3: '🏥', 4: '📚', 5: '🤝', 6: '🛕', 7: '🧹', 8: '👑', 9: '⭐'
+  };
+  var catName = catNames[catId] || 'กิจกรรมความดี';
+  var catEmoji = catEmojis[catId] || '📌';
+  
+  var hours = deed.hours || 0;
+  var actDate = deed.activityDate || Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
+  var desc = deed.description || '';
+  var loc = deed.location || 'วิทยาลัยพยาบาลทหารอากาศ';
+  var approver = deed.approver || 'ร.อ.อนุชิต ทำจะดี (Bird)';
+  
+  var baseUrl = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend';
+  var approveUrl = baseUrl + '/approve_sign.html?id=' + encodeURIComponent(deedId) + '&studentId=' + encodeURIComponent(studentId);
+  var slipUrl = baseUrl + '/deed_slip.html?id=' + encodeURIComponent(deedId) + '&studentId=' + encodeURIComponent(studentId);
+  
+  var replyMarkup = {
+    inline_keyboard: [
+      [
+        { text: '✅ อนุมัติด่วน', callback_data: 'approve_' + deedId + '_' + studentId },
+        { text: '❌ ปฏิเสธ', callback_data: 'reject_' + deedId + '_' + studentId }
+      ],
+      [
+        { text: '✍️ ตรวจสอบ & ลงนาม ↗️', url: approveUrl },
+        { text: '📄 พิมพ์สลิป A4 (PDF) ↗️', url: slipUrl }
+      ]
+    ]
+  };
+  
+  var htmlMsg = '🔔 <b>แจ้งเตือนการขออนุมัติความดี (วพอ. 2569)</b>\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '👤 <b>ผู้ขอ:</b> ' + studentName + '\n' +
+    '🎫 <b>รหัส นพอ.:</b> <code>' + studentId + '</code> (' + yearName + ')\n' +
+    '📂 <b>หมวดที่ ' + catId + ':</b> ' + catEmoji + ' ' + catName + '\n' +
+    '⏱ <b>จำนวน:</b> <b>' + hours + ' ชั่วโมง</b>\n' +
+    '📅 <b>วันที่:</b> ' + actDate + '\n' +
+    '📍 <b>สถานที่:</b> ' + loc + '\n' +
+    '📝 <b>รายละเอียด:</b> ' + desc + '\n' +
+    '👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> ' + approver + '\n' +
+    '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+    '⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>';
+
+  var url = 'https://api.telegram.org/bot' + token + '/sendMessage';
+  var payload = {
+    chat_id: chatId,
+    text: htmlMsg,
+    parse_mode: 'HTML',
+    reply_markup: replyMarkup
+  };
+  
+  UrlFetchApp.fetch(url, {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+  return true;
+}
+
+function getStudentInfoFromMaster(ss, studentId) {
+  var sheet = ss.getSheetByName('Main_2569');
+  if (!sheet) return null;
+  var data = sheet.getDataRange().getValues();
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][1]).trim() === String(studentId).trim()) {
+      var rank = String(data[i][2] || 'นพอ.');
+      var fn = String(data[i][3] || '');
+      var ln = String(data[i][4] || '');
+      var cyRaw = String(data[i][5] || '69').replace(/รุ่น\s*/, '').trim();
+      return {
+        student_id: studentId,
+        rank: rank,
+        first_name: fn,
+        last_name: ln,
+        full_name: (rank + ' ' + fn + ' ' + ln).trim(),
+        class_year: cyRaw
+      };
+    }
+  }
+  return null;
+}
+
+// -------------------------------------------------------------
+// HELPER FUNCTIONS & FOLDER MANAGEMENT
+// -------------------------------------------------------------
+
 function replyLineMessage(replyToken, messages, token) {
+  if (!token) return;
   var url = 'https://api.line.me/v2/bot/message/reply';
   var options = {
     method: 'post',
@@ -463,10 +753,6 @@ function replyLineMessage(replyToken, messages, token) {
   };
   UrlFetchApp.fetch(url, options);
 }
-
-// -------------------------------------------------------------
-// HELPER FUNCTIONS & FOLDER MANAGEMENT
-// -------------------------------------------------------------
 
 function getOrCreateMasterSheet(ss) {
   var sheet = ss.getSheetByName('Main_2569');
@@ -500,7 +786,6 @@ function updateMasterStudentHours(ss, studentId, catId, addedHours) {
       var currentCatHours = parseFloat(data[i][catCol - 1] || 0);
       sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
       
-      // Update Formula for Total & Grade
       var row = i + 1;
       sheet.getRange(row, 16).setFormula('=SUM(G' + row + ':O' + row + ')');
       sheet.getRange(row, 17).setValue('50 ชม./ปี');
@@ -549,11 +834,9 @@ function setupAllStudentFolders() {
     var folderName = sid + ' - ' + rank + ' ' + fname + ' ' + lname;
     var sFolder = getOrCreateSubFolder(parentFolder, folderName);
     
-    // Sub-folders inside student folder
     getOrCreateSubFolder(sFolder, '01_หลักฐานภาพถ่ายความดี');
     getOrCreateSubFolder(sFolder, '02_เอกสารรับรอง_Word_PDF');
     
-    // Create profile.json
     var profileObj = {
       student_id: sid,
       rank: rank,
