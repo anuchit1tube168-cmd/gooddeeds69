@@ -551,181 +551,19 @@ def get_env_config(key, default=''):
     return default
 
 def send_telegram_request(method, payload):
-    token = get_env_config('TELEGRAM_BOT_TOKEN')
-    if not token:
-        return {}
-    url = f"https://api.telegram.org/bot{token}/{method}"
-    data = json.dumps(payload).encode('utf-8')
-    req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
-    ctx = ssl.create_default_context()
-    try:
-        with urllib.request.urlopen(req, timeout=15, context=ctx) as resp:
-            return json.loads(resp.read().decode('utf-8'))
-    except Exception as e:
-        print("TELEGRAM_REQUEST_FAILED")
-        return {}
+    """Retired compatibility shim. Telegram transport is Cloudflare-only."""
+    return {}
+
 
 def send_telegram_photo(photo_path, caption, reply_markup=None):
-    token = get_env_config('TELEGRAM_BOT_TOKEN')
-    chat_id = get_env_config('TELEGRAM_CHAT_ID')
-    if not token or not chat_id:
-        return False
-    url = f"https://api.telegram.org/bot{token}/sendPhoto"
-    boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
-    body = bytearray()
+    """Retired compatibility shim. Telegram transport is Cloudflare-only."""
+    return False
 
-    # chat_id
-    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{chat_id}\r\n".encode('utf-8'))
-    # caption
-    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n".encode('utf-8'))
-    # parse_mode
-    body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
-    # reply_markup
-    if reply_markup:
-        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
-
-    # photo file
-    try:
-        with open(photo_path, 'rb') as f:
-            file_bytes = f.read()
-        filename = os.path.basename(photo_path)
-        body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"{filename}\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
-        body.extend(file_bytes)
-        body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
-
-        req = urllib.request.Request(url, data=bytes(body), headers={
-            'Content-Type': f'multipart/form-data; boundary={boundary}',
-            'Content-Length': str(len(body))
-        })
-        ctx = ssl.create_default_context()
-        with urllib.request.urlopen(req, timeout=20, context=ctx) as resp:
-            res = json.loads(resp.read().decode('utf-8'))
-            return res.get('ok', False)
-    except Exception as e:
-        print("TELEGRAM_PHOTO_FAILED")
-        return False
 
 def notify_deed_submission_telegram(deed_data):
-    """Send interactive Telegram notification for newly submitted deed."""
-    try:
-        token = get_env_config('TELEGRAM_BOT_TOKEN')
-        chat_id = get_env_config('TELEGRAM_CHAT_ID')
-        if not token or not chat_id:
-            return False
+    """Retired compatibility shim. Telegram transport is Cloudflare-only."""
+    return False
 
-        student_id = str(deed_data.get('studentId') or deed_data.get('student_id') or '').strip()
-        deed_id = str(deed_data.get('id') or '').strip()
-
-        # Authoritative student identity resolution from students master database
-        s_map = load_students_map()
-        stu_obj = s_map.get(student_id, {})
-        full_authoritative_name = ''
-        if stu_obj and stu_obj.get('first_name'):
-            rank = stu_obj.get('rank', 'นพอ.')
-            fn = stu_obj.get('first_name', '')
-            ln = stu_obj.get('last_name', '')
-            full_authoritative_name = f"{rank} {fn} {ln}".strip()
-
-        raw_student_name = deed_data.get('student_name') or deed_data.get('studentName') or ''
-        if not full_authoritative_name and raw_student_name and 'รหัส' not in raw_student_name:
-            full_authoritative_name = raw_student_name
-
-        student_name = full_authoritative_name or f"นพอ. ({student_id})"
-        class_year = str(stu_obj.get('class_year') or deed_data.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69'))
-        year_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
-        year_level = str(stu_obj.get('year_level') or deed_data.get('year_level') or year_map.get(class_year, '1'))
-        year_name = f"ชั้นปีที่ {year_level} (รุ่น {class_year})"
-
-        cat_id = int(deed_data.get('categoryId') or deed_data.get('category_id') or 7)
-        cat_emoji_map = {
-            1: ('บริจาคโลหิต/เกล็ดเลือด/พลาสมา', '🩸'),
-            2: ('โครงการภายนอก (คำสั่ง วพอ.)', '🏛️'),
-            3: ('ช่วยเหลืองานภายใน วพอ.', '🏥'),
-            4: ('เข้าอบรมที่ วพอ. จัดให้', '📚'),
-            5: ('ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', '🤝'),
-            6: ('ทำนุบำรุงศาสนสถาน', '🛕'),
-            7: ('งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)', '🧹'),
-            8: ('กิจกรรมจงรักภักดีต่อสถาบัน', '👑'),
-            9: ('ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', '⭐'),
-        }
-        cat_name, cat_emoji = cat_emoji_map.get(cat_id, (CATEGORIES_NAME_MAP.get(cat_id, 'กิจกรรมความดี'), '📌'))
-
-        hours = deed_data.get('hours', 0)
-        activity_date = deed_data.get('activityDate') or deed_data.get('event_date') or time.strftime('%Y-%m-%d')
-        desc = deed_data.get('description') or deed_data.get('title') or ''
-        location = deed_data.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
-        approver = deed_data.get('approver') or deed_data.get('approved_by') or 'ผู้ตรวจที่ได้รับมอบหมาย'
-
-        base_url = get_env_config('SYSTEM_URL', 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend').rstrip('/')
-        if not base_url.endswith('/frontend'):
-            base_url += '/frontend'
-
-        q_params = urllib.parse.urlencode({
-            'id': deed_id,
-            'studentId': student_id,
-            'name': student_name,
-            'year': class_year,
-            'cat': cat_id,
-            'catName': cat_name,
-            'hours': hours,
-            'date': activity_date,
-            'desc': desc,
-            'loc': location,
-            'appr': approver,
-            'status': 'pending'
-        })
-        approve_url = f"{base_url}/approve_sign.html?{q_params}"
-        slip_url = f"{base_url}/deed_slip.html?{q_params}"
-
-        reply_markup = {
-            'inline_keyboard': [
-                [
-                    {'text': '✅ อนุมัติด่วน', 'callback_data': f"approve_{deed_id}_{student_id}"},
-                    {'text': '❌ ปฏิเสธ', 'callback_data': f"reject_{deed_id}_{student_id}"}
-                ],
-                [
-                    {'text': '✍️ ตรวจสอบ & ลงนาม ↗️', 'url': approve_url},
-                    {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': slip_url}
-                ]
-            ]
-        }
-
-        html_msg = (
-            f"🔔 <b>แจ้งเตือนการขออนุมัติความดี (วพอ. 2569)</b>\n"
-            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"👤 <b>ผู้ขอ:</b> {student_name}\n"
-            f"🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> ({year_name})\n"
-            f"📂 <b>หมวดที่ {cat_id}:</b> {cat_emoji} {cat_name}\n"
-            f"⏱ <b>จำนวน:</b> <b>{hours} ชั่วโมง</b>\n"
-            f"📅 <b>วันที่:</b> {activity_date}\n"
-            f"📍 <b>สถานที่:</b> {location}\n"
-            f"📝 <b>รายละเอียด:</b> {desc}\n"
-            f"👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> {approver}\n"
-            f"━━━━━━━━━━━━━━━━━━━━━━━\n"
-            f"⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>"
-        )
-
-        photo_sent = False
-        img_rel = deed_data.get('imageUrl') or ''
-        if img_rel and not img_rel.startswith('data:'):
-            img_full = os.path.join(FRONTEND_DIR, img_rel)
-            if os.path.exists(img_full):
-                photo_sent = send_telegram_photo(img_full, html_msg, reply_markup)
-
-        if not photo_sent:
-            response = send_telegram_request('sendMessage', {
-                'chat_id': chat_id,
-                'text': html_msg,
-                'parse_mode': 'HTML',
-                'reply_markup': reply_markup
-            })
-            if not response or response.get('ok') is not True:
-                return False
-        print("TELEGRAM_DELIVERY_ACCEPTED")
-        return True
-    except Exception as e:
-        print(f"⚠️ Telegram deed notification error: {e}")
-        return False
 
 def calculate_cohort_no(sid_str):
     """A missing official sequence cannot be inferred from a student ID."""
@@ -1210,7 +1048,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     notify_deed_submission_line(student_id, deed_data)
                 except Exception as _ne:
                     pass
-                threading.Thread(target=notify_deed_submission_telegram, args=(deed_data,), daemon=True).start()
+                # Telegram delivery moved to the Cloudflare notification boundary; no local thread is started.
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error submitting deed: {e}")
@@ -1453,43 +1291,16 @@ class CustomHandler(SimpleHTTPRequestHandler):
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
         elif parsed_path.path == '/api/telegram_webhook':
-            content_length = int(self.headers.get('Content-Length', 0))
-            post_data = self.rfile.read(content_length)
-            try:
-                payload = json.loads(post_data.decode('utf-8'))
-                from telegram_bot_listener import process_callback_query
-                if 'callback_query' in payload:
-                    threading.Thread(target=process_callback_query, args=(payload['callback_query'],), daemon=True).start()
-                self.send_json_response(200, {'ok': True})
-            except Exception as e:
-                self.send_json_response(500, {'ok': False, 'error': str(e)})
+            # Retired after Telegram credential incident. Cloudflare owns Telegram transport.
+            self.send_json_response(410, {'ok': False, 'error': 'TELEGRAM_RUNTIME_RETIRED'})
         else:
             self.send_response(404)
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
-    # SECURITY_INCIDENT_TELEGRAM_DISABLED: do not start polling until owner-controlled secret rotation is complete.
+    """Retired compatibility hook. Polling is permanently disabled in this runtime."""
     return False
-    # Re-enabled for local Telegram approval workflow per user instruction.
-    try:
-        import importlib
-        sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
-        import telegram_bot_listener as tbl
-        importlib.reload(tbl)
-        # Inject server functions for canonical persistence + SSE broadcast
-        tbl.save_or_update_deed_in_db = save_or_update_deed_in_db
-        tbl.broadcast_event = broadcast_event
-        tbl.load_students_map = load_students_map
-        t = tbl.start_listener_in_background()
-        if t:
-            print("🤖 Telegram Bot Listener thread started (long-polling).")
-            return True
-        else:
-            print("ℹ️ Telegram Bot Listener not started (no token or already running).")
-            return False
-    except Exception as e:
-        print(f"⚠️ Failed to start Telegram Bot Listener: {e}")
-        return False
+
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
     os.environ['ENABLE_LOCAL_API'] = 'false'  # SECURITY INCIDENT: legacy local API stays fail-closed
@@ -1499,7 +1310,7 @@ def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000
     print(f"📂 Serving static files from {BASE_DIR}")
     print(f"📁 Saving records to {RECORDS_DIR}")
 
-    # Start Telegram Bot Listener for approval via Telegram inline buttons
+    # Legacy Telegram polling is retired. Keep the compatibility hook fail-closed.
     start_telegram_bot_listener_thread()
 
     try:

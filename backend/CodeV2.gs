@@ -6,7 +6,8 @@ const GD_EMERGENCY_LOCKDOWN = true; // SECURITY INCIDENT: Telegram provider disa
  * Backend: Google Apps Script + private Google Sheets/Drive
  *
  * IMPORTANT
- * - Keep every secret in Script Properties, never in this file.
+ * - Keep non-Telegram server secrets in Script Properties, never in this file.
+ * - Telegram bot credentials are retired from Apps Script and must live only in the encrypted Cloudflare Worker secret store.
  * - Deploy as Web App: Execute as Me / Who has access: Anyone.
  * - Run setupSystem() once, then bootstrapOwnerAdmin() once.
  */
@@ -635,14 +636,29 @@ function audit_(actorId, action, entityType, entityId, detail, requestId) {
 }
 
 function notifyTelegram_(message) {
-  if (GD_EMERGENCY_LOCKDOWN) return { status: 'disabled', reason: 'EMERGENCY_LOCKDOWN' };
+  // Compatibility shim only. Telegram delivery is Cloudflare-only after the 2026-09 incident.
+  // Do not read TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID from Apps Script and do not call Telegram here.
+  return { status: 'disabled', reason: GD_EMERGENCY_LOCKDOWN ? 'EMERGENCY_LOCKDOWN' : 'CLOUDFLARE_ONLY' };
+}
+
+/**
+ * Owner/admin utility to remove legacy Telegram properties from this Apps Script project.
+ * Run manually from the verified production Apps Script editor after confirming project identity.
+ * Returns property names only; never logs or returns secret values.
+ */
+function retireLegacyTelegramScriptProperties() {
   const props = PropertiesService.getScriptProperties();
-  const token = '';
-  const chatId = '';
-  if (!token || !chatId) return;
-  try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', { method: 'post', contentType: 'application/json', payload: JSON.stringify({ chat_id: chatId, text: message }), muteHttpExceptions: true });
-  } catch (error) { console.error('Telegram: ' + error); }
+  const names = ['TELEGRAM_BOT_TOKEN', 'TELEGRAM_CHAT_ID', 'TELEGRAM_WEBHOOK_KEY'];
+  const removed = [];
+  names.forEach(function(name) {
+    if (props.getProperty(name) !== null) {
+      props.deleteProperty(name);
+      removed.push(name);
+    }
+  });
+  const result = { ok: true, removed: removed, telegramProvider: 'cloudflare_only' };
+  console.log('LEGACY_TELEGRAM_PROPERTIES_RETIRED ' + JSON.stringify(result));
+  return result;
 }
 
 function verifyLineIdToken_(idToken) {

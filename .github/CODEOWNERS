@@ -1,0 +1,10 @@
+# OWNER-ONLY CONTROL
+* @anuchit1tube168-cmd
+
+# Security-sensitive areas are explicitly owner-reviewed.
+.github/ @anuchit1tube168-cmd
+backend/ @anuchit1tube168-cmd
+functions/ @anuchit1tube168-cmd
+scripts/ @anuchit1tube168-cmd
+frontend/view_cards.html @anuchit1tube168-cmd
+frontend/view_cards.cloudflare.js @anuchit1tube168-cmd

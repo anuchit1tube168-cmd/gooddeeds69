@@ -13,5 +13,6 @@ jobs:
         with:
           persist-credentials: false
       - run: node scripts/check-syntax.cjs
+      - run: node scripts/verify_view_cards_cloudflare.mjs
       - run: node --test tests/*.test.cjs
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
