@@ -63,62 +63,99 @@ const Storage = {
         try { return JSON.parse(localStorage.getItem('gooddeeds_' + key)); } catch { return null; }
     },
     set(key, val) {
-        localStorage.setItem('gooddeeds_' + key, JSON.stringify(val));
+        try {
+            localStorage.setItem('gooddeeds_' + key, JSON.stringify(val));
+        } catch (e) {
+            console.warn('Storage quota exceeded, recovering space...', e);
+            try {
+                // 1. Free space by purging old standalone base64 images and unneeded student deeds
+                Storage.pruneOldStorage(key);
+                localStorage.setItem('gooddeeds_' + key, JSON.stringify(val));
+            } catch (retryErr) {
+                console.warn('Storage retry failed, saving lightweight record...', retryErr);
+                try {
+                    // 2. Strip large base64 image strings from record before storing in local storage
+                    const lightweight = Storage.stripLargeData(val);
+                    localStorage.setItem('gooddeeds_' + key, JSON.stringify(lightweight));
+                } catch (finalErr) {
+                    console.error('Storage quota completely full:', finalErr);
+                }
+            }
+        }
     },
     remove(key) {
-        localStorage.removeItem('gooddeeds_' + key);
+        try { localStorage.removeItem('gooddeeds_' + key); } catch (_) {}
     },
     clear() {
-        Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_')).forEach(k => localStorage.removeItem(k));
+        try {
+            Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_')).forEach(k => localStorage.removeItem(k));
+        } catch (_) {}
+    },
+    pruneOldStorage(currentKeyToKeep) {
+        try {
+            const keys = Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_'));
+            // Remove cached standalone images
+            keys.filter(k => k.startsWith('gooddeeds_img_')).forEach(k => localStorage.removeItem(k));
+            // Keep only the active user's deeds; remove old bulk student deeds
+            const keepKey = 'gooddeeds_' + currentKeyToKeep;
+            const currentUser = Storage.get('current_user') || {};
+            const activeSid = currentUser.student_id ? 'gooddeeds_deeds_' + currentUser.student_id : '';
+            keys.filter(k => k.startsWith('gooddeeds_deeds_') && k !== keepKey && k !== activeSid)
+                .forEach(k => localStorage.removeItem(k));
+        } catch (_) {}
+    },
+    stripLargeData(val) {
+        if (!val) return val;
+        try {
+            const copy = JSON.parse(JSON.stringify(val));
+            const sanitize = (obj) => {
+                if (Array.isArray(obj)) {
+                    obj.forEach(sanitize);
+                } else if (obj && typeof obj === 'object') {
+                    if (typeof obj.imageData === 'string' && obj.imageData.length > 500) {
+                        obj.imageData = '';
+                    }
+                    if (typeof obj.imageUrl === 'string' && obj.imageUrl.startsWith('data:') && obj.imageUrl.length > 50000) {
+                        obj.imageUrl = '';
+                    }
+                    if (Array.isArray(obj.imageUrls)) {
+                        obj.imageUrls = obj.imageUrls.map(u => (typeof u === 'string' && u.length > 50000) ? '' : u).filter(Boolean);
+                    }
+                }
+            };
+            sanitize(copy);
+            return copy;
+        } catch {
+            return val;
+        }
     }
 };
 
 // ==================== SEED IMPORTED DEEDS ====================
 /**
- * โหลดข้อมูลความดีจาก IMPORTED_DEEDS (deeds_data.js) เข้า localStorage
- * ผสานข้อมูลใหม่เสมอเพื่อให้อัปเดตข้อมูลจากสคริปต์ได้โดยไม่ลบข้อมูลเดิม
+ * IMPORTED_DEEDS (deeds_data.js) มีขนาดใหญ่ (~3.9MB)
+ * getDeeds() จะอ่านจากหน่วยความจำโดยตรงอยู่แล้ว ไม่จำเป็นต้องนำเข้า localStorage ทั้งหมด
+ * ฟังก์ชันนี้ช่วยเคลียร์ขยะ localStorage เก่าเพื่อคืนพื้นที่ให้เบราว์เซอร์และมือถือ
  */
 function seedImportedDeeds() {
-    if (typeof IMPORTED_DEEDS === 'undefined') return; // ไม่มีไฟล์ข้อมูล
-
-    let newCount = 0;
-    for (const [studentId, deeds] of Object.entries(IMPORTED_DEEDS)) {
-        let existing = Storage.get('deeds_' + studentId) || [];
-
-        // Cleanup old random-ID imports to prevent duplicates
-        existing = existing.filter(e => e.note !== 'นำเข้าจาก Main 2568.xlsx' || e.id.startsWith('import_'));
-
-        const merged = [...existing];
-
-        // เอาเฉพาะความดีจากไฟล์ที่ยังไม่มีใน localStorage เพิ่มเข้าไป และอัปเดตข้อมูลล่าสุด (เช่น ผู้ตรวจ)
-        deeds.forEach(d => {
-            const idx = merged.findIndex(e => e.id === d.id);
-            if (idx === -1) {
-                merged.push(d);
-                newCount++;
-            } else {
-                // อัปเดตข้อมูลผู้ตรวจประเมินหรือสถานะล่าสุดจากฐานข้อมูลไฟล์
-                const fileApprover = d.approved_by || d.approvedBy || d.approver;
-                if (fileApprover && fileApprover !== merged[idx].approved_by) {
-                    merged[idx].approved_by = fileApprover;
-                    merged[idx].approvedBy = fileApprover;
-                    merged[idx].approver = fileApprover;
+    try {
+        if (typeof localStorage === 'undefined') return;
+        const keys = Object.keys(localStorage).filter(k => k.startsWith('gooddeeds_deeds_'));
+        const currentUser = Storage.get('current_user') || {};
+        const activeSid = currentUser.student_id ? 'gooddeeds_deeds_' + currentUser.student_id : '';
+        // หากมีข้อมูล นพอ. อื่นๆ ค้างอยู่ใน localStorage เกิน 3 คน ให้ลบออกเพื่อป้องกันโควต้าเต็ม (QuotaExceededError)
+        if (keys.length > 3) {
+            keys.forEach(k => {
+                if (k !== activeSid) {
+                    localStorage.removeItem(k);
                 }
-                if (d.status && d.status !== merged[idx].status) {
-                    merged[idx].status = d.status;
-                }
-            }
-        });
-
-        Storage.set('deeds_' + studentId, merged);
-    }
-
-    if (newCount > 0) {
-        console.log(`✅ Seeded ${newCount} NEW deed records from IMPORTED_DEEDS`);
-    }
+            });
+            console.log('🧹 Pruned old deeds cache from localStorage to preserve storage quota.');
+        }
+    } catch (_) {}
 }
 
-// รัน seed ทันทีเมื่อโหลด script
+// รันตรวจเช็คพื้นที่ทันทีเมื่อโหลด script
 seedImportedDeeds();
 
 
@@ -743,7 +780,15 @@ const App = {
     },
 
     saveDeeds(studentId, deeds) {
-        Storage.set('deeds_' + studentId, this.deduplicateDeeds(deeds));
+        const cleanDeeds = (deeds || []).map(d => {
+            if (d && d.imageData && d.imageData.length > 500) {
+                const copy = { ...d };
+                delete copy.imageData;
+                return copy;
+            }
+            return d;
+        });
+        Storage.set('deeds_' + studentId, this.deduplicateDeeds(cleanDeeds));
     },
 
     async syncDeedsWithBackend(studentId) {
@@ -2092,7 +2137,7 @@ const App = {
     },
 
     // ---------- IMAGE HANDLING (AUTO-COMPRESSION FOR 250+ CONCURRENT USERS) ----------
-    imageToBase64(file, maxWidth = 1000, maxHeight = 1000, quality = 0.75) {
+    imageToBase64(file, maxWidth = 800, maxHeight = 800, quality = 0.6) {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
             reader.onload = e => {

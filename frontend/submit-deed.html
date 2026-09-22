@@ -555,7 +555,7 @@
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="chibi3d.js?v=3593"></script>
-    <script src="app.js?v=20260922-v3-login"></script>
+    <script src="app.js?v=20260922-v4-quota-fix"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -814,8 +814,8 @@
         async function handleFileSelect(e) {
             const files = Array.from(e.target.files);
             for (const file of files) {
-                if (file.size > 5 * 1024 * 1024) { showToast('ไฟล์ใหญ่เกิน 5MB: ' + file.name, 'warning'); continue; }
-                const b64 = await App.imageToBase64(file);
+                if (file.size > 15 * 1024 * 1024) { showToast('ไฟล์ใหญ่เกิน 15MB: ' + file.name, 'warning'); continue; }
+                const b64 = await App.imageToBase64(file, 800, 800, 0.6);
                 uploadedImages.push(b64);
                 renderPreviews();
             }
@@ -828,7 +828,7 @@
             document.getElementById('upload-zone').classList.remove('drag-over');
             const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
             for (const file of files) {
-                const b64 = await App.imageToBase64(file);
+                const b64 = await App.imageToBase64(file, 800, 800, 0.6);
                 uploadedImages.push(b64);
             }
             renderPreviews();
@@ -924,13 +924,8 @@
                     }
                 }
 
-                // Save images
+                // Images handling (clean payload without duplicate storage keys)
                 const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
-                const imageKeys = uploadedImages.map((img, i) => {
-                    const key = `${currentUser.student_id}_${Date.now()}_${i}`;
-                    App.saveImage(img, key);
-                    return key;
-                });
 
                 const deed = await App.addDeed({
                     categoryId: selectedCategoryId,
@@ -944,7 +939,7 @@
                     approved_by: approverName,
                     imageUrl: primaryImg || '',
                     imageData: primaryImg || '',
-                    imageUrls: uploadedImages.length > 0 ? uploadedImages : imageKeys,
+                    imageUrls: uploadedImages.length > 0 ? uploadedImages : [],
                 });
 
                 // Notify admin via Telegram + LINE (if configured) with bounded timeout
