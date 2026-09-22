@@ -273,6 +273,12 @@
     const originalLogout = App.logout ? App.logout.bind(App) : null;
     const originalGetAllPending = App.getAllPendingDeeds ? App.getAllPendingDeeds.bind(App) : () => [];
     const originalGetAllSummary = App.getAllStudentsSummary ? App.getAllStudentsSummary.bind(App) : () => [];
+    const originalAddDeed = App.addDeed ? App.addDeed.bind(App) : null;
+    const originalUpdateDeedStatus = App.updateDeedStatus ? App.updateDeedStatus.bind(App) : null;
+    const originalNotifyAdmins = App.notifyAdmins ? App.notifyAdmins.bind(App) : null;
+    const originalSyncDeedsFromCloud = App.syncDeedsFromCloud ? App.syncDeedsFromCloud.bind(App) : null;
+    const originalSyncDeedsWithBackend = App.syncDeedsWithBackend ? App.syncDeedsWithBackend.bind(App) : null;
+    const originalSyncAllDeedsWithBackend = App.syncAllDeedsWithBackend ? App.syncAllDeedsWithBackend.bind(App) : null;
 
     App.loginStudent = async function(studentId, password) {
       const sid = String(studentId || '').replace(/\D/g, '');
@@ -307,42 +313,100 @@
       } catch (e) { if (current === gasEpoch) clearV2(); return { success: false, message: e.message === 'GAS_V2_BACKEND_UNAVAILABLE' ? 'ระบบหลังบ้านกำลังปรับรุ่น กรุณาลองใหม่ภายหลังหรือแจ้งผู้ดูแลระบบ' : e.message === 'GAS_V2_TIMEOUT' ? 'การเชื่อมต่อหมดเวลา กรุณาลองใหม่ หากยังไม่สำเร็จให้แจ้งผู้ดูแล' : e.message || 'เข้าสู่ระบบไม่สำเร็จ' }; }
     };
 
-    App.syncDeedsFromCloud = async function(studentId) { return syncDeeds(String(studentId || '')); };
-    App.syncDeedsWithBackend = async function(studentId) { return syncDeeds(String(studentId || '')); };
-    App.syncAllDeedsWithBackend = async function() { return syncDeeds(''); };
+    App.syncDeedsFromCloud = async function(studentId) {
+      if (getToken()) {
+        try { return await syncDeeds(String(studentId || '')); } catch (_) {}
+      }
+      if (originalSyncDeedsFromCloud) return originalSyncDeedsFromCloud(studentId);
+      return [];
+    };
+
+    App.syncDeedsWithBackend = async function(studentId) {
+      if (getToken()) {
+        try { return await syncDeeds(String(studentId || '')); } catch (_) {}
+      }
+      if (originalSyncDeedsWithBackend) return originalSyncDeedsWithBackend(studentId);
+      return [];
+    };
+
+    App.syncAllDeedsWithBackend = async function() {
+      if (getToken()) {
+        try { return await syncDeeds(''); } catch (_) {}
+      }
+      if (originalSyncAllDeedsWithBackend) return originalSyncAllDeedsWithBackend();
+      return [];
+    };
 
     App.addDeed = async function(input) {
       const current = App.getCurrentUser ? App.getCurrentUser() : null;
-      if (!current || current.role !== 'student' || !getToken()) throw new Error('กรุณาเข้าสู่ระบบนักเรียนใหม่');
-      const cid = Number(input.categoryId || input.category_id || 7);
-      const image = input.imageData || input.imageUrl || (Array.isArray(input.imageUrls) ? input.imageUrls[0] : '');
-      let evidence = null;
-      if (typeof image === 'string' && image.startsWith('data:')) {
-        const m = image.match(/^data:([^;]+);base64,/); if (m) evidence = { dataUrl: image, type: m[1], name: `evidence-${current.student_id}-${Date.now()}` };
+      if (!current || current.role !== 'student') throw new Error('กรุณาเข้าสู่ระบบนักเรียนใหม่');
+      const token = getToken();
+      if (token) {
+        try {
+          const cid = Number(input.categoryId || input.category_id || 7);
+          const image = input.imageData || input.imageUrl || (Array.isArray(input.imageUrls) ? input.imageUrls[0] : '');
+          let evidence = null;
+          if (typeof image === 'string' && image.startsWith('data:')) {
+            const m = image.match(/^data:([^;]+);base64,/); if (m) evidence = { dataUrl: image, type: m[1], name: `evidence-${current.student_id}-${Date.now()}` };
+          }
+          const data = await gasCall('submitDeed', { studentId: String(current.student_id), cohort: String(current.class_year ? 'รุ่น ' + current.class_year : ''),
+            category: categoryText(cid), activityDate: String(input.activityDate || ''), hours: Number(input.hours), description: String(input.description || ''), evidence });
+          if (data && data.deed) {
+            const deed = normalizeDeed(data.deed); deed.notification = data.notification || { status: 'unknown' }; await syncDeeds(current.student_id).catch(() => {}); return deed;
+          }
+        } catch (e) {
+          console.warn('GAS V2 submitDeed unavailable or failed, saving via native pipeline:', e.message);
+        }
       }
-      const data = await gasCall('submitDeed', { studentId: String(current.student_id), cohort: String(current.class_year ? 'รุ่น ' + current.class_year : ''),
-        category: categoryText(cid), activityDate: String(input.activityDate || ''), hours: Number(input.hours), description: String(input.description || ''), evidence });
-      if (!data.deed) throw new Error('บันทึกไม่สำเร็จ');
-      const deed = normalizeDeed(data.deed); deed.notification = data.notification || { status: 'unknown' }; await syncDeeds(current.student_id).catch(() => {}); return deed;
+      if (originalAddDeed) {
+        return originalAddDeed(input);
+      }
+      throw new Error('ไม่สามารถบันทึกความดีได้');
     };
 
-    App.updateDeedStatus = async function(studentId, deedId, status, approverName, rejectReason) {
-      if (!getToken()) throw new Error('กรุณาเข้าสู่ระบบอาจารย์/แอดมินใหม่');
+    App.updateDeedStatus = async function(studentId, deedId, status, approverName, rejectReason, deedData) {
       const decision = status === 'approved' ? 'approved' : status === 'rejected' ? 'rejected' : '';
       if (!decision) throw new Error('สถานะไม่ถูกต้อง');
-      const data = await gasCall('reviewDeed', { recordId: String(deedId), decision, note: String(rejectReason || '') });
-      await syncDeeds('').catch(() => {}); return data.deed ? normalizeDeed(data.deed) : null;
+      const token = getToken();
+      if (token) {
+        try {
+          const data = await gasCall('reviewDeed', { recordId: String(deedId), decision, note: String(rejectReason || '') });
+          if (data && data.deed) {
+            await syncDeeds('').catch(() => {}); return normalizeDeed(data.deed);
+          }
+        } catch (e) {
+          console.warn('GAS V2 reviewDeed unavailable, updating via native pipeline:', e.message);
+        }
+      }
+      if (originalUpdateDeedStatus) {
+        return originalUpdateDeedStatus(studentId, deedId, status, approverName, rejectReason, deedData);
+      }
+      return null;
     };
 
-    App.notifyAdmins = async function(deed) { return !!(deed && deed.notification && deed.notification.status === 'sent'); };
+    App.notifyAdmins = async function(deed, user) {
+      if (deed && deed.notification && deed.notification.status === 'sent') return true;
+      if (originalNotifyAdmins) return originalNotifyAdmins(deed, user);
+      return false;
+    };
+
     App.startRealtimeSync = function(studentId, callback) {
       let stopped = false, busy = false;
       const poll = async () => { if (stopped || busy || !getToken()) return; busy = true; try { await syncDeeds(String(studentId || '')); if (typeof callback === 'function') callback(); } catch (_) {} finally { busy = false; } };
       poll(); const timer = setInterval(poll, 15000); return () => { stopped = true; clearInterval(timer); };
     };
 
-    App.getAllPendingDeeds = function() { const u = App.getCurrentUser ? App.getCurrentUser() : null; if (u && ['teacher','admin'].includes(u.role) && getToken()) return originalGetAllPending(); return []; };
-    App.getAllStudentsSummary = function() { const u = App.getCurrentUser ? App.getCurrentUser() : null; if (u && ['teacher','admin'].includes(u.role) && getToken()) return originalGetAllSummary(); return []; };
+    App.getAllPendingDeeds = function() {
+      const u = App.getCurrentUser ? App.getCurrentUser() : null;
+      if (u && ['teacher','admin'].includes(u.role)) return originalGetAllPending();
+      return [];
+    };
+
+    App.getAllStudentsSummary = function() {
+      const u = App.getCurrentUser ? App.getCurrentUser() : null;
+      if (u && ['teacher','admin'].includes(u.role)) return originalGetAllSummary();
+      return [];
+    };
 
     App.logout = async function() {
       const token = getToken(); clearV2();

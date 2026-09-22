@@ -65,3 +65,5 @@ frontend/auto_login.html
 *.DS_Store
 */.DS_Store
 node_modules/
+data/telegram_message_map.json
+frontend/*_thumb.jpg

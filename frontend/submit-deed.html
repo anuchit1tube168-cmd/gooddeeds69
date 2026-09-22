@@ -546,7 +546,7 @@
     <script src="chibi3d.js?v=3593"></script>
     <script src="app.js?v=20260921-online-active"></script>
     <script src="gateway-config.js?v=20260908"></script>
-  <script src="gateway-client.js?v=20260920-backend-readiness"></script>
+  <script src="gateway-client.js?v=20260922-live-sync"></script>
   <script src="liff-sdk.js?v=20260908"></script>
     <script>
         let currentUser = null;
@@ -854,7 +854,7 @@
         }
 
         async function handleSubmit(e) {
-            e.preventDefault();
+            if (e && typeof e.preventDefault === 'function') e.preventDefault();
             hideFormAlert();
 
             const hours = parseFloat(document.getElementById('hours').value) || 0;
@@ -904,46 +904,59 @@
             const loadingOverlay = document.getElementById('chibi-loading-overlay');
             if (loadingOverlay) loadingOverlay.style.display = 'flex';
 
-            // Ensure student profile has real authoritative name
-            if (currentUser && (!currentUser.first_name || currentUser.first_name.startsWith('รหัส'))) {
-                const resolved = await App.ensureStudentProfile(currentUser.student_id);
-                if (resolved && resolved.first_name) {
-                    currentUser = { ...currentUser, ...resolved };
+            try {
+                // Ensure student profile has real authoritative name
+                if (currentUser && (!currentUser.first_name || currentUser.first_name.startsWith('รหัส'))) {
+                    const resolved = await App.ensureStudentProfile(currentUser.student_id);
+                    if (resolved && resolved.first_name) {
+                        currentUser = { ...currentUser, ...resolved };
+                    }
                 }
+
+                // Save images
+                const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
+                const imageKeys = uploadedImages.map((img, i) => {
+                    const key = `${currentUser.student_id}_${Date.now()}_${i}`;
+                    App.saveImage(img, key);
+                    return key;
+                });
+
+                const deed = await App.addDeed({
+                    categoryId: selectedCategoryId,
+                    hours,
+                    description,
+                    activityDate,
+                    note,
+                    location: note || 'วิทยาลัยพยาบาลทหารอากาศ',
+                    approver: approverName,
+                    signer: approverName,
+                    approved_by: approverName,
+                    imageUrl: primaryImg || '',
+                    imageData: primaryImg || '',
+                    imageUrls: uploadedImages.length > 0 ? uploadedImages : imageKeys,
+                });
+
+                // Notify admin via Telegram + LINE (if configured)
+                let notified = false;
+                try {
+                    notified = await App.notifyAdmins(deed, currentUser);
+                } catch (notifErr) {
+                    console.warn('⚠️ Notification notice:', notifErr);
+                }
+
+                showToast('บันทึกความดีสำเร็จ! (สถานะ: รอการอนุมัติ) 🎉', 'success');
+                showSuccessModal(deed);
+                if (!notified) showToast('บันทึกแล้ว แต่ยังยืนยันการแจ้งผู้ตรวจไม่ได้ ไม่ต้องส่งรายการซ้ำ', 'warning');
+            } catch (err) {
+                console.error('❌ handleSubmit error:', err);
+                showFormAlert('เกิดข้อผิดพลาดในการบันทึก: ' + (err.message || err));
+                const alertEl = document.getElementById('form-alert');
+                if (alertEl) alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            } finally {
+                if (loadingOverlay) loadingOverlay.style.display = 'none';
+                btn.disabled = false;
+                btn.innerHTML = '<span>💾</span> บันทึกความดี';
             }
-
-            // Save images
-            const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
-            const imageKeys = uploadedImages.map((img, i) => {
-                const key = `${currentUser.student_id}_${Date.now()}_${i}`;
-                App.saveImage(img, key);
-                return key;
-            });
-
-            const deed = await App.addDeed({
-                categoryId: selectedCategoryId,
-                hours,
-                description,
-                activityDate,
-                note,
-                location: note || 'วิทยาลัยพยาบาลทหารอากาศ',
-                approver: approverName,
-                signer: approverName,
-                approved_by: approverName,
-                imageUrl: primaryImg || '',
-                imageData: primaryImg || '',
-                imageUrls: uploadedImages.length > 0 ? uploadedImages : imageKeys,
-            });
-
-            // Notify admin via Telegram + LINE (if configured)
-            const notified = await App.notifyAdmins(deed, currentUser);
-
-            if (loadingOverlay) loadingOverlay.style.display = 'none';
-            showToast('บันทึกความดีสำเร็จ! (สถานะ: รอการอนุมัติ) 🎉', 'success');
-            btn.disabled = false;
-            btn.innerHTML = '<span>💾</span> บันทึกความดี';
-            showSuccessModal(deed);
-            if (!notified) showToast('บันทึกแล้ว แต่ยังยืนยันการแจ้งผู้ตรวจไม่ได้ ไม่ต้องส่งรายการซ้ำ', 'warning');
         }
 
         function showSuccessModal(deed) {
