@@ -59,3 +59,9 @@ Production changes must follow:
 Plan → Review → Security Gate → Staging → Controlled E2E → Owner Approval → Production.
 
 **PRODUCTION WRITE = FALSE during incident containment.**
+
+## Staging Update — 2026-09-22
+- Backend `Code.gs`: Telegram bot token & chat ID getters read dynamically from ScriptProperties (`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`).
+- Backend `server.py`: Respects explicit operator environment override `ENABLE_LOCAL_API` while keeping default fail-closed.
+- Frontend `ranking.html`: Added Year 1 (รุ่น 69) and Alumni filters; bumped script cache bust version.
+- PDPA & secret compliance: 100% PASS, zero leaks. Local regression and gate tests: PASS.

@@ -20,8 +20,8 @@ const CONFIG = {
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
   get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
-  get TELEGRAM_TOKEN() { return ''; },
-  get TELEGRAM_CHAT_ID() { return ''; },
+  get TELEGRAM_TOKEN() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || PropertiesService.getScriptProperties().getProperty('TELEGRAM_TOKEN') || ''; },
+  get TELEGRAM_CHAT_ID() { return PropertiesService.getScriptProperties().getProperty('TELEGRAM_CHAT_ID') || ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 

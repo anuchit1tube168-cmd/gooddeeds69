@@ -276,10 +276,11 @@
 
                 <div class="filter-bar" style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap;">
                     <button class="filter-pill active" onclick="setYearFilter('all',this)">ทั้งหมด</button>
+                    <button class="filter-pill" onclick="setYearFilter(69,this)">ปี 1 (69)</button>
                     <button class="filter-pill" onclick="setYearFilter(68,this)">ปี 2 (68)</button>
                     <button class="filter-pill" onclick="setYearFilter(67,this)">ปี 3 (67)</button>
                     <button class="filter-pill" onclick="setYearFilter(66,this)">ปี 4 (66)</button>
-                    <button class="filter-pill" onclick="setYearFilter(65,this)">ศิษย์เก่า 65</button>
+                    <button class="filter-pill" onclick="setYearFilter('alumni',this)">ศิษย์เก่า</button>
 
                     <div style="margin-left:auto; display:flex; gap:8px;">
                         <select class="form-input" id="sort-order" onchange="renderStudents()"
@@ -335,7 +336,7 @@
     <script src="data/students_photos.js?v=3580"></script>
     <script src="data/deeds_data.js?v=3580"></script>
     <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=20260921-online-active"></script>
+    <script src="app.js?v=20260922-v3-login"></script>
     <script>
         let currentUser = null;
         let allSummary = [];
@@ -442,7 +443,11 @@
             let data = [...allSummary];
 
             if (yearFilter !== 'all') {
-                data = data.filter(s => Number(s.class_year) === Number(yearFilter) || s.class_year === yearFilter);
+                if (yearFilter === 'alumni') {
+                    data = data.filter(s => Number(s.class_year) <= 65);
+                } else {
+                    data = data.filter(s => Number(s.class_year) === Number(yearFilter) || s.class_year === yearFilter);
+                }
             }
 
             if (q) {

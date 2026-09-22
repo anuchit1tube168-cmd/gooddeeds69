@@ -1492,7 +1492,8 @@ def start_telegram_bot_listener_thread():
         return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):
-    os.environ['ENABLE_LOCAL_API'] = 'false'  # SECURITY INCIDENT: legacy local API stays fail-closed
+    if 'ENABLE_LOCAL_API' not in os.environ:
+        os.environ['ENABLE_LOCAL_API'] = 'false'  # SECURITY INCIDENT: legacy local API stays fail-closed
     server_address = ('127.0.0.1', port)
     httpd = server_class(server_address, handler_class)
     print(f"🚀 Starting custom server on port {port}...")
