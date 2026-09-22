@@ -5,8 +5,8 @@
  * คุณสมบัติ:
  * 1. บันทึกข้อมูลและประวัติความดีลง Google Sheets อัตโนมัติ (Main_2569 & Deeds_2569)
  * 2. รองรับการอัปโหลดภาพถ่ายหลักฐานบันทึกลง Google Drive แยกโฟลเดอร์รายบุคคล
- * 3. แจ้งเตือนเข้ากลุ่ม Telegram พร้อมปุ่มกด [✅ อนุมัติด่วน] และ [✍️ ตรวจสอบ & ลงนาม]
- * 4. รองรับการตอบกลับ Telegram Callback Query อัตโนมัติแบบ Real-time
+ * 3. Telegram transport ถูกย้ายออกจาก Apps Script ไปยัง Cloudflare security boundary หลังเหตุการณ์ด้านความปลอดภัย
+ * 4. Legacy Telegram callback/runtime ถูก retire แบบ fail-closed
  * 5. ปฏิบัติตามมาตรฐาน PDPA: ข้อมูลส่วนบุคคลถูกจัดเก็บบน Google Cloud ส่วนตัวของสถาบัน
  */
 
@@ -20,8 +20,6 @@ const CONFIG = {
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
   get DEFAULT_DRIVE_FOLDER_ID() { return PropertiesService.getScriptProperties().getProperty('EVIDENCE_FOLDER_ID') || ''; },
-  get TELEGRAM_TOKEN() { return ''; },
-  get TELEGRAM_CHAT_ID() { return ''; },
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
 
@@ -528,71 +526,13 @@ function uploadImage(data) {
 
 // ==================== TELEGRAM NOTIFICATION & CALLBACKS ====================
 function notifyTelegramNewDeed(d) {
-  if (EMERGENCY_LOCKDOWN) return { status: 'disabled', reason: 'EMERGENCY_LOCKDOWN' };
-  const approveUrl = `${CONFIG.FRONTEND_URL}/approve_sign.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
-  const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${d.id}&studentId=${d.studentId}&name=${encodeURIComponent(d.studentName)}&year=${encodeURIComponent(d.classYear)}&cat=${d.category}&hours=${d.hours}&date=${d.date}&desc=${encodeURIComponent(d.desc)}&loc=${encodeURIComponent(d.location)}&appr=${encodeURIComponent(d.approver)}&status=pending`;
-
-  const text = `📋 <b>มีบันทึกความดีใหม่รอการอนุมัติ (วพอ. 2569)</b>\n━━━━━━━━━━━━━━━━━━━━━━━\n👤 <b>นักเรียน:</b> ${d.studentName}\n🎫 <b>รหัส นพอ.:</b> <code>${d.studentId}</code> | รุ่น ${d.classYear}\n📂 <b>หมวดที่ ${d.category}</b>\n⏱ <b>จำนวน:</b> ${d.hours} ชั่วโมง\n📅 <b>วันที่:</b> ${d.date}\n📍 <b>สถานที่:</b> ${d.location}\n📝 <b>รายละเอียด:</b> ${d.desc}\n\n👩‍🏫 <b>เสนอตรวจโดย:</b> ${d.approver}\n━━━━━━━━━━━━━━━━━━━━━━━\n<i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>`;
-
-  const payload = {
-    chat_id: CONFIG.TELEGRAM_CHAT_ID,
-    text: text,
-    parse_mode: 'HTML',
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: '✅ อนุมัติด่วน', callback_data: `approve_${d.id}_${d.studentId}` },
-          { text: '❌ ปฏิเสธ', callback_data: `reject_${d.id}_${d.studentId}` }
-        ],
-        [
-          { text: '✍️ ตรวจสอบ & ลงนาม', url: approveUrl },
-          { text: '📄 พิมพ์สลิป A4 (PDF)', url: slipUrl }
-        ]
-      ]
-    }
-  };
-
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload)
-  });
+  // Retired compatibility shim. Telegram delivery is Cloudflare-only.
+  return { status: 'disabled', reason: EMERGENCY_LOCKDOWN ? 'EMERGENCY_LOCKDOWN' : 'CLOUDFLARE_ONLY' };
 }
 
-// Apps Script cannot inspect Telegram's secret header. A high-entropy query
-// key authenticates this legacy endpoint; prefer the Cloudflare header gateway.
+// Legacy Telegram callback transport is retired. Cloudflare owns Telegram integration.
 function handleTelegramCallback(cb, suppliedKey) {
-  if (EMERGENCY_LOCKDOWN) return { status: 'error', code: 'EMERGENCY_LOCKDOWN' };
-  if (!productionWritesEnabled()) return { status: 'error', code: 'PRODUCTION_WRITE_DISABLED' };
-  const props = PropertiesService.getScriptProperties();
-  const expected = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
-  if (expected.length < 32 || String(suppliedKey || '') !== expected) return { status: 'error', code: 'webhook_unauthorized' };
-  const allowed = (props.getProperty('TELEGRAM_APPROVER_IDS') || '').split(',').map(x => x.trim()).filter(Boolean);
-  if (!cb || !cb.from || !allowed.includes(String(cb.from.id)) || !cb.message || String(cb.message.chat.id) !== String(props.getProperty('TELEGRAM_CHAT_ID') || '')) {
-    return { status: 'error', code: 'reviewer_forbidden' };
-  }
-  // Greedy middle group preserves deed IDs such as deed_123_abcd.
-  const match = /^(approve|reject)_(.+)_(\d{7})$/.exec(String(cb.data || ''));
-  if (!match) return { status: 'ignored' };
-  let result;
-  try {
-    result = approveDeed({ deedId: match[2], studentId: match[3], status: match[1] === 'approve' ? 'approved' : 'rejected', approvedBy: 'telegram:' + cb.from.id });
-  } catch (error) {
-    result = { status: 'error', code: 'review_write_failed' };
-  }
-  const saved = result.status === 'success';
-  // A notification failure never rolls back or repeats the persisted approval.
-  try {
-    UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/answerCallbackQuery', {
-      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
-      payload: JSON.stringify({ callback_query_id: cb.id, text: saved ? 'บันทึกผลการตรวจแล้ว' : 'ยังบันทึกผลไม่ได้ กรุณาให้ผู้ดูแลตรวจสอบ', show_alert: true })
-    });
-    if (saved) UrlFetchApp.fetch('https://api.telegram.org/bot' + CONFIG.TELEGRAM_TOKEN + '/editMessageReplyMarkup', {
-      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
-      payload: JSON.stringify({ chat_id: cb.message.chat.id, message_id: cb.message.message_id, reply_markup: { inline_keyboard: [] } })
-    });
-  } catch (error) { console.warn('Telegram delivery failed after review; inspect backend state.'); }
-  return result;
+  return { status: 'error', code: EMERGENCY_LOCKDOWN ? 'EMERGENCY_LOCKDOWN' : 'TELEGRAM_RUNTIME_RETIRED' };
 }
 
 // ==================== BIND LINE & CLOUD SYNC ====================
