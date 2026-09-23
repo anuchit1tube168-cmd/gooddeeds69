@@ -389,30 +389,34 @@ function doPost(e) {
       imgUrl
     ]);
     
-    // ส่งแจ้งเตือน Telegram ทันที
-    try {
-      sendTelegramDeedNotification(ss, {
-        id: deedId,
-        studentId: studentId,
-        student: deed.student,
-        studentName: deed.studentName || (deed.student ? (deed.student.rank + ' ' + deed.student.first_name + ' ' + deed.student.last_name) : ''),
-        classYear: deed.classYear || (deed.student ? deed.student.class_year : ''),
-        categoryId: catId,
-        hours: hours,
-        activityDate: actDate,
-        description: desc,
-        location: loc,
-        approver: approver,
-        imageUrl: imgUrl
-      });
-    } catch (te) {
-      Logger.log('Telegram notify error: ' + te.message);
+    // ส่งแจ้งเตือน Telegram ทันที (เว้นแต่ระบุ notify === false หรือ silent === true)
+    var skipNotification = (deed.notify === false || deed.silent === true || deed.skipNotification === true || params.notify === false || params.silent === true);
+    if (!skipNotification) {
+      try {
+        sendTelegramDeedNotification(ss, {
+          id: deedId,
+          studentId: studentId,
+          student: deed.student,
+          studentName: deed.studentName || (deed.student ? (deed.student.rank + ' ' + deed.student.first_name + ' ' + deed.student.last_name) : ''),
+          classYear: deed.classYear || (deed.student ? deed.student.class_year : ''),
+          categoryId: catId,
+          hours: hours,
+          activityDate: actDate,
+          description: desc,
+          location: loc,
+          approver: approver,
+          imageUrl: imgUrl
+        });
+      } catch (te) {
+        Logger.log('Telegram notify error: ' + te.message);
+      }
     }
     
     return ContentService.createTextOutput(JSON.stringify({
       status: 'success',
-      message: 'Deed recorded and Telegram notified',
-      deedId: deedId
+      message: skipNotification ? 'Deed recorded (silent, no notification)' : 'Deed recorded and Telegram notified',
+      deedId: deedId,
+      notified: !skipNotification
     })).setMimeType(ContentService.MimeType.JSON);
   }
   
