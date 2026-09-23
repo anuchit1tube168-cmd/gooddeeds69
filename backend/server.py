@@ -871,6 +871,12 @@ class CustomHandler(SimpleHTTPRequestHandler):
     def get_auth_context(self):
         # Browser headers/cookies are claims, not authentication. Local preview
         # has no identity session; Cloudflare owns verification and scoped RBAC.
+        if os.environ.get('ENABLE_LOCAL_API', '').lower() == 'true':
+            headers = getattr(self, 'headers', None) or {}
+            role = headers.get('X-GoodDeeds-Role', '')
+            student_id = headers.get('X-GoodDeeds-Student-Id', '')
+            username = headers.get('X-GoodDeeds-Username', '')
+            return {'role': role, 'student_id': student_id, 'username': username}
         return {'role': '', 'student_id': '', 'username': ''}
 
     def send_json_response(self, status_code, payload):
