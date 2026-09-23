@@ -66,4 +66,5 @@ frontend/auto_login.html
 */.DS_Store
 node_modules/
 data/telegram_message_map.json
+data/notified_deeds.json
 frontend/*_thumb.jpg

@@ -382,18 +382,18 @@
                     <!-- Image Upload -->
                     <div class="form-group" style="margin-bottom: 32px;">
                         <label class="form-label">7. แนบรูปภาพหลักฐาน (ถ้ามี)</label>
-                        <div class="upload-zone" id="upload-zone" style="background: rgba(10, 22, 40, 0.4); border: 2px dashed rgba(30, 58, 110, 0.8); border-radius: var(--radius-lg); padding: 40px 20px;"
-                            onclick="document.getElementById('file-input').click()" ondragover="handleDragOver(event)"
-                            ondrop="handleDrop(event)">
+                        <label for="file-input" class="upload-zone" id="upload-zone" style="display: block; cursor: pointer; background: rgba(10, 22, 40, 0.4); border: 2px dashed rgba(30, 58, 110, 0.8); border-radius: var(--radius-lg); padding: 40px 20px; text-align: center;"
+                            ondragover="handleDragOver(event)" ondrop="handleDrop(event)">
                             <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin: 0 auto 16px; opacity: 0.8; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));">
                                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                 <polyline points="17 8 12 3 7 8"></polyline>
                                 <line x1="12" y1="3" x2="12" y2="15"></line>
                             </svg>
-                            <div style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">ลากไฟล์มาวางที่นี่ หรือ <span style="color: var(--gold); text-decoration: underline;">คลิกเพื่ออัปโหลด</span></div>
-                            <div style="font-size: 0.85rem; color: var(--text-muted);">รองรับไฟล์ JPG, PNG ขนาดไม่เกิน 5MB (อัปโหลดได้หลายรูป)</div>
-                        </div>
-                        <input type="file" id="file-input" accept="image/*" multiple hidden
+                            <div style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary); margin-bottom: 8px;">แตะที่นี่เพื่อถ่ายภาพ หรือเลือกรูปจากคลังภาพ</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">รองรับไฟล์ JPG, PNG (ระบบจะปรับขนาดและบีบอัดให้อัตโนมัติ)</div>
+                        </label>
+                        <input type="file" id="file-input" accept="image/*" multiple
+                            style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0;"
                             onchange="handleFileSelect(event)">
                         <div class="preview-grid" id="preview-grid"></div>
                     </div>
@@ -814,8 +814,8 @@
         async function handleFileSelect(e) {
             const files = Array.from(e.target.files);
             for (const file of files) {
-                if (file.size > 15 * 1024 * 1024) { showToast('ไฟล์ใหญ่เกิน 15MB: ' + file.name, 'warning'); continue; }
-                const b64 = await App.imageToBase64(file, 800, 800, 0.6);
+                if (file.size > 20 * 1024 * 1024) { showToast('ไฟล์ใหญ่เกิน 20MB: ' + file.name, 'warning'); continue; }
+                const b64 = await App.imageToBase64(file, 400, 400, 0.5);
                 uploadedImages.push(b64);
                 renderPreviews();
             }
@@ -828,7 +828,7 @@
             document.getElementById('upload-zone').classList.remove('drag-over');
             const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
             for (const file of files) {
-                const b64 = await App.imageToBase64(file, 800, 800, 0.6);
+                const b64 = await App.imageToBase64(file, 400, 400, 0.5);
                 uploadedImages.push(b64);
             }
             renderPreviews();

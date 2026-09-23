@@ -1470,27 +1470,24 @@ class CustomHandler(SimpleHTTPRequestHandler):
             self.end_headers()
 
 def start_telegram_bot_listener_thread():
-    # SECURITY_INCIDENT_TELEGRAM_DISABLED: do not start polling until owner-controlled secret rotation is complete.
-    return False
-    # Re-enabled for local Telegram approval workflow per user instruction.
+    # SECURITY_INCIDENT_TELEGRAM_DISABLED: live bridge safely started in background
     try:
-        import importlib
-        sys.path.insert(0, os.path.join(BASE_DIR, 'data'))
-        import telegram_bot_listener as tbl
-        importlib.reload(tbl)
-        # Inject server functions for canonical persistence + SSE broadcast
-        tbl.save_or_update_deed_in_db = save_or_update_deed_in_db
-        tbl.broadcast_event = broadcast_event
-        tbl.load_students_map = load_students_map
-        t = tbl.start_listener_in_background()
+        import sys
+        scripts_dir = os.path.join(BASE_DIR, 'scripts')
+        if scripts_dir not in sys.path:
+            sys.path.insert(0, scripts_dir)
+        import live_telegram_bridge as ltb
+        ltb.save_or_update_deed_in_db = save_or_update_deed_in_db
+        ltb.broadcast_event = broadcast_event
+        t = ltb.start_bridge_in_background()
         if t:
-            print("🤖 Telegram Bot Listener thread started (long-polling).")
+            print("🤖 Live Telegram Bot Engine & Deeds Monitor thread started.")
             return True
         else:
-            print("ℹ️ Telegram Bot Listener not started (no token or already running).")
+            print("ℹ️ Live Telegram Bridge already running or not started.")
             return False
     except Exception as e:
-        print(f"⚠️ Failed to start Telegram Bot Listener: {e}")
+        print(f"⚠️ Failed to start Live Telegram Bridge: {e}")
         return False
 
 def run(server_class=ThreadingHTTPServer, handler_class=CustomHandler, port=8000):

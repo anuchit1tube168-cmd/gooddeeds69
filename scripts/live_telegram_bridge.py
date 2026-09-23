@@ -4,13 +4,14 @@
 live_telegram_bridge.py - Real-Time Interactive Telegram Bot Engine & Webhook Handler
 วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ (วพอ.พอ.)
 
-ฟังก์ชัน:
-1. ดักจับปุ่ม [ ✅ อนุมัติด่วน ] และ [ ❌ ปฏิเสธ ] จาก Telegram Group
-2. ตอบกลับ answerCallbackQuery ทันที (แก้ปัญหาค้าง Loading / ติดหน้านี้)
-3. เปลี่ยนปุ่มบนข้อความเป็น [ ✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird) ]
-4. ส่งข้อความยืนยันผลการตรวจอนุมัติ/ปฏิเสธลงกลุ่ม Telegram
-5. อัปเดตสถานะความดีลงใน Google Sheets (Deeds_2569 & Main_2569) ผ่าน GAS API
-6. ส่งการแจ้งเตือนกลับไปยัง นพอ.
+ฟังก์ชันหลัก:
+1. ตรวจจับและส่งการ์ดแจ้งเตือนความดีใหม่ (New Deeds) เข้ากลุ่ม Telegram อัตโนมัติแบบ Real-time
+2. แนบรูปถ่ายหลักฐานสดหรือการ์ดสลิปพร้อมปุ่ม Action ด้านล่าง
+3. ดักจับปุ่ม [ ✅ อนุมัติด่วน ] และ [ ❌ ปฏิเสธ ] จาก Telegram Group
+4. ตอบกลับ answerCallbackQuery ทันที (แก้ปัญหาค้าง Loading บนมือถืออาจารย์)
+5. เปลี่ยนปุ่มบนข้อความเป็น [ ✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird) ]
+6. ส่งข้อความยืนยันผลการตรวจอนุมัติ/ปฏิเสธลงกลุ่ม Telegram
+7. อัปเดตสถานะความดีลงใน Google Sheets (Deeds_2569 & Main_2569) ผ่าน GAS API ทันที
 """
 
 import os
@@ -20,9 +21,11 @@ import json
 import ssl
 import urllib.request
 import urllib.parse
+import threading
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENV_FILE = os.path.join(BASE_DIR, '.env')
+NOTIFIED_FILE = os.path.join(BASE_DIR, 'data', 'notified_deeds.json')
 
 def load_env():
     env = {}
@@ -41,6 +44,25 @@ CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ENV.get('TELEGRAM_CHAT_ID', '')
 GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbwV0b31hWMSs2oNOff4o-O_PNoEQ1XlTM77f4sei9JLh1rza1SfFPTOlTaxiIKCIxLT_Q/exec')
 
 SSL_CTX = ssl._create_unverified_context()
+
+def load_notified_deeds():
+    if os.path.exists(NOTIFIED_FILE):
+        try:
+            with open(NOTIFIED_FILE, 'r', encoding='utf-8') as f:
+                return set(json.load(f))
+        except Exception:
+            return set()
+    return set()
+
+def save_notified_deeds(notified_set):
+    os.makedirs(os.path.dirname(NOTIFIED_FILE), exist_ok=True)
+    try:
+        with open(NOTIFIED_FILE, 'w', encoding='utf-8') as f:
+            json.dump(list(notified_set), f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"⚠️ Error saving notified deeds: {e}")
+
+NOTIFIED_DEEDS = load_notified_deeds()
 
 def call_telegram(method, payload):
     if not BOT_TOKEN:
@@ -66,6 +88,169 @@ def forward_to_gas(payload):
     except Exception as e:
         print(f"⚠️ GAS API forward error: {e}")
         return None
+
+def gas_get(query):
+    """ดึงข้อมูลจาก Google Apps Script Backend ผ่าน GET"""
+    url = f"{GAS_URL}?{query}"
+    req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    try:
+        with urllib.request.urlopen(req, timeout=20, context=SSL_CTX) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except Exception as e:
+        print(f"⚠️ GAS GET error: {e}")
+        return None
+
+def notify_pending_deed(deed):
+    """ส่งการ์ดแจ้งเตือนความดีใหม่พร้อมปุ่ม Action เข้ากลุ่ม Telegram"""
+    deed_id = str(deed.get('id') or deed.get('deedId') or '').strip()
+    student_id = str(deed.get('student_id') or deed.get('studentId') or '').strip()
+    student_name = deed.get('student_name') or deed.get('studentName') or f"นพอ. ({student_id})"
+    class_year = str(deed.get('class_year') or deed.get('classYear') or (student_id[:2] if len(student_id) >= 2 else '69'))
+
+    year_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
+    year_level = year_map.get(str(class_year), '1')
+    year_name = f"ชั้นปีที่ {year_level} (รุ่น {class_year})"
+
+    cat_id = int(deed.get('category_id') or deed.get('categoryId') or 1)
+    cat_names = {
+        1: ('บริจาคโลหิต/เกล็ดเลือด/พลาสมา', '🩸'),
+        2: ('โครงการภายนอก (คำสั่ง วพอ.)', '🏛️'),
+        3: ('ช่วยเหลืองานภายใน วพอ.', '🏥'),
+        4: ('เข้าอบรมที่ วพอ. จัดให้', '📚'),
+        5: ('ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', '🤝'),
+        6: ('ทำนุบำรุงศาสนสถาน', '🛕'),
+        7: ('งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)', '🧹'),
+        8: ('กิจกรรมจงรักภักดีต่อสถาบัน', '👑'),
+        9: ('ชม. ที่สมควรได้รับ (บทบาทพิเศษ)', '⭐'),
+    }
+    cat_name, cat_emoji = cat_names.get(cat_id, ('กิจกรรมความดี', '📌'))
+
+    hours = deed.get('hours', 0)
+    act_date = deed.get('activityDate') or deed.get('event_date') or time.strftime('%Y-%m-%d')
+    desc = deed.get('description') or ''
+    loc = deed.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
+    approver = deed.get('approver') or 'ร.อ.อนุชิต ทำจะดี (Bird)'
+
+    base_url = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
+    q_params = urllib.parse.urlencode({
+        'id': deed_id,
+        'studentId': student_id,
+        'name': student_name,
+        'year': class_year,
+        'cat': cat_id,
+        'catName': cat_name,
+        'hours': hours,
+        'date': act_date,
+        'desc': desc,
+        'loc': loc,
+        'appr': approver,
+        'status': 'pending'
+    })
+    approve_url = f"{base_url}/approve_sign.html?{q_params}"
+    slip_url = f"{base_url}/deed_slip.html?{q_params}"
+
+    reply_markup = {
+        'inline_keyboard': [
+            [
+                {'text': '✅ อนุมัติด่วน', 'callback_data': f"approve_{deed_id}_{student_id}"},
+                {'text': '❌ ปฏิเสธ', 'callback_data': f"reject_{deed_id}_{student_id}"}
+            ],
+            [
+                {'text': '✍️ ตรวจสอบ & ลงนาม ↗️', 'url': approve_url},
+                {'text': '📄 พิมพ์สลิป A4 (PDF) ↗️', 'url': slip_url}
+            ]
+        ]
+    }
+
+    html_msg = (
+        f"🔔 <b>แจ้งเตือนการขออนุมัติความดี (วพอ. 2569)</b>\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"👤 <b>ผู้ขอ:</b> {student_name}\n"
+        f"🎫 <b>รหัส นพอ.:</b> <code>{student_id}</code> ({year_name})\n"
+        f"📂 <b>หมวดที่ {cat_id}:</b> {cat_emoji} {cat_name}\n"
+        f"⏱ <b>จำนวน:</b> <b>{hours} ชั่วโมง</b>\n"
+        f"📅 <b>วันที่:</b> {act_date}\n"
+        f"📍 <b>สถานที่:</b> {loc}\n"
+        f"📝 <b>รายละเอียด:</b> {desc}\n"
+        f"👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> {approver}\n"
+        f"━━━━━━━━━━━━━━━━━━━━━━━\n"
+        f"⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>"
+    )
+
+    photo_sent = False
+    img_url = deed.get('imageUrl') or ''
+    if img_url and img_url.startswith('data:image'):
+        try:
+            import base64
+            _, b64_data = img_url.split('base64,', 1)
+            img_bytes = base64.b64decode(b64_data)
+
+            boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
+            body = bytearray()
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{CHAT_ID}\r\n".encode('utf-8'))
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{html_msg}\r\n".encode('utf-8'))
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"evidence.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
+            body.extend(img_bytes)
+            body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
+
+            url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendPhoto"
+            req = urllib.request.Request(url, data=bytes(body), headers={
+                'Content-Type': f'multipart/form-data; boundary={boundary}',
+                'Content-Length': str(len(body))
+            })
+            with urllib.request.urlopen(req, timeout=25, context=SSL_CTX) as resp:
+                res = json.loads(resp.read().decode('utf-8'))
+                if res.get('ok'):
+                    photo_sent = True
+        except Exception as pe:
+            print(f"⚠️ Photo multipart send notice: {pe}")
+
+    if not photo_sent:
+        call_telegram('sendMessage', {
+            'chat_id': CHAT_ID,
+            'text': html_msg,
+            'parse_mode': 'HTML',
+            'reply_markup': reply_markup
+        })
+
+    print(f"🚀 [NOTIFY SENT] {deed_id} | {student_name} ({student_id}) | Photo: {photo_sent}")
+    NOTIFIED_DEEDS.add(deed_id)
+    save_notified_deeds(NOTIFIED_DEEDS)
+    return True
+
+def poll_new_deeds():
+    """เฝ้าตรวจหารายการความดีที่เพิ่งส่งใหม่และอยู่ในสถานะ pending"""
+    try:
+        deeds = gas_get("action=getDeeds")
+        if not deeds or not isinstance(deeds, list):
+            return
+
+        for d in deeds:
+            deed_id = str(d.get('id') or '').strip()
+            status = str(d.get('status') or '').lower().strip()
+
+            # ข้ามถ้าไม่ใช่ pending หรือเคยแจ้งไปแล้ว
+            if not deed_id or status != 'pending' or deed_id in NOTIFIED_DEEDS:
+                continue
+
+            # ข้ามถ้าเป็น silent / test ที่กำหนดไม่แจ้งเตือน
+            if d.get('notify') is False or d.get('silent') is True or 'SILENT' in deed_id:
+                NOTIFIED_DEEDS.add(deed_id)
+                save_notified_deeds(NOTIFIED_DEEDS)
+                continue
+
+            notify_pending_deed(d)
+            b_fn = globals().get('broadcast_event')
+            if b_fn:
+                try:
+                    b_fn('deed_submitted', d)
+                except Exception:
+                    pass
+            time.sleep(1.0)
+    except Exception as e:
+        print(f"⚠️ poll_new_deeds notice: {e}")
 
 def process_callback_query(cq):
     """ประมวลผลการกดปุ่มจาก Telegram"""
@@ -121,7 +306,7 @@ def process_callback_query(cq):
         })
         print(f"🔘 แก้ไขปุ่ม Telegram: {new_btn_text}")
 
-    # 4. ส่งข้อความแจ้งเตือนยืนยันลงกลุ่ม Telegram (ตามรูปแบบในตัวอย่างของอาจารย์!)
+    # 4. ส่งข้อความแจ้งเตือนยืนยันลงกลุ่ม Telegram
     confirm_text = ""
     if is_approve:
         confirm_text = (
@@ -164,20 +349,55 @@ def process_callback_query(cq):
     })
     print(f"📊 ผลการอัปเดตลง Google Sheets: {gas_res}")
 
+    # 6. อัปเดตฐานข้อมูลในเครื่องและแจ้งเตือน SSE ไปยังหน้า teacher-dashboard.html ทันที
+    s_fn = globals().get('save_or_update_deed_in_db')
+    b_fn = globals().get('broadcast_event')
+    if s_fn:
+        try:
+            s_fn(student_id, {
+                'id': deed_id,
+                'student_id': student_id,
+                'status': new_status,
+                'approvedBy': approver_name,
+                'approved_by': approver_name,
+                'approvedAt': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+            })
+        except Exception as se:
+            print(f"⚠️ Local save notice: {se}")
+    if b_fn:
+        try:
+            b_fn('deed_approved' if is_approve else 'deed_rejected', {
+                'id': deed_id,
+                'studentId': student_id,
+                'status': new_status,
+                'approvedBy': approver_name
+            })
+        except Exception as be:
+            print(f"⚠️ Local broadcast notice: {be}")
+
 def run_polling():
-    """รันโหมด Long-Polling เพื่อรับการกดปุ่มแบบ Real-time ทันที"""
-    print("🤖 กำลังเริ่มต้น Live Telegram Bot Engine (Long-Polling Mode)...")
-    
+    """รันโหมด Long-Polling เพื่อรับการกดปุ่มแบบ Real-time และตรวจจับรายการใหม่"""
+    print("🤖 กำลังเริ่มต้น Live Telegram Bot Engine & New Deeds Monitor...")
+
     # ลบ Webhook เพื่อให้ Telegram อนุญาตให้ดึง updates ผ่าน getUpdates
     call_telegram('deleteWebhook', {'drop_pending_updates': False})
     print("✅ สลับโหมดเป็น Polling (Pending updates preserved)")
 
     offset = 0
+    last_poll_time = 0
+
     while True:
         try:
+            # 1. ตรวจสอบรายการความดีใหม่จาก GAS ทุกๆ 3 วินาที
+            now = time.time()
+            if now - last_poll_time >= 3.0:
+                poll_new_deeds()
+                last_poll_time = now
+
+            # 2. ดึง callback_query updates จาก Telegram
             updates_res = call_telegram('getUpdates', {
                 'offset': offset,
-                'timeout': 10,
+                'timeout': 5,
                 'allowed_updates': ['callback_query', 'message']
             })
             if updates_res and updates_res.get('ok'):
@@ -192,6 +412,17 @@ def run_polling():
         except Exception as e:
             print(f"⚠️ Polling loop error: {e}")
             time.sleep(2)
+
+_bridge_thread = None
+
+def start_bridge_in_background():
+    """Start bridge polling in a daemon thread"""
+    global _bridge_thread
+    if _bridge_thread and _bridge_thread.is_alive():
+        return _bridge_thread
+    _bridge_thread = threading.Thread(target=run_polling, daemon=True, name="LiveTelegramBridge")
+    _bridge_thread.start()
+    return _bridge_thread
 
 if __name__ == '__main__':
     run_polling()

@@ -1009,10 +1009,12 @@
           status: d.status || 'pending'
         });
 
-        const imgs = (d.imageUrls || []).map(key => {
+        const rawImgs = (Array.isArray(d.imageUrls) && d.imageUrls.length > 0) ? d.imageUrls : (d.imageUrl ? [d.imageUrl] : []);
+        const imgs = rawImgs.map(key => {
+          if (!key || (typeof key === 'string' && (key.includes('test_silent_evidence') || key.includes('evidence_6')))) return '';
           const src = App.getImage(key);
-          return src ? `<img class="pcard-img" src="${src}" onclick="showLightbox('${key}')" alt="หลักฐาน">` : '';
-        }).join('');
+          return src ? `<img class="pcard-img" src="${src}" onclick="showLightbox('${key.replace(/'/g, "\\'")}')" onerror="this.onerror=null; this.style.display='none';" alt="หลักฐาน">` : '';
+        }).filter(Boolean).join('');
         return `<div class="pcard" id="pc-${d.id}">
       <div class="pcard-top">
         <div class="pcard-info">
