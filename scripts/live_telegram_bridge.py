@@ -375,43 +375,47 @@ def process_callback_query(cq):
         except Exception as be:
             print(f"⚠️ Local broadcast notice: {be}")
 
-def run_polling():
-    """รันโหมด Long-Polling เพื่อรับการกดปุ่มแบบ Real-time และตรวจจับรายการใหม่"""
-    print("🤖 กำลังเริ่มต้น Live Telegram Bot Engine & New Deeds Monitor...")
-
-    # ลบ Webhook เพื่อให้ Telegram อนุญาตให้ดึง updates ผ่าน getUpdates
-    call_telegram('deleteWebhook', {'drop_pending_updates': False})
-    print("✅ สลับโหมดเป็น Polling (Pending updates preserved)")
-
+def telegram_listener_loop():
+    """เฝ้ารับการกดปุ่มจาก Telegram แบบ Real-time ทันที"""
     offset = 0
-    last_poll_time = 0
-
     while True:
         try:
-            # 1. ตรวจสอบรายการความดีใหม่จาก GAS ทุกๆ 3 วินาที
-            now = time.time()
-            if now - last_poll_time >= 3.0:
-                poll_new_deeds()
-                last_poll_time = now
-
-            # 2. ดึง callback_query updates จาก Telegram
             updates_res = call_telegram('getUpdates', {
                 'offset': offset,
-                'timeout': 5,
+                'timeout': 10,
                 'allowed_updates': ['callback_query', 'message']
             })
             if updates_res and updates_res.get('ok'):
                 for u in updates_res.get('result', []):
                     offset = u['update_id'] + 1
                     if 'callback_query' in u:
-                        process_callback_query(u['callback_query'])
-            time.sleep(0.5)
-        except KeyboardInterrupt:
-            print("\n👋 ปิดการทำงาน Telegram Bot Engine")
-            break
-        except Exception as e:
-            print(f"⚠️ Polling loop error: {e}")
-            time.sleep(2)
+                        threading.Thread(target=process_callback_query, args=(u['callback_query'],), daemon=True).start()
+            time.sleep(0.2)
+        except Exception:
+            time.sleep(2.0)
+
+def deed_monitor_loop():
+    """เฝ้าตรวจหารายการความดีใหม่จาก GAS"""
+    while True:
+        try:
+            poll_new_deeds()
+            time.sleep(4.0)
+        except Exception:
+            time.sleep(3.0)
+
+def run_polling():
+    """รันโหมด Multi-threaded Polling เพื่อรับการกดปุ่มแบบ Instant และตรวจจับรายการใหม่"""
+    print("🤖 กำลังเริ่มต้น Live Telegram Bot Engine & New Deeds Monitor (Multi-threaded)...")
+    call_telegram('deleteWebhook', {'drop_pending_updates': False})
+    print("✅ สลับโหมดเป็น Polling (Pending updates preserved)")
+
+    t1 = threading.Thread(target=telegram_listener_loop, daemon=True, name="TelegramListener")
+    t2 = threading.Thread(target=deed_monitor_loop, daemon=True, name="DeedMonitor")
+    t1.start()
+    t2.start()
+
+    while True:
+        time.sleep(1.0)
 
 _bridge_thread = None
 
