@@ -27,9 +27,12 @@ function doGet(e) {
   if (action === 'getStudents') {
     try {
       var cache = CacheService.getScriptCache();
-      var cached = cache.get('students_api_v2');
-      if (cached) {
-        return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+      var noCache = (e && e.parameter && (e.parameter.nocache || e.parameter.refresh));
+      if (!noCache) {
+        var cached = cache.get('students_api_v2');
+        if (cached) {
+          return ContentService.createTextOutput(cached).setMimeType(ContentService.MimeType.JSON);
+        }
       }
       
       var sheet = ss.getSheetByName('Main_2569');
@@ -51,23 +54,49 @@ function doGet(e) {
         else if (classYear === '67') yearLevel = '3';
         else if (classYear === '66') yearLevel = '4';
         
+        var rank = String(data[i][2] || 'นพอ.');
+        var fn = String(data[i][3] || '');
+        var ln = String(data[i][4] || '');
+        var catHours = [
+          parseFloat(data[i][6] || 0),
+          parseFloat(data[i][7] || 0),
+          parseFloat(data[i][8] || 0),
+          parseFloat(data[i][9] || 0),
+          parseFloat(data[i][10] || 0),
+          parseFloat(data[i][11] || 0),
+          parseFloat(data[i][12] || 0),
+          parseFloat(data[i][13] || 0),
+          parseFloat(data[i][14] || 0)
+        ];
+        var sumCats = 0;
+        for (var c = 0; c < catHours.length; c++) {
+          sumCats += catHours[c];
+        }
+        var rawTot = data[i][15];
+        var totHrs = (typeof rawTot === 'number' && !isNaN(rawTot)) ? rawTot : sumCats;
+        
+        var formattedFull = (fn.indexOf(rank) === 0 ? (fn + ' ' + ln) : (rank + ' ' + fn + ' ' + ln)).trim();
         students.push({
           student_id: sid,
-          rank: String(data[i][2] || 'นพอ.'),
-          first_name: String(data[i][3] || ''),
-          last_name: String(data[i][4] || ''),
-          full_name: String(data[i][3] || '') + ' ' + String(data[i][4] || ''),
+          rank: rank,
+          first_name: fn,
+          last_name: ln,
+          full_name: formattedFull,
           class_year: classYear,
           year_level: yearLevel,
           role: 'student',
           password: sid,
+          categories: catHours,
           line_user_id: String(data[i][19] || ''),
-          total_hours: data[i][15] || 0
+          total_hours: totHrs,
+          passed: totHrs >= 50
         });
       }
       
       var jsonStr = JSON.stringify(students);
-      cache.put('students_api_v2', jsonStr, 300);
+      if (!noCache) {
+        cache.put('students_api_v2', jsonStr, 120);
+      }
       return ContentService.createTextOutput(jsonStr).setMimeType(ContentService.MimeType.JSON);
     } catch (err) {
       return ContentService.createTextOutput(JSON.stringify({ error: err.message })).setMimeType(ContentService.MimeType.JSON);
@@ -84,6 +113,31 @@ function doGet(e) {
       var dValues = dSheet.getDataRange().getValues();
       var deedsList = [];
       var targetSid = (e && e.parameter && (e.parameter.studentId || e.parameter.student_id)) ? String(e.parameter.studentId || e.parameter.student_id).trim() : '';
+      
+      // Build student map from Main_2569 for fast O(1) enrichment
+      var stuMap = {};
+      var mSheet = ss.getSheetByName('Main_2569');
+      if (mSheet) {
+        var mVals = mSheet.getDataRange().getValues();
+        for (var m = 1; m < mVals.length; m++) {
+          var mSid = String(mVals[m][1] || '').trim();
+          if (!mSid) continue;
+          var mRank = String(mVals[m][2] || 'นพอ.');
+          var mFn = String(mVals[m][3] || '');
+          var mLn = String(mVals[m][4] || '');
+          var mYr = String(mVals[m][5] || '69').replace(/รุ่น\s*/, '').trim();
+          var mFull = (mFn.indexOf(mRank) === 0 ? (mFn + ' ' + mLn) : (mRank + ' ' + mFn + ' ' + mLn)).trim();
+          stuMap[mSid] = {
+            student_id: mSid,
+            rank: mRank,
+            first_name: mFn,
+            last_name: mLn,
+            full_name: mFull,
+            student_name: mFull,
+            class_year: mYr
+          };
+        }
+      }
       
       for (var dIdx = 1; dIdx < dValues.length; dIdx++) {
         var row = dValues[dIdx];
@@ -103,10 +157,19 @@ function doGet(e) {
         var loc = String(row[10] || 'วิทยาลัยพยาบาลทหารอากาศ');
         var imgUrl = String(row[11] || '');
         
+        var stuInfo = stuMap[sId] || null;
+        var sName = stuInfo ? stuInfo.full_name : ('นพอ. รหัส ' + sId);
+        var sYear = stuInfo ? stuInfo.class_year : (sId ? sId.substring(0, 2) : '69');
+        
         deedsList.push({
           id: dId,
           studentId: sId,
           student_id: sId,
+          studentName: sName,
+          student_name: sName,
+          classYear: sYear,
+          class_year: sYear,
+          student: stuInfo,
           categoryId: cId,
           category_id: cId,
           hours: hrs,
@@ -944,7 +1007,7 @@ function updateMasterStudentHours(ss, studentId, catId, addedHours) {
   var catCol = 6 + catId; // Cols G..O (7..15)
   
   for (var i = 1; i < data.length; i++) {
-    if (String(data[i][1]) === String(studentId)) {
+    if (String(data[i][1]).trim() === String(studentId).trim()) {
       var currentCatHours = parseFloat(data[i][catCol - 1] || 0);
       sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
       
@@ -955,6 +1018,10 @@ function updateMasterStudentHours(ss, studentId, catId, addedHours) {
       break;
     }
   }
+  
+  try {
+    CacheService.getScriptCache().remove('students_api_v2');
+  } catch (ce) {}
 }
 
 function getOrCreateSheet(ss, name, headers) {

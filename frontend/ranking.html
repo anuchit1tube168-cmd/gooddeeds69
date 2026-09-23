@@ -412,8 +412,8 @@
 
         function loadData() {
             allSummary = App.getAllStudentsSummary();
-            if (currentUser.role === 'student') {
-                allSummary = allSummary.filter(s => s.student_id === currentUser.student_id);
+            if (currentUser && currentUser.role === 'student') {
+                allSummary = allSummary.filter(s => String(s.student_id).trim() === String(currentUser.student_id).trim());
             }
             // Default sort: highest hours first
             allSummary.sort((a, b) => b.totalHours - a.totalHours);

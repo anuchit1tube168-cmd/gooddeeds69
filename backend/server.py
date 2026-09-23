@@ -931,6 +931,8 @@ class CustomHandler(SimpleHTTPRequestHandler):
         public_asset = (
             '/' not in relative and (relative.endswith(('.html', '.css', '.js')) or relative == '510903.jpg')
         ) or (
+            relative == 'data/app_settings.js'
+        ) or (
             relative.startswith('secure-pilot/') and relative.count('/') == 1
             and (relative.endswith(('.html', '.css', '.js')) or relative in {
                 'secure-pilot/510903.jpg', 'secure-pilot/airforce-flight.png'
