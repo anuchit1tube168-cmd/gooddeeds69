@@ -41,10 +41,12 @@ def main():
         sub_date = str(d.get("submittedAt") or d.get("activityDate") or "")
         did = str(d.get("id", ""))
         desc = str(d.get("description", ""))
+        sid = str(d.get("student_id") or d.get("studentId") or "").strip()
         is_test = (
             any(k in sub_date for k in ["2026-09-19", "2026-09-20", "2026-09-21", "2026-09-22", "2026-09-23"]) or
-            any(k in did for k in ["TEST", "SILENT", "NOTIFIED", "LIVE", "OVERSIZE"]) or
-            any(k in desc for k in ["ทดสอบ", "TEST", "test", "เดกห"])
+            any(k in did.upper() for k in ["TEST", "SILENT", "NOTIFIED", "LIVE", "OVERSIZE", "SSE"]) or
+            any(k in desc for k in ["ทดสอบ", "TEST", "test", "เดกห"]) or
+            not sid
         )
         if is_test:
             test_deeds.append(d)
@@ -101,6 +103,19 @@ def main():
             with open(path, 'w', encoding='utf-8') as f:
                 json.dump(deeds_by_student, f, indent=2, ensure_ascii=False)
             print(f"   อัปเดต {os.path.relpath(path, BASE_DIR)} สำเร็จ")
+
+    js_content = (
+        f"// Auto-updated by server.py\n"
+        f"const IMPORTED_DEEDS = {json.dumps(deeds_by_student, ensure_ascii=False, indent=2)};\n"
+        f"const DEEDS_DATA = IMPORTED_DEEDS;\n\n"
+        f"if (typeof window !== 'undefined') {{ window.IMPORTED_DEEDS = IMPORTED_DEEDS; window.DEEDS_DATA = DEEDS_DATA; }}\n"
+        f"if (typeof globalThis !== 'undefined') {{ globalThis.IMPORTED_DEEDS = IMPORTED_DEEDS; globalThis.DEEDS_DATA = DEEDS_DATA; }}\n"
+    )
+    for js_p in [os.path.join(BASE_DIR, 'data', 'deeds_data.js'), os.path.join(BASE_DIR, 'frontend', 'data', 'deeds_data.js')]:
+        if os.path.exists(os.path.dirname(js_p)):
+            with open(js_p, 'w', encoding='utf-8') as f:
+                f.write(js_content)
+            print(f"   อัปเดต {os.path.relpath(js_p, BASE_DIR)} สำเร็จ")
 
     # 6. ลบ cache ใน data/notified_deeds.json
     notified_file = os.path.join(BASE_DIR, 'data', 'notified_deeds.json')

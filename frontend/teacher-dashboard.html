@@ -879,17 +879,28 @@
     });
 
     // Auto-refresh when deeds are synced or updated
-    window.addEventListener('deeds_updated', () => {
+    window.addEventListener('deeds_updated', async () => {
+      if (typeof App.syncAllDeedsWithBackend === 'function') {
+        await App.syncAllDeedsWithBackend().catch(() => {});
+      }
       loadData();
     });
 
-    // Periodic auto-refresh every 15 seconds to pull newly submitted deeds from students
+    // Real-time listener for new pending deeds submitted by students
+    window.addEventListener('deed_submitted', async (e) => {
+      if (typeof App.syncAllDeedsWithBackend === 'function') {
+        await App.syncAllDeedsWithBackend().catch(() => {});
+      }
+      loadData();
+    });
+
+    // Periodic auto-refresh every 4 seconds to pull newly submitted deeds from students
     setInterval(async () => {
       if (typeof App.syncAllDeedsWithBackend === 'function') {
         await App.syncAllDeedsWithBackend().catch(() => {});
         loadData();
       }
-    }, 15000);
+    }, 4000);
 
     // Immediate auto-refresh when switching back to tab
     document.addEventListener('visibilitychange', async () => {

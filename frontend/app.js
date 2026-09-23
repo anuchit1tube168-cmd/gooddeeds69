@@ -851,7 +851,15 @@ const App = {
                     Object.entries(byStudent).forEach(([sid, deeds]) => {
                         const current = this.getDeeds(sid);
                         const mergedMap = new Map();
-                        current.forEach(d => mergedMap.set(String(d.id), d));
+                        const backendIds = new Set(deeds.map(bd => String(bd.id)));
+                        current.forEach(d => {
+                            const did = String(d.id || '').toUpperCase();
+                            const desc = String(d.description || '');
+                            const isObsoleteTest = (did.includes('TEST') || did.includes('LIVE') || did.includes('SSE') || desc.includes('ทดสอบ')) && !backendIds.has(String(d.id));
+                            if (!isObsoleteTest) {
+                                mergedMap.set(String(d.id), d);
+                            }
+                        });
                         deeds.forEach(d => {
                             const existing = mergedMap.get(String(d.id)) || {};
                             mergedMap.set(String(d.id), { ...existing, ...d });
@@ -894,7 +902,15 @@ const App = {
                         Object.entries(byStudent).forEach(([sid, deeds]) => {
                             const current = this.getDeeds(sid);
                             const mergedMap = new Map();
-                            current.forEach(d => mergedMap.set(String(d.id), d));
+                            const cloudIds = new Set(deeds.map(cd => String(cd.id)));
+                            current.forEach(d => {
+                                const did = String(d.id || '').toUpperCase();
+                                const desc = String(d.description || '');
+                                const isObsoleteTest = (did.includes('TEST') || did.includes('LIVE') || did.includes('SSE') || desc.includes('ทดสอบ')) && !cloudIds.has(String(d.id));
+                                if (!isObsoleteTest) {
+                                    mergedMap.set(String(d.id), d);
+                                }
+                            });
                             deeds.forEach(d => {
                                 const existing = mergedMap.get(String(d.id)) || {};
                                 mergedMap.set(String(d.id), { ...existing, ...d });
@@ -2404,21 +2420,22 @@ function startRealtimeUpdates() {
             const data = JSON.parse(e.data);
             console.log("🔔 Real-time: New deed submitted:", data);
 
+            const isDashboard = typeof window !== 'undefined' && window.location && window.location.pathname.includes('teacher-dashboard');
             const user = App.getCurrentUser();
-            if (user) {
-                if (user.role === 'teacher' || user.role === 'admin') {
-                    await App.syncAllDeedsWithBackend();
-                    if (typeof loadDashboardData === 'function') loadDashboardData();
-                    if (typeof loadData === 'function') loadData();
-                    showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${data.studentId}`);
-                } else if (String(user.student_id) === String(data.studentId)) {
-                    await App.syncDeedsWithBackend(data.studentId);
-                    if (typeof loadDashboardData === 'function') loadDashboardData();
-                    if (typeof init === 'function') init();
-                }
+            const sid = data.studentId || data.student_id;
+            if (isDashboard || (user && (user.role === 'teacher' || user.role === 'admin'))) {
+                await App.syncAllDeedsWithBackend();
+                if (typeof loadDashboardData === 'function') loadDashboardData();
+                if (typeof loadData === 'function') loadData();
+                if (typeof showToast === 'function') showToast(`🔔 มีกิจกรรมใหม่รออนุมัติจาก นพอ. รหัส ${sid}`);
+            } else if (user && String(user.student_id) === String(sid)) {
+                await App.syncDeedsWithBackend(sid);
+                if (typeof loadDashboardData === 'function') loadDashboardData();
+                if (typeof init === 'function') init();
             }
             if (typeof window !== 'undefined') {
                 window.dispatchEvent(new CustomEvent('deeds_updated', { detail: data }));
+                window.dispatchEvent(new CustomEvent('deed_submitted', { detail: data }));
             }
         } catch (err) {
             console.error("Error processing deed_submitted event:", err);

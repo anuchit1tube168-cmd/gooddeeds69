@@ -16,6 +16,7 @@ live_telegram_bridge.py - Real-Time Interactive Telegram Bot Engine & Webhook Ha
 
 import os
 import sys
+import io
 import time
 import json
 import ssl
@@ -100,6 +101,184 @@ def gas_get(query):
         print(f"⚠️ GAS GET error: {e}")
         return None
 
+try:
+    from PIL import Image, ImageDraw, ImageFont
+    PIL_AVAILABLE = True
+except ImportError:
+    PIL_AVAILABLE = False
+
+def render_official_deed_slip(deed, student=None):
+    """สร้างภาพสลิปแบบบันทึกความดีทางการ (Official Deed Slip) ส่งเข้า Telegram
+    พร้อมตราสัญลักษณ์ วพอ., ลายเส้นน้ำเงิน-ทอง, ข้อมูล นพอ. และรูปภาพหลักฐานสด (ถ้ามี)
+    """
+    if not PIL_AVAILABLE:
+        return None
+
+    raw_img = deed.get('slipImage') or deed.get('imageUrl') or deed.get('imageData')
+    if not raw_img and deed.get('imageUrls') and len(deed.get('imageUrls')) > 0:
+        raw_img = deed['imageUrls'][0]
+    
+    photo_pil = None
+    if raw_img and isinstance(raw_img, str):
+        try:
+            if raw_img.startswith('data:image'):
+                import base64
+                _, b64 = raw_img.split('base64,', 1)
+                photo_bytes = base64.b64decode(b64)
+                photo_pil = Image.open(io.BytesIO(photo_bytes)).convert('RGB')
+            elif os.path.exists(raw_img):
+                photo_pil = Image.open(raw_img).convert('RGB')
+        except Exception as pe:
+            print(f"⚠️ Photo load notice: {pe}")
+
+    has_photo = photo_pil is not None
+    w, h = 1000, 1080 if has_photo else 720
+    im = Image.new('RGB', (w, h), (255, 255, 255))
+    draw = ImageDraw.Draw(im)
+
+    # Thai font resolution: prioritize Ayuthaya -> Sukhumvit -> Thonburi
+    font_paths = [
+        '/System/Library/Fonts/Supplemental/Ayuthaya.ttf',
+        '/System/Library/Fonts/Supplemental/SukhumvitSet.ttc',
+        '/System/Library/Fonts/Supplemental/Thonburi.ttc'
+    ]
+    font_path = None
+    for p in font_paths:
+        if os.path.exists(p):
+            font_path = p
+            break
+    
+    if not font_path:
+        return None
+
+    try:
+        f_title = ImageFont.truetype(font_path, 28)
+        f_sub = ImageFont.truetype(font_path, 16)
+        f_sec = ImageFont.truetype(font_path, 18)
+        f_lbl = ImageFont.truetype(font_path, 18)
+        f_val = ImageFont.truetype(font_path, 19)
+        f_hours = ImageFont.truetype(font_path, 22)
+    except Exception:
+        return None
+
+    # Double frame borders: Navy outer, Gold inner
+    draw.rectangle([(20, 20), (w - 20, h - 20)], outline=(30, 58, 138), width=4)
+    draw.rectangle([(26, 26), (w - 26, h - 26)], outline=(201, 162, 39), width=2)
+
+    # Date & Student ID
+    now = time.localtime()
+    thai_months = ['มกราคม', 'กุมภาพันธ์', 'มีนาคม', 'เมษายน', 'พฤษภาคม', 'มิถุนายน', 'กรกฎาคม', 'สิงหาคม', 'กันยายน', 'ตุลาคม', 'พฤศจิกายน', 'ธันวาคม']
+    cur_date_str = f"วันที่  {now.tm_mday}  เดือน  {thai_months[now.tm_mon-1]}  พ.ศ.  {now.tm_year + 543}"
+    draw.text((50, 48), cur_date_str, fill=(15, 23, 42), font=f_sub)
+
+    sid = str(deed.get('student_id') or deed.get('studentId') or '').strip()
+    draw.text((750, 48), f"รหัส นพอ. :  {sid}", fill=(15, 23, 42), font=f_sub)
+
+    # Emblem centered at (500, 75)
+    emblem_path = os.path.join(BASE_DIR, 'frontend', '510903.jpg')
+    if os.path.exists(emblem_path):
+        try:
+            emb = Image.open(emblem_path).convert('RGBA').resize((84, 84))
+            mask = Image.new('L', (84, 84), 0)
+            m_draw = ImageDraw.Draw(mask)
+            m_draw.ellipse([(0, 0), (84, 84)], fill=255)
+            im.paste(emb, (458, 33), mask)
+            draw.ellipse([(458, 33), (542, 117)], outline=(201, 162, 39), width=3)
+        except Exception:
+            pass
+
+    # Header Titles
+    draw.text((500, 138), 'บันทึกกิจกรรมความดีและจิตอาสา นพอ.', fill=(12, 27, 51), font=f_title, anchor='mm')
+    draw.text((500, 168), 'วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ · ปีการศึกษา ๒๕๖๙', fill=(71, 85, 105), font=f_sub, anchor='mm')
+
+    def draw_dotted_line(x1, y, x2):
+        for x in range(x1, x2, 8):
+            draw.line([(x, y), (min(x + 4, x2), y)], fill=(100, 116, 139), width=1)
+
+    s_name = deed.get('student_name') or deed.get('studentName') or f"นพอ. ({sid})"
+    cy = str(deed.get('class_year') or (sid[:2] if len(sid) >= 2 else '69'))
+    yl_map = {'69': '1', '68': '2', '67': '3', '66': '4'}
+    yl = yl_map.get(cy, '1')
+
+    cat_id = int(deed.get('category_id') or deed.get('categoryId') or 1)
+    cat_names = {
+        1: 'บริจาคโลหิต/เกล็ดเลือด/พลาสมา',
+        2: 'โครงการภายนอก (คำสั่ง วพอ.)',
+        3: 'ช่วยเหลืองานภายใน วพอ.',
+        4: 'เข้าอบรมที่ วพอ. จัดให้',
+        5: 'ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ',
+        6: 'ทำนุบำรุงศาสนสถาน',
+        7: 'งานฟรีทั่วไป (ช่วยงานผู้ปกครอง)',
+        8: 'กิจกรรมจงรักภักดีต่อสถาบัน',
+        9: 'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)',
+    }
+    cat_name = cat_names.get(cat_id, 'กิจกรรมความดี')
+
+    # Section 1: ข้อมูลผู้ขออนุมัติ
+    draw.rectangle([(50, 205), (950, 355)], outline=(12, 27, 51), width=2)
+    draw.rectangle([(50, 205), (310, 237)], fill=(12, 27, 51))
+    draw.text((65, 210), 'ส่วนที่ ๑ : ข้อมูลผู้ขออนุมัติ', fill=(255, 255, 255), font=f_sec)
+
+    draw.text((70, 255), 'ชื่อ – สกุล :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((175, 253), s_name, fill=(30, 58, 138), font=f_val)
+    draw_dotted_line(170, 282, 600)
+
+    draw.text((630, 255), 'ชั้นปีที่ :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((705, 253), f"{yl} (รุ่น {cy})", fill=(30, 58, 138), font=f_val)
+    draw_dotted_line(700, 282, 925)
+
+    draw.text((70, 305), 'หมวดหมู่ความดี :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((215, 303), f"หมวดที่ {cat_id} : {cat_name}", fill=(146, 64, 14), font=f_val)
+    draw_dotted_line(210, 332, 925)
+
+    # Section 2: รายละเอียดการปฏิบัติงาน
+    draw.rectangle([(50, 375), (950, 615)], outline=(12, 27, 51), width=2)
+    draw.rectangle([(50, 375), (360, 407)], fill=(12, 27, 51))
+    draw.text((65, 380), 'ส่วนที่ ๒ : รายละเอียดการปฏิบัติงาน', fill=(255, 255, 255), font=f_sec)
+
+    act_date = deed.get('activityDate') or deed.get('event_date') or time.strftime('%Y-%m-%d')
+    hours = deed.get('hours', 0)
+    draw.text((70, 425), 'วันที่ปฏิบัติกิจกรรม :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((235, 423), str(act_date), fill=(30, 58, 138), font=f_val)
+    draw_dotted_line(230, 452, 530)
+
+    draw.text((560, 425), 'จำนวนชั่วโมง :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((690, 422), f"{hours} ชั่วโมง", fill=(180, 83, 9), font=f_hours)
+    draw_dotted_line(685, 452, 925)
+
+    loc = deed.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
+    draw.text((70, 475), 'สถานที่ / สังกัด :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((215, 473), str(loc), fill=(51, 65, 85), font=f_lbl)
+    draw_dotted_line(210, 502, 925)
+
+    desc = deed.get('description') or '-'
+    short_desc = desc[:50] + '...' if len(desc) > 50 else desc
+    draw.text((70, 525), 'รายละเอียดกิจกรรม :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((245, 523), short_desc, fill=(15, 23, 42), font=f_val)
+    draw_dotted_line(240, 552, 925)
+
+    appr = deed.get('approver') or 'ร.อ.อนุชิต ทำจะดี (Bird)'
+    draw.text((70, 575), 'อาจารย์ผู้ตรวจประเมิน :', fill=(15, 23, 42), font=f_lbl)
+    draw.text((270, 573), str(appr), fill=(16, 100, 50), font=f_val)
+    draw_dotted_line(265, 602, 925)
+
+    # Section 3: ภาพถ่ายหลักฐาน (ถ้ามี)
+    if has_photo:
+        draw.rectangle([(50, 635), (950, 1040)], outline=(12, 27, 51), width=2)
+        draw.rectangle([(50, 635), (380, 667)], fill=(12, 27, 51))
+        draw.text((65, 640), 'ส่วนที่ ๓ : ภาพถ่ายหลักฐานการปฏิบัติงาน', fill=(255, 255, 255), font=f_sec)
+        
+        box_w, box_h = 880, 340
+        photo_pil.thumbnail((box_w, box_h), Image.Resampling.LANCZOS)
+        px = 50 + (900 - photo_pil.width) // 2
+        py = 680 + (340 - photo_pil.height) // 2
+        im.paste(photo_pil, (px, py))
+        draw.rectangle([(px, py), (px + photo_pil.width, py + photo_pil.height)], outline=(201, 162, 39), width=1)
+
+    buf = io.BytesIO()
+    im.save(buf, format='JPEG', quality=90)
+    return buf.getvalue()
+
 def notify_pending_deed(deed):
     """ส่งการ์ดแจ้งเตือนความดีใหม่พร้อมปุ่ม Action เข้ากลุ่ม Telegram"""
     deed_id = str(deed.get('id') or deed.get('deedId') or '').strip()
@@ -178,20 +357,45 @@ def notify_pending_deed(deed):
     )
 
     photo_sent = False
-    img_url = deed.get('imageUrl') or ''
-    if img_url and img_url.startswith('data:image'):
+    img_bytes = None
+
+    # Priority 1: Check if slipImage is already rendered by frontend canvas
+    slip_data = deed.get('slipImage')
+    if slip_data and isinstance(slip_data, str) and slip_data.startswith('data:image'):
         try:
             import base64
-            _, b64_data = img_url.split('base64,', 1)
-            img_bytes = base64.b64decode(b64_data)
+            _, b64_d = slip_data.split('base64,', 1)
+            img_bytes = base64.b64decode(b64_d)
+        except Exception:
+            img_bytes = None
 
+    # Priority 2: Generate official deed slip with emblem and authentic Thai typography
+    if not img_bytes:
+        try:
+            img_bytes = render_official_deed_slip(deed)
+        except Exception as r_err:
+            print(f"⚠️ render_official_deed_slip note: {r_err}")
+
+    # Priority 3: Fallback to raw attached image if slip generation failed
+    if not img_bytes:
+        img_url = deed.get('imageUrl') or ''
+        if img_url and img_url.startswith('data:image'):
+            try:
+                import base64
+                _, b64_data = img_url.split('base64,', 1)
+                img_bytes = base64.b64decode(b64_data)
+            except Exception:
+                img_bytes = None
+
+    if img_bytes:
+        try:
             boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
             body = bytearray()
             body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{CHAT_ID}\r\n".encode('utf-8'))
             body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{html_msg}\r\n".encode('utf-8'))
             body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n".encode('utf-8'))
             body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"reply_markup\"\r\n\r\n{json.dumps(reply_markup, ensure_ascii=False)}\r\n".encode('utf-8'))
-            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"evidence.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
+            body.extend(f"--{boundary}\r\nContent-Disposition: form-data; name=\"photo\"; filename=\"deed_slip.jpg\"\r\nContent-Type: image/jpeg\r\n\r\n".encode('utf-8'))
             body.extend(img_bytes)
             body.extend(f"\r\n--{boundary}--\r\n".encode('utf-8'))
 
@@ -241,11 +445,24 @@ def poll_new_deeds():
                 save_notified_deeds(NOTIFIED_DEEDS)
                 continue
 
+            # 1. บันทึกลง local DB ทันที เพื่อให้ Admin Dashboard โหลดเจอทันที
+            student_id = str(d.get('student_id') or d.get('studentId') or '').strip()
+            s_fn = globals().get('save_or_update_deed_in_db')
+            if s_fn and student_id:
+                try:
+                    s_fn(student_id, d)
+                except Exception as se:
+                    print(f"⚠️ Error saving pending deed locally: {se}")
+
+            # 2. ส่งแจ้งเตือนการ์ดสลิปทางการเข้ากลุ่ม Telegram
             notify_pending_deed(d)
+
+            # 3. กระจายสัญญาณ Real-time SSE ให้หน้า Admin อัปเดตทันที
             b_fn = globals().get('broadcast_event')
             if b_fn:
                 try:
                     b_fn('deed_submitted', d)
+                    b_fn('deeds_updated', {'count': 1, 'studentId': student_id})
                 except Exception:
                     pass
             time.sleep(1.0)

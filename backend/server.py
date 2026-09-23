@@ -1003,6 +1003,23 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.send_json_response(404, {'status': 'error', 'message': 'Student not found'})
             return
 
+        elif parsed_path.path == '/api/get_student_line':
+            student_id = query_params.get('studentId') or query_params.get('student_id') or query_params.get('id')
+            if not student_id:
+                self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId'})
+                return
+            contact = None
+            try:
+                import mcp_line_contacts
+                contact = mcp_line_contacts.get_student_contact(student_id)
+            except Exception:
+                pass
+            if contact:
+                self.send_json_response(200, contact)
+            else:
+                self.send_json_response(404, {'status': 'error', 'message': 'Student not found'})
+            return
+
         elif parsed_path.path == '/api/students':
             s_map = load_students_map()
             all_deeds = get_all_deeds()
@@ -1452,7 +1469,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 line_pic = payload.get('linePictureUrl', '')
                 
                 if student_id and line_user_id:
-                    res = save_student_line_binding(student_id, line_user_id, line_name, line_pic)
+                    res = save_student_line_binding(student_id, line_user_id, line_name, line_pic, verified=True)
                     broadcast_event("student_updated", {"studentId": student_id, "lineUserId": line_user_id})
                     sync_to_google_drive_bg()
                     self.send_json_response(200, res)

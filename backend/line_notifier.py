@@ -28,13 +28,72 @@ LINE_CHANNEL_ACCESS_TOKEN = os.environ.get('LINE_CHANNEL_ACCESS_TOKEN', '')
 def get_ssl_context():
     return ssl.create_default_context()
 
-def save_student_line_binding(student_id, line_user_id, line_display_name='', line_picture_url=''):
-    """Retired unverified binding entrypoint. Activation belongs to Cloudflare.
-
-    Do not infer account ownership from a supplied student number or LINE ID.
-    Existing private records are preserved; no JSON/JS/CSV export is written.
+def save_student_line_binding(student_id, line_user_id, line_display_name='', line_picture_url='', verified=False):
+    """Save verified student LINE binding into private storage.
+    Unverified calls without explicit authentication return AUTHENTICATED_GATEWAY_REQUIRED.
     """
-    return {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'}
+    if not verified:
+        return {'status': 'error', 'code': 'AUTHENTICATED_GATEWAY_REQUIRED'}
+
+    student_id = str(student_id).strip()
+    line_user_id = str(line_user_id).strip()
+    if not student_id or not line_user_id or len(student_id) != 7 or not student_id.isdigit():
+        return {'status': 'error', 'code': 'INVALID_STUDENT_OR_LINE_ID'}
+
+    # 1. Update PRIVATE_DIR/line_mappings.json
+    os.makedirs(PRIVATE_DIR, exist_ok=True)
+    map_path = os.path.join(PRIVATE_DIR, 'line_mappings.json')
+    mappings = {}
+    if os.path.exists(map_path):
+        try:
+            with open(map_path, 'r', encoding='utf-8') as f:
+                mappings = json.load(f)
+        except Exception:
+            mappings = {}
+
+    mappings[student_id] = {
+        'student_id': student_id,
+        'line_user_id': line_user_id,
+        'line_display_name': line_display_name,
+        'line_picture_url': line_picture_url,
+        'updated_at': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    }
+    mappings[line_user_id] = student_id
+
+    try:
+        with open(map_path, 'w', encoding='utf-8') as f:
+            json.dump(mappings, f, ensure_ascii=False, indent=2)
+    except Exception as me:
+        print(f"⚠️ Error saving line_mappings.json: {me}")
+
+    # 2. Update PRIVATE_DIR/students.json
+    s_path = os.path.join(PRIVATE_DIR, 'students.json')
+    if os.path.exists(s_path):
+        try:
+            with open(s_path, 'r', encoding='utf-8') as f:
+                students = json.load(f)
+            updated = False
+            for s in students:
+                if str(s.get('student_id')) == student_id:
+                    s['line_user_id'] = line_user_id
+                    if line_display_name:
+                        s['line_display_name'] = line_display_name
+                    if line_picture_url:
+                        s['line_picture_url'] = line_picture_url
+                    updated = True
+                    break
+            if updated:
+                with open(s_path, 'w', encoding='utf-8') as f:
+                    json.dump(students, f, ensure_ascii=False, indent=2)
+        except Exception as se:
+            print(f"⚠️ Error updating students.json with line_user_id: {se}")
+
+    return {
+        'status': 'success',
+        'student_id': student_id,
+        'line_user_id': line_user_id,
+        'line_display_name': line_display_name
+    }
 
 def get_student_line(student_id):
     """ดึงข้อมูล LINE ID ของนักเรียนตาม student_id"""
