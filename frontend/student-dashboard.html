@@ -1346,7 +1346,7 @@
     <script src="data/students_photos.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20260922-v5-sync-react"></script>
+    <script src="app.js?v=20260923-v6-live-telegram-slip"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
@@ -1375,7 +1375,9 @@
                 LiffHelper.bindCurrentStudentProfile();
             }
 
-            if (App.canUseBackendApi()) {
+            if (typeof App.syncAllDeedsWithBackend === 'function') {
+                await App.syncAllDeedsWithBackend().catch(() => {});
+            } else if (App.canUseBackendApi()) {
                 await App.syncDeedsWithBackend(currentUser.student_id);
             }
 
@@ -1388,6 +1390,18 @@
             renderCategories();
             renderInteractiveTable();
             renderRecentDeeds();
+
+            // Auto-sync when switching back to tab or periodic polling
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && typeof App.syncAllDeedsWithBackend === 'function') {
+                    App.syncAllDeedsWithBackend().catch(() => {});
+                }
+            });
+            setInterval(() => {
+                if (typeof App.syncAllDeedsWithBackend === 'function') {
+                    App.syncAllDeedsWithBackend().catch(() => {});
+                }
+            }, 20000);
 
             // Start Real-time Auto-Sync with Telegram & Cloud (Instant UI Reaction)
             if (App.startRealtimeSync) {

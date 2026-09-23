@@ -285,7 +285,7 @@
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20260921-online-active"></script>
+    <script src="app.js?v=20260923-v6-live-telegram-slip"></script>
     <script>
         let currentUser = null;
         let allDeeds = [];
@@ -295,7 +295,9 @@
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
 
-            if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncDeedsWithBackend === 'function') {
+            if (typeof App.syncAllDeedsWithBackend === 'function') {
+                await App.syncAllDeedsWithBackend().catch(() => {});
+            } else if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncDeedsWithBackend === 'function') {
                 await App.syncDeedsWithBackend(currentUser.student_id);
             }
 
@@ -311,6 +313,13 @@
             });
             renderSummary();
             renderDeeds();
+
+            // Auto-refresh when switching back to tab
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && typeof App.syncAllDeedsWithBackend === 'function') {
+                    App.syncAllDeedsWithBackend().catch(() => {});
+                }
+            });
 
             if (App.startRealtimeSync) {
                 App.startRealtimeSync(currentUser.student_id, () => {

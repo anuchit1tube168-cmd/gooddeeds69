@@ -514,6 +514,7 @@ function handleTelegramCallback(cq, ss) {
             studentId: String(dData[r][1] || studentId),
             catId: parseInt(dData[r][2] || 1),
             hours: parseFloat(dData[r][3] || 0),
+            desc: String(dData[r][5] || ''),
             prevStatus: prevStatus
           };
           break;
@@ -529,7 +530,7 @@ function handleTelegramCallback(cq, ss) {
     // 3. แก้ไขปุ่มบน Telegram ให้แสดงว่าอนุมัติแล้ว
     if (token && cq.message && cq.message.chat && cq.message.message_id) {
       try {
-        var newBtnText = isApprove ? '✅ อนุมัติแล้ว โดย ร.อ.อนุชิต' : '❌ ปฏิเสธแล้ว โดย ร.อ.อนุชิต';
+        var newBtnText = isApprove ? '✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)' : '❌ ปฏิเสธแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)';
         UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/editMessageReplyMarkup', {
           method: 'post',
           contentType: 'application/json',
@@ -553,6 +554,60 @@ function handleTelegramCallback(cq, ss) {
         Logger.log('editMessageReplyMarkup error: ' + e.message);
       }
     }
+
+    // 4. ส่งข้อความแจ้งเตือนผลการตรวจลงในกลุ่ม Telegram ทันที
+    if (token && cq.message && cq.message.chat) {
+      try {
+        var sInfo = getStudentInfoFromMaster(ss, studentId);
+        var sName = sInfo ? sInfo.full_name : ('นพอ. รหัส ' + studentId);
+        var catNames = { 1:'บริจาคโลหิต/เกล็ดเลือด/พลาสมา', 2:'โครงการภายนอก (คำสั่ง วพอ.)', 3:'ช่วยเหลืองานภายใน วพอ.', 4:'เข้าอบรมที่ วพอ. จัดให้', 5:'ช่วยงานหน่วยงาน/ชุมชน/มูลนิธิ', 6:'ทำนุบำรุงศาสนสถาน', 7:'งานฟรีทั่วไป', 8:'กิจกรรมจงรักภักดีต่อสถาบัน', 9:'ชม. ที่สมควรได้รับ (บทบาทพิเศษ)' };
+        var catName = foundDeed ? (catNames[foundDeed.catId] || 'กิจกรรมความดี') : 'กิจกรรมความดี';
+        var dDesc = foundDeed ? foundDeed.desc : '';
+        var hrs = foundDeed ? foundDeed.hours : 0;
+        
+        var confirmMsg = '';
+        if (isApprove) {
+          confirmMsg = 'AGEn Ai Bot\n' +
+            '✅ <b>แจ้งเตือนการอนุมัติความดี</b>\n' +
+            '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+            '👤 <b>นักเรียน:</b> ' + sName + '\n' +
+            '🎫 <b>รหัส นพอ.:</b> <code>' + studentId + '</code>\n' +
+            '📂 <b>กิจกรรม:</b> ' + catName + (dDesc ? (' - ' + dDesc) : '') + '\n' +
+            '⏱ <b>จำนวน:</b> <b>' + hrs + ' ชั่วโมง</b>\n' +
+            '👨‍🏫 <b>ผู้อนุมัติ:</b> ' + approverName + '\n' +
+            '🎉 <i>บันทึกข้อมูลและสะสมชั่วโมงลงฐานข้อมูลเรียบร้อยแล้วค่ะ</i>';
+        } else {
+          confirmMsg = 'AGEn Ai Bot\n' +
+            '❌ <b>แจ้งเตือนการปฏิเสธความดี</b>\n' +
+            '━━━━━━━━━━━━━━━━━━━━━━━\n' +
+            '👤 <b>นักเรียน:</b> ' + sName + '\n' +
+            '🎫 <b>รหัส นพอ.:</b> <code>' + studentId + '</code>\n' +
+            '📁 <b>กิจกรรม:</b> ' + catName + (dDesc ? (' - ' + dDesc) : '') + '\n' +
+            '👨‍🏫 <b>ผู้ปฏิเสธ:</b> ' + approverName + '\n' +
+            '📝 <b>เหตุผล:</b> กรุณาตรวจสอบหลักฐานและส่งใหม่';
+        }
+        
+        UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+          method: 'post',
+          contentType: 'application/json',
+          payload: JSON.stringify({
+            chat_id: cq.message.chat.id,
+            text: confirmMsg,
+            parse_mode: 'HTML'
+          }),
+          muteHttpExceptions: true
+        });
+      } catch (me) {
+        Logger.log('confirm message error: ' + me.message);
+      }
+    }
+
+    // 5. แจ้งเตือน นพอ. ผ่าน LINE ส่วนตัว (ถ้าผูก LINE ไว้)
+    try {
+      notifyStudentViaLine(ss, studentId, isApprove, foundDeed);
+    } catch (le) {
+      Logger.log('LINE notify error: ' + le.message);
+    }
     
     return ContentService.createTextOutput(JSON.stringify({
       status: 'success',
@@ -562,6 +617,56 @@ function handleTelegramCallback(cq, ss) {
   }
   
   return ContentService.createTextOutput(JSON.stringify({ status: 'ok' })).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ==================== NOTIFY STUDENT VIA LINE ====================
+function notifyStudentViaLine(ss, studentId, isApprove, deed) {
+  var lineToken = PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN') || '';
+  if (!lineToken) return;
+  
+  var sheet = ss.getSheetByName('Main_2569');
+  if (!sheet) return;
+  var data = sheet.getDataRange().getValues();
+  var lineUserId = '';
+  var studentName = '';
+  
+  for (var i = 1; i < data.length; i++) {
+    if (String(data[i][1]).trim() === String(studentId).trim()) {
+      lineUserId = String(data[i][19] || '').trim();
+      studentName = String(data[i][2] || '') + ' ' + String(data[i][3] || '') + ' ' + String(data[i][4] || '');
+      break;
+    }
+  }
+  
+  if (!lineUserId) return;
+  
+  var catNames = { 1:'บริจาคโลหิต', 2:'โครงการภายนอก', 3:'ช่วยงานภายใน วพอ.', 4:'เข้าอบรม', 5:'ช่วยชุมชน/มูลนิธิ', 6:'ศาสนสถาน', 7:'งานฟรีทั่วไป', 8:'จงรักภักดี', 9:'บทบาทพิเศษ' };
+  var catName = deed ? (catNames[deed.catId] || 'กิจกรรมความดี') : 'กิจกรรมความดี';
+  var hrs = deed ? deed.hours : 0;
+  
+  var msgText = isApprove
+    ? '🎉 แจ้งเตือนผลการตรวจความดี วพอ. 2569\n\n' +
+      'เรียน ' + studentName + '\n' +
+      '✅ กิจกรรม: ' + catName + '\n' +
+      '⏱ จำนวน: ' + hrs + ' ชั่วโมง\n' +
+      '👨‍🏫 อาจารย์ผู้ตรวจ: ร.อ.อนุชิต ทำจะดี (Bird)\n\n' +
+      'รายการความดีของคุณได้รับการอนุมัติและสะสมชั่วโมงเรียบร้อยแล้วค่ะ 🌟'
+    : '⚠️ แจ้งเตือนผลการตรวจความดี วพอ. 2569\n\n' +
+      'เรียน ' + studentName + '\n' +
+      '❌ กิจกรรม: ' + catName + '\n' +
+      '👨‍🏫 อาจารย์ผู้ตรวจ: ร.อ.อนุชิต ทำจะดี (Bird)\n' +
+      '📝 เหตุผล: กรุณาตรวจสอบหลักฐานและส่งใหม่ค่ะ';
+      
+  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+    method: 'post',
+    contentType: 'application/json',
+    headers: { 'Authorization': 'Bearer ' + lineToken },
+    payload: JSON.stringify({
+      to: lineUserId,
+      messages: [{ type: 'text', text: msgText }]
+    }),
+    muteHttpExceptions: true
+  });
 }
 
 // ==================== UPDATE DEED STATUS (WEB / TEACHER DASHBOARD) ====================
@@ -579,6 +684,7 @@ function handleUpdateDeedStatus(params, ss) {
   
   var dData = deedSheet.getDataRange().getValues();
   var updated = false;
+  var foundDeed = null;
   
   for (var r = 1; r < dData.length; r++) {
     if (String(dData[r][0]) === deedId) {
@@ -590,6 +696,7 @@ function handleUpdateDeedStatus(params, ss) {
       var sid = String(dData[r][1] || studentId);
       var catId = parseInt(dData[r][2] || 1);
       var hrs = parseFloat(dData[r][3] || 0);
+      foundDeed = { studentId: sid, catId: catId, hours: hrs };
       
       if (newStatus === 'approved' && prevStatus !== 'approved') {
         updateMasterStudentHours(ss, sid, catId, hrs);
@@ -600,6 +707,11 @@ function handleUpdateDeedStatus(params, ss) {
   }
   
   if (updated) {
+    if (foundDeed) {
+      try {
+        notifyStudentViaLine(ss, foundDeed.studentId, newStatus === 'approved', foundDeed);
+      } catch (ne) {}
+    }
     return ContentService.createTextOutput(JSON.stringify({
       status: 'success',
       deedId: deedId,
@@ -697,20 +809,70 @@ function sendTelegramDeedNotification(ss, deed) {
     '━━━━━━━━━━━━━━━━━━━━━━━\n' +
     '⏳ <i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>';
 
-  var url = 'https://api.telegram.org/bot' + token + '/sendMessage';
-  var payload = {
-    chat_id: chatId,
-    text: htmlMsg,
-    parse_mode: 'HTML',
-    reply_markup: replyMarkup
-  };
+  // ตรวจสอบรูปภาพสลิปแบบฟอร์ม (Slip Card Image) เพื่อส่งเป็น Photo
+  var slipImg = deed.slipImage || deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || '';
+  var photoSent = false;
   
-  UrlFetchApp.fetch(url, {
-    method: 'post',
-    contentType: 'application/json',
-    payload: JSON.stringify(payload),
-    muteHttpExceptions: true
-  });
+  if (slipImg) {
+    try {
+      if (slipImg.indexOf('data:image') === 0) {
+        var commaIdx = slipImg.indexOf(',');
+        var b64Data = slipImg.substring(commaIdx + 1);
+        var mime = slipImg.substring(5, commaIdx).split(';')[0] || 'image/png';
+        var ext = (mime.indexOf('jpeg') !== -1 || mime.indexOf('jpg') !== -1) ? 'jpg' : 'png';
+        var decoded = Utilities.base64Decode(b64Data);
+        var photoBlob = Utilities.newBlob(decoded, mime, 'deed_slip.' + ext);
+        
+        var photoPayload = {
+          chat_id: chatId,
+          photo: photoBlob,
+          caption: htmlMsg,
+          parse_mode: 'HTML',
+          reply_markup: JSON.stringify(replyMarkup)
+        };
+        var pRes = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendPhoto', {
+          method: 'post',
+          payload: photoPayload,
+          muteHttpExceptions: true
+        });
+        if (pRes.getResponseCode() === 200) photoSent = true;
+      } else if (slipImg.indexOf('http') === 0) {
+        var photoPayloadUrl = {
+          chat_id: chatId,
+          photo: slipImg,
+          caption: htmlMsg,
+          parse_mode: 'HTML',
+          reply_markup: replyMarkup
+        };
+        var pRes2 = UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendPhoto', {
+          method: 'post',
+          contentType: 'application/json',
+          payload: JSON.stringify(photoPayloadUrl),
+          muteHttpExceptions: true
+        });
+        if (pRes2.getResponseCode() === 200) photoSent = true;
+      }
+    } catch (pe) {
+      Logger.log('Photo send notice: ' + pe.message);
+    }
+  }
+
+  // Fallback เป็นข้อความปกติถ้าไม่มีรูปหรือส่งรูปไม่สำเร็จ
+  if (!photoSent) {
+    var url = 'https://api.telegram.org/bot' + token + '/sendMessage';
+    var payload = {
+      chat_id: chatId,
+      text: htmlMsg,
+      parse_mode: 'HTML',
+      reply_markup: replyMarkup
+    };
+    UrlFetchApp.fetch(url, {
+      method: 'post',
+      contentType: 'application/json',
+      payload: JSON.stringify(payload),
+      muteHttpExceptions: true
+    });
+  }
   return true;
 }
 

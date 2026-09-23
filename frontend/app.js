@@ -1056,19 +1056,37 @@ const App = {
         // Sync to Google Apps Script (Cloud Google Sheets) if configured
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
-            fetch(gasUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'submit_deed',
-                    deed: {
-                        ...newDeed,
-                        student: user
+            (async () => {
+                let slipBase64 = '';
+                try {
+                    const slipBlob = await this.generateDeedFormSlipBlob(newDeed, user);
+                    if (slipBlob) {
+                        slipBase64 = await new Promise((resolve) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => resolve(reader.result);
+                            reader.onerror = () => resolve('');
+                            reader.readAsDataURL(slipBlob);
+                        });
                     }
-                })
-            }).then(() => console.log('☁️ Synced Deed to Google Apps Script'))
-              .catch(err => console.warn('⚠️ GAS Deed Sync Error:', err));
+                } catch (err) {
+                    console.warn('Slip card generation notice:', err);
+                }
+
+                fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submit_deed',
+                        deed: {
+                            ...newDeed,
+                            student: user,
+                            slipImage: slipBase64
+                        }
+                    })
+                }).then(() => console.log('☁️ Synced Deed & Slip Card to Google Apps Script'))
+                  .catch(err => console.warn('⚠️ GAS Deed Sync Error:', err));
+            })();
         }
 
         // Save to backend via API
@@ -1957,14 +1975,51 @@ const App = {
     },
 
     // ---------- TELEGRAM NOTIFY (TEXT & PHOTO) ----------
-    async sendTelegram() {
-        // Notifications belong to the backend after durable persistence.
-        // Never use previously cached browser tokens, even when present.
-        return false;
+    async sendTelegram(chatId, message, replyMarkup = null) {
+        const settings = this.getSettings();
+        const token = settings.telegramToken || (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_BOT_TOKEN : '');
+        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_CHAT_ID : '');
+        if (!token || !targetChatId) return false;
+        try {
+            const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    chat_id: targetChatId,
+                    text: message,
+                    parse_mode: 'HTML',
+                    reply_markup: replyMarkup
+                })
+            });
+            return res.ok;
+        } catch { return false; }
     },
 
-    async sendTelegramPhoto() {
-        return false;
+    async sendTelegramPhoto(chatId, photoBlob, caption, replyMarkup = null) {
+        const settings = this.getSettings();
+        const token = settings.telegramToken || (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_BOT_TOKEN : '');
+        const targetChatId = (chatId && String(chatId).trim()) ? String(chatId).trim() : (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_CHAT_ID : '');
+        if (!token || !targetChatId || !photoBlob) return false;
+        try {
+            const formData = new FormData();
+            formData.append('chat_id', targetChatId);
+            formData.append('photo', photoBlob, 'deed_form.png');
+            if (caption) {
+                formData.append('caption', caption);
+                formData.append('parse_mode', 'HTML');
+            }
+            if (replyMarkup) {
+                formData.append('reply_markup', JSON.stringify(replyMarkup));
+            }
+            const res = await fetch(`https://api.telegram.org/bot${token}/sendPhoto`, {
+                method: 'POST',
+                body: formData
+            });
+            return res.ok;
+        } catch (err) {
+            console.warn('Telegram photo send error:', err);
+            return false;
+        }
     },
 
     // ---------- LINE NOTIFY ----------
