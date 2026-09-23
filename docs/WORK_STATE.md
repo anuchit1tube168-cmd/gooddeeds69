@@ -73,3 +73,10 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Cloudflare Webhook Proxy: Created `cloudflare/telegram-webhook-proxy.js` to eliminate HTTP 302 redirect errors from GAS webhooks.
 - Local Live Engine: Created `scripts/live_telegram_bridge.py` for real-time polling and instant callback execution.
 - Tests & Compliance: 153/153 JS + 23/23 Python = 176 tests PASS, 100% PDPA compliance. Cache bust updated to `v6-live-telegram-slip`.
+
+## Deployment & Telegram Live Bridge Continuation — 2026-09-23
+- Telegram Notifications Live Engine: Integrated `scripts/live_telegram_bridge.py` as background daemon in `backend/server.py`. Polls GAS every 3s for new pending deeds and pushes rich interactive cards to Telegram group `-4839151586` with inline buttons. Handles callbacks, answers immediately, and synchronizes Sheets & SSE in real-time. Verified live delivery.
+- Photo Upload & Rendering: Converted `.upload-zone` to `<label for="file-input">` to prevent mobile OS/LINE browser click blocking. Added 400x400 Base64 thumbnail compression (<25k chars) to prevent Google Sheets 50k character cell overflow. Added multi-image and `onerror` fallback in `teacher-dashboard.html` and `history.html` to eliminate broken image icons completely.
+- Safe Test Cleanup & Archive: Inspected and safely classified 65 deeds in Google Sheets `Deeds_2569`. Privately archived all 43 test records created between 19-23 Sep into `records/archive_test_deeds_20260919_20260923.json`. Google Sheets restored to exactly the 22 authentic student records.
+- Local Execution on Port 3000: Running `ENABLE_LOCAL_API=true python3 backend/server.py 3000` with local role header authentication. Headless Chrome validated 256 active students, 124 alumni, 73 approved records, and 0 pending records with zero broken image icons.
+- Git & PDPA: All changes committed and pushed to `main`. PDPA compliance audit passed 100%. All 153 JS + 23 Python tests PASS.
