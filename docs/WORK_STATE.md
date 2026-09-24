@@ -95,3 +95,18 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Live 8-Student Alternating Cohort Test: Executed full online submission test with 8 students across all 4 cohorts (ปี 1-4: รุ่น 69, 68, 67, 66) using actual college categories (1, 3, 5, 8, 6, 4, 2, 7). All 8 items submitted to GAS, picked up by the bridge within 4 seconds, rendered with Ayuthaya font and RTAFNC emblem, and pushed to Telegram group `-4839151586`.
 - Telegram Inline Approval Verification: Confirmed that interactive `[✅ อนุมัติด่วน]` callback buttons immediately updated the Telegram message to "✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)" and persisted `status: 'approved'` back into Google Sheets `Deeds_2569` for all 8 records.
 - GitHub Pages & Compliance: Online frontend at GitHub Pages (`https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/`) verified operational. 153 JS + 23 Python tests PASS. 100% PDPA compliant.
+
+## Test Records & Hours Complete Cleanup & Safe Archiving — 2026-09-24
+- User Request: "อันไหน ทดสอบ เอาชม ออกให้หมด" (Remove all test records and clear all hours associated with testing completely from the system).
+- Implementation: Created `scripts/cleanup_all_test_deeds_and_hours.py` executing full classification, archiving, and atomic restoration.
+- Private Archiving: Classified 33 total deeds in Google Sheets. Safely archived all 12 synthetic/test deeds (created on 24 Sep) into `records/archive_test_deeds_20260924.json` per AGENTS.md rule (*"Clean means inspect, classify and privately archive; never delete/reset"*).
+- Google Sheets `Deeds_2569` Restored: Called `restore_authentic_deeds` restoring exactly the 21 authentic student records (August–September 2026).
+- Google Sheets `Main_2569` Hours Reset: Recalculated hours across all 380 students. Reset all test students' deed hours back to 0. Preserved exactly the 12 authentic students with 52.5 total hours across college categories. Called `init_all_students` to update the authoritative sheet.
+- Local Storage Synchronization: Updated `data/deeds.json`, `frontend/data/deeds.json`, and `frontend/data/deeds_data.js` with only authentic deeds. Cleaned 21 synthetic JSON files in `records/AY2569/`.
+- Verification:
+  - Google Sheets `Deeds_2569`: exactly 21 rows (PASS)
+  - Google Sheets `Main_2569`: exactly 12 students with hours > 0, sum = exactly 52.5 hours (PASS)
+  - Local database: synchronized with exactly 21 authentic deeds (PASS)
+  - Test Suite: 153/153 JS + 23/23 Python = 176 tests PASS (PASS)
+  - PDPA & Security: 100% PASS, 0 PII tracked in git.
+
