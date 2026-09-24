@@ -749,7 +749,7 @@ def save_or_update_deed_in_db(student_id, deed_data):
         return False
 
     academic_year = deed_data.get('academicYear', 2569)
-    student = deed_data.get('student', {})
+    student = deed_data.get('student') or {}
     class_year = student.get('class_year') or (student_id[:2] if len(student_id) >= 2 else '69')
     category_id = deed_data.get('categoryId') or deed_data.get('category_id') or 7
 
