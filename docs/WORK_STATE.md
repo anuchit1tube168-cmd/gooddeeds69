@@ -122,4 +122,22 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - PDPA & Security Compliance: 100% PASS (0 student PII tracked in git)
   - Git working tree: clean and pushed to `main`.
 
+## Student Photos Database Import from Google Drive — 2026-10-01
+- User Request: Provided Google Drive links for 4 cohorts of student nurse official photos (ปี 1, 2, 3, 4) to update system photo database.
+- Folders Scanned:
+  - ปี 1 (รุ่น 69): `1JLbTNb3NuRH8NA8BWiXKj0ENvhZ4uqw_` (62 photos)
+  - ปี 2 (รุ่น 68): `1YrstAJO2XpDSx9sPiXt_h7Mv3Sl78CoZ` (63 photos)
+  - ปี 3 (รุ่น 67): `1Napj4NNRwwjRGpUlvNuM9moNXhCsBvaY` (61 photos, matched 5 special format files by student no and name)
+  - ปี 4 (รุ่น 66): `1i7R8qm-CvqptQqE-Y99N1ZClwwWBb0pD` (63 photos)
+  - Total: 249 photos scanned, matched and imported with 100% accuracy.
+- Implementation:
+  - Created `scripts/import_drive_photos.py` with multi-sort Drive parsing, automatic student ID resolution, and high-quality 250x250 thumbnail download.
+  - Downloaded 249 photos into `frontend/photos/{student_id}.jpg` for local offline use.
+  - Generated `data/photos.json`, `data/students_photos.js`, and `frontend/data/students_photos.js` with dual mapping: local path `STUDENT_PHOTOS` and Google Drive CDN `STUDENT_DRIVE_PHOTOS`.
+  - Updated `frontend/app.js` (`getProfilePhoto`) to seamlessly use Google Drive CDN on GitHub Pages and local files on localhost.
+- Compliance & Tests:
+  - PDPA: 100% PASS (all photos, `photos.json`, and `students_photos.js` strictly ignored in `.gitignore`, 0 student photos in git tracking).
+  - Tests: 153/153 JS + 23/23 Python = 176/176 tests PASS.
+
+
 

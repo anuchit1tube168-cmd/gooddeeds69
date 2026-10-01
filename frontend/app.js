@@ -2209,12 +2209,19 @@ const App = {
 
 
 
-    // ดึงรูปโปรไฟล์นักเรียน: localStorage ก่อน, ถ้าไม่มีใช้ STUDENT_PHOTOS หรือ photos/{studentId}.jpg
+    // ดึงรูปโปรไฟล์นักเรียน: localStorage ก่อน, ถ้าไม่มีใช้ STUDENT_PHOTOS หรือ Google Drive CDN
     getProfilePhoto(studentId) {
         const local = Storage.get('photo_' + studentId);
         if (local) return local;
+        const isOnlinePages = typeof location !== 'undefined' && location.hostname.includes('github.io');
+        if (isOnlinePages && typeof STUDENT_DRIVE_PHOTOS !== 'undefined' && STUDENT_DRIVE_PHOTOS[studentId]) {
+            return STUDENT_DRIVE_PHOTOS[studentId];
+        }
         if (typeof STUDENT_PHOTOS !== 'undefined' && STUDENT_PHOTOS[studentId]) {
             return STUDENT_PHOTOS[studentId];
+        }
+        if (typeof STUDENT_DRIVE_PHOTOS !== 'undefined' && STUDENT_DRIVE_PHOTOS[studentId]) {
+            return STUDENT_DRIVE_PHOTOS[studentId];
         }
         const apiBase = (typeof this.getApiBaseUrl === 'function') ? this.getApiBaseUrl() : '';
         if (apiBase) {
