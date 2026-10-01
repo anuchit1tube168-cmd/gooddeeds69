@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ส่งการ์ดแจ้งเตือนเข้ากลุ่ม LINE — วพอ.พอ. 2569</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+  <style>
+    :root {
+      --bg: #07111e;
+      --card: #0d1e35;
+      --gold: #c9a227;
+      --gold-light: #f3d46a;
+      --line-green: #06c755;
+      --text: #ffffff;
+      --text-muted: #94a3b8;
+      --danger: #ef4444;
+      --border: rgba(201,162,39,0.3);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Sarabun', sans-serif; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px 40px;
+    }
+    .container {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .crest {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+      box-shadow: 0 0 16px rgba(201,162,39,0.4);
+      margin-bottom: 8px;
+      object-fit: cover;
+    }
+    h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      line-height: 1.3;
+    }
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--gold);
+      font-weight: 600;
+      margin-top: 4px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--gold-light);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .select-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+      display: block;
+    }
+    select {
+      width: 100%;
+      background: #06101d;
+      border: 1px solid rgba(201,162,39,0.4);
+      border-radius: 10px;
+      color: #fff;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 14px;
+      outline: none;
+    }
+    /* Preview Bubble */
+    .preview-bubble {
+      background: #0a192f;
+      border-radius: 16px;
+      border: 2px solid var(--gold);
+      overflow: hidden;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    }
+    .bubble-header {
+      background: #0a192f;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(201,162,39,0.25);
+      text-align: center;
+    }
+    .bubble-college {
+      color: var(--gold);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .bubble-title {
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    .bubble-body {
+      background: #ffffff;
+      color: #111827;
+      padding: 16px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+    .bubble-stats {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stat-badge {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #b45309;
+    }
+    .stat-label {
+      font-size: 0.7rem;
+      color: #64748b;
+    }
+    .bubble-footer {
+      background: #ffffff;
+      padding: 12px 16px 16px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .bubble-btn-fake {
+      background: #0a192f;
+      color: #ffffff;
+      text-align: center;
+      padding: 10px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    /* Action Buttons */
+    .btn-send {
+      width: 100%;
+      background: var(--line-green);
+      color: #ffffff;
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(6,199,85,0.4);
+      transition: all 0.2s;
+    }
+    .btn-send:active {
+      transform: scale(0.98);
+    }
+    .btn-copy {
+      width: 100%;
+      background: rgba(255,255,255,0.08);
+      color: #94a3b8;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .hint {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      text-align: center;
+      margin-top: 10px;
+      line-height: 1.4;
+    }
+    .status-pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 12px;
+    }
+    .status-ok { background: rgba(34,197,94,0.2); color: #4ade80; border: 1px solid #22c55e; }
+    .status-warn { background: rgba(239,68,68,0.2); color: #f87171; border: 1px solid #ef4444; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="510903.jpg" alt="วพอ." class="crest">
+      <h1>ระบบส่งการ์ดแจ้งเตือนเข้ากลุ่ม LINE</h1>
+      <div class="subtitle">วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ</div>
+    </div>
+
+    <div class="card">
+      <div id="liff-status-badge" class="status-pill status-warn">กำลังตรวจสอบ LINE LIFF...</div>
+
+      <label class="select-label">🎯 เลือกกลุ่มเป้าหมายที่ต้องการส่งเตือน:</label>
+      <select id="target-select" onchange="updateMessage()">
+        <option value="all">📢 สรุปภาพรวมทุกชั้นปี (ยังไม่บันทึก 239 นาย)</option>
+        <option value="69">🎖️ เฉพาะชั้นปีที่ 1 (รุ่น 69) — ยังไม่บันทึก 49 นาย</option>
+        <option value="68">🎖️ เฉพาะชั้นปีที่ 2 (รุ่น 68) — ยังไม่บันทึก 64 นาย</option>
+        <option value="67">🎖️ เฉพาะชั้นปีที่ 3 (รุ่น 67) — ยังไม่บันทึก 62 นาย</option>
+        <option value="66">🎖️ เฉพาะชั้นปีที่ 4 (รุ่น 66) — ยังไม่บันทึก 64 นาย</option>
+      </select>
+
+      <div class="card-title">📱 การ์ด Flex Message ที่จะส่งเข้ากลุ่ม LINE:</div>
+      
+      <div class="preview-bubble">
+        <div class="bubble-header">
+          <div class="bubble-college">วิทยาลัยพยาบาลทหารอากาศ</div>
+          <div class="bubble-title" id="preview-title">📢 แจ้งเตือนบันทึกชั่วโมงความดี 2569</div>
+        </div>
+        <div class="bubble-body">
+          <div id="preview-body" style="white-space: pre-line;"></div>
+          <div class="bubble-stats">
+            <div>
+              <div class="stat-label">เกณฑ์ขั้นต่ำ</div>
+              <div class="stat-badge">50 ชม.</div>
+            </div>
+            <div style="text-align: right;">
+              <div class="stat-label">ปีการศึกษา</div>
+              <div style="font-weight:700; color:#0a192f; font-size:0.95rem;">2569</div>
+            </div>
+          </div>
+        </div>
+        <div class="bubble-footer">
+          <div class="bubble-btn-fake">📝 บันทึกความดีออนไลน์ทันที</div>
+        </div>
+      </div>
+
+      <button class="btn-send" id="btn-share" onclick="handleShareToLine()">
+        <span>📲</span>
+        <span>เลือกกลุ่ม LINE และส่งทันที (ฟรี)</span>
+      </button>
+
+      <button class="btn-copy" onclick="copyTextMessage()">
+        📋 คัดลอกข้อความ (นำไปวางในกลุ่มไลน์)
+      </button>
+
+      <div class="hint">
+        💡 เมื่อกดปุ่ม ระบบจะเปิดหน้าต่างของแอป LINE ให้ท่านเลือกกลุ่มแชทที่ต้องการส่ง<br>
+        <b>ฟรี 100% ไม่เสียโควต้าข้อความของ LINE Official Account</b>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const LIFF_ID = '2010948179-Ympqt2bT';
+    let isLiffReady = false;
+    let canShareTarget = false;
+
+    const DATA_PRESETS = {
+      'all': {
+        title: '📢 แจ้งเตือนบันทึกชั่วโมงความดีจิตอาสา 2569',
+        body: 'เรียน นพอ. ทุกชั้นปี (ปี 1 - 4)\n\n📊 จากการตรวจสอบระบบ พบว่ายังมี นพอ. จำนวน 239 นาย ที่ยังไม่มีชั่วโมงความดีในเทอมนี้:\n• ปี 1 (รุ่น 69): ยังไม่บันทึก 49 นาย\n• ปี 2 (รุ่น 68): ยังไม่บันทึก 64 นาย\n• ปี 3 (รุ่น 67): ยังไม่บันทึก 62 นาย\n• ปี 4 (รุ่น 66): ยังไม่บันทึก 64 นาย\n\n🎯 ขอให้นักเรียนทุกนายเข้าร่วมกิจกรรมจิตอาสาและบันทึกความดีให้ครบตามเกณฑ์ 50 ชม./ปีการศึกษาครับ',
+        altText: '📢 ประกาศแจ้งเตือน นพอ. ทุกชั้นปีที่ยังไม่มีชั่วโมงความดีจิตอาสา (239 นาย)'
+      },
+      '69': {
+        title: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 1 (รุ่น 69)',
+        body: 'เรียน นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 1 (รุ่น 69)\n\n📊 ตรวจสอบพบว่ายังมี นพอ. จำนวน 49 นาย ที่ยังไม่ได้เริ่มบันทึกชั่วโมงความดีในภาคเรียนที่ 1/2569 (บันทึกแล้ว 15 นาย)\n\n🎯 เกณฑ์ขั้นต่ำ: 50 ชั่วโมง/ปีการศึกษา\n⏱ ขอให้นักเรียนทยอยเข้าร่วมกิจกรรมและส่งบันทึกความดีเข้าสู่ระบบได้เลยครับ',
+        altText: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 1 (รุ่น 69) ที่ยังไม่มีชั่วโมงความดี'
+      },
+      '68': {
+        title: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 2 (รุ่น 68)',
+        body: 'เรียน นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 2 (รุ่น 68)\n\n📊 ตรวจสอบพบว่า นพอ. ชั้นปีที่ 2 ทั้ง 64 นาย ยังไม่มีการบันทึกชั่วโมงความดีของปีการศึกษา 2569 ในระบบ\n\n🎯 เกณฑ์ขั้นต่ำ: 50 ชั่วโมง/ปีการศึกษา\n⏱ ขอให้นักเรียนเริ่มส่งบันทึกความดีและแนบภาพหลักฐานผ่านระบบออนไลน์ได้เลยครับ',
+        altText: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 2 (รุ่น 68) เริ่มบันทึกความดี 2569'
+      },
+      '67': {
+        title: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 3 (รุ่น 67)',
+        body: 'เรียน นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 3 (รุ่น 67)\n\n📊 ตรวจสอบพบว่ายังมี นพอ. จำนวน 62 นาย ที่ยังไม่มีชั่วโมงความดีในภาคเรียนที่ 1/2569 (บันทึกแล้ว 2 นาย)\n\n🎯 เกณฑ์ขั้นต่ำ: 50 ชั่วโมง/ปีการศึกษา\n⏱ ขอให้นักเรียนเร่งสะสมกิจกรรมจิตอาสาและส่งบันทึกความดีในระบบครับ',
+        altText: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 3 (รุ่น 67) ที่ยังไม่มีชั่วโมงความดี'
+      },
+      '66': {
+        title: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 4 (รุ่น 66)',
+        body: 'เรียน นักเรียนพยาบาลทหารอากาศ ชั้นปีที่ 4 (รุ่น 66)\n\n📊 ตรวจสอบพบว่า นพอ. ชั้นปีที่ 4 ทั้ง 64 นาย ยังไม่มีการบันทึกชั่วโมงความดีของปีการศึกษา 2569\n\n🎯 เกณฑ์ขั้นต่ำ: 50 ชั่วโมง/ปีการศึกษา (ข้อบังคับก่อนสำเร็จการศึกษา)\n⏱ ขอให้นักเรียนเร่งดำเนินการบันทึกความดีผ่านระบบออนไลน์ให้ครบถ้วนครับ',
+        altText: '📢 แจ้งเตือน นพอ. ชั้นปีที่ 4 (รุ่น 66) เริ่มบันทึกความดี 2569'
+      }
+    };
+
+    function updateMessage() {
+      const key = document.getElementById('target-select').value;
+      const data = DATA_PRESETS[key];
+      document.getElementById('preview-title').textContent = data.title;
+      document.getElementById('preview-body').textContent = data.body;
+    }
+
+    async function initLiff() {
+      const badge = document.getElementById('liff-status-badge');
+      try {
+        await liff.init({ liffId: LIFF_ID });
+        isLiffReady = true;
+        if (!liff.isLoggedIn()) {
+          badge.textContent = '🟢 พร้อมใช้งาน (กดแชร์เพื่อล็อกอิน)';
+          badge.className = 'status-pill status-ok';
+        } else {
+          canShareTarget = liff.isApiAvailable('shareTargetPicker');
+          badge.textContent = canShareTarget ? '🟢 LINE LIFF พร้อมส่งเข้ากลุ่มได้ทันที' : '🟡 LINE LIFF เชื่อมต่อแล้ว';
+          badge.className = 'status-pill status-ok';
+        }
+      } catch (err) {
+        console.warn('LIFF init warning:', err);
+        badge.textContent = '⚪ โหมดเว็บทั่วไป (คัดลอกข้อความได้)';
+        badge.className = 'status-pill status-warn';
+      }
+    }
+
+    function buildFlexPayload() {
+      const key = document.getElementById('target-select').value;
+      const data = DATA_PRESETS[key];
+      const webUrl = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html';
+
+      return {
+        type: "flex",
+        altText: data.altText,
+        contents: {
+          type: "bubble",
+          size: "mega",
+          header: {
+            type: "box",
+            layout: "vertical",
+            backgroundColor: "#0a192f",
+            paddingAll: "20px",
+            contents: [
+              { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
+              { type: "text", text: data.title, color: "#ffffff", size: "md", weight: "bold", margin: "xs", wrap: true }
+            ]
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: data.body, size: "sm", color: "#1e293b", wrap: true },
+              { type: "separator", margin: "lg" },
+              {
+                type: "box",
+                layout: "horizontal",
+                margin: "lg",
+                contents: [
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      { type: "text", text: "เกณฑ์ขั้นต่ำ", size: "xs", color: "#888888" },
+                      { type: "text", text: "50 ชม.", size: "lg", weight: "bold", color: "#c9a227" }
+                    ]
+                  },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    alignItems: "flex-end",
+                    contents: [
+                      { type: "text", text: "ปีการศึกษา", size: "xs", color: "#888888" },
+                      { type: "text", text: "2569", size: "sm", weight: "bold", color: "#0a192f" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: "📝 บันทึกความดีออนไลน์ทันที",
+                  uri: webUrl
+                },
+                style: "primary",
+                color: "#0a192f"
+              }
+            ]
+          }
+        }
+      };
+    }
+
+    async function handleShareToLine() {
+      const btn = document.getElementById('btn-share');
+      btn.disabled = true;
+      btn.innerHTML = '⏳ กำลังเปิดรายชื่อกลุ่ม LINE...';
+
+      if (!isLiffReady) {
+        try { await liff.init({ liffId: LIFF_ID }); isLiffReady = true; } catch (e) {}
+      }
+
+      if (!liff.isLoggedIn()) {
+        liff.login({ redirectUri: window.location.href });
+        return;
+      }
+
+      try {
+        if (liff.isApiAvailable('shareTargetPicker')) {
+          const flexPayload = buildFlexPayload();
+          const res = await liff.shareTargetPicker([flexPayload]);
+          if (res) {
+            alert('🎉 ส่งการ์ดแจ้งเตือนเข้ากลุ่ม LINE เรียบร้อยแล้ว!');
+          }
+        } else {
+          alert('อุปกรณ์นี้ยังไม่รองรับการแชร์เข้ากลุ่มโดยตรง ระบบจะคัดลอกข้อความให้แทนครับ');
+          copyTextMessage();
+        }
+      } catch (err) {
+        console.error('Share error:', err);
+        alert('เกิดข้อผิดพลาด: ' + err.message + '\n\nท่านสามารถกดปุ่มคัดลอกข้อความเพื่อนำไปวางในกลุ่มได้ทันทีครับ');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>📲</span><span>เลือกกลุ่ม LINE และส่งทันที (ฟรี)</span>';
+      }
+    }
+
+    function copyTextMessage() {
+      const key = document.getElementById('target-select').value;
+      const data = DATA_PRESETS[key];
+      const textToCopy = `📢 ${data.title}\nวิทยาลัยพยาบาลทหารอากาศ\n━━━━━━━━━━━━━━━━━━━━\n${data.body}\n\n📲 เข้าสู่ระบบบันทึกความดี:\nhttps://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html`;
+
+      navigator.clipboard.writeText(textToCopy).then(() => {
+        alert('📋 คัดลอกข้อความเรียบร้อยแล้ว!\nสามารถนำไปกดวาง (Paste) ส่งในกลุ่ม LINE ได้ทันทีครับ');
+      }).catch(() => {
+        prompt('กรุณาคัดลอกข้อความด้านล่างนี้:', textToCopy);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateMessage();
+      initLiff();
+    });
+  </script>
+</body>
+</html>

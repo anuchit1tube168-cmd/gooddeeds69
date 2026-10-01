@@ -713,6 +713,9 @@
             <button class="btn btn-primary w-full" id="btn-broadcast-submit" onclick="executeLineBroadcast()" style="background:#06c755; border-color:#06c755; font-size:1.05rem; padding:12px; font-weight:700;">
               🚀 ยืนยันส่งข้อความ LINE ทันที
             </button>
+            <button class="btn w-full" id="btn-share-target" onclick="shareBroadcastToLineGroups()" style="background:#00b900; color:#fff; font-size:1.05rem; padding:12px; font-weight:700; margin-top:10px; display:flex; align-items:center; justify-content:center; gap:8px;">
+              📲 ส่งเข้า "LINE กลุ่มชั้นปี" (เลือกกลุ่มได้ฟรี ไม่เสียโควต้า)
+            </button>
           </div>
 
           <!-- Live Flex Preview -->
@@ -2053,6 +2056,91 @@
       } finally {
         btn.disabled = false;
         btn.innerHTML = '🚀 ยืนยันส่งข้อความ LINE ทันที';
+      }
+    }
+
+    async function shareBroadcastToLineGroups() {
+      const title = (document.getElementById('broadcast-title')?.value || '📢 แจ้งเตือนบันทึกชั่วโมงความดี').trim();
+      const body = (document.getElementById('broadcast-body')?.value || '').trim();
+      const btnText = (document.getElementById('broadcast-btn-text')?.value || '📝 บันทึกความดีออนไลน์').trim();
+      const btnUrl = (document.getElementById('broadcast-btn-url')?.value || 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html').trim();
+
+      const flexPayload = {
+        type: "flex",
+        altText: `📢 ${title}`,
+        contents: {
+          type: "bubble",
+          size: "mega",
+          header: {
+            type: "box",
+            layout: "vertical",
+            backgroundColor: "#0a192f",
+            paddingAll: "20px",
+            contents: [
+              { type: "text", text: "วิทยาลัยพยาบาลทหารอากาศ", color: "#c9a227", size: "xs", weight: "bold" },
+              { type: "text", text: title, color: "#ffffff", size: "md", weight: "bold", margin: "xs", wrap: true }
+            ]
+          },
+          body: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              { type: "text", text: body, size: "sm", color: "#111111", wrap: true },
+              { type: "separator", margin: "lg" },
+              {
+                type: "box",
+                layout: "horizontal",
+                margin: "lg",
+                contents: [
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    contents: [
+                      { type: "text", text: "เกณฑ์ขั้นต่ำ", size: "xs", color: "#888888" },
+                      { type: "text", text: "50 ชม.", size: "lg", weight: "bold", color: "#c9a227" }
+                    ]
+                  },
+                  {
+                    type: "box",
+                    layout: "vertical",
+                    alignItems: "flex-end",
+                    contents: [
+                      { type: "text", text: "ปีการศึกษา", size: "xs", color: "#888888" },
+                      { type: "text", text: "2569", size: "sm", weight: "bold", color: "#0a192f" }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          footer: {
+            type: "box",
+            layout: "vertical",
+            contents: [
+              {
+                type: "button",
+                action: {
+                  type: "uri",
+                  label: btnText,
+                  uri: btnUrl
+                },
+                style: "primary",
+                color: "#0a192f"
+              }
+            ]
+          }
+        }
+      };
+
+      if (typeof liff !== 'undefined' && liff.isApiAvailable && liff.isApiAvailable('shareTargetPicker')) {
+        try {
+          const res = await liff.shareTargetPicker([flexPayload]);
+          if (res) showToast('🎉 ส่งการ์ดเข้ากลุ่ม LINE สำเร็จเรียบร้อยแล้ว!', 'success');
+        } catch (err) {
+          showToast('เกิดข้อผิดพลาดในการแชร์: ' + err.message, 'error');
+        }
+      } else {
+        window.open('share_alert.html', '_blank');
       }
     }
 
