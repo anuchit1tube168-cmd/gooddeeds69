@@ -73,7 +73,7 @@ def call_telegram(method, payload):
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(url, data=data, headers={'Content-Type': 'application/json'})
     try:
-        with urllib.request.urlopen(req, timeout=15, context=SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=25, context=SSL_CTX) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ Telegram API {method} error: {e}")
@@ -84,7 +84,7 @@ def forward_to_gas(payload):
     data = json.dumps(payload).encode('utf-8')
     req = urllib.request.Request(GAS_URL, data=data, headers={'Content-Type': 'application/json'})
     try:
-        with urllib.request.urlopen(req, timeout=20, context=SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=30, context=SSL_CTX) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ GAS API forward error: {e}")
@@ -95,7 +95,7 @@ def gas_get(query):
     url = f"{GAS_URL}?{query}"
     req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
     try:
-        with urllib.request.urlopen(req, timeout=20, context=SSL_CTX) as resp:
+        with urllib.request.urlopen(req, timeout=30, context=SSL_CTX) as resp:
             return json.loads(resp.read().decode('utf-8'))
     except Exception as e:
         print(f"⚠️ GAS GET error: {e}")
@@ -599,7 +599,7 @@ def telegram_listener_loop():
         try:
             updates_res = call_telegram('getUpdates', {
                 'offset': offset,
-                'timeout': 10,
+                'timeout': 15,
                 'allowed_updates': ['callback_query', 'message']
             })
             if updates_res and updates_res.get('ok'):
@@ -607,18 +607,18 @@ def telegram_listener_loop():
                     offset = u['update_id'] + 1
                     if 'callback_query' in u:
                         threading.Thread(target=process_callback_query, args=(u['callback_query'],), daemon=True).start()
-            time.sleep(0.2)
+            time.sleep(1.0)
         except Exception:
-            time.sleep(2.0)
+            time.sleep(5.0)
 
 def deed_monitor_loop():
     """เฝ้าตรวจหารายการความดีใหม่จาก GAS"""
     while True:
         try:
             poll_new_deeds()
-            time.sleep(4.0)
+            time.sleep(6.0)
         except Exception:
-            time.sleep(3.0)
+            time.sleep(6.0)
 
 def run_polling():
     """รันโหมด Multi-threaded Polling เพื่อรับการกดปุ่มแบบ Instant และตรวจจับรายการใหม่"""

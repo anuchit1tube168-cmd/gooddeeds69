@@ -1234,7 +1234,7 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 try:
                     notify_deed_submission_line(student_id, deed_data)
                 except Exception as _ne:
-                    pass
+                    print(f"⚠️ LINE notification failed for {student_id}: {_ne}")
                 threading.Thread(target=notify_deed_submission_telegram, args=(deed_data,), daemon=True).start()
             except Exception as e:
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})

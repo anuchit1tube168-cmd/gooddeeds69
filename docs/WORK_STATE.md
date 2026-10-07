@@ -139,5 +139,19 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - PDPA: 100% PASS (all photos, `photos.json`, and `students_photos.js` strictly ignored in `.gitignore`, 0 student photos in git tracking).
   - Tests: 153/153 JS + 23/23 Python = 176/176 tests PASS.
 
-
-
+## Online Notification Fix & Telegram Bridge Restoration — 2026-10-07
+- User Request: "ตรวจ สอบ ว่าทำไมออนไลนไม่แจ้งเตือนเมื่อคนกรอกความดี" / "อับให้ใช้งานได้เลย" / "ทำต่อ"
+- Root Cause Identified:
+  1. `backend/server.py` daemon was not running on port 3000, which halted `live_telegram_bridge.py`. GAS lacks external network authorization to hit Telegram directly, so the bridge is the required mechanism to poll pending deeds and dispatch interactive cards to Telegram.
+  2. Submissions pending in Google Sheets were waiting for the bridge process to notify.
+  3. `backend/server.py` silently swallowed LINE notification errors with `pass` without logging.
+  4. Network jitter caused rapid timeouts in bridge loops; adjusted timeouts (25-30s) and sleep backoff (6s monitor, 1s listener) in `scripts/live_telegram_bridge.py`.
+- Execution & Restoration:
+  - Fixed silent swallowing in `server.py` to log LINE errors explicitly.
+  - Restarted `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` in daemon mode.
+  - Verified Live Telegram Bridge: Bot connectivity OK (`@rtafnc_gooddeed_2569_bot`), successfully picked up and pushed pending deeds with official slip photos to Telegram group `-4839151586`.
+- Verification & Test Suite:
+  - Syntax check: 100% PASS
+  - JavaScript tests: 153/153 PASS
+  - Python tests: 23/23 PASS (total 176/176 tests PASS)
+  - PDPA & Security Compliance: 100% PASS (0 PII tracked in git)
