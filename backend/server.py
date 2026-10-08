@@ -40,13 +40,17 @@ except ImportError as e:
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 FRONTEND_DIR = os.path.join(BASE_DIR, 'frontend')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
-GDRIVE_DEST = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
+GDRIVE_DEST = os.path.expanduser(os.environ.get('GOODDEEDS_GDRIVE_DEST', ''))
+
+def production_writes_enabled():
+    """Fail closed unless an operator explicitly enables backend writes."""
+    return os.environ.get('PRODUCTION_WRITE_ENABLED', '').strip().lower() == 'true'
 
 def sync_to_google_drive_bg():
     """Sync data folder to Google Drive in background thread."""
     def run_sync():
         try:
-            if os.path.exists(os.path.dirname(GDRIVE_DEST)):
+            if GDRIVE_DEST and os.path.exists(os.path.dirname(GDRIVE_DEST)):
                 os.makedirs(GDRIVE_DEST, exist_ok=True)
                 import subprocess
                 subprocess.run([
@@ -674,6 +678,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
         if parsed_path.query:
             query_params = {k: v[0] for k, v in parse_qs(parsed_path.query).items()}
             
+        if parsed_path.path == '/api/health':
+            self.send_json_response(200, {
+                'status': 'ok',
+                'service': 'rtafnc-gooddeeds',
+                'productionWriteEnabled': production_writes_enabled(),
+            })
+            return
+
         if parsed_path.path == '/api/get_student':
             student_id = query_params.get('studentId')
             if not student_id:
@@ -834,6 +846,14 @@ class CustomHandler(SimpleHTTPRequestHandler):
 
     def do_POST(self):
         parsed_path = urlparse(self.path)
+
+        if not production_writes_enabled():
+            self.send_json_response(503, {
+                'status': 'error',
+                'code': 'PRODUCTION_WRITE_DISABLED',
+                'message': 'Production writes are disabled',
+            })
+            return
         
         if parsed_path.path == '/api/submit_deed':
             content_length = int(self.headers.get('Content-Length', 0))

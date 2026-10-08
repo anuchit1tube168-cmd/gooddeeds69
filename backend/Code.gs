@@ -16,11 +16,18 @@ const CONFIG = {
   MIN_HOURS_YEAR: 50,
   MAX_HOURS_SCALE: 400,
   ACADEMIC_YEAR: 2569,
-  DEFAULT_DRIVE_FOLDER_ID: '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx',
-  TELEGRAM_TOKEN: '8087838067:AAGld1ygsrvnyc6hDX02sGxyDOZwQbyRU0s',
-  TELEGRAM_CHAT_ID: '-4839151586',
   FRONTEND_URL: 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
 };
+
+function getRequiredScriptProperty(name) {
+  const value = PropertiesService.getScriptProperties().getProperty(name);
+  if (!value) throw new Error('Missing required Script Property: ' + name);
+  return value;
+}
+
+function productionWritesEnabled() {
+  return PropertiesService.getScriptProperties().getProperty('PRODUCTION_WRITE_ENABLED') === 'true';
+}
 
 const SHEETS = {
   STUDENTS: 'Main_2569',
@@ -71,6 +78,7 @@ function doGet(e) {
       return jsonResponse({
         status: 'success',
         message: 'GoodDeeds 69 Cloud Engine Active 🟢',
+        productionWriteEnabled: productionWritesEnabled(),
         time: new Date().toISOString()
       });
     }
@@ -91,6 +99,13 @@ function doGet(e) {
 }
 
 function doPost(e) {
+  if (!productionWritesEnabled()) {
+    return jsonResponse({
+      status: 'error',
+      code: 'PRODUCTION_WRITE_DISABLED',
+      message: 'Production writes are disabled'
+    });
+  }
   if (!e || !e.postData || !e.postData.contents) {
     return jsonResponse({ status: 'error', message: 'No post data received' });
   }
@@ -338,7 +353,7 @@ function updateMasterStudentHours(studentId, catId, addedHours) {
 
 // ==================== IMAGE UPLOAD (GOOGLE DRIVE) ====================
 function uploadImage(data) {
-  const mainFolderId = data.folderId || CONFIG.DEFAULT_DRIVE_FOLDER_ID;
+  const mainFolderId = data.folderId || getRequiredScriptProperty('DRIVE_FOLDER_ID');
   let base64 = data.base64 || '';
   const filename = data.filename || 'evidence_' + Date.now() + '.jpg';
   const mimeType = data.mimeType || 'image/jpeg';
@@ -376,7 +391,7 @@ function notifyTelegramNewDeed(d) {
   const text = `📋 <b>มีบันทึกความดีใหม่รอการอนุมัติ (วพอ. 2569)</b>\n━━━━━━━━━━━━━━━━━━━━━━━\n👤 <b>นักเรียน:</b> ${d.studentName}\n🎫 <b>รหัส นพอ.:</b> <code>${d.studentId}</code> | รุ่น ${d.classYear}\n📂 <b>หมวดที่ ${d.category}</b>\n⏱ <b>จำนวน:</b> ${d.hours} ชั่วโมง\n📅 <b>วันที่:</b> ${d.date}\n📍 <b>สถานที่:</b> ${d.location}\n📝 <b>รายละเอียด:</b> ${d.desc}\n\n👩‍🏫 <b>เสนอตรวจโดย:</b> ${d.approver}\n━━━━━━━━━━━━━━━━━━━━━━━\n<i>กรุณาตรวจสอบและกดอนุมัติหรือลงนามด้านล่าง:</i>`;
 
   const payload = {
-    chat_id: CONFIG.TELEGRAM_CHAT_ID,
+    chat_id: getRequiredScriptProperty('TELEGRAM_CHAT_ID'),
     text: text,
     parse_mode: 'HTML',
     reply_markup: {
@@ -393,7 +408,7 @@ function notifyTelegramNewDeed(d) {
     }
   };
 
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/sendMessage`, {
+  UrlFetchApp.fetch(`https://api.telegram.org/bot${getRequiredScriptProperty('TELEGRAM_TOKEN')}/sendMessage`, {
     method: 'post',
     contentType: 'application/json',
     payload: JSON.stringify(payload)
@@ -415,7 +430,7 @@ function handleTelegramCallback(cb) {
   const approver = cb.from ? `${cb.from.first_name} ${cb.from.last_name || ''}`.trim() : 'อาจารย์ใน Telegram';
 
   // 1. Answer Telegram Alert
-  UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/answerCallbackQuery`, {
+  UrlFetchApp.fetch(`https://api.telegram.org/bot${getRequiredScriptProperty('TELEGRAM_TOKEN')}/answerCallbackQuery`, {
     method: 'post',
     contentType: 'application/json',
     payload: JSON.stringify({
@@ -436,7 +451,7 @@ function handleTelegramCallback(cb) {
   // 3. Edit Telegram Buttons
   if (message) {
     const slipUrl = `${CONFIG.FRONTEND_URL}/deed_slip.html?id=${deedId}&studentId=${studentId}`;
-    UrlFetchApp.fetch(`https://api.telegram.org/bot${CONFIG.TELEGRAM_TOKEN}/editMessageReplyMarkup`, {
+    UrlFetchApp.fetch(`https://api.telegram.org/bot${getRequiredScriptProperty('TELEGRAM_TOKEN')}/editMessageReplyMarkup`, {
       method: 'post',
       contentType: 'application/json',
       payload: JSON.stringify({
