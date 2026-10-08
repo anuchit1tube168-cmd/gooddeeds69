@@ -1,0 +1,9 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/frontend/photos/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/frontend/data/*
+  Cache-Control: public, max-age=60, stale-while-revalidate=300
