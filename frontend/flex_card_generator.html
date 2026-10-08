@@ -889,8 +889,16 @@
             ctx.fillText(line, x, y);
         }
 
-        // Initialize preview
-        window.addEventListener('DOMContentLoaded', applyPreset);
+        // Initialize preview with student guard
+        window.addEventListener('DOMContentLoaded', () => {
+            const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+            if (u && u.role === 'student') {
+                alert('⚠️ หน้านี้สำหรับอาจารย์ผู้ดูแลระบบเท่านั้น');
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+            applyPreset();
+        });
     </script>
 </body>
 

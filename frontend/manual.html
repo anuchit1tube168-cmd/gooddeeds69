@@ -573,7 +573,7 @@
                 <button class="m-tab-btn" onclick="switchTab('faq', this)">
                     <span>❓</span> คำถามพบบ่อย (FAQ)
                 </button>
-                <a href="flex_card_generator.html" class="m-tab-btn" style="border-color:#06C755;color:#06C755;text-decoration:none;">
+                <a href="flex_card_generator.html" id="btn-flex-card-gen" class="m-tab-btn" style="border-color:#06C755;color:#06C755;text-decoration:none;display:none;">
                     <span>📣</span> สร้าง LINE Flex &amp; บัตร PNG
                 </a>
             </div>
@@ -1419,6 +1419,10 @@
                 const avEl = document.getElementById("nav-avatar");
                 if (nameEl) nameEl.textContent = (user.rank || "") + " " + (user.first_name || "นักเรียน");
                 if (avEl) avEl.textContent = (user.first_name || "?")[0];
+
+                const isVerifiedStaff = (user.role === 'teacher' || user.role === 'admin') && user.token && user.token.startsWith('teacher_');
+                const flexBtn = document.getElementById("btn-flex-card-gen");
+                if (flexBtn && isVerifiedStaff) flexBtn.style.display = "inline-flex";
             }
 
             const hash = (window.location.hash || "").replace("#", "");

@@ -653,6 +653,14 @@
         }
 
         async function loadDeedData() {
+            // Strict role guard: Students can NEVER access approve_sign.html
+            const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+            if (u && u.role === 'student') {
+                alert('⚠️ หน้านี้สำหรับอาจารย์ผู้ตรวจประเมินเท่านั้น นักเรียนไม่สามารถเข้าถึงได้');
+                window.location.href = 'student-dashboard.html';
+                return;
+            }
+
             const params = new URLSearchParams(window.location.search);
             const deedId = params.get('id');
             const studentId = params.get('studentId');

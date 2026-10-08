@@ -148,8 +148,16 @@
   <script src="app.js?v=20260921-online-active"></script>
     <script>
         function init() {
-            const currentUser = App.requireAuth(['admin']);
-            if (!currentUser) return;
+            const currentUser = App.getCurrentUser();
+            const isVerifiedAdmin = currentUser && currentUser.role === 'admin' && currentUser.token && currentUser.token.startsWith('teacher_');
+            if (!isVerifiedAdmin) {
+                if (currentUser && currentUser.role === 'student') {
+                    window.location.href = 'student-dashboard.html';
+                    return;
+                }
+                window.location.href = 'index.html?tab=teacher';
+                return;
+            }
             const settings = { ...App.getSettings() };
             // Remove browser-resident provider credentials left by older releases.
             delete settings.telegramToken;

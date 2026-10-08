@@ -461,6 +461,12 @@
     }
 
     window.addEventListener('DOMContentLoaded', () => {
+      const u = (typeof localStorage !== 'undefined') ? JSON.parse(localStorage.getItem('gooddeeds_session') || '{}') : {};
+      if (u && u.role === 'student') {
+        alert('⚠️ หน้านี้สำหรับอาจารย์ผู้ดูแลระบบเท่านั้น');
+        window.location.href = 'student-dashboard.html';
+        return;
+      }
       updateMessage();
       initLiff();
     });

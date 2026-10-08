@@ -565,7 +565,7 @@
     <select class="ctrl-select" id="student-select" style="display:none" onchange="renderReport()">
       <option value="">— เลือกนักเรียน —</option>
     </select>
-    <a href="teacher-dashboard.html" class="btn-back">← กลับ</a>
+    <a href="student-dashboard.html" class="btn-back" id="btn-back-link">← กลับ</a>
     <button class="btn-print" onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button>
   </div>
 </div>
@@ -1122,11 +1122,30 @@ document.addEventListener('DOMContentLoaded', async () => {
   const pType = params.get('type');
   const pStudentId = params.get('studentId');
   
-  if (user.role === 'student') {
-    document.getElementById('student-select').value = user.student_id;
+  const isVerifiedStaff = (user.role === 'teacher' || user.role === 'admin') && user.token && user.token.startsWith('teacher_');
+
+  if (!isVerifiedStaff) {
+    // Strictly scope for students and unverified visitors
+    const backBtn = document.getElementById('btn-back-link');
+    if (backBtn) backBtn.href = 'student-dashboard.html';
+
+    const reportTypeSelect = document.getElementById('report-type');
+    if (reportTypeSelect) {
+      reportTypeSelect.innerHTML = `
+        <option value="individual">👤 รายงานสรุปรายบุคคล</option>
+        <option value="cert">🎓 ใบประกาศรายบุคคล</option>
+      `;
+    }
+
+    if (user.student_id) {
+      document.getElementById('student-select').value = user.student_id;
+    }
     document.getElementById('report-type').value = pType === 'cert' ? 'cert' : 'individual';
     document.getElementById('student-select').disabled = true;
   } else {
+    const backBtn = document.getElementById('btn-back-link');
+    if (backBtn) backBtn.href = 'teacher-dashboard.html';
+
     if (pType) {
       document.getElementById('report-type').value = pType;
     }
