@@ -976,11 +976,21 @@
                     });
                     window.location.href = 'deed_slip.html?' + slipParams.toString();
                 } else {
-                    window.location.href = 'teacher-dashboard.html';
+                    const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+                    if (u && (u.role === 'teacher' || u.role === 'admin')) {
+                        window.location.href = 'teacher-dashboard.html';
+                    } else {
+                        window.location.href = 'student-dashboard.html';
+                    }
                 }
             } else {
                 alert('ดำเนินการสำเร็จ');
-                window.location.href = 'teacher-dashboard.html';
+                const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+                if (u && (u.role === 'teacher' || u.role === 'admin')) {
+                    window.location.href = 'teacher-dashboard.html';
+                } else {
+                    window.location.href = 'student-dashboard.html';
+                }
             }
         }
 

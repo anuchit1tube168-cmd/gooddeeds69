@@ -831,16 +831,12 @@
       try {
         let currentUser = App.getCurrentUser();
         if (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'admin')) {
-          currentUser = {
-            role: 'admin',
-            username: 'anuchit',
-            name: 'ร.อ.อนุชิต ทำจะดี (Bird)',
-            isAdmin: true,
-            isTeacher: true,
-            title: 'นายทหารฝ่ายปกครอง / อาจารย์ผู้ตรวจ & แอดมิน'
-          };
-          if (App.setSession) App.setSession('admin', currentUser);
-          else Storage.set('session', currentUser);
+          if (currentUser && currentUser.role === 'student') {
+            window.location.href = 'student-dashboard.html';
+            return;
+          }
+          window.location.href = 'index.html?tab=teacher';
+          return;
         }
         teacher = currentUser;
         
