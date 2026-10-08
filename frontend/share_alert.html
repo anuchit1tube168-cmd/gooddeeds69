@@ -411,17 +411,22 @@
     async function handleShareToLine() {
       const btn = document.getElementById('btn-share');
       btn.disabled = true;
-      btn.innerHTML = '⏳ กำลังเปิดรายชื่อกลุ่ม LINE...';
+      btn.innerHTML = '⏳ กำลังเตรียมการแชร์...';
 
       if (!isLiffReady) {
         try { await liff.init({ liffId: LIFF_ID }); isLiffReady = true; } catch (e) {}
       }
 
-      if (!liff.isLoggedIn()) {
-        liff.login({ redirectUri: window.location.href });
+      // If opened outside the LINE app (e.g. Chrome on Mac/PC or external browser)
+      if (typeof liff === 'undefined' || !liff.isInClient || !liff.isInClient()) {
+        copyTextMessage();
+        alert('💡 ท่านกำลังเปิดบนเบราว์เซอร์คอมพิวเตอร์ (ไม่ใช่ในแอป LINE บนมือถือ)\n\nระบบได้ "คัดลอกข้อความสรุปพร้อมลิงก์" ให้เรียบร้อยแล้วครับ!\nท่านสามารถเปิดแอป LINE ในคอม แล้วกดวาง (Paste) ส่งเข้ากลุ่มได้ทันทีครับ');
+        btn.disabled = false;
+        btn.innerHTML = '<span>📲</span><span>เลือกกลุ่ม LINE และส่งทันที (ฟรี)</span>';
         return;
       }
 
+      // Inside LINE App on mobile
       try {
         if (liff.isApiAvailable('shareTargetPicker')) {
           const flexPayload = buildFlexPayload();
@@ -430,12 +435,13 @@
             alert('🎉 ส่งการ์ดแจ้งเตือนเข้ากลุ่ม LINE เรียบร้อยแล้ว!');
           }
         } else {
-          alert('อุปกรณ์นี้ยังไม่รองรับการแชร์เข้ากลุ่มโดยตรง ระบบจะคัดลอกข้อความให้แทนครับ');
           copyTextMessage();
+          alert('💡 บัญชี LINE นี้ยังไม่ได้เปิดฟังก์ชัน Share Target Picker\nระบบได้คัดลอกข้อความให้แล้ว สามารถกดวางในกลุ่มได้ทันทีครับ');
         }
       } catch (err) {
         console.error('Share error:', err);
-        alert('เกิดข้อผิดพลาด: ' + err.message + '\n\nท่านสามารถกดปุ่มคัดลอกข้อความเพื่อนำไปวางในกลุ่มได้ทันทีครับ');
+        copyTextMessage();
+        alert('เกิดข้อผิดพลาดในการแชร์: ' + err.message + '\n\nระบบได้คัดลอกข้อความให้แล้ว ท่านสามารถนำไปวางในกลุ่มได้ทันทีครับ');
       } finally {
         btn.disabled = false;
         btn.innerHTML = '<span>📲</span><span>เลือกกลุ่ม LINE และส่งทันที (ฟรี)</span>';
