@@ -830,7 +830,20 @@
     async function init() {
       try {
         let currentUser = App.getCurrentUser();
-        if (!currentUser || (currentUser.role !== 'teacher' && currentUser.role !== 'admin')) {
+        
+        // Strict Role & Token Verification:
+        // Must have verified staff role AND a genuine teacher token from actual login.
+        const isVerifiedStaff = currentUser && 
+          (currentUser.role === 'teacher' || currentUser.role === 'admin') && 
+          currentUser.token && 
+          currentUser.token.startsWith('teacher_');
+
+        if (!isVerifiedStaff) {
+          // If session was tainted with a legacy admin session without token, purge it immediately
+          if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'teacher') && (!currentUser.token || !currentUser.token.startsWith('teacher_'))) {
+            console.warn('⚠️ Purging tainted unauthenticated admin session');
+            Storage.remove('session');
+          }
           if (currentUser && currentUser.role === 'student') {
             window.location.href = 'student-dashboard.html';
             return;

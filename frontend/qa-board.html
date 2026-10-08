@@ -374,18 +374,18 @@
                 </div>
                 <button class="sidebar-close" onclick="toggleSidebar()">✕</button>
             </div>
-            <div class="sidebar-menu">
+            <div class="sidebar-menu" id="sidebar-menu">
                 <div class="sidebar-section"><span class="sidebar-label">เมนูหลัก</span></div>
-                <a href="student-dashboard.html" class="sidebar-item"><span class="icon">🏠</span> หน้าหลักนักเรียน</a>
-                <a href="teacher-dashboard.html" class="sidebar-item"><span class="icon">👩‍🏫</span> แดชบอร์ดอาจารย์</a>
-                <a href="submit-deed.html" class="sidebar-item"><span class="icon">✍️</span> บันทึกความดี</a>
-                <a href="history.html" class="sidebar-item"><span class="icon">📋</span> ประวัติความดี</a>
+                <a href="student-dashboard.html" class="sidebar-item" id="sidebar-student-link"><span class="icon">🏠</span> หน้าหลักนักเรียน</a>
+                <a href="teacher-dashboard.html" class="sidebar-item" id="sidebar-teacher-link" style="display:none;"><span class="icon">👩‍🏫</span> แดชบอร์ดอาจารย์</a>
+                <a href="submit-deed.html" class="sidebar-item" id="sidebar-submit-link"><span class="icon">✍️</span> บันทึกความดี</a>
+                <a href="history.html" class="sidebar-item" id="sidebar-history-link"><span class="icon">📋</span> ประวัติความดี</a>
                 <a href="qa-board.html" class="sidebar-item active"><span class="icon">💬</span> กระดานถาม-ตอบ</a>
                 <a href="manual.html" class="sidebar-item"><span class="icon">📖</span> คู่มือ &amp; เกณฑ์ความดี</a>
                 <a href="ranking.html" class="sidebar-item"><span class="icon">🏆</span> จัดอันดับ &amp; สถิติ</a>
-                <a href="view_cards.html" class="sidebar-item"><span class="icon">💳</span> คอลเลกชันบัตร</a>
+                <a href="view_cards.html" class="sidebar-item" id="sidebar-cards-link"><span class="icon">💳</span> คอลเลกชันบัตร</a>
                 <div class="divider" style="margin: 8px 16px;"></div>
-                <a href="profile.html" class="sidebar-item"><span class="icon">👤</span> โปรไฟล์</a>
+                <a href="profile.html" class="sidebar-item" id="sidebar-profile-link"><span class="icon">👤</span> โปรไฟล์</a>
                 <a href="#" class="sidebar-item" onclick="App.logout()"><span class="icon">🚪</span> ออกจากระบบ</a>
             </div>
             <div class="sidebar-footer">ระบบบันทึกความดี v1.1</div>
@@ -520,14 +520,40 @@
         }
 
         function isAdmin() {
-            return currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+            return currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin') && currentUser.token && currentUser.token.startsWith('teacher_');
         }
 
         function init() {
             currentUser = App.getCurrentUser();
-            // Show admin buttons
-            if (isAdmin()) {
+
+            // Self-healing: if session is a tainted admin session without token, purge it
+            if (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin') && (!currentUser.token || !currentUser.token.startsWith('teacher_'))) {
+                Storage.remove('session');
+                currentUser = null;
+            }
+
+            // Adjust sidebar links based on verified role
+            const isStaff = isAdmin();
+            const teacherLink = document.getElementById('sidebar-teacher-link');
+            const studentLink = document.getElementById('sidebar-student-link');
+            const submitLink = document.getElementById('sidebar-submit-link');
+            const historyLink = document.getElementById('sidebar-history-link');
+            const cardsLink = document.getElementById('sidebar-cards-link');
+
+            if (isStaff) {
                 document.getElementById('btn-announce').style.display = 'inline-flex';
+                if (teacherLink) teacherLink.style.display = 'flex';
+                if (studentLink) studentLink.style.display = 'none';
+                if (submitLink) submitLink.style.display = 'none';
+                if (historyLink) historyLink.style.display = 'none';
+                if (cardsLink) cardsLink.style.display = 'none';
+            } else {
+                document.getElementById('btn-announce').style.display = 'none';
+                if (teacherLink) teacherLink.style.display = 'none';
+                if (studentLink) studentLink.style.display = 'flex';
+                if (submitLink) submitLink.style.display = 'flex';
+                if (historyLink) historyLink.style.display = 'flex';
+                if (cardsLink) cardsLink.style.display = 'flex';
             }
             loadQAData();
         }

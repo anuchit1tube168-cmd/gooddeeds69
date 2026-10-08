@@ -1367,6 +1367,13 @@
         }
 
         async function init() {
+            // Self-healing: if session is a tainted admin session without teacher token, purge it
+            const rawSession = Storage.get('session');
+            if (rawSession && (rawSession.role === 'admin' || rawSession.role === 'teacher') && (!rawSession.token || !rawSession.token.startsWith('teacher_'))) {
+                console.warn('⚠️ Purging tainted admin session on student dashboard');
+                Storage.remove('session');
+            }
+
             currentUser = App.requireAuth(['student']);
             if (!currentUser) return;
 

@@ -575,9 +575,17 @@
 
             const user = !isLogout ? App.getCurrentUser() : null;
             if (user) {
-                if (user.role === 'student') window.location.href = 'student-dashboard.html';
-                else window.location.href = 'teacher-dashboard.html';
-                return;
+                // If session is a tainted admin/teacher session without token, purge it
+                if ((user.role === 'admin' || user.role === 'teacher') && (!user.token || !user.token.startsWith('teacher_'))) {
+                    console.warn('⚠️ Purging tainted admin session on login page');
+                    Storage.remove('session');
+                } else if (user.role === 'student') {
+                    window.location.href = 'student-dashboard.html';
+                    return;
+                } else {
+                    window.location.href = 'teacher-dashboard.html';
+                    return;
+                }
             }
 
             // Auto-switch to teacher/admin tab if requested in URL
