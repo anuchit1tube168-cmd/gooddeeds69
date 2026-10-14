@@ -155,3 +155,19 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - JavaScript tests: 153/153 PASS
   - Python tests: 23/23 PASS (total 176/176 tests PASS)
   - PDPA & Security Compliance: 100% PASS (0 PII tracked in git)
+
+## Online Approval & Live Telegram Bridge Restoration — 2026-10-14
+- User Request: "มีคนเข้าทำความดีแล้วไม่ได้อับเดทไหม" / "ไม่แจ้งเตื่อนที่ telegram เลยเมื่อนักเรียนกรอกแล้ว" / "อนุมัต" / "ไม่ใช่localต้องonlineตามระบบที่ทำไว้แล้วเท่านั้น" / "เปิด"
+- Investigation:
+  - Identified 24 pending deeds across 8 students (78.5 total hours) in Google Sheets `Deeds_2569`.
+  - Confirmed Telegram bridge was offline because server on port 3000 was inactive.
+  - Root cause for missing GAS direct Telegram notification confirmed: GAS lacks `UrlFetchApp` OAuth authorization (`https://www.googleapis.com/auth/script.external_request`).
+- Execution & Online Approvals:
+  - Approved all 24 pending deeds 100% online via Google Apps Script API (`action: updateDeedStatus`).
+  - Updated all 8 students' cumulative hours in authoritative `Main_2569` sheet (pending: 0, approved: 156).
+  - Synchronized local database `data/deeds.json`, `frontend/data/deeds_data.js` to 157 authentic deeds.
+  - Started Live Telegram Bridge & server on port 3000 (`ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000`) in daemon mode.
+  - Verified server HTTP 200 and live Telegram polling engine active for instant online notifications on any new submission.
+- Verification & Compliance:
+  - 153/153 JS + 23/23 Python = 176/176 tests PASS.
+  - PDPA compliance: 100% PASS (0 PII in git).
