@@ -14,6 +14,34 @@
 
 var ROOT_FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
 
+// ==================== TEST & AUTHORIZE TELEGRAM (RUN DIRECTLY IN APPS SCRIPT EDITOR) ====================
+function testAuthorizeTelegram() {
+  var p = PropertiesService.getScriptProperties();
+  var token = p.getProperty('TELEGRAM_BOT_TOKEN') || '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
+  var chatId = p.getProperty('TELEGRAM_CHAT_ID') || '-4839151586';
+
+  p.setProperty('TELEGRAM_BOT_TOKEN', token);
+  p.setProperty('TELEGRAM_CHAT_ID', chatId);
+
+  var url = 'https://api.telegram.org/bot' + token + '/sendMessage';
+  var payload = {
+    chat_id: chatId,
+    text: '🟢 <b>[ทดสอบระบบออนไลน์]</b> ได้รับการอนุญาตสิทธิ์ UrlFetchApp บน Google Apps Script สำเร็จแล้ว! ระบบพร้อมส่งแจ้งเตือนความดีแบบออนไลน์ 24 ชม. ตลอดเวลาค่ะ 🚀',
+    parse_mode: 'HTML'
+  };
+
+  var resp = UrlFetchApp.fetch(url, {
+    method: 'post',
+    contentType: 'application/json',
+    payload: JSON.stringify(payload),
+    muteHttpExceptions: true
+  });
+
+  Logger.log('HTTP Status: ' + resp.getResponseCode());
+  Logger.log('Response: ' + resp.getContentText());
+  return 'ผลการทดสอบ: ' + resp.getContentText();
+}
+
 function doGet(e) {
   var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : 'ping';
   var ss = SpreadsheetApp.getActiveSpreadsheet();
