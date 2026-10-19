@@ -179,6 +179,7 @@ function doGet(e) {
         var aDate = row[4] ? (row[4] instanceof Date ? Utilities.formatDate(row[4], 'Asia/Bangkok', 'yyyy-MM-dd') : String(row[4])) : '';
         var dDesc = String(row[5] || '');
         var dStatus = String(row[6] || 'pending');
+        if (dStatus === 'deleted') continue;
         var sDate = row[7] ? (row[7] instanceof Date ? Utilities.formatDate(row[7], 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss') : String(row[7])) : '';
         var appr = String(row[8] || '');
         var apprAt = row[9] ? (row[9] instanceof Date ? Utilities.formatDate(row[9], 'Asia/Bangkok', 'yyyy-MM-dd HH:mm:ss') : String(row[9])) : '';
@@ -351,6 +352,11 @@ function doPost(e) {
   // 3. Update Deed Status / Approve / Reject (Web & Teacher Dashboard)
   if (action === 'updateDeedStatus' || action === 'approveDeed') {
     return handleUpdateDeedStatus(params, ss);
+  }
+
+  // 3.1 Delete / Cancel Deed (Student can delete own pending/rejected; Teacher can delete any including approved with hour reversal)
+  if (action === 'delete_deed' || action === 'deleteDeed') {
+    return handleDeleteDeed(params, ss);
   }
 
   // 4. Also support getDeeds via POST
@@ -879,6 +885,8 @@ function handleUpdateDeedStatus(params, ss) {
 
       if (newStatus === 'approved' && prevStatus !== 'approved') {
         updateMasterStudentHours(ss, sid, catId, hrs);
+      } else if (prevStatus === 'approved' && (newStatus === 'deleted' || newStatus === 'rejected' || newStatus === 'cancelled')) {
+        updateMasterStudentHours(ss, sid, catId, -hrs);
       }
       updated = true;
       break;
@@ -896,6 +904,72 @@ function handleUpdateDeedStatus(params, ss) {
       deedId: deedId,
       newStatus: newStatus,
       approver: approver
+    })).setMimeType(ContentService.MimeType.JSON);
+  } else {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: 'Deed not found: ' + deedId
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+// ==================== DELETE / CANCEL DEED (STUDENT & TEACHER) ====================
+
+function handleDeleteDeed(params, ss) {
+  var deedId = String(params.deedId || params.id || '').trim();
+  var studentId = String(params.studentId || params.student_id || '').trim();
+  var role = String(params.role || 'student').trim();
+  var deletedBy = String(params.deletedBy || params.userName || (role === 'teacher' ? 'อาจารย์ผู้ตรวจ' : 'นักเรียนเจ้าของรายการ')).trim();
+  var reason = String(params.reason || 'ลบ/ยกเลิกรายการ').trim();
+
+  var deedSheet = ss.getSheetByName('Deeds_2569');
+  if (!deedSheet) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Deeds_2569 sheet not found' })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  var dData = deedSheet.getDataRange().getValues();
+  var updated = false;
+  var foundDeed = null;
+
+  for (var r = 1; r < dData.length; r++) {
+    if (String(dData[r][0]) === deedId) {
+      var rowSid = String(dData[r][1] || '').trim();
+      var prevStatus = String(dData[r][6] || 'pending');
+      var catId = parseInt(dData[r][2] || 1);
+      var hrs = parseFloat(dData[r][3] || 0);
+
+      // Student guard: student can only delete their own deed, and cannot delete already approved deeds
+      if (role === 'student') {
+        if (studentId && rowSid !== studentId) {
+          return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unauthorized: ไม่สามารถลบรายการของ นพอ. ท่านอื่นได้' })).setMimeType(ContentService.MimeType.JSON);
+        }
+        if (prevStatus === 'approved') {
+          return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'รายการนี้ได้รับการอนุมัติแล้ว หากต้องการยกเลิกกรุณาติดต่ออาจารย์ผู้ตรวจ' })).setMimeType(ContentService.MimeType.JSON);
+        }
+      }
+
+      // Mark status as deleted
+      deedSheet.getRange(r + 1, 7).setValue('deleted');
+      deedSheet.getRange(r + 1, 9).setValue(deletedBy + (reason ? ' (' + reason + ')' : ''));
+      deedSheet.getRange(r + 1, 10).setValue(new Date());
+
+      // If it was approved, reverse/deduct the hours from Master Sheet
+      if (prevStatus === 'approved') {
+        updateMasterStudentHours(ss, rowSid, catId, -hrs);
+      }
+
+      foundDeed = { studentId: rowSid, catId: catId, hours: hrs, prevStatus: prevStatus };
+      updated = true;
+      break;
+    }
+  }
+
+  if (updated) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success',
+      deedId: deedId,
+      message: 'Deed deleted and hours reversed if applicable',
+      prevStatus: foundDeed.prevStatus
     })).setMimeType(ContentService.MimeType.JSON);
   } else {
     return ContentService.createTextOutput(JSON.stringify({
@@ -1125,7 +1199,8 @@ function updateMasterStudentHours(ss, studentId, catId, addedHours) {
   for (var i = 1; i < data.length; i++) {
     if (String(data[i][1]).trim() === String(studentId).trim()) {
       var currentCatHours = parseFloat(data[i][catCol - 1] || 0);
-      sheet.getRange(i + 1, catCol).setValue(currentCatHours + addedHours);
+      var newCatHours = Math.max(0, currentCatHours + addedHours);
+      sheet.getRange(i + 1, catCol).setValue(newCatHours);
 
       var row = i + 1;
       sheet.getRange(row, 16).setFormula('=SUM(G' + row + ':O' + row + ')');

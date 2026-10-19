@@ -171,3 +171,72 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Verification & Compliance:
   - 153/153 JS + 23/23 Python = 176/176 tests PASS.
   - PDPA compliance: 100% PASS (0 PII in git).
+
+## Telegram Notification Restoration & Data Sync — 2026-10-19
+- User Request: "นักเรียนเข้าใช้งานและลงบันทึกความดีแล้วยังไม่แจ้งเตือนเข้า telegram จาก LINE LIFF ช่วยอัปเดตโค้ดให้เรียบร้อย"
+- Root Cause: Same recurring issue — `backend/server.py` daemon was not running on port 3000, causing `live_telegram_bridge.py` to be inactive. GAS cannot call Telegram API directly (missing `UrlFetchApp` OAuth scope).
+- Investigation:
+  - Bot token verified OK: `@rtafnc_gooddeed_2569_bot` (id:8928797456).
+  - Google Sheets: 160 total deeds, 3 pending, 156 approved.
+  - 3 pending deeds from 2 students: นพอ. ณัฐธิชา สุขสวัสดิ์ (6903975) ×2, นพอ. พัณณิตา ศรีเพชร (6703857) ×1.
+- Execution:
+  - Cleared port 3000 and started `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` as daemon.
+  - Live Telegram Bridge automatically detected and sent all 3 pending deeds with official slip card photos to Telegram group.
+  - Synchronized local database: 160 deeds across 42 students, 172 notified deeds tracked.
+  - Files updated: `deeds.json` (×2), `deeds_data.js` (×2), `notified_deeds.json`.
+- Verification & Compliance:
+  - Syntax check: 100% PASS.
+  - JavaScript tests: 153/153 PASS.
+  - Python tests: 23/23 PASS (total 176/176 PASS).
+  - Server health: HTTP 200 OK on `http://localhost:3000/api/health`.
+  - PDPA compliance: 100% PASS (0 PII in git).
+
+## Online Submission & Telegram Interactive Verification — 2026-10-19
+- User Request: "ทดสอบ ออนไลน์ และเทสแจ้งเตือน line liff"
+- Online LIFF Submission Test:
+  - Simulated online deed submission to live GAS endpoint (`action: submit_deed`).
+  - GAS appended record to `Deeds_2569` Google Sheet successfully.
+  - Live Telegram Bridge automatically rendered official slip card and dispatched to Telegram group `-4839151586`.
+- Telegram Interactive Callback Verification:
+  - User AGis tested and approved pending deeds via Telegram inline buttons:
+    - `approve_deed_1792028776370_emhs_6903975` (Approved)
+    - `approve_deed_1792028953458_mys1_6903975` (Approved)
+    - `approve_deed_1792372754403_xvkp_6703857` (Approved)
+  - Bridge answered callback queries with alerts, updated inline buttons to "✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)", sent group confirmation messages, and updated Google Sheets status to `approved`.
+- Safe Test Cleanup & Archiving:
+  - Safely archived 1 synthetic test deed (`deed_online_test_1792387714`) into `records/archive_test_deeds_20261019.json`.
+  - Google Sheets `Deeds_2569` restored to exactly 160 authentic student records.
+- Test Suite & Compliance:
+  - 153/153 JS + 23/23 Python = 176/176 tests PASS.
+  - 100% PDPA compliant, 0 PII tracked in git.
+
+## Online Pure-Cloud Operation & Deed Deletion / Hour Reversal Feature — 2026-10-19
+- User Request: "ไม่ได้รันจาก port 3000 local นะ" / "ทำออนไลน์เท่านั้น" / "นพอ ลบ ความดีของตัวเองได้และอาจารย์ ลบได้ใน online เมื่อลงและอนุมัติผิด"
+- Architecture & Policy Alignment:
+  - Zero Local Server Dependency: Local port 3000 process completely terminated; system runs cloud-native against Google Apps Script & Sheets.
+  - Ledger & Invariant Integrity: Preserves historical audit records; uses soft-delete (`status = 'deleted'`) in `Deeds_2569` with deleter identity and timestamp.
+  - Accurate Hour Reversal: Decrements student hours from authoritative `Main_2569` sheet when an approved deed is revoked/deleted.
+- Implementation:
+  - Backend (`data/google_apps_script_backend.js`):
+    - Added `handleDeleteDeed(params, ss)`: validates student ownership (students can only delete their own `pending`/`rejected` deeds; teachers/admins can delete any deed, including `approved`).
+    - Soft-deletes deed in `Deeds_2569` and records audit reason.
+    - Reverses/deducts hours in `Main_2569` via `updateMasterStudentHours(ss, sid, catId, -hrs)` when an approved deed is deleted.
+    - Updated `handleUpdateDeedStatus`: handles transitions away from `approved` with hour deduction.
+    - Updated `getDeeds`: filters out `'deleted'` deeds so they do not appear in active feeds or counts.
+  - Frontend (`frontend/app.js`):
+    - Added `App.deleteDeed(studentId, deedId, reason, role)`: updates local storage, decrements hours if approved, dispatches `deeds_updated` event, and syncs `action: 'delete_deed'` to GAS.
+  - Student Interface (`frontend/history.html`):
+    - Added deletion support with confirmation modal: students can delete pending requests and rejected records; teachers can delete any status including approved (with hour deduction warning).
+    - Updated cache buster tag to `app.js?v=20261019-v7-deed-delete`.
+  - Teacher Interface (`frontend/teacher-dashboard.html`):
+    - Added `teacherRevokeDeed` in student inspection modal for revoking mistakenly approved deeds with automatic hour reversal.
+    - Updated cache buster tag to `app.js?v=20261019-v7-deed-delete`.
+  - Local Server (`backend/server.py`):
+    - Added `/api/delete_deed` route for boundary test parity.
+- Verification & Compliance:
+  - Local port 3000: Stopped / Inactive (`lsof -i:3000` is empty).
+  - Node.js tests: 153/153 PASS.
+  - Python tests: 23/23 PASS (total 176/176 tests PASS).
+  - HTML script brace check: 100% balanced across all 21 files.
+  - PDPA compliance: 100% PASS (0 PII tracked in git).
+

@@ -805,7 +805,7 @@
   <script src="data/students_photos.js?v=3593"></script>
   <script src="data/deeds_data.js?v=3593"></script>
   <script src="data/app_settings.js?v=3593"></script>
-  <script src="app.js?v=20260923-v6-live-telegram-slip"></script>
+  <script src="app.js?v=20261019-v7-deed-delete"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -1061,6 +1061,7 @@
         <button class="btn btn-outline btn-sm" onclick="openStuModal('${sid}')">👁️ ดูโปรไฟล์</button>
         <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.4);" onclick="window.open('approve_sign.html?${approveParams.toString()}','_blank')">✍️ ตรวจ & เซ็นชื่อ</button>
         <button class="btn btn-danger btn-sm" onclick="openRejectModal('${sid}','${d.id}')">❌ ปฏิเสธ</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red); border-color:rgba(239,68,68,0.3);" onclick="teacherRevokeDeed('${sid}','${d.id}',${d.hours},'pending')">🗑️ ลบคำขอ</button>
         <button class="btn btn-success btn-sm" onclick="quickApprove('${sid}','${d.id}')">✅ อนุมัติด่วน</button>
       </div>
     </div>`;
@@ -1072,6 +1073,27 @@
       const approverName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี (Bird)';
       await App.updateDeedStatus(studentId, deedId, 'approved', approverName);
       showToast('✅ อนุมัติความดีเรียบร้อยแล้ว', 'success');
+      loadData();
+    }
+
+    async function teacherRevokeDeed(studentId, deedId, hours, status) {
+      const isApproved = status === 'approved';
+      const msg = isApproved
+        ? `⚠️ ยืนยันยกเลิกและลบรายการความดีนี้ใช่หรือไม่?\n\n- จำนวนชั่วโมง: ${hours} ชม.\n\nระบบจะทำการหักชั่วโมงสะสมคืนจาก นพอ. ในฐานข้อมูลออนไลน์ทันที`
+        : `ยืนยันการลบรายการคำขอนี้ออกจากระบบใช่หรือไม่?`;
+
+      if (!confirm(msg)) return;
+
+      const u = App.getCurrentUser();
+      const teacherName = (u && (u.name || u.username)) ? (u.name || u.username) : 'อาจารย์ผู้ตรวจ';
+      const reason = isApproved ? 'อาจารย์ยกเลิกรายการที่ลง/อนุมัติผิด' : 'อาจารย์ลบคำขอ';
+
+      await App.deleteDeed(studentId, deedId, reason, 'teacher');
+      showToast(isApproved ? '🗑️ ยกเลิกรายการและหักชั่วโมงคืนเรียบร้อยแล้ว' : '🗑️ ลบรายการเรียบร้อยแล้ว', 'info');
+      const sModal = document.getElementById('student-modal');
+      if (sModal && sModal.classList.contains('open')) {
+        closeStuModal();
+      }
       loadData();
     }
 
@@ -1320,6 +1342,7 @@
         const badges = { pending: '<span class="badge badge-pending">รอ</span>', approved: '<span class="badge badge-approved">✅</span>', rejected: '<span class="badge badge-rejected">❌</span>' };
         const approveBtn = d.status === 'pending' ? `<button class="btn btn-success btn-sm" style="padding:4px 10px;font-size:0.75rem" onclick="quickApprove('${sid}','${d.id}');closeStuModal()">อนุมัติ</button>` : '';
         const pdfBtn = `<a href="deed_slip.html?id=${d.id}&studentId=${sid}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;text-decoration:none;color:var(--gold);border-color:var(--gold)" title="พิมพ์ใบบันทึกความดี PDF">📄 PDF</a>`;
+        const deleteBtn = `<button class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;color:var(--red);border-color:rgba(239,68,68,0.4)" onclick="teacherRevokeDeed('${sid}','${d.id}',${d.hours},'${d.status}')" title="ลบ / ยกเลิกรายการนี้ (หักชั่วโมงคืน)">🗑️ ลบ</button>`;
         return `<div class="deed-row">
       <span>${cat.emoji}</span>
       <span style="flex:1;font-size:0.82rem;color:var(--text-secondary)">${d.description || cat.name}</span>
@@ -1327,6 +1350,7 @@
       ${badges[d.status] || ''}
       ${approveBtn}
       ${pdfBtn}
+      ${deleteBtn}
     </div>`;
       }).join('');
 

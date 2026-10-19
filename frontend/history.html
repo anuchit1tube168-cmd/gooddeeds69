@@ -285,23 +285,28 @@
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20260923-v6-live-telegram-slip"></script>
+    <script src="app.js?v=20261019-v7-deed-delete"></script>
     <script>
         let currentUser = null;
         let allDeeds = [];
-        let currentFilter = 'all';
+        let viewStudentId = null;
 
         async function init() {
-            currentUser = App.requireAuth(['student']);
+            currentUser = App.requireAuth(['student', 'teacher', 'admin']);
             if (!currentUser) return;
+
+            const urlParams = new URLSearchParams(window.location.search);
+            viewStudentId = ((currentUser.role === 'teacher' || currentUser.role === 'admin') && urlParams.get('studentId'))
+                ? urlParams.get('studentId')
+                : currentUser.student_id;
 
             if (typeof App.syncAllDeedsWithBackend === 'function') {
                 await App.syncAllDeedsWithBackend().catch(() => {});
             } else if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncDeedsWithBackend === 'function') {
-                await App.syncDeedsWithBackend(currentUser.student_id);
+                await App.syncDeedsWithBackend(viewStudentId);
             }
 
-            allDeeds = App.getDeeds(currentUser.student_id)
+            allDeeds = App.getDeeds(viewStudentId)
                 .sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
             // Populate category filter dropdown
             const catSel = document.getElementById('cat-filter');
@@ -405,7 +410,9 @@
                     ? `<span>👨‍⚕️ ${d.approvedBy || 'อาจารย์'}</span><span>✅ ${App.formatDate(d.approvedAt)}</span>`
                     : '';
 
-                const canDelete = d.status === 'rejected';
+                const isTeacherOrAdmin = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+                const canDelete = isTeacherOrAdmin ? true : (d.status === 'pending' || d.status === 'rejected');
+                const deleteBtnLabel = d.status === 'pending' ? '🗑️ ยกเลิกคำขอ' : (d.status === 'rejected' ? '🗑️ ลบรายการ' : '🗑️ ลบ/ยกเลิก (หัก ชม. คืน)');
                 return `<div class="deed-card">
           <div class="deed-card-icon" style="background:${cat.bg}">${cat.emoji}</div>
           <div class="deed-card-body">
@@ -428,7 +435,7 @@
               <span style="font-size:0.75rem; color:#94a3b8; background:rgba(255,255,255,0.05); padding:3px 8px; border-radius:4px; border:1px dashed rgba(255,255,255,0.15);">
                 🔒 พิมพ์ PDF ได้เมื่ออาจารย์อนุมัติแล้ว
               </span>`}
-              ${canDelete ? `<button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.3);color:var(--red)" onclick="deleteDeed('${d.id}')">🗑️ ลบ</button>` : ''}
+              ${canDelete ? `<button class="btn btn-outline btn-sm" style="font-size:0.72rem;padding:4px 10px;border-color:rgba(239,68,68,0.4);color:var(--red)" onclick="deleteDeed('${d.id}')">${deleteBtnLabel}</button>` : ''}
             </div>
           </div>
           <div class="deed-card-right">
@@ -447,14 +454,36 @@
         }
         function closeLightbox() { document.getElementById('lightbox').classList.add('hidden'); }
 
-        function deleteDeed(deedId) {
-            if (!confirm('ลบรายการนี้ออกจากระบบ?')) return;
-            const deeds = App.getDeeds(currentUser.student_id).filter(d => d.id !== deedId);
-            App.saveDeeds(currentUser.student_id, deeds);
-            allDeeds = deeds.sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
-            renderSummary();
-            renderDeeds();
-            showToast('ลบรายการแล้ว', 'info');
+        async function deleteDeed(deedId) {
+            const d = allDeeds.find(x => String(x.id) === String(deedId));
+            if (!d) return;
+
+            const isTeacher = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
+            const role = isTeacher ? 'teacher' : 'student';
+            const isApproved = d.status === 'approved';
+
+            let confirmMsg = 'ต้องการยกเลิกและลบรายการความดีนี้ออกจากระบบใช่หรือไม่?';
+            if (isApproved) {
+                confirmMsg = `⚠️ ยืนยันยกเลิกและลบรายการความดีที่อนุมัติแล้วนี้ใช่หรือไม่?\n\n- กิจกรรม: ${d.description || 'ความดี'}\n- จำนวน: ${d.hours} ชั่วโมง\n\nระบบจะทำการหักชั่วโมงสะสมคืนจากฐานข้อมูลทันที`;
+            } else if (d.status === 'pending') {
+                confirmMsg = `ต้องการยกเลิกคำขอบันทึกความดี (${d.hours} ชม.) ที่กำลังรออนุมัติใช่หรือไม่?`;
+            }
+
+            if (!confirm(confirmMsg)) return;
+
+            const reason = isApproved
+                ? (isTeacher ? 'อาจารย์ยกเลิกรายการที่ลง/อนุมัติผิด' : 'ยกเลิกรายการที่อนุมัติแล้ว')
+                : (isTeacher ? 'อาจารย์ลบคำขอ' : 'นักเรียนยกเลิกคำขอ');
+            const targetId = viewStudentId || currentUser.student_id;
+            const ok = await App.deleteDeed(targetId, deedId, reason, role);
+            if (ok) {
+                allDeeds = App.getDeeds(targetId).sort((a, b) => new Date(b.submittedAt) - new Date(a.submittedAt));
+                renderSummary();
+                renderDeeds();
+                showToast(isApproved ? '🗑️ ยกเลิกรายการและหักชั่วโมงคืนเรียบร้อยแล้ว' : '🗑️ ลบรายการเรียบร้อยแล้ว', 'info');
+            } else {
+                showToast('❌ ไม่สามารถลบรายการได้ กรุณาลองใหม่อีกครั้ง', 'error');
+            }
         }
 
         function printCurrentStudent() {

@@ -1296,6 +1296,27 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error updating deed: {e}")
 
+        elif parsed_path.path == '/api/delete_deed':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                student_id = str(payload.get('studentId') or '').strip()
+                deed_id = str(payload.get('deedId') or '').strip()
+                if not student_id or not deed_id:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or deedId'})
+                    return
+                existing = get_deeds_for_student(student_id)
+                found = next((d for d in existing if str(d.get('id')) == deed_id), None)
+                if found:
+                    found['status'] = 'deleted'
+                    save_or_update_deed_in_db(student_id, found)
+                self.send_json_response(200, {'status': 'success', 'message': 'Deed marked deleted', 'deedId': deed_id})
+                broadcast_event("deeds_updated", {"studentId": student_id, "deedId": deed_id, "status": "deleted"})
+            except Exception as e:
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
+                print(f"❌ Error deleting deed: {e}")
+
         elif parsed_path.path == '/api/update_student':
             if not self.require_staff():
                 return

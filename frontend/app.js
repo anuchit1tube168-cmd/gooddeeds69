@@ -1226,6 +1226,75 @@ const App = {
         return true;
     },
 
+    async deleteDeed(studentId, deedId, reason = 'ลบ/ยกเลิกรายการ', role = 'student') {
+        const sid = String(studentId).trim();
+        const did = String(deedId).trim();
+        const deeds = this.getDeeds(sid);
+        const deed = deeds.find(d => String(d.id) === did);
+        if (!deed) return false;
+
+        const prevStatus = deed.status;
+        const hours = parseFloat(deed.hours || 0);
+        const catId = parseInt(deed.categoryId || deed.category_id || 1);
+
+        // 1. Remove from local student deeds list
+        const remainingDeeds = deeds.filter(d => String(d.id) !== did);
+        this.saveDeeds(sid, remainingDeeds);
+
+        // 2. If deed was approved, reverse/deduct hours from local student stats
+        if (prevStatus === 'approved') {
+            const student = this.getStudent(sid);
+            if (student) {
+                if (student.categories && student.categories[catId - 1] !== undefined) {
+                    student.categories[catId - 1] = Math.max(0, parseFloat(student.categories[catId - 1] || 0) - hours);
+                }
+                student.total_hours = Math.max(0, parseFloat(student.total_hours || 0) - hours);
+                student.passed = student.total_hours >= (CONFIG.MIN_HOURS_PER_YEAR || 50);
+                this.saveStudent(student);
+            }
+        }
+
+        // 3. Update DEEDS_DATA cache if present
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            const idx = DEEDS_DATA.findIndex(d => String(d.id) === did);
+            if (idx !== -1) {
+                DEEDS_DATA.splice(idx, 1);
+            }
+        } else if (typeof DEEDS_DATA !== 'undefined' && typeof DEEDS_DATA === 'object') {
+            if (DEEDS_DATA[sid]) {
+                DEEDS_DATA[sid] = DEEDS_DATA[sid].filter(d => String(d.id) !== did);
+            }
+        }
+
+        // 4. Dispatch event for instant UI reactivity
+        if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId: sid, deedId: did, status: 'deleted' } }));
+        }
+
+        // 5. Sync to Google Apps Script (Cloud Google Sheets)
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl) {
+            const user = this.getCurrentUser() || {};
+            const userName = (user.name || user.full_name || (user.rank ? (user.rank + ' ' + user.first_name + ' ' + user.last_name) : '')) || (role === 'teacher' ? 'อาจารย์ผู้ตรวจ' : 'นักเรียน');
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'delete_deed',
+                    deedId: did,
+                    studentId: sid,
+                    role: role,
+                    deletedBy: userName,
+                    reason: reason
+                })
+            }).then(() => console.log('☁️ Synced deed deletion to Google Apps Script'))
+              .catch(err => console.warn('⚠️ GAS Delete Sync Error:', err));
+        }
+
+        return true;
+    },
+
     // ---------- ACADEMIC TERM & QUOTA VALIDATION ----------
     getAcademicTerm(dateStr) {
         if (!dateStr) {
