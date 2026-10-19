@@ -122,8 +122,10 @@ function doGet(e) {
       }
 
       var jsonStr = JSON.stringify(students);
-      if (!noCache) {
-        cache.put('students_api_v2', jsonStr, 120);
+      if (!noCache && jsonStr.length < 90000) {
+        try {
+          cache.put('students_api_v2', jsonStr, 120);
+        } catch (ce) {}
       }
       return ContentService.createTextOutput(jsonStr).setMimeType(ContentService.MimeType.JSON);
     } catch (err) {
