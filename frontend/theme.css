@@ -1,0 +1,364 @@
+/* ==============================================================
+   RTAFNC Good Deeds — Day / Night Theme & iOS Slide Toggle
+   วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ (วพอ.พอ.)
+   ============================================================== */
+
+/* ---------- 1. CSS VARIABLES FOR THEMES ---------- */
+:root {
+  color-scheme: light dark;
+}
+
+/* Day Mode (Light Theme) */
+body.theme-day,
+html[data-theme="day"] body {
+  --navy: #eef4fc;
+  --navy-mid: #ffffff;
+  --navy-light: #e2edfa;
+  --navy-border: rgba(190, 212, 238, 0.8);
+  --gold: #b38615;
+  --gold-light: #d4a528;
+  --gold-dark: #8c6508;
+  --gold-bg: rgba(179, 134, 21, 0.1);
+
+  --text-primary: #0d1b33;
+  --text-secondary: #2c4263;
+  --text-muted: #587194;
+
+  --card-bg: rgba(255, 255, 255, 0.9);
+  --card-border: rgba(190, 212, 238, 0.65);
+  --input-bg: #ffffff;
+  --hover-bg: rgba(179, 134, 21, 0.08);
+
+  --shadow-sm: 0 2px 8px rgba(15, 35, 65, 0.06);
+  --shadow-md: 0 8px 24px rgba(15, 35, 65, 0.08);
+  --shadow-lg: 0 16px 40px rgba(15, 35, 65, 0.12);
+
+  background: radial-gradient(ellipse at 15% 10%, #ffffff 0%, #edf4fc 55%, #e1edf9 100%),
+              radial-gradient(at 100% 0%, rgba(201, 162, 39, 0.12) 0%, transparent 50%),
+              radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+}
+
+/* Day Mode Overrides for UI Elements */
+body.theme-day h1,
+body.theme-day h2,
+body.theme-day h3,
+body.theme-day h4,
+body.theme-day .title {
+  color: #0d1b33;
+}
+
+body.theme-day .subtitle,
+body.theme-day .text-secondary {
+  color: #385172;
+}
+
+body.theme-day :is(.card, .kpi-card, .login-card, .crystal-card, .stat-card, .year-stat-card, .chart-card, .modal-content, .smodal-content) {
+  background: var(--card-bg) !important;
+  border-color: var(--card-border) !important;
+  color: var(--text-primary) !important;
+  box-shadow: var(--shadow-md) !important;
+}
+
+body.theme-day :is(.navbar, .top-nav, .sidebar, .topbar) {
+  background: rgba(255, 255, 255, 0.94) !important;
+  border-color: var(--card-border) !important;
+  box-shadow: 0 4px 20px rgba(15, 35, 65, 0.06) !important;
+}
+
+body.theme-day :is(.form-input, .form-select, .form-textarea, input[type="text"], input[type="password"], input[type="number"], select, textarea) {
+  background: #ffffff !important;
+  color: #0d1b33 !important;
+  border: 1px solid rgba(180, 205, 235, 0.85) !important;
+}
+
+body.theme-day input::placeholder,
+body.theme-day textarea::placeholder {
+  color: #6b829e !important;
+  opacity: 1 !important;
+}
+
+body.theme-day select option {
+  background: #ffffff !important;
+  color: #0d1b33 !important;
+}
+
+body.theme-day .hero-card,
+body.theme-day .starbucks-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f4f8fd 60%, #eaf2fb 100%) !important;
+  border: 1px solid rgba(201, 162, 39, 0.45) !important;
+  box-shadow: 0 12px 36px rgba(15, 35, 65, 0.08) !important;
+}
+
+body.theme-day table th {
+  background: rgba(228, 240, 253, 0.9) !important;
+  color: #0d1b33 !important;
+  border-bottom: 2px solid rgba(190, 212, 238, 0.8) !important;
+}
+
+body.theme-day table td {
+  border-bottom: 1px solid rgba(215, 230, 248, 0.7) !important;
+  color: #1e293b !important;
+}
+
+body.theme-day table tr:hover td {
+  background: rgba(201, 162, 39, 0.06) !important;
+}
+
+body.theme-day .tab-bar {
+  background: rgba(225, 237, 250, 0.75) !important;
+  border: 1px solid rgba(195, 215, 240, 0.7) !important;
+}
+
+body.theme-day .tab-btn {
+  color: #3b5270 !important;
+}
+
+body.theme-day .tab-btn.active {
+  color: #0d1b33 !important;
+  background: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(15, 35, 65, 0.12) !important;
+}
+
+body.theme-day .btn-outline {
+  border-color: rgba(180, 205, 235, 0.9) !important;
+  color: #1e3a8a !important;
+  background: rgba(255, 255, 255, 0.8) !important;
+}
+
+body.theme-day .btn-outline:hover {
+  background: rgba(30, 58, 138, 0.08) !important;
+}
+
+body.theme-day .badge-pending {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #b45309 !important;
+  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+}
+
+body.theme-day .badge-approved {
+  background: rgba(34, 197, 94, 0.15) !important;
+  color: #15803d !important;
+  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+}
+
+body.theme-day .badge-rejected {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #b91c1c !important;
+  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+}
+
+body.theme-day .mac-traffic-lights {
+  border-bottom-color: rgba(200, 220, 245, 0.6) !important;
+}
+
+body.theme-day .mac-title {
+  color: #385172 !important;
+}
+
+body.theme-day .approve-card {
+  background: rgba(255, 255, 255, 0.95) !important;
+  border-color: rgba(201, 162, 39, 0.45) !important;
+  color: #0d1b33 !important;
+  box-shadow: 0 15px 40px rgba(15, 35, 65, 0.12) !important;
+}
+
+body.theme-day .deed-details {
+  background: rgba(235, 243, 253, 0.75) !important;
+  border-color: rgba(195, 215, 240, 0.8) !important;
+  color: #0d1b33 !important;
+}
+
+body.theme-day .approve-card .header {
+  border-bottom-color: rgba(195, 215, 240, 0.7) !important;
+}
+
+body.theme-day .approve-card .header p {
+  color: #475569 !important;
+}
+
+body.theme-day .approve-card .row {
+  border-bottom-color: rgba(195, 215, 240, 0.6) !important;
+}
+
+body.theme-day .signature-box,
+body.theme-day .sig-container {
+  background: #ffffff !important;
+  border-color: rgba(180, 205, 235, 0.9) !important;
+}
+
+/* Glass effect support in Day Mode */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  body.theme-day :is(.login-card, .card, .kpi-card, .year-stat-card, .modal-content, .crystal-card) {
+    background: rgba(255, 255, 255, 0.85) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+    backdrop-filter: blur(20px) saturate(140%) !important;
+  }
+  body.theme-day :is(.navbar, .top-nav, .sidebar, .topbar) {
+    background: rgba(255, 255, 255, 0.9) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
+    backdrop-filter: blur(24px) saturate(140%) !important;
+  }
+}
+
+
+/* ---------- 2. IPHONE / IOS STYLE SLIDING TOGGLE SWITCH ---------- */
+.ios-theme-toggle-container {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  user-select: none;
+  font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+  vertical-align: middle;
+}
+
+/* The iPhone Toggle Capsule Button */
+.ios-theme-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 56px;
+  height: 32px;
+  padding: 3px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(201, 162, 39, 0.45);
+  background: linear-gradient(135deg, #132238 0%, #0a1424 100%);
+  box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  outline: none;
+  transition: background 0.35s cubic-bezier(0.2, 0.9, 0.3, 1),
+              border-color 0.35s ease,
+              box-shadow 0.35s ease;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ios-theme-switch:focus-visible {
+  outline: 2.5px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* Track Icons: Moon on the right in night mode, Sun on the left in day mode */
+.ios-theme-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 7px;
+  pointer-events: none;
+}
+
+.ios-track-icon {
+  font-size: 13px;
+  line-height: 1;
+  transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ios-track-icon.track-sun {
+  opacity: 0.25;
+  transform: scale(0.75);
+}
+
+.ios-track-icon.track-moon {
+  opacity: 0.9;
+  transform: scale(1);
+  color: #fbbf24;
+}
+
+/* The Sliding Circular Knob (iPhone Thumb) */
+.ios-theme-thumb {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35), 0 1px 3px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.32s cubic-bezier(0.34, 1.45, 0.64, 1),
+              background 0.3s ease,
+              box-shadow 0.3s ease;
+  z-index: 2;
+  transform: translateX(0);
+}
+
+.ios-thumb-icon {
+  font-size: 13px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+}
+
+/* Text label next to switch */
+.ios-theme-label {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.2px;
+  white-space: nowrap;
+}
+
+/* ---------- 3. ACTIVE DAY MODE STATE (SLIDE RIGHT) ---------- */
+body.theme-day .ios-theme-switch,
+html[data-theme="day"] .ios-theme-switch {
+  background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(245, 158, 11, 0.35);
+}
+
+body.theme-day .ios-theme-thumb,
+html[data-theme="day"] .ios-theme-thumb {
+  transform: translateX(22px);
+  background: #ffffff;
+  box-shadow: 0 3px 10px rgba(180, 83, 9, 0.4), 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+
+body.theme-day .ios-track-icon.track-sun,
+html[data-theme="day"] .ios-track-icon.track-sun {
+  opacity: 0.95;
+  transform: scale(1);
+}
+
+body.theme-day .ios-track-icon.track-moon,
+html[data-theme="day"] .ios-track-icon.track-moon {
+  opacity: 0.25;
+  transform: scale(0.75);
+}
+
+/* Floating Corner Switch for Pages without Top Nav (e.g. Login page) */
+.ios-theme-floating-corner {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 9999;
+  background: rgba(14, 31, 61, 0.65);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 6px 12px;
+  border-radius: 999px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+body.theme-day .ios-theme-floating-corner {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(190, 212, 238, 0.7);
+  box-shadow: 0 4px 16px rgba(15, 35, 65, 0.1);
+}
+
+@media (max-width: 576px) {
+  .ios-theme-label {
+    display: none; /* Hide label on small screens to save header space */
+  }
+  .ios-theme-floating-corner {
+    top: 10px;
+    right: 10px;
+    padding: 4px 8px;
+  }
+}
