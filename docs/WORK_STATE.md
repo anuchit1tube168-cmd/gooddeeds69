@@ -240,3 +240,49 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - HTML script brace check: 100% balanced across all 21 files.
   - PDPA compliance: 100% PASS (0 PII tracked in git).
 
+
+## Telegram Notification Restoration & Data Sync — 2026-10-26
+- User Request: "ทำไมระบบ ออนไลน์ ยังไม่แจ้งเตือน telegram ตอนนักเรียนเข้า ใช้งาน" / "ดู check github cloudfare appscript" / "อับเดทเลย"
+- System Inspection:
+  - GitHub Pages: ✅ HTTP 200 OK, `app.js` served correctly (125,684 bytes).
+  - Google Apps Script (GET): ✅ Engine Active, `getDeeds` returns 162 deeds (159 approved, 2 pending).
+  - Google Apps Script (POST): ⚠️ Returns "ไม่พบเพจ" (Google Drive error) when called via curl POST. Browser `mode: 'no-cors'` POST from frontend still works for submissions. The `sendTelegramDeedNotification()` inside `submit_deed` handler fails silently because `UrlFetchApp` is not re-authorized after deployment.
+  - Cloudflare: ⚠️ `telegram-webhook-proxy.js` exists but no `wrangler.toml` and not deployed as Worker.
+  - Local Server (port 3000): ❌ Was not running.
+- Root Cause: Same recurring issue — GAS cannot call Telegram API directly without `UrlFetchApp` OAuth authorization. Local `live_telegram_bridge.py` was not running.
+- 2 Pending Deeds Found:
+  1. `deed_1792391013107_zaih`: นพอ. ธัชชลัยย์ ศุภศิลป์กนก (6903976) — ดรัมเมเยอร์เข้าแถวตอนเช้า (2 ชม.)
+  2. `deed_1792635625964_z18x`: นพอ.(ช) นนท์ปวิธ จรูญธาดา (6903979) — ดุริยางค์ คฑากร (0.5 ชม.)
+- Execution:
+  - Cleared port 3000 and started `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` as daemon.
+  - Live Telegram Bridge automatically detected both pending deeds and sent official slip card photos to Telegram group.
+  - `[NOTIFY SENT] deed_1792391013107_zaih | นพอ. ธัชชลัยย์ ศุภศิลป์กนก | Photo: True`
+  - `[NOTIFY SENT] deed_1792635625964_z18x | นพอ.(ช) นนท์ปวิธ จรูญธาดา | Photo: True`
+  - Synchronized local database: 162 deeds across 42 students, 139 notified deeds tracked.
+  - Files updated: `deeds.json` (×2), `deeds_data.js` (×2).
+- Verification & Compliance:
+  - Server health: HTTP 200 OK on `http://localhost:3000/api/health`.
+  - Syntax check: 100% PASS.
+  - JavaScript tests: 153/153 PASS.
+  - Python tests: 23/23 PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (0 PII in git).
+- Known Recurring Issue: GAS `UrlFetchApp` requires manual re-authorization by owner in Apps Script Editor after each deployment. Owner should run `testAuthorizeTelegram()` in the editor to enable cloud-native Telegram notifications without local bridge dependency.
+
+## Cloud-Native Web App URL Update & Deployment Diagnostic — 2026-10-26
+- User Request: Switch to new authorized deployment URL `https://script.google.com/macros/s/AKfycbyxX884uZtuiPciUC2uN-xQnrLNmv2e34HJw2zmQHd7VS9gvWxj9R44oBHLSRkOgaVM/exec` for online-only cloud operation.
+- Verification on New Web App URL:
+  - `doGet` Engine Active: ✅ HTTP 200 OK (`ฐานข้อมูลความดี วพอ 2569`).
+  - `getDeeds`: ✅ 162 deeds retrieved successfully.
+  - `check_telegram_diag` & `test_drive_access`: ⚠️ Returned permission error:
+    `Exception: คุณไม่ได้รับอนุญาตให้เรียกใช้ UrlFetchApp.fetch ...` and `DriveApp.getFolderById ...`.
+  - Root Cause Analysis: The Web App in Google Apps Script was deployed with `Execute as: User accessing the web app` (ผู้ใช้ที่เข้าถึงเว็บแอป) instead of `Execute as: Me` (ฉัน / เจ้าของสคริปต์). Anonymous callers over the web cannot execute external HTTP requests or access Drive unless the deployment is configured to execute as the script owner (`Execute as: Me`).
+- Repository Updates:
+  - Updated `CONFIG.GAS_URL` in `frontend/app.js`, `cloudflare/telegram-webhook-proxy.js`, `frontend/secure-pilot/config.js`, `online-v2/config.js`, `rtafnc-one-pilot/config.js`, and maintenance Python scripts.
+  - Bumped cache busters across HTML entrypoints (`frontend/*.html`) to `?v=20261026-cloud-gas-v1`.
+- Verification & Compliance:
+  - Syntax check: 100% PASS (`check-syntax.cjs`).
+  - JavaScript tests: 153/153 PASS (`node --test tests/*.test.cjs`).
+  - Python tests: 23/23 PASS (`python3 -m unittest discover`).
+  - PDPA compliance: 100% PASS (0 PII tracked in git).
+- Instruction for Owner:
+  - In Apps Script: Manage deployments > Edit current web app > Set `Execute as: Me` (ฉัน) and `Who has access: Anyone` (ทุกคน) > Version: New version > Deploy.

@@ -235,6 +235,36 @@ function doGet(e) {
     })).setMimeType(ContentService.MimeType.JSON);
   }
 
+  // ==================== CHECK TELEGRAM DIAGNOSTICS (GET) ====================
+  if (action === 'check_telegram_diag') {
+    var p = PropertiesService.getScriptProperties();
+    var t = p.getProperty('TELEGRAM_BOT_TOKEN') || '';
+    var c = p.getProperty('TELEGRAM_CHAT_ID') || '';
+    var res = { hasToken: !!t, tokenLength: t.length, chatId: c, authorized: false };
+    if (t && c) {
+      try {
+        var resp = UrlFetchApp.fetch('https://api.telegram.org/bot' + t + '/sendMessage', {
+          method: 'post',
+          contentType: 'application/json',
+          payload: JSON.stringify({ chat_id: c, text: '🧪 [ทดสอบ Online] ระบบ GAS ส่ง Telegram ได้สำเร็จ! (' + new Date().toISOString() + ')' }),
+          muteHttpExceptions: true
+        });
+        res.code = resp.getResponseCode();
+        res.body = resp.getContentText();
+        res.authorized = (res.code === 200);
+      } catch (err) {
+        res.error = err.toString();
+      }
+    }
+    return ContentService.createTextOutput(JSON.stringify(res)).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // ==================== NOTIFY PENDING DEEDS VIA TELEGRAM (ONLINE — NO LOCAL SERVER) ====================
+  if (action === 'notify_pending') {
+    var results = notifyAllPendingDeeds(ss);
+    return ContentService.createTextOutput(JSON.stringify(results)).setMimeType(ContentService.MimeType.JSON);
+  }
+
   return ContentService.createTextOutput(JSON.stringify({
     status: 'success',
     message: 'GoodDeeds 69 Cloud Engine Active 🟢',
@@ -982,6 +1012,110 @@ function handleDeleteDeed(params, ss) {
 }
 
 // ==================== SEND TELEGRAM INTERACTIVE NOTIFICATION ====================
+
+// ==================== ONLINE AUTO-NOTIFY: FIND & SEND ALL PENDING DEEDS ====================
+function notifyAllPendingDeeds(ss) {
+  var p = PropertiesService.getScriptProperties();
+  var token = p.getProperty('TELEGRAM_BOT_TOKEN') || '';
+  var chatId = p.getProperty('TELEGRAM_CHAT_ID') || '';
+  if (!token || !chatId) {
+    return { status: 'error', message: 'Telegram token or chat ID not set' };
+  }
+
+  // Load notified set from Script Properties (persisted across calls)
+  var notifiedRaw = p.getProperty('NOTIFIED_DEED_IDS') || '[]';
+  var notifiedSet = {};
+  try {
+    var arr = JSON.parse(notifiedRaw);
+    for (var n = 0; n < arr.length; n++) notifiedSet[arr[n]] = true;
+  } catch (e) { notifiedSet = {}; }
+
+  var dSheet = ss.getSheetByName('Deeds_2569');
+  if (!dSheet) return { status: 'error', message: 'Deeds_2569 sheet not found' };
+
+  var dValues = dSheet.getDataRange().getValues();
+  var sent = [];
+  var errors = [];
+
+  for (var i = 1; i < dValues.length; i++) {
+    var row = dValues[i];
+    var deedId = String(row[0] || '').trim();
+    var status = String(row[6] || '').trim().toLowerCase();
+    if (!deedId || status === 'deleted') continue;
+
+    // Skip already-notified deeds
+    if (notifiedSet[deedId]) continue;
+
+    var studentId = String(row[1] || '').trim();
+    var catId = parseInt(row[2] || 1);
+    var hours = parseFloat(row[3] || 0);
+    var actDate = row[4] ? (row[4] instanceof Date ? Utilities.formatDate(row[4], 'Asia/Bangkok', 'yyyy-MM-dd') : String(row[4])) : '';
+    var desc = String(row[5] || '');
+    var loc = String(row[10] || 'วิทยาลัยพยาบาลทหารอากาศ');
+    var approver = String(row[8] || 'ร.อ.อนุชิต ทำจะดี (Bird)');
+
+    try {
+      sendTelegramDeedNotification(ss, {
+        id: deedId,
+        studentId: studentId,
+        categoryId: catId,
+        hours: hours,
+        activityDate: actDate,
+        description: desc,
+        location: loc,
+        approver: approver
+      });
+      sent.push(deedId);
+      notifiedSet[deedId] = true;
+    } catch (te) {
+      errors.push({ deedId: deedId, error: te.message });
+    }
+  }
+
+  // Save updated notified set (keep max 500 most recent to fit Properties limit)
+  var allIds = Object.keys(notifiedSet);
+  if (allIds.length > 500) allIds = allIds.slice(allIds.length - 500);
+  try {
+    p.setProperty('NOTIFIED_DEED_IDS', JSON.stringify(allIds));
+  } catch (pe) {
+    Logger.log('Could not save notified IDs: ' + pe.message);
+  }
+
+  return {
+    status: 'success',
+    totalDeeds: dValues.length - 1,
+    previouslyNotified: Object.keys(notifiedSet).length - sent.length,
+    newlySent: sent.length,
+    sentIds: sent,
+    errors: errors
+  };
+}
+
+// ==================== AUTO TRIGGER — ตั้ง Time Trigger อัตโนมัติ (รันใน Editor ครั้งเดียว) ====================
+function setupAutoNotifyTrigger() {
+  // ลบ trigger เก่า (ถ้ามี)
+  var triggers = ScriptApp.getProjectTriggers();
+  for (var i = 0; i < triggers.length; i++) {
+    if (triggers[i].getHandlerFunction() === 'autoNotifyTrigger') {
+      ScriptApp.deleteTrigger(triggers[i]);
+    }
+  }
+  // ตั้ง trigger ใหม่ ทุก 1 นาที
+  ScriptApp.newTrigger('autoNotifyTrigger')
+    .timeBased()
+    .everyMinutes(1)
+    .create();
+  Logger.log('✅ Auto Notify Trigger created — จะตรวจและแจ้งเตือนทุก 1 นาที');
+  return 'Trigger created successfully';
+}
+
+function autoNotifyTrigger() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var result = notifyAllPendingDeeds(ss);
+  if (result.newlySent > 0) {
+    Logger.log('🔔 Auto Notify: sent ' + result.newlySent + ' notifications: ' + result.sentIds.join(', '));
+  }
+}
 
 function sendTelegramDeedNotification(ss, deed) {
   var token = PropertiesService.getScriptProperties().getProperty('TELEGRAM_BOT_TOKEN') || '';
