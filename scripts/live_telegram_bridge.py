@@ -461,7 +461,7 @@ def notify_pending_deed(deed):
     loc = deed.get('location') or 'วิทยาลัยพยาบาลทหารอากาศ'
     approver = deed.get('approver') or 'ร.อ.อนุชิต ทำจะดี (Bird)'
 
-    base_url = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend'
+    base_url = 'https://rtafnc-gooddeeds.pages.dev'
     q_params = urllib.parse.urlencode({
         'id': deed_id,
         'studentId': student_id,
@@ -476,8 +476,8 @@ def notify_pending_deed(deed):
         'appr': approver,
         'status': 'pending'
     })
-    approve_url = f"{base_url}/approve_sign.html?{q_params}"
-    slip_url = f"{base_url}/deed_slip.html?{q_params}"
+    approve_url = f"{base_url}/approve_sign?{q_params}"
+    slip_url = f"{base_url}/deed_slip?{q_params}"
 
     reply_markup = {
         'inline_keyboard': [
