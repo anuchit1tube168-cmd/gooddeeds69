@@ -11,7 +11,7 @@
  */
 
 // ==================== CONFIGURATION ====================
-const GAS_BUILD_ID = 'gooddeeds69-20260921-emergency-lock-v1';
+const GAS_BUILD_ID = 'gooddeeds69-20260922-room-id-diagnostic-v1';
 const EMERGENCY_LOCKDOWN = true; // Incident containment: no Telegram, no legacy public data/password routes, no production writes.
 
 const CONFIG = {
@@ -168,6 +168,13 @@ function doPost(e) {
       productionWriteEnabled: productionWritesEnabled(),
       time: new Date().toISOString()
     });
+  }
+
+  // Narrow emergency-safe diagnostic: reveal the current group ID only when
+  // explicitly enabled and authenticated by the existing high-entropy webhook key.
+  // This does not enable deed writes, approvals, roster reads or notifications.
+  if (data && data.message && telegramRoomIdDiagnosticEnabled_() && isTelegramRoomIdCommand_(data.message.text)) {
+    return jsonResponse(handleTelegramRoomIdDiagnostic_(data.message, e.parameter && e.parameter.webhookKey));
   }
 
   if (EMERGENCY_LOCKDOWN) {
@@ -524,6 +531,73 @@ function uploadImage(data) {
   file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
   const fileUrl = file.getUrl(); // Access remains private; secure evidence API is required for students.
   return { status: 'success', fileId: file.getId(), url: fileUrl };
+}
+
+// ==================== TELEGRAM ROOM-ID DIAGNOSTIC ====================
+// This is deliberately independent from production-write enablement.
+// It is OFF by default and can only reply to /id or /check inside a group.
+function telegramRoomIdDiagnosticEnabled_() {
+  return PropertiesService.getScriptProperties().getProperty('TELEGRAM_ROOM_ID_DIAGNOSTIC_ENABLED') === 'true';
+}
+
+function isTelegramRoomIdCommand_(text) {
+  const value = String(text || '').trim();
+  const match = /^\/(id|check)(?:@([A-Za-z0-9_]{5,}))?(?:\s.*)?$/i.exec(value);
+  if (!match) return false;
+
+  const addressedBot = String(match[2] || '').toLowerCase();
+  if (!addressedBot) return true;
+
+  const expectedBot = String(
+    PropertiesService.getScriptProperties().getProperty('TELEGRAM_EXPECTED_USERNAME') || 'SmartAGEN_bot'
+  ).replace(/^@/, '').toLowerCase();
+
+  return addressedBot === expectedBot;
+}
+
+function handleTelegramRoomIdDiagnostic_(message, suppliedKey) {
+  const props = PropertiesService.getScriptProperties();
+  if (!telegramRoomIdDiagnosticEnabled_()) {
+    return { status: 'error', code: 'TELEGRAM_ROOM_ID_DIAGNOSTIC_DISABLED' };
+  }
+
+  const expectedKey = props.getProperty('TELEGRAM_WEBHOOK_KEY') || '';
+  if (expectedKey.length < 32 || String(suppliedKey || '') !== expectedKey) {
+    return { status: 'error', code: 'webhook_unauthorized' };
+  }
+
+  const token = props.getProperty('TELEGRAM_BOT_TOKEN') || '';
+  if (!token) {
+    return { status: 'error', code: 'TELEGRAM_SECRET_NOT_CONFIGURED' };
+  }
+
+  const chat = message && message.chat;
+  const chatId = chat && chat.id;
+  const chatType = String((chat && chat.type) || '');
+  if (chatId === undefined || !['group', 'supergroup'].includes(chatType)) {
+    return { status: 'error', code: 'GROUP_CHAT_REQUIRED' };
+  }
+
+  const response = UrlFetchApp.fetch(
+    'https://api.telegram.org/bot' + token + '/sendMessage',
+    {
+      method: 'post',
+      contentType: 'application/json',
+      muteHttpExceptions: true,
+      payload: JSON.stringify({
+        chat_id: chatId,
+        text: '🆔 Telegram Room ID\nChat ID: ' + chatId + '\nType: ' + chatType,
+        reply_parameters: message.message_id ? { message_id: message.message_id } : undefined
+      })
+    }
+  );
+
+  const statusCode = response.getResponseCode();
+  if (statusCode < 200 || statusCode >= 300) {
+    return { status: 'error', code: 'TELEGRAM_SEND_FAILED', providerStatus: statusCode };
+  }
+
+  return { status: 'success', code: 'ROOM_ID_REPLIED' };
 }
 
 // ==================== TELEGRAM NOTIFICATION & CALLBACKS ====================
