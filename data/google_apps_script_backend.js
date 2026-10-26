@@ -14,6 +14,18 @@
 
 var ROOT_FOLDER_ID = '1Y6n_lYLIfIkg9Mt3pLtwWK0_4Lcw3Ysx';
 
+// ==================== ON OPEN MENU FOR EASY AUTHORIZATION IN GOOGLE SHEETS ====================
+function onOpen() {
+  try {
+    SpreadsheetApp.getUi()
+      .createMenu('🌟 ระบบบันทึกความดี')
+      .addItem('🟢 ยืนยันสิทธิ์ Telegram (กดที่นี่ 1 ครั้ง)', 'testAuthorizeTelegram')
+      .addToUi();
+  } catch (e) {
+    Logger.log('onOpen notice: ' + e);
+  }
+}
+
 // ==================== TEST & AUTHORIZE TELEGRAM (RUN DIRECTLY IN APPS SCRIPT EDITOR) ====================
 function testAuthorizeTelegram() {
   var p = PropertiesService.getScriptProperties();
