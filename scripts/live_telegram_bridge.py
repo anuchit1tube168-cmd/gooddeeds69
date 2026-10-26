@@ -42,7 +42,7 @@ def load_env():
 ENV = load_env()
 BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or ENV.get('TELEGRAM_BOT_TOKEN', '')
 CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ENV.get('TELEGRAM_CHAT_ID', '')
-GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbynhi6e37swFUaOqIBqYqxFVzZzRYm8ZL5-vmxtZvM4FOAS9O7b_Y2UblnXjd7E6hKyaA/exec')
+GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec')
 
 SSL_CTX = ssl._create_unverified_context()
 
@@ -279,6 +279,157 @@ def render_official_deed_slip(deed, student=None):
     im.save(buf, format='JPEG', quality=90)
     return buf.getvalue()
 
+RECORDS_DIR = os.path.join(BASE_DIR, 'records')
+
+def clean_filename(s):
+    if not s:
+        return 'กิจกรรมจิตอาสา'
+    for c in ['/', '\\', ':', '*', '?', '"', '<', '>', '|']:
+        s = s.replace(c, '_')
+    return s.strip()
+
+def load_students_map():
+    for p in [os.path.join(BASE_DIR, 'data', 'students.json'), os.path.join(BASE_DIR, 'frontend', 'data', 'students.json')]:
+        if os.path.exists(p):
+            try:
+                with open(p, 'r', encoding='utf-8') as f:
+                    return {str(s['student_id']).strip(): s for s in json.load(f)}
+            except Exception:
+                pass
+    return {}
+
+STUDENTS_MAP = load_students_map()
+
+def save_deed_to_student_folder(deed, img_bytes=None):
+    """จัดเก็บรูปภาพหลักฐานและข้อมูลความดีลงในโฟลเดอร์ของนักเรียนแต่ละคน (Student Records)"""
+    try:
+        sid = str(deed.get('student_id') or deed.get('studentId') or '').strip()
+        deed_id = str(deed.get('id') or deed.get('deedId') or '').strip()
+        if not sid or not deed_id:
+            return False
+
+        stu = STUDENTS_MAP.get(sid, {})
+        rank = stu.get('rank', 'นพอ.')
+        fname = stu.get('first_name', '')
+        lname = stu.get('last_name', '')
+        full_name = f"{rank} {fname} {lname}".strip() or deed.get('student_name') or f"นพอ. ({sid})"
+        class_year = str(stu.get('class_year') or deed.get('class_year') or (sid[:2] if len(sid) >= 2 else '69'))
+        cat_id = int(deed.get('category_id') or deed.get('categoryId') or 1)
+
+        cat_names = {
+            1: 'หมวด 1 - บริจาคโลหิต/เกล็ดเลือด/พลาสมา',
+            2: 'หมวด 2 - โครงการภายนอก (คำสั่ง วพอ.)',
+            3: 'หมวด 3 - ช่วยเหลืองานภายใน วพอ.',
+            4: 'หมวด 4 - เข้าอบรมที่ วพอ. จัดให้',
+            5: 'หมวด 5 - ช่วยงานหน่วยงาน ชุมชน หรือมูลนิธิ',
+            6: 'หมวด 6 - ทำนุบำรุงศาสนสถาน',
+            7: 'หมวด 7 - งานจิตอาสาฟรีทั่วไป',
+            8: 'หมวด 8 - กิจกรรมจงรักภักดีต่อสถาบัน',
+            9: 'หมวด 9 - บทบาทพิเศษ แกนนำจิตอาสา',
+        }
+        cat_name = cat_names.get(cat_id, f'หมวด {cat_id} - กิจกรรมความดี')
+        desc_raw = deed.get('description') or deed.get('title') or 'กิจกรรมความดี'
+        desc = clean_filename(desc_raw[:40])
+        act_date = deed.get('activityDate') or deed.get('event_date') or time.strftime('%Y-%m-%d')
+        hours = float(deed.get('hours', 1.0))
+        status = deed.get('status') or 'pending'
+        approver = deed.get('approved_by') or deed.get('approver') or 'ร.อ.อนุชิต ทำจะดี (Bird)'
+
+        # 1. บันทึกลงโฟลเดอร์ตามชื่อนักเรียน: records/[รหัส] - [ยศ ชื่อ สกุล]/[หมวด]/[กิจกรรม]_[วันที่]_DEED-[id]/
+        stu_folder_name = f"{sid} - {full_name}"
+        act_folder_name = f"{desc}_{act_date}_DEED-{deed_id}"
+        dest_dir = os.path.join(RECORDS_DIR, stu_folder_name, cat_name, act_folder_name)
+        os.makedirs(dest_dir, exist_ok=True)
+
+        # บันทึกรูปภาพหลักฐาน / สลิป
+        if img_bytes:
+            img_path = os.path.join(dest_dir, 'evidence.jpg')
+            with open(img_path, 'wb') as f:
+                f.write(img_bytes)
+
+        # บันทึก info.json
+        info_data = {
+            'id': deed_id,
+            'deed_id': deed_id,
+            'student_id': sid,
+            'student_name': full_name,
+            'class_year': class_year,
+            'category_id': cat_id,
+            'category_name': cat_name,
+            'description': desc_raw,
+            'hours': hours,
+            'activity_date': act_date,
+            'status': status,
+            'approved_by': approver,
+            'created_at': deed.get('created_at') or deed.get('submittedAt') or time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+            'has_evidence': bool(img_bytes)
+        }
+        with open(os.path.join(dest_dir, 'info.json'), 'w', encoding='utf-8') as f:
+            json.dump(info_data, f, ensure_ascii=False, indent=2)
+
+        # 2. บันทึกลงโฟลเดอร์โครงสร้างระบบ AY2569: records/AY2569/Class_{class_year}/Student_{sid}/Category_{cat_id}/
+        ay_dir = os.path.join(RECORDS_DIR, 'AY2569', f'Class_{class_year}', f'Student_{sid}', f'Category_{cat_id}')
+        os.makedirs(ay_dir, exist_ok=True)
+        with open(os.path.join(ay_dir, f'{deed_id}.json'), 'w', encoding='utf-8') as f:
+            json.dump(info_data, f, ensure_ascii=False, indent=2)
+        if img_bytes:
+            with open(os.path.join(ay_dir, f'{deed_id}_evidence.jpg'), 'wb') as f:
+                f.write(img_bytes)
+
+        print(f"📁 [STUDENT RECORD SAVED] {stu_folder_name} -> {cat_name}/{act_folder_name}")
+        return True
+    except Exception as e:
+        print(f"⚠️ Error saving to student folder: {e}")
+        return False
+
+def update_student_folder_record_status(sid, deed_id, new_status, approver_name):
+    """อัปเดตสถานะในโฟลเดอร์นักเรียนเมื่อมีการอนุมัติหรือปฏิเสธผ่าน Telegram"""
+    try:
+        stu = STUDENTS_MAP.get(str(sid), {})
+        full_name = f"{stu.get('rank', 'นพอ.')} {stu.get('first_name', '')} {stu.get('last_name', '')}".strip()
+        stu_folder_name = f"{sid} - {full_name}" if full_name else f"Student_{sid}"
+        stu_dir = os.path.join(RECORDS_DIR, stu_folder_name)
+        
+        updated_count = 0
+        now_iso = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        if os.path.exists(stu_dir):
+            for root, dirs, files in os.walk(stu_dir):
+                if 'info.json' in files and f"DEED-{deed_id}" in root:
+                    p = os.path.join(root, 'info.json')
+                    try:
+                        with open(p, 'r', encoding='utf-8') as f:
+                            d = json.load(f)
+                        d['status'] = new_status
+                        d['approved_by'] = approver_name
+                        d['approved_at'] = now_iso
+                        with open(p, 'w', encoding='utf-8') as f:
+                            json.dump(d, f, ensure_ascii=False, indent=2)
+                        updated_count += 1
+                    except Exception:
+                        pass
+        
+        # อัปเดตใน AY2569
+        ay_root = os.path.join(RECORDS_DIR, 'AY2569')
+        if os.path.exists(ay_root):
+            for root, dirs, files in os.walk(ay_root):
+                if f"{deed_id}.json" in files:
+                    p = os.path.join(root, f"{deed_id}.json")
+                    try:
+                        with open(p, 'r', encoding='utf-8') as f:
+                            d = json.load(f)
+                        d['status'] = new_status
+                        d['approved_by'] = approver_name
+                        d['approved_at'] = now_iso
+                        with open(p, 'w', encoding='utf-8') as f:
+                            json.dump(d, f, ensure_ascii=False, indent=2)
+                        updated_count += 1
+                    except Exception:
+                        pass
+                
+        print(f"📝 [STUDENT RECORD UPDATED] {sid} | {deed_id} -> {new_status} ({updated_count} files)")
+    except Exception as e:
+        print(f"⚠️ Error updating student record status: {e}")
+
 def notify_pending_deed(deed):
     """ส่งการ์ดแจ้งเตือนความดีใหม่พร้อมปุ่ม Action เข้ากลุ่ม Telegram"""
     deed_id = str(deed.get('id') or deed.get('deedId') or '').strip()
@@ -388,6 +539,8 @@ def notify_pending_deed(deed):
                 img_bytes = None
 
     if img_bytes:
+        # บันทึกรูปภาพและเอกสารความดีลงในโฟลเดอร์ของนักเรียนแต่ละคนทันที
+        save_deed_to_student_folder(deed, img_bytes)
         try:
             boundary = f"----WebKitFormBoundary{int(time.time()*1000)}"
             body = bytearray()
@@ -567,6 +720,7 @@ def process_callback_query(cq):
     print(f"📊 ผลการอัปเดตลง Google Sheets: {gas_res}")
 
     # 6. อัปเดตฐานข้อมูลในเครื่องและแจ้งเตือน SSE ไปยังหน้า teacher-dashboard.html ทันที
+    update_student_folder_record_status(student_id, deed_id, new_status, approver_name)
     s_fn = globals().get('save_or_update_deed_in_db')
     b_fn = globals().get('broadcast_event')
     if s_fn:
