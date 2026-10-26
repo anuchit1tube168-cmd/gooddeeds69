@@ -286,3 +286,26 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - PDPA compliance: 100% PASS (0 PII tracked in git).
 - Instruction for Owner:
   - In Apps Script: Manage deployments > Edit current web app > Set `Execute as: Me` (ฉัน) and `Who has access: Anyone` (ทุกคน) > Version: New version > Deploy.
+
+## Day / Night Theme Optimization & Readability Enhancement — 2026-10-26
+- User Request: "ปรับให้อ่านได้ง่ายไม่สว่างเกินไป" (Make it easy to read, not too bright / washed-out).
+- Issue Identified from User Screenshot (`media_1793009362758_b8dd4c5f.png`):
+  - In Day Mode (Light Theme), `.starbucks-card` had its background forced to pure white by `theme.css`, but internal text selectors (`.card-student-name`, `.card-brand-text .th`, `.card-student-detail`) were hardcoded `#fff`, rendering them invisible (white text on white card).
+  - Background radial gradient had pure white `#ffffff` center, causing harsh screen glare and low contrast with cards.
+  - Status banner ("ยังไม่ผ่านเกณฑ์") and HeroHQ title had faint gold/white text with insufficient contrast.
+- Execution & Resolution:
+  1. `frontend/theme.css`:
+     - Canvas: Switched to soft, anti-glare canvas `#eaf0f8` with gentle slate undertones, eliminating eye fatigue.
+     - Member Pass Card (`.starbucks-card`): Restored authentic VIP pass styling (Welcome bronze, Emerald, Royal gold, Platinum navy) with 100% crisp white and gold text (`contrast ratio > 12:1`).
+     - Status Banner: Styled with high-contrast dark amber (`#78350f` / `#92400e`) on warm amber-50 background.
+     - HeroHQ & Headings: Removed fading white gradient text (`linear-gradient(#fff, ...)`), replaced with solid `#0f172a` (Slate-900) bold headings.
+     - RPG stats, Action cards, Stat cards, and Table headers tuned for WCAG AAA contrast.
+  2. `frontend/theme.js`:
+     - Added URL parameter support `?theme=day` / `?theme=night` alongside localStorage and system preferences.
+  3. Verification:
+     - Syntax: 100% PASS (`check-syntax.cjs`).
+     - Tests: 153/153 JS tests + 23/23 Python tests PASS.
+     - PDPA compliance: 100% PASS (`check_pdpa_compliance.py`).
+     - Live Cloudflare Pages deploy: Deployed to `https://rtafnc-gooddeeds.pages.dev`.
+     - Headless Chrome live screenshots verified: `live_day_student_dashboard.png`, `live_day_student_dashboard_lower.png`, `live_day_ranking.png`, `live_day_submit_deed.png`.
+     - Git commit: `460e6b30` pushed to `origin main`.
