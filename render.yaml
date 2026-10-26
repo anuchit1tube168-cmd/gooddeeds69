@@ -1,0 +1,14 @@
+services:
+  - type: worker
+    name: rtafnc-telegram-bridge
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python3 scripts/live_telegram_bridge.py
+    autoDeploy: true
+    envVars:
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      - key: GAS_URL
+        sync: false

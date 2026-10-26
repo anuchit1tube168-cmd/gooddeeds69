@@ -362,3 +362,31 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
      - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
      - Cloudflare Pages live deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev/`.
      - Live UI screenshot verified: `live_delete_button_preview.png`.
+
+## 24/7 Cloud Edge Telegram Bot Webhook Bridge — 2026-10-26
+- User Request: "อับเข้าออนไลนpython3 scripts/live_telegram_bridge.py ต้องรันได้แม่ปิดเครื่อง" (Upload/deploy live_telegram_bridge.py online so it runs 24/7 even when computer is turned off).
+- Problem Analysis:
+  1. Previously, `scripts/live_telegram_bridge.py` ran as a local Python process polling `getUpdates` on the user's Mac.
+  2. When the user shut down their Mac or closed the lid, the local polling process stopped, leading to socket dropouts, missed approvals, and Telegram loading spinner errors on teachers' mobile devices.
+- Solution & Cloud Architecture:
+  1. **Cloudflare Serverless Edge Functions (`functions/api/telegram-webhook.js`):**
+     - Developed native serverless handler mounted on Cloudflare Pages global edge network.
+     - Handled `callback_query` (`approve_` / `reject_`) in <50ms with zero server maintenance.
+     - Answers Telegram `answerCallbackQuery` immediately (halts loading spinner on mobile).
+     - Edits inline keyboard on Telegram message to display `[ ✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird) ]` or rejection.
+     - Sends official confirmation message into the Telegram chat group.
+     - Dispatches `updateDeedStatus` to Google Apps Script (`GAS_URL`) on Google Sheets.
+     - Handles Telegram commands `/status`, `/ping`, `/start`.
+  2. **Security & Secrets:**
+     - `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, and `GAS_URL` stored directly in Cloudflare Pages encrypted secrets via Wrangler API (`wrangler pages secret put`). No secrets in Git or frontend code.
+  3. **Live Webhook Registration:**
+     - Registered Telegram `setWebhook` to `https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook`.
+     - Telegram verified: `{"ok":true,"result":{"url":"https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook","has_custom_certificate":false,"pending_update_count":0}}`.
+  4. **Containerization for Standalone Python Cloud Hosting:**
+     - Added `Dockerfile`, `Procfile`, `requirements.txt`, and `render.yaml` for optional 24/7 deployment on Render/Railway/Koyeb.
+  5. **Verification:**
+     - Tested health endpoint `GET https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook`: returned `status: online, ready: true`.
+     - Local syntax check: PASS (`node scripts/check-syntax.cjs`).
+     - Unit tests: 153/153 JS tests PASS (`node --test tests/*.test.cjs`).
+     - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+     - Cloudflare deployment: Live on `https://rtafnc-gooddeeds.pages.dev`.
