@@ -42,7 +42,7 @@ def load_env():
 ENV = load_env()
 BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or ENV.get('TELEGRAM_BOT_TOKEN', '')
 CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ENV.get('TELEGRAM_CHAT_ID', '')
-GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbyxX884uZtuiPciUC2uN-xQnrLNmv2e34HJw2zmQHd7VS9gvWxj9R44oBHLSRkOgaVM/exec')
+GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec')
 
 SSL_CTX = ssl._create_unverified_context()
 

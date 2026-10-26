@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==================== CONFIG ====================
 const CONFIG = {
-    GAS_URL: 'https://script.google.com/macros/s/AKfycbyxX884uZtuiPciUC2uN-xQnrLNmv2e34HJw2zmQHd7VS9gvWxj9R44oBHLSRkOgaVM/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
+    GAS_URL: 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
     TELEGRAM_BOT_TOKEN: '',
     TELEGRAM_CHAT_ID: '',
     SYSTEM_URL: '',

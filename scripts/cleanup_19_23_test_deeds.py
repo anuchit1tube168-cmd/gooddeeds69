@@ -17,7 +17,7 @@ import ssl
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ARCHIVE_DIR = os.path.join(BASE_DIR, 'records')
 ARCHIVE_FILE = os.path.join(ARCHIVE_DIR, 'archive_test_deeds_20260919_20260923.json')
-GAS_URL = 'https://script.google.com/macros/s/AKfycbyxX884uZtuiPciUC2uN-xQnrLNmv2e34HJw2zmQHd7VS9gvWxj9R44oBHLSRkOgaVM/exec'
+GAS_URL = 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec'
 
 SSL_CTX = ssl._create_unverified_context()
 
