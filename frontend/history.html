@@ -413,8 +413,11 @@
                     : '';
 
                 const isTeacherOrAdmin = currentUser && (currentUser.role === 'teacher' || currentUser.role === 'admin');
-                const canDelete = isTeacherOrAdmin ? true : (d.status === 'pending' || d.status === 'rejected');
-                const deleteBtnLabel = d.status === 'pending' ? '🗑️ ยกเลิกคำขอ' : (d.status === 'rejected' ? '🗑️ ลบรายการ' : '🗑️ ลบ/ยกเลิก (หัก ชม. คืน)');
+                // อนุญาตให้ทั้ง นพอ. และอาจารย์ สามารถยกเลิก/ลบรายการที่ลงผิดได้ เพื่อหักชั่วโมงคืนและบันทึกใหม่
+                const canDelete = true;
+                const deleteBtnLabel = d.status === 'pending'
+                    ? '🗑️ ยกเลิกคำขอ'
+                    : (d.status === 'rejected' ? '🗑️ ลบรายการ' : '🗑️ ขอยกเลิก/ลบ (หัก ชม. คืน)');
                 return `<div class="deed-card">
           <div class="deed-card-icon" style="background:${cat.bg}">${cat.emoji}</div>
           <div class="deed-card-body">
@@ -466,7 +469,7 @@
 
             let confirmMsg = 'ต้องการยกเลิกและลบรายการความดีนี้ออกจากระบบใช่หรือไม่?';
             if (isApproved) {
-                confirmMsg = `⚠️ ยืนยันยกเลิกและลบรายการความดีที่อนุมัติแล้วนี้ใช่หรือไม่?\n\n- กิจกรรม: ${d.description || 'ความดี'}\n- จำนวน: ${d.hours} ชั่วโมง\n\nระบบจะทำการหักชั่วโมงสะสมคืนจากฐานข้อมูลทันที`;
+                confirmMsg = `⚠️ ยืนยันยกเลิกและลบรายการความดีที่อนุมัติแล้วนี้ใช่หรือไม่?\n\n- กิจกรรม: ${d.description || 'ความดี'}\n- จำนวน: ${d.hours} ชั่วโมง\n\nระบบจะทำการหักชั่วโมงสะสม ${d.hours} ชม. คืนจากฐานข้อมูลทันที เพื่อให้ท่านสามารถบันทึกรายการใหม่ที่ถูกต้องได้`;
             } else if (d.status === 'pending') {
                 confirmMsg = `ต้องการยกเลิกคำขอบันทึกความดี (${d.hours} ชม.) ที่กำลังรออนุมัติใช่หรือไม่?`;
             }
@@ -474,7 +477,7 @@
             if (!confirm(confirmMsg)) return;
 
             const reason = isApproved
-                ? (isTeacher ? 'อาจารย์ยกเลิกรายการที่ลง/อนุมัติผิด' : 'ยกเลิกรายการที่อนุมัติแล้ว')
+                ? (isTeacher ? 'อาจารย์ยกเลิกรายการที่ลง/อนุมัติผิด' : 'นพอ. ขอยกเลิกรายการที่ลงชั่วโมงผิด')
                 : (isTeacher ? 'อาจารย์ลบคำขอ' : 'นักเรียนยกเลิกคำขอ');
             const targetId = viewStudentId || currentUser.student_id;
             const ok = await App.deleteDeed(targetId, deedId, reason, role);

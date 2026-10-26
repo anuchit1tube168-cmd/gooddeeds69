@@ -338,3 +338,27 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
      - PDPA compliance: 100% PASS (`check_pdpa_compliance.py`).
      - Live Cloudflare Pages deploy: Deployed to `https://rtafnc-gooddeeds.pages.dev`.
      - Live screenshots captured & verified: `live_full_50_hours_dashboard.png`, `live_ranking_50_hours.png`.
+
+## Student Mistaken Deed Cancellation & Hour Deduction Capability — 2026-10-26
+- User Request: "นพอ ลง ชม ผิดและอนุม้ตไปแล้ว ยังลบเองไม่ได้" (Student entered hours incorrectly and it was already approved, but cannot delete it themselves yet).
+- Problem Analysis:
+  1. Previously, in `frontend/history.html` line 416, a strict check `canDelete = isTeacherOrAdmin ? true : (d.status === 'pending' || d.status === 'rejected');` prevented students from deleting any deed once it had been approved (`status === 'approved'`).
+  2. In `frontend/student-dashboard.html`, the interactive table did not render an action button for deleting/reversing entries.
+  3. Consequently, if a student entered incorrect hours or duplicate activities and a teacher approved it, the student was unable to rectify or cancel the mistake themselves to re-enter the correct data.
+- Implementation & Verification:
+  1. `frontend/history.html`:
+     - Enabled deletion for both students and teachers (`canDelete = true`).
+     - Labeled delete button as `🗑️ ขอยกเลิก/ลบ (หัก ชม. คืน)` for approved items.
+     - Added clear confirmation dialog stating that approved hours will be automatically deducted from student totals and category breakdown.
+     - Audit log records reason: `นพอ. ขอยกเลิกรายการที่ลงชั่วโมงผิด`.
+  2. `frontend/student-dashboard.html`:
+     - Added `🗑️ ลบ` button directly into the interactive deeds table for quick self-service.
+     - Implemented `cancelOrDeleteDeed(deedId)` which triggers `App.deleteDeed()`, deducts hours, updates UI, recalculates progress/stars, and refreshes the table.
+  3. `frontend/app.js`:
+     - Leveraged `App.deleteDeed(studentId, deedId, reason, role)` which reverses hours from `student.total_hours` and `student.categories[catId-1]`, re-evaluates passing status, updates cache, emits `deeds_updated` event, and dispatches deletion to backend / GAS.
+  4. Verification:
+     - Syntax check: 100% PASS (`node scripts/check-syntax.cjs`).
+     - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+     - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+     - Cloudflare Pages live deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev/`.
+     - Live UI screenshot verified: `live_delete_button_preview.png`.

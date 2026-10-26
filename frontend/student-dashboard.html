@@ -1840,16 +1840,43 @@
                             ${badges[d.status] || ''}
                         </td>
                         <td style="text-align:center;">
+                            <div style="display:inline-flex; gap:4px; align-items:center; justify-content:center;">
                             ${d.status === 'approved' ? `
                             <a href="deed_slip.html?id=${d.id}&studentId=${currentUser.student_id}&autoprint=true" target="_blank" class="btn btn-sm btn-outline" style="font-size:0.75rem; padding:4px 8px; border-color:var(--gold); color:var(--gold); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-weight:600;">
                                 📄 พิมพ์ PDF
                             </a>` : `
                             <span style="font-size:0.75rem; color:var(--text-muted);">🔒 รออนุมัติ</span>
                             `}
+                            <button class="btn btn-sm btn-outline" style="font-size:0.72rem; padding:4px 8px; border-color:rgba(239,68,68,0.4); color:var(--red);" onclick="cancelOrDeleteDeed('${d.id}')" title="ยกเลิก/ลบรายการที่ลงผิด (หัก ชม. คืน)">
+                                🗑️ ลบ
+                            </button>
+                            </div>
                         </td>
                     </tr>
                 `;
             }).join('');
+        }
+
+        async function cancelOrDeleteDeed(deedId) {
+            const deeds = App.getDeeds(currentUser.student_id);
+            const d = deeds.find(x => String(x.id) === String(deedId));
+            if (!d) return;
+
+            const isApproved = d.status === 'approved';
+            let msg = isApproved
+                ? `⚠️ ยืนยันยกเลิกและลบรายการความดีที่อนุมัติแล้วนี้ใช่หรือไม่?\n\n- กิจกรรม: ${d.description || d.title || 'ความดี'}\n- จำนวน: ${d.hours} ชั่วโมง\n\nระบบจะทำการหักชั่วโมงสะสม ${d.hours} ชม. คืนจากฐานข้อมูลทันที เพื่อให้ท่านสามารถบันทึกรายการใหม่ที่ถูกต้องได้`
+                : `ต้องการยกเลิกคำขอบันทึกความดี (${d.hours} ชม.) นี้ใช่หรือไม่?`;
+
+            if (!confirm(msg)) return;
+
+            const reason = isApproved ? 'นพอ. ขอยกเลิกรายการที่ลงชั่วโมงผิด' : 'นพอ. ยกเลิกคำขอ';
+            const ok = await App.deleteDeed(currentUser.student_id, deedId, reason, 'student');
+            if (ok) {
+                showToast(isApproved ? `🗑️ ยกเลิกรายการและหัก ${d.hours} ชม. คืนเรียบร้อยแล้ว` : '🗑️ ลบรายการเรียบร้อยแล้ว', 'info');
+                init();
+            } else {
+                showToast('❌ ไม่สามารถลบรายการได้ กรุณาลองใหม่อีกครั้ง', 'error');
+            }
         }
 
         function renderRecentDeeds() {

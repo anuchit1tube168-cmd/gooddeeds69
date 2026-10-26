@@ -1271,6 +1271,15 @@ const App = {
             window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId: sid, deedId: did, status: 'deleted' } }));
         }
 
+        // 4.1 Sync to Local Backend API if available
+        if (this.canUseBackendApi()) {
+            fetch('/api/delete_deed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ studentId: sid, deedId: did, reason: reason })
+            }).catch(err => console.warn('⚠️ Local API delete_deed error:', err));
+        }
+
         // 5. Sync to Google Apps Script (Cloud Google Sheets)
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
         if (gasUrl) {
