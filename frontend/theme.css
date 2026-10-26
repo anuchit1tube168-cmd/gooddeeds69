@@ -1,6 +1,7 @@
 /* ==============================================================
    RTAFNC Good Deeds — Day / Night Theme & iOS Slide Toggle
    วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ (วพอ.พอ.)
+   Refined Day Mode: Anti-glare soothing background & crisp high-contrast text
    ============================================================== */
 
 /* ---------- 1. CSS VARIABLES FOR THEMES ---------- */
@@ -8,93 +9,320 @@
   color-scheme: light dark;
 }
 
-/* Day Mode (Light Theme) */
+/* Day Mode (Light Theme) — Soothing Anti-Glare, High-Contrast */
 body.theme-day,
 html[data-theme="day"] body {
-  --navy: #eef4fc;
+  --navy: #eaf0f8;
   --navy-mid: #ffffff;
-  --navy-light: #e2edfa;
-  --navy-border: rgba(190, 212, 238, 0.8);
-  --gold: #b38615;
-  --gold-light: #d4a528;
-  --gold-dark: #8c6508;
-  --gold-bg: rgba(179, 134, 21, 0.1);
+  --navy-light: #dfe8f4;
+  --navy-border: rgba(203, 213, 225, 0.9);
+  --gold: #b45309;
+  --gold-light: #d97706;
+  --gold-dark: #78350f;
+  --gold-bg: rgba(180, 83, 9, 0.08);
 
-  --text-primary: #0d1b33;
-  --text-secondary: #2c4263;
-  --text-muted: #587194;
+  --text-primary: #0f172a;   /* Slate-900: Crisp dark navy/black */
+  --text-secondary: #334155; /* Slate-700: High-contrast secondary */
+  --text-muted: #475569;     /* Slate-600: Fully legible muted text */
 
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --card-border: rgba(190, 212, 238, 0.65);
+  --card-bg: #ffffff;
+  --card-border: rgba(203, 213, 225, 0.85);
   --input-bg: #ffffff;
-  --hover-bg: rgba(179, 134, 21, 0.08);
+  --hover-bg: rgba(180, 83, 9, 0.06);
 
-  --shadow-sm: 0 2px 8px rgba(15, 35, 65, 0.06);
-  --shadow-md: 0 8px 24px rgba(15, 35, 65, 0.08);
-  --shadow-lg: 0 16px 40px rgba(15, 35, 65, 0.12);
+  --shadow-sm: 0 2px 6px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 6px 18px rgba(15, 23, 42, 0.06);
+  --shadow-lg: 0 14px 32px rgba(15, 23, 42, 0.09);
 
-  background: radial-gradient(ellipse at 15% 10%, #ffffff 0%, #edf4fc 55%, #e1edf9 100%),
-              radial-gradient(at 100% 0%, rgba(201, 162, 39, 0.12) 0%, transparent 50%),
-              radial-gradient(at 50% 100%, rgba(59, 130, 246, 0.08) 0%, transparent 60%);
-  background-attachment: fixed;
-  color: var(--text-primary);
+  /* Soft, soothing anti-glare canvas (Prevents eye strain, NOT blinding white!) */
+  background: #eaf0f8 !important;
+  background-image: radial-gradient(ellipse at 20% 0%, rgba(255, 255, 255, 0.65) 0%, transparent 65%),
+                    radial-gradient(ellipse at 80% 100%, rgba(205, 222, 242, 0.55) 0%, transparent 65%) !important;
+  background-attachment: fixed !important;
+  color: var(--text-primary) !important;
 }
 
-/* Day Mode Overrides for UI Elements */
+/* Day Mode Overrides for UI Headings & Labels */
 body.theme-day h1,
 body.theme-day h2,
 body.theme-day h3,
 body.theme-day h4,
-body.theme-day .title {
-  color: #0d1b33;
+body.theme-day .title,
+body.theme-day .page-header h1 {
+  color: #0f172a !important;
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #0f172a !important;
 }
 
 body.theme-day .subtitle,
 body.theme-day .text-secondary {
-  color: #385172;
+  color: #334155 !important;
 }
 
+body.theme-day .text-muted,
+body.theme-day .meta {
+  color: #475569 !important;
+}
+
+/* Card surfaces: Clean crisp white with subtle border and gentle shadow */
 body.theme-day :is(.card, .kpi-card, .login-card, .crystal-card, .stat-card, .year-stat-card, .chart-card, .modal-content, .smodal-content) {
-  background: var(--card-bg) !important;
-  border-color: var(--card-border) !important;
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
   color: var(--text-primary) !important;
-  box-shadow: var(--shadow-md) !important;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.05) !important;
 }
 
-body.theme-day :is(.navbar, .top-nav, .sidebar, .topbar) {
-  background: rgba(255, 255, 255, 0.94) !important;
-  border-color: var(--card-border) !important;
-  box-shadow: 0 4px 20px rgba(15, 35, 65, 0.06) !important;
+/* Top Disclaimer Banner */
+body.theme-day p[role="status"] {
+  background: #fef3c7 !important;
+  color: #78350f !important;
+  border-bottom: 1px solid #fde68a !important;
+  font-weight: 500 !important;
 }
 
+/* Navigation & Sidebar */
+body.theme-day :is(.navbar, .top-nav, .topbar) {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-bottom: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.theme-day .sidebar {
+  background: #ffffff !important;
+  border-right: 1px solid rgba(203, 213, 225, 0.85) !important;
+}
+
+body.theme-day .sidebar-item {
+  color: #334155 !important;
+}
+
+body.theme-day .sidebar-item:hover,
+body.theme-day .sidebar-item.active {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+/* Form Inputs & Selects */
 body.theme-day :is(.form-input, .form-select, .form-textarea, input[type="text"], input[type="password"], input[type="number"], select, textarea) {
   background: #ffffff !important;
-  color: #0d1b33 !important;
-  border: 1px solid rgba(180, 205, 235, 0.85) !important;
+  color: #0f172a !important;
+  border: 1px solid rgba(180, 200, 225, 0.9) !important;
 }
 
 body.theme-day input::placeholder,
 body.theme-day textarea::placeholder {
-  color: #6b829e !important;
+  color: #64748b !important;
   opacity: 1 !important;
 }
 
 body.theme-day select option {
   background: #ffffff !important;
-  color: #0d1b33 !important;
+  color: #0f172a !important;
 }
 
-body.theme-day .hero-card,
+/* ==============================================================
+   VOLUNTEER MEMBER PASS CARD (Starbucks / Apple Wallet Style)
+   Preserve rich VIP Pass depth & 100% white crisp readable text
+   ============================================================== */
 body.theme-day .starbucks-card {
-  background: linear-gradient(135deg, #ffffff 0%, #f4f8fd 60%, #eaf2fb 100%) !important;
-  border: 1px solid rgba(201, 162, 39, 0.45) !important;
-  box-shadow: 0 12px 36px rgba(15, 35, 65, 0.08) !important;
+  box-shadow: 0 16px 36px rgba(15, 30, 60, 0.22), 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
 }
 
+.starbucks-card .card-brand-text .th,
+.starbucks-card .card-student-name,
+.starbucks-card .card-student-detail,
+.starbucks-card .card-student-detail b,
+.starbucks-card .stars-title,
+.starbucks-card .card-barcode-text {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.7) !important;
+}
+
+.starbucks-card .card-brand-text .en {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+.starbucks-card .card-student-detail {
+  opacity: 0.95 !important;
+}
+
+/* Status Banner ("ยังไม่ผ่านเกณฑ์" / "ผ่านเกณฑ์") High-Contrast */
+body.theme-day .status-banner.fail {
+  background: #fffbeb !important;
+  border: 1.5px solid #f59e0b !important;
+  color: #78350f !important;
+}
+
+body.theme-day .status-banner.fail #status-text {
+  color: #78350f !important;
+  font-weight: 700 !important;
+}
+
+body.theme-day .status-banner.fail .detail {
+  color: #92400e !important;
+  font-weight: 500 !important;
+}
+
+body.theme-day .status-banner.fail #status-total-hrs span {
+  color: #78350f !important;
+}
+
+body.theme-day .status-banner.pass {
+  background: #ecfdf5 !important;
+  border: 1.5px solid #10b981 !important;
+  color: #065f46 !important;
+}
+
+body.theme-day .status-banner.pass #status-text {
+  color: #065f46 !important;
+  font-weight: 700 !important;
+}
+
+body.theme-day .status-banner.pass .detail {
+  color: #047857 !important;
+  font-weight: 500 !important;
+}
+
+body.theme-day .status-banner.pass #status-total-hrs span {
+  color: #065f46 !important;
+}
+
+/* Chibi HeroHQ Section in Day Mode */
+body.theme-day .crystal-heading,
+body.theme-day #chibi-hero-title {
+  background: none !important;
+  -webkit-background-clip: unset !important;
+  -webkit-text-fill-color: #0f172a !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+body.theme-day .rpg-stat-row .stat-label {
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+body.theme-day .rpg-stat-row .stat-val {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+body.theme-day .crystal-progress-track {
+  background: #cbd5e1 !important;
+  border: 1px solid #94a3b8 !important;
+}
+
+body.theme-day .crystal-progress-fill {
+  background: linear-gradient(90deg, #d97706, #b45309) !important;
+}
+
+body.theme-day .profile-kv .k {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+body.theme-day .profile-kv .v {
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+body.theme-day .chibi-next-goal {
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #1e293b !important;
+  font-weight: 500 !important;
+}
+
+body.theme-day .chibi-level-badge {
+  background: #0f172a !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(201, 162, 39, 0.6) !important;
+}
+
+/* Stat Cards & Quick Action Buttons */
+body.theme-day .stat-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+}
+
+body.theme-day .stat-card .stat-value {
+  color: #0f172a !important;
+}
+
+body.theme-day .stat-card .stat-value.text-green {
+  color: #15803d !important;
+}
+
+body.theme-day .stat-card .stat-value.text-yellow {
+  color: #b45309 !important;
+}
+
+body.theme-day .stat-card .stat-value.text-red {
+  color: #b91c1c !important;
+}
+
+body.theme-day .stat-card .stat-label {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+body.theme-day .action-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04) !important;
+  color: #0f172a !important;
+}
+
+body.theme-day .action-card:hover {
+  background: #f8fafc !important;
+  border-color: #b45309 !important;
+}
+
+body.theme-day .action-card .ac-label {
+  color: #1e293b !important;
+  font-weight: 600 !important;
+}
+
+/* Category Filter Chips & Progress Bars */
+body.theme-day .cat-chip {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+  color: #1e293b !important;
+}
+
+body.theme-day .cat-chip.active {
+  background: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #0f172a !important;
+}
+
+body.theme-day .cat-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(203, 213, 225, 0.85) !important;
+}
+
+body.theme-day .cat-name {
+  color: #0f172a !important;
+}
+
+body.theme-day .cat-hrs {
+  color: #78350f !important;
+  font-weight: 700 !important;
+}
+
+body.theme-day .cat-progress-bg {
+  background: #e2e8f0 !important;
+}
+
+/* Tables in Day Mode */
 body.theme-day table th {
-  background: rgba(228, 240, 253, 0.9) !important;
-  color: #0d1b33 !important;
+  background: rgba(226, 236, 248, 0.95) !important;
+  color: #0f172a !important;
   border-bottom: 2px solid rgba(190, 212, 238, 0.8) !important;
+  font-weight: 700 !important;
 }
 
 body.theme-day table td {
@@ -103,71 +331,79 @@ body.theme-day table td {
 }
 
 body.theme-day table tr:hover td {
-  background: rgba(201, 162, 39, 0.06) !important;
+  background: rgba(180, 83, 9, 0.05) !important;
 }
 
+/* Tab Bar */
 body.theme-day .tab-bar {
-  background: rgba(225, 237, 250, 0.75) !important;
-  border: 1px solid rgba(195, 215, 240, 0.7) !important;
+  background: rgba(225, 235, 248, 0.85) !important;
+  border: 1px solid rgba(195, 215, 240, 0.8) !important;
 }
 
 body.theme-day .tab-btn {
-  color: #3b5270 !important;
+  color: #334155 !important;
 }
 
 body.theme-day .tab-btn.active {
-  color: #0d1b33 !important;
+  color: #0f172a !important;
   background: #ffffff !important;
-  box-shadow: 0 2px 8px rgba(15, 35, 65, 0.12) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1) !important;
 }
 
+/* Outline Buttons */
 body.theme-day .btn-outline {
   border-color: rgba(180, 205, 235, 0.9) !important;
   color: #1e3a8a !important;
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0.9) !important;
 }
 
 body.theme-day .btn-outline:hover {
   background: rgba(30, 58, 138, 0.08) !important;
 }
 
+/* Badges */
 body.theme-day .badge-pending {
-  background: rgba(245, 158, 11, 0.15) !important;
-  color: #b45309 !important;
-  border: 1px solid rgba(245, 158, 11, 0.3) !important;
+  background: rgba(245, 158, 11, 0.16) !important;
+  color: #92400e !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  font-weight: 600 !important;
 }
 
 body.theme-day .badge-approved {
-  background: rgba(34, 197, 94, 0.15) !important;
-  color: #15803d !important;
-  border: 1px solid rgba(34, 197, 94, 0.3) !important;
+  background: rgba(34, 197, 94, 0.16) !important;
+  color: #166534 !important;
+  border: 1px solid rgba(34, 197, 94, 0.4) !important;
+  font-weight: 600 !important;
 }
 
 body.theme-day .badge-rejected {
-  background: rgba(239, 68, 68, 0.15) !important;
-  color: #b91c1c !important;
-  border: 1px solid rgba(239, 68, 68, 0.3) !important;
+  background: rgba(239, 68, 68, 0.16) !important;
+  color: #991b1b !important;
+  border: 1px solid rgba(239, 68, 68, 0.4) !important;
+  font-weight: 600 !important;
 }
 
+/* macOS Titlebar & Traffic Lights */
 body.theme-day .mac-traffic-lights {
-  border-bottom-color: rgba(200, 220, 245, 0.6) !important;
+  border-bottom-color: rgba(200, 220, 245, 0.7) !important;
 }
 
 body.theme-day .mac-title {
-  color: #385172 !important;
+  color: #334155 !important;
 }
 
+/* Approval Card in Day Mode */
 body.theme-day .approve-card {
-  background: rgba(255, 255, 255, 0.95) !important;
+  background: #ffffff !important;
   border-color: rgba(201, 162, 39, 0.45) !important;
-  color: #0d1b33 !important;
-  box-shadow: 0 15px 40px rgba(15, 35, 65, 0.12) !important;
+  color: #0f172a !important;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, 0.1) !important;
 }
 
 body.theme-day .deed-details {
-  background: rgba(235, 243, 253, 0.75) !important;
-  border-color: rgba(195, 215, 240, 0.8) !important;
-  color: #0d1b33 !important;
+  background: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
 }
 
 body.theme-day .approve-card .header {
@@ -191,14 +427,14 @@ body.theme-day .sig-container {
 /* Glass effect support in Day Mode */
 @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   body.theme-day :is(.login-card, .card, .kpi-card, .year-stat-card, .modal-content, .crystal-card) {
-    background: rgba(255, 255, 255, 0.85) !important;
-    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
-    backdrop-filter: blur(20px) saturate(140%) !important;
+    background: rgba(255, 255, 255, 0.92) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(140%) !important;
+    backdrop-filter: blur(18px) saturate(140%) !important;
   }
   body.theme-day :is(.navbar, .top-nav, .sidebar, .topbar) {
-    background: rgba(255, 255, 255, 0.9) !important;
-    -webkit-backdrop-filter: blur(24px) saturate(140%) !important;
-    backdrop-filter: blur(24px) saturate(140%) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(140%) !important;
+    backdrop-filter: blur(20px) saturate(140%) !important;
   }
 }
 
@@ -304,9 +540,9 @@ body.theme-day .sig-container {
 /* ---------- 3. ACTIVE DAY MODE STATE (SLIDE RIGHT) ---------- */
 body.theme-day .ios-theme-switch,
 html[data-theme="day"] .ios-theme-switch {
-  background: linear-gradient(135deg, #f59e0b 0%, #eab308 100%);
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
   border-color: rgba(255, 255, 255, 0.85);
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(245, 158, 11, 0.35);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2), 0 2px 10px rgba(217, 119, 6, 0.35);
 }
 
 body.theme-day .ios-theme-thumb,
@@ -347,9 +583,9 @@ html[data-theme="day"] .ios-track-icon.track-moon {
 }
 
 body.theme-day .ios-theme-floating-corner {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   border-color: rgba(190, 212, 238, 0.7);
-  box-shadow: 0 4px 16px rgba(15, 35, 65, 0.1);
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
 }
 
 @media (max-width: 576px) {

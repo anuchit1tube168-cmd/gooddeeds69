@@ -11,6 +11,11 @@
   // 1. Instant FOUC Prevention (runs immediately)
   function getInitialTheme() {
     try {
+      const urlTheme = new URLSearchParams(window.location.search).get('theme');
+      if (urlTheme === 'day' || urlTheme === 'night') {
+        localStorage.setItem(STORAGE_KEY, urlTheme);
+        return urlTheme;
+      }
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved === 'day' || saved === 'night') return saved;
       if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
