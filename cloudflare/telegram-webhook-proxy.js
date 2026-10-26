@@ -7,7 +7,7 @@
  * แก้ปัญหา Telegram Webhook ได้รับ HTTP 302 Redirect จาก Google Apps Script
  */
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbynhi6e37swFUaOqIBqYqxFVzZzRYm8ZL5-vmxtZvM4FOAS9O7b_Y2UblnXjd7E6hKyaA/exec';
 
 export default {
   async fetch(request, env, ctx) {

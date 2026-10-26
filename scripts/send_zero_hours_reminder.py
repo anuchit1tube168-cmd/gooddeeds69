@@ -164,7 +164,7 @@ def send_telegram_reminder(summary_data):
         return False, str(e)
 
 def send_line_broadcast_reminder(summary_data):
-    gas_url = "https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec"
+    gas_url = "https://script.google.com/macros/s/AKfycbynhi6e37swFUaOqIBqYqxFVzZzRYm8ZL5-vmxtZvM4FOAS9O7b_Y2UblnXjd7E6hKyaA/exec"
     stats = summary_data['stats']
     titles = summary_data['cohort_titles']
     total_zero = summary_data['total_zero']
