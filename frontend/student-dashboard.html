@@ -1084,7 +1084,7 @@
                             <div class="stars-row" id="card-stars-row">
                                 <!-- Stars generated dynamically -->
                             </div>
-                            <div class="stars-count" id="card-stars-count">0 / 400 ชม.</div>
+                            <div class="stars-count" id="card-stars-count">0 / 50 ชม.</div>
                         </div>
                         
                         <div class="card-barcode-wrap">
@@ -1128,7 +1128,7 @@
                         
                         <div class="rpg-stat-row">
                             <span class="stat-label">Volunteer EXP:</span>
-                            <span class="stat-val" id="chibi-exp-text">0 / 400 hours</span>
+                            <span class="stat-val" id="chibi-exp-text">0 / 50 hours</span>
                         </div>
                         
                         <div class="crystal-progress-track">
@@ -1346,9 +1346,9 @@
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/students_photos.js?v=3593"></script>
-    <script src="data/deeds_data.js?v=3593"></script>
+    <script src="data/deeds_data.js?v=20261026-v50"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20261026-cloud-gas-v1"></script>
+    <script src="app.js?v=20261026-v50"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
@@ -1448,7 +1448,10 @@
 
                 function renderHero() {
             // Name & ID
-            const fullName = (currentUser.rank || '') + ' ' + currentUser.first_name + ' ' + currentUser.last_name;
+            const sRank = currentUser.rank || 'นพอ.';
+            const sFn = currentUser.first_name || '';
+            const sLn = currentUser.last_name || '';
+            const fullName = currentUser.full_name ? ((currentUser.full_name.startsWith(sRank) ? '' : sRank + ' ') + currentUser.full_name) : `${sRank} ${sFn} ${sLn}`.trim();
             
             // Populate Starbucks Card Elements
             document.getElementById('card-student-name').textContent = fullName;
@@ -1502,19 +1505,24 @@
 
             if (hours >= 300) {
                 cardClass = 'platinum-level';
-                badgeText = 'Platinum Celestial Pass';
+                badgeText = 'Platinum Celestial Pass (ผ่านเกณฑ์)';
                 numStars = 8;
                 activeStars = 8;
             } else if (hours >= 150) {
                 cardClass = 'gold-level';
-                badgeText = 'Gold Member Pass';
+                badgeText = 'Gold Member Pass (ผ่านเกณฑ์)';
                 numStars = 5;
                 activeStars = Math.min(5, 3 + Math.floor(((hours - 150) / 150) * 2));
             } else if (hours >= 50) {
+                cardClass = 'gold-level';
+                badgeText = 'Gold Member Pass (ผ่านเกณฑ์)';
+                numStars = 5;
+                activeStars = 5;
+            } else if (hours >= 25) {
                 cardClass = 'green-level';
                 badgeText = 'Green Member Pass';
                 numStars = 3;
-                activeStars = Math.min(3, 1 + Math.floor(((hours - 50) / 100) * 2));
+                activeStars = 2;
             } else {
                 cardClass = 'welcome-level';
                 badgeText = 'Welcome Member Pass';
@@ -1525,7 +1533,8 @@
             // Apply card styling
             cardEl.className = `starbucks-card ${cardClass}`;
             badgeEl.textContent = badgeText;
-            countEl.textContent = `${Math.round(hours)} / 400 ชั่วโมง`;
+            const targetMin = CONFIG.MIN_HOURS_PER_YEAR || 50;
+            countEl.textContent = `${Math.round(hours)} / ${targetMin} ชม.${hours >= targetMin ? ' (ผ่านเกณฑ์แล้ว ✅)' : ''}`;
 
             // Draw Stars
             let starsHtml = '';

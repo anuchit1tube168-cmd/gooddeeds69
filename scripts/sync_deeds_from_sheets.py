@@ -22,7 +22,7 @@ FRONTEND_DATA_DIR = os.path.join(BASE_DIR, 'frontend', 'data')
 RECORDS_DIR = os.path.join(BASE_DIR, 'records')
 
 # Load GAS_URL from env or default
-GAS_URL = os.environ.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec')
+GAS_URL = os.environ.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbyxX884uZtuiPciUC2uN-xQnrLNmv2e34HJw2zmQHd7VS9gvWxj9R44oBHLSRkOgaVM/exec')
 
 def fetch_from_gas(action, retries=3):
     url = f"{GAS_URL}?action={action}"
