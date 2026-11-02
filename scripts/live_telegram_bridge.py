@@ -751,6 +751,13 @@ def telegram_listener_loop():
     offset = 0
     while True:
         try:
+            # Check if webhook is active (e.g. Cloudflare Pages 24/7)
+            wh = call_telegram('getWebhookInfo', {})
+            if wh and wh.get('ok') and wh.get('result', {}).get('url'):
+                # Cloudflare webhook is handling callback queries 24/7, pause getUpdates
+                time.sleep(30.0)
+                continue
+
             updates_res = call_telegram('getUpdates', {
                 'offset': offset,
                 'timeout': 15,

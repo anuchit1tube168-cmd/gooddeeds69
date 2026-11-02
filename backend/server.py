@@ -811,26 +811,35 @@ def save_or_update_deed_in_db(student_id, deed_data):
 
     # 2. Update data/deeds.json and frontend/data/deeds.json
     deeds_file = os.path.join(BASE_DIR, 'data', 'deeds.json')
-    data = {}
+    data = []
     if os.path.exists(deeds_file):
         try:
             with open(deeds_file, 'r', encoding='utf-8') as f:
                 data = json.load(f)
         except Exception:
-            data = {}
-
-    if student_id not in data:
-        data[student_id] = []
+            data = []
 
     # Find existing or append
-    found = False
-    for i, d in enumerate(data[student_id]):
-        if str(d.get('id')) == deed_id:
-            data[student_id][i] = {**d, **deed_data}
-            found = True
-            break
-    if not found:
-        data[student_id].append(deed_data)
+    if isinstance(data, list):
+        found = False
+        for i, d in enumerate(data):
+            if str(d.get('id')) == deed_id:
+                data[i] = {**d, **deed_data}
+                found = True
+                break
+        if not found:
+            data.append(deed_data)
+    else:
+        if student_id not in data:
+            data[student_id] = []
+        found = False
+        for i, d in enumerate(data[student_id]):
+            if str(d.get('id')) == deed_id:
+                data[student_id][i] = {**d, **deed_data}
+                found = True
+                break
+        if not found:
+            data[student_id].append(deed_data)
 
     for json_p in [deeds_file, os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')]:
         try:

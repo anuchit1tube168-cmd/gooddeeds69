@@ -390,3 +390,26 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
      - Unit tests: 153/153 JS tests PASS (`node --test tests/*.test.cjs`).
      - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
      - Cloudflare deployment: Live on `https://rtafnc-gooddeeds.pages.dev`.
+
+
+## Telegram Online Notification Diagnostics & Recovery — 2026-11-02
+- User Request: "ทำไม่ไม่แจ้งเตือน มา telegram อีกแล้ว เมื่อนักเียนกรอกออนไลน" (Why are notifications not coming to Telegram when students submit online?)
+- Problem Analysis & Root Cause:
+  1. **Google Apps Script OAuth Permission Block (`UrlFetchApp`):** Direct diagnosis to GAS `action=check_telegram_diag` revealed Google error: `Exception: คุณไม่ได้รับอนุญาตให้เรียกใช้ UrlFetchApp.fetch สิทธิ์ที่จำเป็นคือ https://www.googleapis.com/auth/script.external_request`. Because the deployed Google Apps Script project lacks the external request OAuth grant, GAS cannot make outgoing calls to Telegram directly from Google's cloud.
+  2. **Local Python Bridge Daemon Inactive:** Due to system/session restart on Nov 2, the local background process `python3 backend/server.py 3000` was stopped. Without this bridge, no daemon was polling GAS for new deeds.
+  3. **Cloudflare Webhook Boundary:** The Cloudflare Pages function (`functions/api/telegram-webhook.js`) handles *incoming* Telegram webhook events (interactive button clicks / callback queries) 24/7, but was not designed to poll Google Sheets for new deeds.
+  4. **Accumulated Unnotified Deeds:** 33 pending deeds submitted by Class 69 students on Nov 2 were stored safely in Google Sheets `Deeds_2569`, but remained unnotified in Telegram.
+- Implementation & Recovery:
+  1. `scripts/live_telegram_bridge.py`:
+     - Added active webhook check (`getWebhookInfo`) in `telegram_listener_loop` to pause local `getUpdates` when Cloudflare 24/7 webhook is active, completely eliminating HTTP 409 Conflict spam while keeping the deed monitor loop active.
+  2. `backend/server.py`:
+     - Updated `save_or_update_deed_in_db` to support both list and dictionary structures in `data/deeds.json`, eliminating `TypeError: list indices must be integers or slices, not str`.
+     - Restarted `server.py 3000` in daemon mode.
+  3. **Complete Notification Recovery:**
+     - Processed all 33 pending deeds submitted today: rendered official deed slip cards (with Ayuthaya Thai typography and RTAFNC emblem), saved to individual student records, and sent with interactive `[✅ อนุมัติด่วน]` and `[❌ ปฏิเสธ]` buttons to Telegram group `-4839151586`.
+     - Verified `data/notified_deeds.json` reached 174/174 (100% notified).
+- Verification & Tests:
+  - Syntax check: 100% PASS (`node scripts/check-syntax.cjs`).
+  - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+  - Server status: `http://127.0.0.1:3000` running in background.
