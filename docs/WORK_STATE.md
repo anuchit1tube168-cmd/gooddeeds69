@@ -413,3 +413,23 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
   - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
   - Server status: `http://127.0.0.1:3000` running in background.
+
+## Student Self-Deletion Authorization & Deed Hour Deduction — 2026-11-02
+- User Request: "ตัดชม ออก นพอ ลงผิด และนพอ ต้องตัดได้" (Deduct hours for student 6903986 who entered incorrectly, and students must be able to cancel/delete their own deeds).
+- Problem Analysis & Fix:
+  1. **Hour Deduction for Student 6903986:**
+     - Activity `deed_1793582867947_z5x2` (Category 2, 8 hrs, 2026-10-31 "เดินดุริยางค์งานการกุศล พยาบาล4เหล่าทัพ") was cancelled/deleted.
+     - Deducted 8 hours from Google Sheets `Main_2569` and marked `deleted` in `Deeds_2569`.
+     - Student's Category 2 hours updated: 8.5 -> 0.5 hrs; total hours updated: 16.5 -> 8.5 hrs.
+     - Local database (`deeds.json`, `deeds_data.js`, `records/`) synchronized.
+  2. **Student Self-Deletion Guard Fix in GAS:**
+     - In `data/google_apps_script_backend.js` line 990, an outdated restriction `if (prevStatus === 'approved') return error` was blocking students from deleting their own approved entries when mistakes occurred.
+     - Removed the blocking check so students can cancel their own mistaken entries. Strict ownership check `rowSid === studentId` remains enforced (students cannot delete other students' deeds).
+     - Hour reversal `updateMasterStudentHours(ss, rowSid, catId, -hrs)` executes automatically upon deletion of approved deeds.
+     - Pushed to Google Apps Script and deployed versions 32 & 33 via Clasp.
+  3. **Frontend Cache Busting:**
+     - Updated cache busters in `frontend/history.html` and `frontend/student-dashboard.html` to `app.js?v=20261102-self-delete-v1`.
+- Verification & Tests:
+  - Syntax check: 100% PASS (`node scripts/check-syntax.cjs` & `scratch/test_braces.py`).
+  - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).

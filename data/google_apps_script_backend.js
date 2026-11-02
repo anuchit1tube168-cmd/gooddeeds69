@@ -982,13 +982,10 @@ function handleDeleteDeed(params, ss) {
       var catId = parseInt(dData[r][2] || 1);
       var hrs = parseFloat(dData[r][3] || 0);
 
-      // Student guard: student can only delete their own deed, and cannot delete already approved deeds
+      // Student guard: student can only delete their own deed
       if (role === 'student') {
         if (studentId && rowSid !== studentId) {
           return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unauthorized: ไม่สามารถลบรายการของ นพอ. ท่านอื่นได้' })).setMimeType(ContentService.MimeType.JSON);
-        }
-        if (prevStatus === 'approved') {
-          return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'รายการนี้ได้รับการอนุมัติแล้ว หากต้องการยกเลิกกรุณาติดต่ออาจารย์ผู้ตรวจ' })).setMimeType(ContentService.MimeType.JSON);
         }
       }
 
