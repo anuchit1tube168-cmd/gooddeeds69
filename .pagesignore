@@ -1,0 +1,16 @@
+# Cloudflare Pages Ignore File
+node_modules/
+.git/
+.env*
+records/
+backups/
+exports/
+private/
+data/
+tests/
+scratch/
+*.xlsx
+*.xls
+*.py
+*.pyc
+__pycache__/
