@@ -403,6 +403,11 @@ function doPost(e) {
     return handleDeleteDeed(params, ss);
   }
 
+  // 3.2 Edit / Update Deed (Student can edit own deed, updates Google Sheets Deeds_2569)
+  if (action === 'edit_deed' || action === 'editDeed' || action === 'update_deed') {
+    return handleEditDeed(params, ss);
+  }
+
   // 4. Also support getDeeds via POST
   if (action === 'getDeeds' || action === 'getAllDeeds') {
     return doGet({ parameter: params });
@@ -1018,6 +1023,108 @@ function handleDeleteDeed(params, ss) {
       message: 'Deed not found: ' + deedId
     })).setMimeType(ContentService.MimeType.JSON);
   }
+}
+
+// ==================== EDIT / UPDATE DEED (STUDENT & TEACHER) ====================
+function handleEditDeed(params, ss) {
+  var deedId = String(params.deedId || params.id || '').trim();
+  var studentId = String(params.studentId || params.student_id || '').trim();
+  var role = String(params.role || 'student').trim();
+  var updates = params.updates || params;
+
+  var deedSheet = ss.getSheetByName('Deeds_2569');
+  if (!deedSheet) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Deeds_2569 sheet not found' })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  var dData = deedSheet.getDataRange().getValues();
+  var foundRow = -1;
+  var oldDeed = null;
+
+  for (var r = 1; r < dData.length; r++) {
+    if (String(dData[r][0]) === deedId) {
+      foundRow = r;
+      oldDeed = {
+        id: String(dData[r][0]),
+        studentId: String(dData[r][1] || '').trim(),
+        categoryId: parseInt(dData[r][2] || 1),
+        hours: parseFloat(dData[r][3] || 0),
+        activityDate: dData[r][4],
+        description: String(dData[r][5] || ''),
+        status: String(dData[r][6] || 'pending'),
+        approver: String(dData[r][8] || ''),
+        location: String(dData[r][10] || ''),
+        imageUrl: String(dData[r][11] || '')
+      };
+      break;
+    }
+  }
+
+  if (foundRow === -1 || !oldDeed) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Deed not found: ' + deedId })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // Security check: student can only edit their own deed
+  if (role === 'student' && oldDeed.studentId && studentId && oldDeed.studentId !== studentId) {
+    return ContentService.createTextOutput(JSON.stringify({ status: 'error', message: 'Unauthorized: Student cannot edit deed of another student' })).setMimeType(ContentService.MimeType.JSON);
+  }
+
+  // New updated values
+  var newCat = (updates.categoryId !== undefined || updates.category_id !== undefined) ? parseInt(updates.categoryId || updates.category_id) : oldDeed.categoryId;
+  var newHours = updates.hours !== undefined ? parseFloat(updates.hours) : oldDeed.hours;
+  var newDate = updates.activityDate || updates.event_date || oldDeed.activityDate;
+  var newDesc = (updates.description !== undefined || updates.title !== undefined) ? String(updates.description || updates.title) : oldDeed.description;
+  var newLoc = (updates.location !== undefined || updates.note !== undefined) ? String(updates.location || updates.note) : oldDeed.location;
+  var newApprover = (updates.approver !== undefined || updates.approved_by !== undefined) ? String(updates.approver || updates.approved_by) : oldDeed.approver;
+  var newImg = (updates.imageUrl !== undefined || updates.imageData !== undefined) ? String(updates.imageUrl || updates.imageData) : oldDeed.imageUrl;
+  var safeImg = (typeof newImg === 'string' && newImg.length > 45000) ? '' : newImg;
+
+  // Reconcile hours in Main_2569 if deed was approved and hours or category changed
+  if (oldDeed.status === 'approved' && (newHours !== oldDeed.hours || newCat !== oldDeed.categoryId)) {
+    var masterSheet = ss.getSheetByName('Main_2569');
+    if (masterSheet) {
+      var mData = masterSheet.getDataRange().getValues();
+      var targetSid = oldDeed.studentId || studentId;
+      for (var mr = 1; mr < mData.length; mr++) {
+        if (String(mData[mr][1]).trim() === targetSid) {
+          // Deduct old hours from old category
+          var oldCol = 6 + (oldDeed.categoryId - 1);
+          var curOldCatVal = parseFloat(mData[mr][oldCol] || 0);
+          masterSheet.getRange(mr + 1, oldCol + 1).setValue(Math.max(0, curOldCatVal - oldDeed.hours));
+
+          // Add new hours to new category
+          var newCol = 6 + (newCat - 1);
+          var curNewCatVal = parseFloat(masterSheet.getRange(mr + 1, newCol + 1).getValue() || 0);
+          masterSheet.getRange(mr + 1, newCol + 1).setValue(curNewCatVal + newHours);
+          break;
+        }
+      }
+    }
+  }
+
+  // Update row in Deeds_2569 (1-based index: 3=Cat, 4=Hours, 5=Date, 6=Desc, 9=Approver, 11=Loc, 12=Img)
+  var rowNum = foundRow + 1;
+  deedSheet.getRange(rowNum, 3).setValue(newCat);
+  deedSheet.getRange(rowNum, 4).setValue(newHours);
+  if (newDate) deedSheet.getRange(rowNum, 5).setValue(newDate);
+  deedSheet.getRange(rowNum, 6).setValue(newDesc);
+  if (newApprover) deedSheet.getRange(rowNum, 9).setValue(newApprover);
+  deedSheet.getRange(rowNum, 11).setValue(newLoc);
+  if (safeImg) deedSheet.getRange(rowNum, 12).setValue(safeImg);
+
+  return ContentService.createTextOutput(JSON.stringify({
+    status: 'success',
+    deedId: deedId,
+    message: 'Deed updated successfully in Google Sheets',
+    updated: {
+      categoryId: newCat,
+      hours: newHours,
+      activityDate: newDate,
+      description: newDesc,
+      location: newLoc,
+      approver: newApprover
+    }
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 // ==================== SEND TELEGRAM INTERACTIVE NOTIFICATION ====================

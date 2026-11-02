@@ -1326,6 +1326,57 @@ class CustomHandler(SimpleHTTPRequestHandler):
                 self.send_json_response(500, {'status': 'error', 'message': str(e)})
                 print(f"❌ Error deleting deed: {e}")
 
+        elif parsed_path.path == '/api/edit_deed':
+            content_length = int(self.headers.get('Content-Length', 0))
+            post_data = self.rfile.read(content_length)
+            try:
+                payload = json.loads(post_data.decode('utf-8'))
+                student_id = str(payload.get('studentId') or payload.get('student_id') or '').strip()
+                deed_id = str(payload.get('deedId') or payload.get('id') or '').strip()
+                updates = payload.get('updates') or payload
+                if not student_id or not deed_id:
+                    self.send_json_response(400, {'status': 'error', 'message': 'Missing studentId or deedId'})
+                    return
+                existing = get_deeds_for_student(student_id)
+                found = next((d for d in existing if str(d.get('id')) == deed_id), None)
+                if not found:
+                    self.send_json_response(404, {'status': 'error', 'message': f'Deed not found: {deed_id}'})
+                    return
+
+                # Allowed fields to update
+                allowed_fields = [
+                    'categoryId', 'category_id', 'hours', 'activityDate', 'event_date',
+                    'description', 'title', 'location', 'note', 'approver', 'approved_by',
+                    'signer', 'imageUrl', 'imageData'
+                ]
+                for k in allowed_fields:
+                    if k in updates:
+                        found[k] = updates[k]
+
+                # Normalize hours and category
+                if 'hours' in updates:
+                    found['hours'] = float(updates['hours'])
+                if 'categoryId' in updates or 'category_id' in updates:
+                    cat_val = int(updates.get('categoryId') or updates.get('category_id') or 1)
+                    found['categoryId'] = cat_val
+                    found['category_id'] = cat_val
+
+                found['updated_at'] = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+
+                save_or_update_deed_in_db(student_id, found)
+                self.send_json_response(200, {
+                    'status': 'success',
+                    'message': 'Deed updated successfully',
+                    'deedId': deed_id,
+                    'deed': found
+                })
+                print(f"✏️ Updated deed [{deed_id}] for student {student_id}")
+                broadcast_event("deeds_updated", {"studentId": student_id, "deedId": deed_id, "status": found.get('status')})
+                sync_to_google_drive_bg()
+            except Exception as e:
+                self.send_json_response(500, {'status': 'error', 'message': str(e)})
+                print(f"❌ Error editing deed: {e}")
+
         elif parsed_path.path == '/api/update_student':
             if not self.require_staff():
                 return

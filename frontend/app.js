@@ -1218,13 +1218,253 @@ const App = {
         return deed;
     },
 
-    editDeed(studentId, deedId, updates) {
-        const deeds = this.getDeeds(studentId);
-        const index = deeds.findIndex(d => d.id === deedId);
+    async editDeed(studentId, deedId, updates) {
+        const sid = String(studentId).trim();
+        const did = String(deedId).trim();
+        const deeds = this.getDeeds(sid);
+        const index = deeds.findIndex(d => String(d.id) === did);
         if (index === -1) return false;
-        deeds[index] = { ...deeds[index], ...updates };
-        this.saveDeeds(studentId, deeds);
+
+        const oldDeed = deeds[index];
+        const oldHours = parseFloat(oldDeed.hours || 0);
+        const oldCat = parseInt(oldDeed.categoryId || oldDeed.category_id || 1);
+        const newHours = updates.hours !== undefined ? parseFloat(updates.hours) : oldHours;
+        const newCat = (updates.categoryId !== undefined || updates.category_id !== undefined)
+            ? parseInt(updates.categoryId || updates.category_id)
+            : oldCat;
+
+        // 1. Update local deed object
+        const updatedDeed = {
+            ...oldDeed,
+            ...updates,
+            hours: newHours,
+            categoryId: newCat,
+            category_id: newCat,
+            updatedAt: new Date().toISOString()
+        };
+        deeds[index] = updatedDeed;
+        this.saveDeeds(sid, deeds);
+
+        // 2. If deed was approved and hours or category changed, reconcile student totals in local storage
+        if (oldDeed.status === 'approved' && (newHours !== oldHours || newCat !== oldCat)) {
+            const student = this.getStudent(sid);
+            if (student) {
+                if (student.categories) {
+                    if (student.categories[oldCat - 1] !== undefined) {
+                        student.categories[oldCat - 1] = Math.max(0, parseFloat(student.categories[oldCat - 1] || 0) - oldHours);
+                    }
+                    if (student.categories[newCat - 1] !== undefined) {
+                        student.categories[newCat - 1] = parseFloat(student.categories[newCat - 1] || 0) + newHours;
+                    }
+                }
+                student.total_hours = Math.max(0, parseFloat(student.total_hours || 0) - oldHours + newHours);
+                student.passed = student.total_hours >= (CONFIG.MIN_HOURS_PER_YEAR || 50);
+                this.saveStudent(student);
+            }
+        }
+
+        // 3. Update DEEDS_DATA in-memory array if present
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            const dIdx = DEEDS_DATA.findIndex(d => String(d.id) === did);
+            if (dIdx !== -1) DEEDS_DATA[dIdx] = { ...DEEDS_DATA[dIdx], ...updatedDeed };
+        }
+
+        // 4. Sync edit to Google Apps Script (Cloud)
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+        if (gasUrl) {
+            fetch(gasUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'edit_deed',
+                    deedId: did,
+                    studentId: sid,
+                    role: 'student',
+                    updates: {
+                        categoryId: newCat,
+                        hours: newHours,
+                        activityDate: updatedDeed.activityDate,
+                        description: updatedDeed.description,
+                        location: updatedDeed.location,
+                        approver: updatedDeed.approver,
+                        imageUrl: updatedDeed.imageUrl
+                    }
+                })
+            }).then(() => console.log('☁️ Synced edit to Google Apps Script'))
+              .catch(err => console.warn('⚠️ GAS Edit Sync Error:', err));
+        }
+
+        // 5. Sync edit to local backend server if reachable
+        if (this.canUseBackendApi()) {
+            fetch('/api/edit_deed', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studentId: sid,
+                    deedId: did,
+                    updates: {
+                        categoryId: newCat,
+                        hours: newHours,
+                        activityDate: updatedDeed.activityDate,
+                        description: updatedDeed.description,
+                        location: updatedDeed.location,
+                        approver: updatedDeed.approver,
+                        imageUrl: updatedDeed.imageUrl
+                    }
+                })
+            }).then(() => console.log('💻 Synced edit to local backend'))
+              .catch(err => console.warn('⚠️ Local backend edit sync error:', err));
+        }
+
         return true;
+    },
+
+    openEditDeedModal(studentId, deedId, onSaved) {
+        const sid = String(studentId).trim();
+        const did = String(deedId).trim();
+        const deeds = this.getDeeds(sid);
+        const deed = deeds.find(d => String(d.id) === did);
+        if (!deed) {
+            alert('ไม่พบข้อมูลรายการความดีนี้');
+            return;
+        }
+
+        let modalEl = document.getElementById('edit-deed-global-modal');
+        if (!modalEl) {
+            modalEl = document.createElement('div');
+            modalEl.id = 'edit-deed-global-modal';
+            modalEl.style.cssText = 'position:fixed;inset:0;background:rgba(7,13,24,0.85);z-index:10000;display:flex;align-items:center;justify-content:center;padding:16px;backdrop-filter:blur(8px);';
+            document.body.appendChild(modalEl);
+        }
+
+        const catOptions = (this.CATEGORIES || []).map(c => {
+            const isSel = (c.id === (deed.categoryId || deed.category_id)) ? 'selected' : '';
+            return `<option value="${c.id}" ${isSel}>${c.emoji} หมวด ${c.id}: ${c.name}</option>`;
+        }).join('');
+
+        const isApproved = deed.status === 'approved';
+
+        const statusNotice = isApproved
+            ? `<div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);padding:10px 14px;border-radius:8px;font-size:0.8rem;color:#34d399;margin-bottom:14px;line-height:1.4;">
+                ✅ <b>รายการนี้ได้รับการอนุมัติแล้ว</b> — หากแก้ไขจำนวนชั่วโมง ระบบจะปรับปรุงยอดชั่วโมงสะสมในสมุดทะเบียนให้อัตโนมัติ
+               </div>`
+            : `<div style="background:rgba(217,119,6,0.1);border:1px solid rgba(217,119,6,0.3);padding:10px 14px;border-radius:8px;font-size:0.8rem;color:#fbbf24;margin-bottom:14px;line-height:1.4;">
+                ⏳ <b>สถานะ: รอการตรวจสอบ</b> — สามารถแก้ไขข้อมูลกิจกรรม ชั่วโมง และรายละเอียดได้โดยตรง
+               </div>`;
+
+        modalEl.innerHTML = `
+        <div style="background:#0f172a;border:1px solid rgba(201,162,39,0.4);border-radius:16px;width:100%;max-width:540px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 50px rgba(0,0,0,0.7);padding:24px;color:#f8fafc;font-family:inherit;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:12px;">
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span style="font-size:1.3rem;">✏️</span>
+                    <div>
+                        <h3 style="margin:0;font-size:1.15rem;color:#f1f5f9;font-weight:700;">แก้ไขรายการบันทึกความดี</h3>
+                        <div style="font-size:0.75rem;color:#94a3b8;">รหัสรายการ: <code style="color:#fbbf24;">${did}</code></div>
+                    </div>
+                </div>
+                <button type="button" id="edit-deed-close-btn" style="background:transparent;border:none;color:#94a3b8;font-size:1.4rem;cursor:pointer;padding:4px 8px;line-height:1;">✕</button>
+            </div>
+
+            ${statusNotice}
+
+            <form id="edit-deed-form" style="display:flex;flex-direction:column;gap:12px;">
+                <div>
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">📂 หมวดหมู่ความดี <span style="color:#ef4444;">*</span></label>
+                    <select id="edit-deed-cat" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;" required>
+                        ${catOptions}
+                    </select>
+                </div>
+
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                    <div>
+                        <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">⏱ จำนวนชั่วโมง <span style="color:#ef4444;">*</span></label>
+                        <input type="number" id="edit-deed-hours" step="0.5" min="0.5" max="40" value="${deed.hours || 1}" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;" required>
+                    </div>
+                    <div>
+                        <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">📅 วันที่ทำกิจกรรม <span style="color:#ef4444;">*</span></label>
+                        <input type="date" id="edit-deed-date" value="${deed.activityDate || ''}" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;" required>
+                    </div>
+                </div>
+
+                <div>
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">📍 สถานที่ทำกิจกรรม</label>
+                    <input type="text" id="edit-deed-loc" value="${(deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ').replace(/"/g, '&quot;')}" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;">
+                </div>
+
+                <div>
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">📝 รายละเอียดกิจกรรม / สิ่งที่ได้ปฏิบัติ <span style="color:#ef4444;">*</span></label>
+                    <textarea id="edit-deed-desc" rows="3" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;resize:vertical;" required>${(deed.description || deed.title || '').replace(/</g, '&lt;')}</textarea>
+                </div>
+
+                <div>
+                    <label style="display:block;font-size:0.82rem;font-weight:600;color:#cbd5e1;margin-bottom:4px;">👨‍🏫 อาจารย์ผู้ตรวจประเมิน</label>
+                    <input type="text" id="edit-deed-approver" value="${(deed.approver || deed.approved_by || 'ร.อ.อนุชิต ทำจะดี (Bird)').replace(/"/g, '&quot;')}" style="width:100%;padding:10px;border-radius:8px;background:#1e293b;border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:0.9rem;">
+                </div>
+
+                <div style="display:flex;gap:10px;margin-top:12px;justify-content:flex-end;">
+                    <button type="button" id="edit-deed-cancel-btn" style="padding:10px 18px;border-radius:8px;background:rgba(255,255,255,0.1);color:#e2e8f0;border:1px solid rgba(255,255,255,0.15);cursor:pointer;font-weight:600;">ยกเลิก</button>
+                    <button type="submit" id="edit-deed-submit-btn" style="padding:10px 24px;border-radius:8px;background:linear-gradient(135deg, #c9a227, #d97706);color:#fff;border:none;cursor:pointer;font-weight:700;box-shadow:0 4px 12px rgba(201,162,39,0.3);">💾 บันทึกการแก้ไข</button>
+                </div>
+            </form>
+        </div>`;
+
+        modalEl.style.display = 'flex';
+
+        const closeModal = () => {
+            modalEl.style.display = 'none';
+        };
+
+        document.getElementById('edit-deed-close-btn').onclick = closeModal;
+        document.getElementById('edit-deed-cancel-btn').onclick = closeModal;
+        modalEl.onclick = (e) => { if (e.target === modalEl) closeModal(); };
+
+        const form = document.getElementById('edit-deed-form');
+        form.onsubmit = async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('edit-deed-submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '⏳ กำลังบันทึก...';
+
+            const newCategoryId = parseInt(document.getElementById('edit-deed-cat').value, 10);
+            const newHours = parseFloat(document.getElementById('edit-deed-hours').value);
+            const newDate = document.getElementById('edit-deed-date').value;
+            const newLocation = document.getElementById('edit-deed-loc').value.trim();
+            const newDesc = document.getElementById('edit-deed-desc').value.trim();
+            const newApprover = document.getElementById('edit-deed-approver').value.trim();
+
+            if (!newHours || newHours <= 0) {
+                alert('กรุณาระบุจำนวนชั่วโมงให้ถูกต้อง');
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '💾 บันทึกการแก้ไข';
+                return;
+            }
+
+            const updates = {
+                categoryId: newCategoryId,
+                hours: newHours,
+                activityDate: newDate,
+                location: newLocation,
+                note: newLocation,
+                description: newDesc,
+                approver: newApprover,
+                approved_by: newApprover
+            };
+
+            try {
+                await this.editDeed(sid, did, updates);
+                closeModal();
+                if (typeof onSaved === 'function') {
+                    onSaved(did, updates);
+                }
+                const toastFn = (typeof showToast === 'function') ? showToast : alert;
+                toastFn('✅ บันทึกการแก้ไขข้อมูลความดีเรียบร้อยแล้ว', 'success');
+            } catch (err) {
+                console.error('Edit deed save error:', err);
+                alert('❌ เกิดข้อผิดพลาดในการบันทึก: ' + err.message);
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '💾 บันทึกการแก้ไข';
+            }
+        };
     },
 
     async deleteDeed(studentId, deedId, reason = 'ลบ/ยกเลิกรายการ', role = 'student') {
