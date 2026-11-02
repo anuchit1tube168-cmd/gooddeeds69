@@ -27,14 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ==================== CONFIG ====================
 const CONFIG = {
-    GAS_URL: 'https://script.google.com/macros/s/AKfycbynhi6e37swFUaOqIBqYqxFVzZzRYm8ZL5-vmxtZvM4FOAS9O7b_Y2UblnXjd7E6hKyaA/exec', // Google Apps Script Enterprise Cloud Web App (Master + Full Drive Integration Live)
+    GAS_URL: 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec', // Google Apps Script Enterprise Cloud Web App
+    CLOUDFLARE_NOTIFY_URL: 'https://rtafnc-gooddeeds.pages.dev/api/notify-deed', // Cloudflare 24/7 Edge Telegram Dispatcher
     TELEGRAM_BOT_TOKEN: '',
-    TELEGRAM_CHAT_ID: '',
+    TELEGRAM_CHAT_ID: '-4839151586', // กลุ่มแจ้งเตือน AGEn Ai bot
     SYSTEM_URL: '',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
     MAX_HOURS_SCALE: 400, // เพดานสูงสุด 400 ชม.
-    APP_VERSION: '1.2.0',
+    APP_VERSION: '1.2.1',
     ACADEMIC_YEAR: 2569,
 };
 
@@ -2262,14 +2263,57 @@ const App = {
 
         let sentTg = false;
         const rawChatId = settings.adminChatId && String(settings.adminChatId).trim() ? String(settings.adminChatId).trim() : '';
-        const chatId = rawChatId || CONFIG.TELEGRAM_CHAT_ID;
-        if (chatId) {
-            // 1. Try generating Form Slip Image first
+        const chatId = rawChatId || (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_CHAT_ID : '') || '-4839151586';
+
+        // 1. Dispatch via 24/7 Cloudflare Pages Edge Serverless (Works anywhere, mobile, LINE LIFF)
+        try {
+            const cfEndpoint = (typeof CONFIG !== 'undefined' && CONFIG.CLOUDFLARE_NOTIFY_URL)
+                ? CONFIG.CLOUDFLARE_NOTIFY_URL
+                : 'https://rtafnc-gooddeeds.pages.dev/api/notify-deed';
+
+            let slipBase64 = null;
+            try {
+                const formSlipBlob = await this.generateDeedFormSlipBlob(deed, student);
+                if (formSlipBlob) {
+                    slipBase64 = await new Promise((res) => {
+                        const reader = new FileReader();
+                        reader.onloadend = () => res(reader.result);
+                        reader.onerror = () => res(null);
+                        reader.readAsDataURL(formSlipBlob);
+                    });
+                }
+            } catch (bErr) {
+                console.warn('Slip image generator notice:', bErr);
+            }
+
+            const cfResp = await fetch(cfEndpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    deed: deed,
+                    student: student,
+                    slipImage: slipBase64 || deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || ''
+                })
+            });
+            if (cfResp.ok) {
+                const cfData = await cfResp.json();
+                if (cfData && cfData.ok) {
+                    sentTg = true;
+                    console.log('✅ Telegram notified via Cloudflare Edge 24/7:', cfData);
+                }
+            }
+        } catch (cfErr) {
+            console.warn('Cloudflare notify edge notice:', cfErr);
+        }
+
+        // 2. Fallback to direct client-side Telegram dispatch if Cloudflare did not handle it
+        if (!sentTg && chatId) {
+            // Try generating Form Slip Image first
             const formSlipBlob = await this.generateDeedFormSlipBlob(deed, student);
             if (formSlipBlob) {
                 sentTg = await this.sendTelegramPhoto(chatId, formSlipBlob, htmlMsg, replyMarkup);
             }
-            // 2. Fallback to Text message if photo sending failed
+            // Fallback to Text message if photo sending failed
             if (!sentTg) {
                 sentTg = await this.sendTelegram(chatId, htmlMsg, replyMarkup);
             }

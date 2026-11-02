@@ -5,10 +5,18 @@
  */
 
 export async function onRequestGet(context) {
+  const { env } = context;
+  const botToken = env ? env.TELEGRAM_BOT_TOKEN : null;
+  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const hasGasUrl = !!(env && env.GAS_URL);
+
   return new Response(JSON.stringify({
     status: 'online',
     service: 'RTAFNC Good Deeds Telegram Bot Webhook Bridge',
     environment: 'Cloudflare Edge 24/7 Serverless',
+    telegramConfigured: !!botToken,
+    chatId: defaultChatId,
+    hasGasUrl: hasGasUrl,
     timestamp: new Date().toISOString(),
     ready: true
   }, null, 2), {
@@ -19,9 +27,9 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  const botToken = env.TELEGRAM_BOT_TOKEN;
-  const defaultChatId = env.TELEGRAM_CHAT_ID;
-  const gasUrl = env.GAS_URL;
+  const botToken = env ? env.TELEGRAM_BOT_TOKEN : null;
+  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const gasUrl = (env && env.GAS_URL) ? env.GAS_URL : 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
 
   if (!botToken) {
     return new Response(JSON.stringify({ error: 'TELEGRAM_BOT_TOKEN not configured' }), {
