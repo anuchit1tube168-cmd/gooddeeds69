@@ -53,6 +53,14 @@ const LiffHelper = {
             if (liff.isLoggedIn()) {
                 try {
                     this.profile = await liff.getProfile();
+                    console.log('✅ LINE profile retrieved:', this.profile.displayName, this.profile.userId);
+                    // Automatically bind student LINE account if logged in
+                    if (typeof App !== 'undefined' && App.bindLineAccount) {
+                        const cur = App.getCurrentUser ? App.getCurrentUser() : null;
+                        if (cur && cur.student_id && this.profile && this.profile.userId) {
+                            App.bindLineAccount(cur.student_id, this.profile.userId, this.profile.displayName, this.profile.pictureUrl);
+                        }
+                    }
                     // LINE profile is for display only; verify its token on the server.
                     await this.handleAutoLogin();
                 } catch (pe) {
@@ -348,10 +356,11 @@ const LiffHelper = {
     }
 };
 
-// Safe conditional initialize on load - Only auto-initialize on the landing/login page to prevent OAuth redirect loops on dashboards
+// Safe conditional initialize on load - Auto-initialize on landing, submit-deed, and history pages
 window.addEventListener('load', () => {
     const isLanding = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-    if (isLanding && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
+    const isSubmitOrHistory = window.location.pathname.includes('submit-deed.html') || window.location.pathname.includes('history.html');
+    if ((isLanding || isSubmitOrHistory) && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
         try {
             LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
         } catch(e) {}

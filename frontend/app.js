@@ -1304,6 +1304,55 @@ const App = {
         return true;
     },
 
+    async bindLineAccount(studentId, lineUserId, lineDisplayName = '', linePictureUrl = '') {
+        const sid = String(studentId || '').trim();
+        const lid = String(lineUserId || '').trim();
+        if (!sid || !lid) return false;
+
+        // 1. Update local student object
+        const student = this.getStudent ? this.getStudent(sid) : null;
+        if (student) {
+            student.line_user_id = lid;
+            student.line_display_name = lineDisplayName;
+            student.line_picture_url = linePictureUrl;
+            if (this.saveStudent) this.saveStudent(student);
+        }
+
+        // 2. Sync to Google Apps Script
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl) {
+            fetch(gasUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    action: 'bind_line',
+                    studentId: sid,
+                    lineUserId: lid,
+                    lineDisplayName: lineDisplayName,
+                    linePictureUrl: linePictureUrl
+                })
+            }).then(() => console.log('☁️ Synced LINE binding to Google Sheets'))
+              .catch(e => console.warn('⚠️ GAS bind_line notice:', e));
+        }
+
+        // 3. Sync to local backend if available
+        if (this.canUseBackendApi && this.canUseBackendApi()) {
+            fetch('/api/bind_line', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    studentId: sid,
+                    lineUserId: lid,
+                    lineDisplayName: lineDisplayName,
+                    linePictureUrl: linePictureUrl
+                })
+            }).catch(e => console.warn('⚠️ Local API bind_line notice:', e));
+        }
+
+        return true;
+    },
+
     // ---------- ACADEMIC TERM & QUOTA VALIDATION ----------
     getAcademicTerm(dateStr) {
         if (!dateStr) {
