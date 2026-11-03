@@ -1166,11 +1166,12 @@ const App = {
             }
         }
 
-        // Save to backend via API
+        // Save to backend via API (Local Server or Cloudflare Pages 24/7 Edge)
+        let backendSaved = false;
         if (this.canUseBackendApi()) {
             try {
                 const apiUrl = `${this.getApiBaseUrl()}/api/approve_deed`;
-                await fetch(apiUrl, {
+                const resp = await fetch(apiUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -1187,29 +1188,59 @@ const App = {
                         deedData: deed
                     })
                 });
-                console.log(`✅ Sent deed [${deedId}] status update [${status}] to backend`);
+                if (resp && resp.ok) {
+                    backendSaved = true;
+                    console.log(`✅ Sent deed [${deedId}] status update [${status}] to backend API`);
+                }
             } catch (error) {
-                console.error('❌ Failed to send deed status update to backend:', error);
+                console.error('❌ Failed to send deed status update to backend API:', error);
+            }
+        } else if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('pages.dev')) {
+            // Cloudflare Pages 24/7 Edge Serverless API
+            try {
+                const resp = await fetch('/api/approve_deed', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId,
+                        deedId,
+                        status,
+                        teacherName,
+                        rejectReason,
+                        signatureKey: deed.signatureKey || '',
+                        signature: deed.signature || ''
+                    })
+                });
+                if (resp && resp.ok) {
+                    backendSaved = true;
+                    console.log(`☁️ Cloudflare Edge approved deed [${deedId}] [${status}]`);
+                }
+            } catch (cfErr) {
+                console.warn('⚠️ Cloudflare Edge approve notice:', cfErr);
             }
         }
 
-        // Sync status update to Google Apps Script (Cloud Google Sheets)
+        // Secondary backup sync to Google Apps Script (Cloud Google Sheets)
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
-        if (gasUrl) {
-            fetch(gasUrl, {
-                method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    action: 'updateDeedStatus',
-                    deedId,
-                    studentId,
-                    status,
-                    approvedBy: teacherName,
-                    rejectReason
-                })
-            }).then(() => console.log('☁️ Synced status update to Google Apps Script'))
-              .catch(err => console.warn('⚠️ GAS Status Update Sync Error:', err));
+        if (gasUrl && !backendSaved) {
+            try {
+                await fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'updateDeedStatus',
+                        deedId,
+                        studentId,
+                        status,
+                        approvedBy: teacherName,
+                        rejectReason
+                    })
+                });
+                console.log('☁️ Synced status update to Google Apps Script');
+            } catch (err) {
+                console.warn('⚠️ GAS Status Update Sync Error:', err);
+            }
         }
 
         // Delivery belongs to the authenticated server's durable outbox.

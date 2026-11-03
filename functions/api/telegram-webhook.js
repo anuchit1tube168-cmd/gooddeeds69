@@ -82,8 +82,8 @@ export async function onRequestPost(context) {
     if (!isApprove && !isReject) {
       await callTelegram('answerCallbackQuery', {
         callback_query_id: cqId,
-        text: 'รับข้อมูลเรียบร้อยแล้วค่ะ',
-        show_alert: false
+        text: 'ℹ️ รายการนี้ได้รับการตรวจอนุมัติเรียบร้อยแล้วค่ะ',
+        show_alert: true
       });
       return new Response(JSON.stringify({ ok: true, action: 'ignored' }), {
         headers: { 'Content-Type': 'application/json' }

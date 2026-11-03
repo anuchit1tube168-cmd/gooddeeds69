@@ -782,14 +782,23 @@ def deed_monitor_loop():
             time.sleep(6.0)
 
 def run_polling():
-    """รันโหมด Multi-threaded Polling เพื่อรับการกดปุ่มแบบ Instant และตรวจจับรายการใหม่"""
+    """รันโหมด Multi-threaded เพื่อตรวจจับรายการใหม่และตรวจสอบ Webhook 24 ชม."""
     print("🤖 กำลังเริ่มต้น Live Telegram Bot Engine & New Deeds Monitor (Multi-threaded)...")
-    call_telegram('deleteWebhook', {'drop_pending_updates': False})
-    print("✅ สลับโหมดเป็น Polling (Pending updates preserved)")
+    wh = call_telegram('getWebhookInfo', {})
+    wh_url = (wh.get('result', {}) or {}).get('url', '')
+    if not wh_url:
+        cf_wh = 'https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook'
+        call_telegram('setWebhook', {'url': cf_wh, 'allowed_updates': ['message', 'callback_query']})
+        print(f"✅ ตั้งค่า Webhook 24/7 ชี้ไปที่ Cloudflare Pages: {cf_wh}")
+    else:
+        print(f"✅ Webhook ออนไลน์อยู่แล้วบน: {wh_url} (Cloudflare 24/7)")
 
-    t1 = threading.Thread(target=telegram_listener_loop, daemon=True, name="TelegramListener")
+    if not wh_url:
+        t1 = threading.Thread(target=telegram_listener_loop, daemon=True, name="TelegramListener")
+        t1.start()
+    else:
+        print("ℹ️ Telegram Webhook ทำงานบน Cloudflare Edge 24 ชม. อยู่แล้ว (ข้าม local polling เพื่อเลี่ยง 409 Conflict)")
     t2 = threading.Thread(target=deed_monitor_loop, daemon=True, name="DeedMonitor")
-    t1.start()
     t2.start()
 
     while True:
