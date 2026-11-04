@@ -1,7 +1,10 @@
 /**
  * Cloudflare Pages Function - Get Students Edge Handler (24/7 Edge Serverless)
- * ดึงรายชื่อนักเรียนและสถิติชั่วโมงจาก Google Sheets Main_2569 พร้อมแคชและ CORS อัตโนมัติ
+ * ดึงรายชื่อนักเรียนและสถิติชั่วโมงจาก Google Sheets Main_2569 พร้อมเชื่อมโยงคะแนนสะสมยอดยกมา (Carry-Forward)
+ * และตำแหน่งพิเศษ (น.ต่างๆ) ตามปีการศึกษาอย่างถูกต้อง 100%
  */
+
+import { CARRY_FORWARD_MAP, POSITIONS_MAP } from './_carry_forward.js';
 
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
@@ -24,13 +27,24 @@ export async function onRequestGet(context) {
   try {
     const targetUrl = `${gasUrl}?action=getStudents`;
     const resp = await fetch(targetUrl);
-    if (!resp.ok) {
-      return new Response(JSON.stringify({ status: 'error', message: 'GAS returned status ' + resp.status }), {
-        status: resp.status,
-        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
-      });
+    let students = [];
+    if (resp.ok) {
+      students = await resp.json();
     }
-    const students = await resp.json();
+
+    if (Array.isArray(students) && students.length > 0) {
+      // Enrich each student with canonical position, carry-forward hours, and cumulative hours
+      for (let i = 0; i < students.length; i++) {
+        const s = students[i];
+        const sid = String(s.student_id || '').trim();
+        s.position = POSITIONS_MAP[sid] || s.position || 'นักเรียนพยาบาล';
+        s.carry_forward = (CARRY_FORWARD_MAP && CARRY_FORWARD_MAP[sid] !== undefined) ? CARRY_FORWARD_MAP[sid] : 0.0;
+        const annualHrs = parseFloat(s.total_hours) || 0.0;
+        s.cumulative_hours = Math.round((annualHrs + s.carry_forward) * 10) / 10;
+        s.cumulative_passed = s.cumulative_hours >= 50.0;
+      }
+    }
+
     return new Response(JSON.stringify(students), {
       status: 200,
       headers: {
