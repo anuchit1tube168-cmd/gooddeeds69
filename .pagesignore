@@ -2,6 +2,8 @@
 node_modules/
 .git/
 .env*
+.wrangler/
+.agents/
 records/
 backups/
 exports/
@@ -9,6 +11,8 @@ private/
 data/
 tests/
 scratch/
+graphify-8/
+ความดีปีการศึกษา 2568/
 *.xlsx
 *.xls
 *.py

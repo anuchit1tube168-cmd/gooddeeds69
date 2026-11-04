@@ -654,6 +654,17 @@ const App = {
         return this.isBackendMode();
     },
 
+    getEdgeApiUrl(endpoint) {
+        const path = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+        if (typeof window !== 'undefined' && window.location && window.location.hostname) {
+            const h = window.location.hostname;
+            if (h.includes('pages.dev')) {
+                return path; // same-origin relative on Cloudflare Pages
+            }
+        }
+        return `https://rtafnc-gooddeeds.pages.dev${path}`;
+    },
+
     getAuthHeaders() {
         const user = this.getCurrentUser();
         if (!user) return {};
@@ -726,11 +737,25 @@ const App = {
         let localDeeds = Storage.get('deeds_' + studentId) || [];
         let globalDeeds = [];
 
+        // Load persistently deleted deed IDs to prevent resurrection from static files or cloud cache
+        let deletedSet = new Set();
+        try {
+            const rawDeleted = localStorage.getItem('gooddeeds_deleted_ids');
+            if (rawDeleted) {
+                const arr = JSON.parse(rawDeleted);
+                if (Array.isArray(arr)) deletedSet = new Set(arr.map(String));
+            }
+        } catch (_) {}
+
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
             globalDeeds = DEEDS_DATA.filter(d => String(d.student_id || d.studentId) === String(studentId));
         } else if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
             globalDeeds = IMPORTED_DEEDS[String(studentId)] || [];
         }
+
+        // Filter out deleted deeds before processing
+        globalDeeds = globalDeeds.filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
+        localDeeds = (localDeeds || []).filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
 
         if (!localDeeds || localDeeds.length === 0) {
             return this.deduplicateDeeds(globalDeeds);
@@ -777,7 +802,8 @@ const App = {
             }
         });
 
-        return this.deduplicateDeeds(Array.from(mergedMap.values()));
+        const activeList = Array.from(mergedMap.values()).filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
+        return this.deduplicateDeeds(activeList);
     },
 
     saveDeeds(studentId, deeds) {
@@ -884,55 +910,81 @@ const App = {
             }
         }
 
-        // Cloud Google Apps Script fetch for GitHub Pages & Online Deployment
-        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-        if (gasUrl && typeof fetch === 'function') {
-            try {
-                const res = await fetch(`${gasUrl}?action=getDeeds`);
-                if (res.ok) {
-                    const cloudDeeds = await res.json();
-                    const list = Array.isArray(cloudDeeds) ? cloudDeeds : (cloudDeeds && Array.isArray(cloudDeeds.deeds) ? cloudDeeds.deeds : (cloudDeeds && Array.isArray(cloudDeeds.data) ? cloudDeeds.data : null));
-                    if (list && list.length > 0) {
-                        const byStudent = {};
-                        list.forEach(d => {
-                            const sid = String(d.student_id || d.studentId);
-                            if (!byStudent[sid]) byStudent[sid] = [];
-                            byStudent[sid].push(d);
-                        });
-
-                        Object.entries(byStudent).forEach(([sid, deeds]) => {
-                            const current = this.getDeeds(sid);
-                            const mergedMap = new Map();
-                            const cloudIds = new Set(deeds.map(cd => String(cd.id)));
-                            current.forEach(d => {
-                                const did = String(d.id || '').toUpperCase();
-                                const desc = String(d.description || '');
-                                const isObsoleteTest = (did.includes('TEST') || did.includes('LIVE') || did.includes('SSE') || desc.includes('ทดสอบ')) && !cloudIds.has(String(d.id));
-                                if (!isObsoleteTest) {
-                                    mergedMap.set(String(d.id), d);
-                                }
-                            });
-                            deeds.forEach(d => {
-                                const existing = mergedMap.get(String(d.id)) || {};
-                                mergedMap.set(String(d.id), { ...existing, ...d });
-                            });
-                            this.saveDeeds(sid, this.deduplicateDeeds(Array.from(mergedMap.values())));
-                        });
-
-                        window.IMPORTED_DEEDS = byStudent;
-                        window.DEEDS_DATA = list;
-                        globalThis.IMPORTED_DEEDS = byStudent;
-                        globalThis.DEEDS_DATA = list;
-
-                        if (typeof window !== 'undefined') {
-                            window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: list.length } }));
-                        }
-                        return list;
-                    }
-                }
-            } catch (err) {
-                console.warn('Cloud sync all deeds note:', err.message);
+        // Cloudflare Pages Edge 24/7 or Google Apps Script fetch for Online Deployment
+        let list = null;
+        try {
+            const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/get_all_deeds') : 'https://rtafnc-gooddeeds.pages.dev/api/get_all_deeds';
+            const res = await fetch(edgeUrl);
+            if (res.ok) {
+                const cloudDeeds = await res.json();
+                list = Array.isArray(cloudDeeds) ? cloudDeeds : (cloudDeeds && Array.isArray(cloudDeeds.deeds) ? cloudDeeds.deeds : (cloudDeeds && Array.isArray(cloudDeeds.data) ? cloudDeeds.data : null));
             }
+        } catch (_) {}
+
+        if (!list) {
+            const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
+            if (gasUrl && typeof fetch === 'function') {
+                try {
+                    const res = await fetch(`${gasUrl}?action=getDeeds`);
+                    if (res.ok) {
+                        const cloudDeeds = await res.json();
+                        list = Array.isArray(cloudDeeds) ? cloudDeeds : (cloudDeeds && Array.isArray(cloudDeeds.deeds) ? cloudDeeds.deeds : (cloudDeeds && Array.isArray(cloudDeeds.data) ? cloudDeeds.data : null));
+                    }
+                } catch (err) {
+                    console.warn('Cloud sync all deeds note:', err.message);
+                }
+            }
+        }
+
+        if (list && list.length > 0) {
+            let deletedSet = new Set();
+            try {
+                const rawDeleted = localStorage.getItem('gooddeeds_deleted_ids');
+                if (rawDeleted) {
+                    const arr = JSON.parse(rawDeleted);
+                    if (Array.isArray(arr)) deletedSet = new Set(arr.map(String));
+                }
+            } catch (_) {}
+
+            const activeList = list.filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
+
+            const byStudent = {};
+            activeList.forEach(d => {
+                const sid = String(d.student_id || d.studentId);
+                if (!byStudent[sid]) byStudent[sid] = [];
+                byStudent[sid].push(d);
+            });
+
+            Object.entries(byStudent).forEach(([sid, deeds]) => {
+                const current = this.getDeeds(sid);
+                const mergedMap = new Map();
+                const cloudIds = new Set(deeds.map(cd => String(cd.id)));
+                current.forEach(d => {
+                    const did = String(d.id || '').toUpperCase();
+                    const desc = String(d.description || '');
+                    const isObsoleteTest = (did.includes('TEST') || did.includes('LIVE') || did.includes('SSE') || desc.includes('ทดสอบ')) && !cloudIds.has(String(d.id));
+                    if (!isObsoleteTest && !deletedSet.has(String(d.id)) && d.status !== 'deleted') {
+                        mergedMap.set(String(d.id), d);
+                    }
+                });
+                deeds.forEach(d => {
+                    if (!deletedSet.has(String(d.id)) && d.status !== 'deleted') {
+                        const existing = mergedMap.get(String(d.id)) || {};
+                        mergedMap.set(String(d.id), { ...existing, ...d });
+                    }
+                });
+                this.saveDeeds(sid, this.deduplicateDeeds(Array.from(mergedMap.values())));
+            });
+
+            window.IMPORTED_DEEDS = byStudent;
+            window.DEEDS_DATA = activeList;
+            globalThis.IMPORTED_DEEDS = byStudent;
+            globalThis.DEEDS_DATA = activeList;
+
+            if (typeof window !== 'undefined') {
+                window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { count: activeList.length } }));
+            }
+            return activeList;
         }
         return null;
     },
@@ -1036,7 +1088,7 @@ const App = {
         const sPos = user.position || '';
 
         const newDeed = {
-            id: 'deed_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+            id: deed.id || ('deed_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6)),
             studentId,
             student_id: studentId,
             student_name: sName,
@@ -1064,57 +1116,51 @@ const App = {
             rejectReason: null,
             note: deed.note || '',
         };
+
+        // 1. Immediately save to student's local deeds in localStorage
         deeds.push(newDeed);
         this.saveDeeds(studentId, deeds);
+
+        // 1.1 Immediately update in-memory caches for fast reactivity
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            DEEDS_DATA.unshift(newDeed);
+        }
+        if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
+            if (!IMPORTED_DEEDS[String(studentId)]) IMPORTED_DEEDS[String(studentId)] = [];
+            IMPORTED_DEEDS[String(studentId)].unshift(newDeed);
+        }
+
         if (typeof window !== 'undefined') {
             window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deed: newDeed } }));
         }
 
-        // Sync to Google Apps Script (Cloud Google Sheets) if configured
-        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
-        if (gasUrl) {
-            (async () => {
-                let slipBase64 = '';
-                try {
-                    const slipBlob = await this.generateDeedFormSlipBlob(newDeed, user);
-                    if (slipBlob) {
-                        slipBase64 = await new Promise((resolve) => {
-                            const reader = new FileReader();
-                            reader.onloadend = () => resolve(reader.result);
-                            reader.onerror = () => resolve('');
-                            reader.readAsDataURL(slipBlob);
-                        });
-                    }
-                } catch (err) {
-                    console.warn('Slip card generation notice:', err);
-                }
-
-                fetch(gasUrl, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        action: 'submit_deed',
-                        deed: {
-                            ...newDeed,
-                            student: user,
-                            slipImage: slipBase64
-                        }
-                    })
-                }).then(() => console.log('☁️ Synced Deed & Slip Card to Google Apps Script'))
-                  .catch(err => console.warn('⚠️ GAS Deed Sync Error:', err));
-            })();
+        // 2. Generate slip card
+        let slipBase64 = '';
+        try {
+            const slipBlob = await this.generateDeedFormSlipBlob(newDeed, user);
+            if (slipBlob) {
+                slipBase64 = await new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.onloadend = () => resolve(reader.result);
+                    reader.onerror = () => resolve('');
+                    reader.readAsDataURL(slipBlob);
+                });
+            }
+        } catch (err) {
+            console.warn('Slip card generation notice:', err);
         }
 
-        // Save to backend via API
+        // 3. Save to backend API (Local server or Cloudflare Edge 24/7)
+        let backendSaved = false;
+        const payload = {
+            ...newDeed,
+            academicYear: 2569,
+            student: user,
+            slipImage: slipBase64
+        };
+
         if (this.canUseBackendApi()) {
             try {
-                const payload = {
-                    ...newDeed,
-                    academicYear: 2569,
-                    student: user
-                };
-
                 const apiUrl = `${this.getApiBaseUrl()}/api/submit_deed`;
                 const res = await fetch(apiUrl, {
                     method: 'POST',
@@ -1125,12 +1171,53 @@ const App = {
                     body: JSON.stringify(payload)
                 });
                 if (res.ok) {
-                    console.log('✅ Sent deed to backend successfully');
-                } else {
-                    console.warn('⚠️ Backend response not ok:', res.status);
+                    backendSaved = true;
+                    console.log('✅ Sent deed to local backend successfully');
                 }
             } catch (error) {
-                console.error('❌ Failed to send deed to backend:', error);
+                console.error('❌ Failed to send deed to local backend:', error);
+            }
+        } else {
+            // Cloudflare Pages 24/7 Edge Serverless API
+            try {
+                const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/submit_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/submit_deed';
+                const res = await fetch(edgeUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    backendSaved = true;
+                    const resData = await res.json().catch(() => ({}));
+                    if (resData && resData.telegramSent) {
+                        newDeed.telegramSent = true;
+                    }
+                    console.log('☁️ Sent deed to Cloudflare Edge API successfully');
+                }
+            } catch (cfErr) {
+                console.warn('⚠️ Cloudflare Edge submit notice:', cfErr);
+            }
+        }
+
+        // 4. Secondary backup sync direct to Google Apps Script
+        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
+        if (gasUrl && !backendSaved) {
+            try {
+                await fetch(gasUrl, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        action: 'submit_deed',
+                        deed: {
+                            ...newDeed,
+                            student: user
+                        }
+                    })
+                });
+                console.log('☁️ Synced Deed to Google Apps Script');
+            } catch (err) {
+                console.warn('⚠️ GAS Deed Sync Error:', err);
             }
         }
 
@@ -1195,10 +1282,11 @@ const App = {
             } catch (error) {
                 console.error('❌ Failed to send deed status update to backend API:', error);
             }
-        } else if (typeof window !== 'undefined' && window.location && window.location.hostname && window.location.hostname.includes('pages.dev')) {
-            // Cloudflare Pages 24/7 Edge Serverless API
+        } else {
+            // Cloudflare Pages 24/7 Edge Serverless API (for pages.dev, github.io, mobile, LINE LIFF)
             try {
-                const resp = await fetch('/api/approve_deed', {
+                const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/approve_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/approve_deed';
+                const resp = await fetch(edgeUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1300,9 +1388,62 @@ const App = {
             if (dIdx !== -1) DEEDS_DATA[dIdx] = { ...DEEDS_DATA[dIdx], ...updatedDeed };
         }
 
-        // 4. Sync edit to Google Apps Script (Cloud)
+        // 4. Sync edit to backend API (Local Server or Cloudflare Edge 24/7)
+        let backendEdited = false;
+        if (this.canUseBackendApi()) {
+            try {
+                const resp = await fetch(`${this.getApiBaseUrl()}/api/edit_deed`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
+                    body: JSON.stringify({
+                        studentId: sid,
+                        deedId: did,
+                        updates: {
+                            categoryId: newCat,
+                            hours: newHours,
+                            activityDate: updatedDeed.activityDate,
+                            description: updatedDeed.description,
+                            location: updatedDeed.location,
+                            approver: updatedDeed.approver,
+                            imageUrl: updatedDeed.imageUrl
+                        }
+                    })
+                });
+                if (resp && resp.ok) backendEdited = true;
+            } catch (err) {
+                console.warn('⚠️ Local backend edit sync error:', err);
+            }
+        } else {
+            // Cloudflare Pages 24/7 Edge Serverless API
+            try {
+                const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/edit_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/edit_deed';
+                const resp = await fetch(edgeUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        studentId: sid,
+                        deedId: did,
+                        role: 'student',
+                        updates: {
+                            categoryId: newCat,
+                            hours: newHours,
+                            activityDate: updatedDeed.activityDate,
+                            description: updatedDeed.description,
+                            location: updatedDeed.location,
+                            approver: updatedDeed.approver,
+                            imageUrl: updatedDeed.imageUrl
+                        }
+                    })
+                });
+                if (resp && resp.ok) backendEdited = true;
+            } catch (cfErr) {
+                console.warn('⚠️ Cloudflare Edge edit sync notice:', cfErr);
+            }
+        }
+
+        // 5. Direct GAS fallback if not saved via backend/edge
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-        if (gasUrl) {
+        if (gasUrl && !backendEdited) {
             fetch(gasUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1323,28 +1464,6 @@ const App = {
                 })
             }).then(() => console.log('☁️ Synced edit to Google Apps Script'))
               .catch(err => console.warn('⚠️ GAS Edit Sync Error:', err));
-        }
-
-        // 5. Sync edit to local backend server if reachable
-        if (this.canUseBackendApi()) {
-            fetch('/api/edit_deed', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    studentId: sid,
-                    deedId: did,
-                    updates: {
-                        categoryId: newCat,
-                        hours: newHours,
-                        activityDate: updatedDeed.activityDate,
-                        description: updatedDeed.description,
-                        location: updatedDeed.location,
-                        approver: updatedDeed.approver,
-                        imageUrl: updatedDeed.imageUrl
-                    }
-                })
-            }).then(() => console.log('💻 Synced edit to local backend'))
-              .catch(err => console.warn('⚠️ Local backend edit sync error:', err));
         }
 
         return true;
@@ -1513,6 +1632,15 @@ const App = {
         const remainingDeeds = deeds.filter(d => String(d.id) !== did);
         this.saveDeeds(sid, remainingDeeds);
 
+        // 1.1 Persistently remember this deleted deed ID so getDeeds and sync won't resurrect it
+        try {
+            const deletedKey = 'gooddeeds_deleted_ids';
+            const rawDeleted = localStorage.getItem(deletedKey);
+            const deletedSet = new Set(rawDeleted ? JSON.parse(rawDeleted) : []);
+            deletedSet.add(did);
+            localStorage.setItem(deletedKey, JSON.stringify(Array.from(deletedSet)));
+        } catch (_) {}
+
         // 2. If deed was approved, reverse/deduct hours from local student stats
         if (prevStatus === 'approved') {
             const student = this.getStudent(sid);
@@ -1526,15 +1654,16 @@ const App = {
             }
         }
 
-        // 3. Update DEEDS_DATA cache if present
+        // 3. Update DEEDS_DATA & IMPORTED_DEEDS cache if present
         if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
             const idx = DEEDS_DATA.findIndex(d => String(d.id) === did);
             if (idx !== -1) {
                 DEEDS_DATA.splice(idx, 1);
             }
-        } else if (typeof DEEDS_DATA !== 'undefined' && typeof DEEDS_DATA === 'object') {
-            if (DEEDS_DATA[sid]) {
-                DEEDS_DATA[sid] = DEEDS_DATA[sid].filter(d => String(d.id) !== did);
+        }
+        if (typeof IMPORTED_DEEDS !== 'undefined' && typeof IMPORTED_DEEDS === 'object') {
+            if (IMPORTED_DEEDS[sid]) {
+                IMPORTED_DEEDS[sid] = IMPORTED_DEEDS[sid].filter(d => String(d.id) !== did);
             }
         }
 
@@ -1543,20 +1672,40 @@ const App = {
             window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId: sid, deedId: did, status: 'deleted' } }));
         }
 
-        // 4.1 Sync to Local Backend API if available
+        // 5. Sync to Backend API (Local or Cloudflare Edge 24/7)
+        let backendDeleted = false;
+        const user = this.getCurrentUser() || {};
+        const userName = (user.name || user.full_name || (user.rank ? (user.rank + ' ' + user.first_name + ' ' + user.last_name) : '')) || (role === 'teacher' ? 'อาจารย์ผู้ตรวจ' : 'นักเรียน');
+
         if (this.canUseBackendApi()) {
-            fetch('/api/delete_deed', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ studentId: sid, deedId: did, reason: reason })
-            }).catch(err => console.warn('⚠️ Local API delete_deed error:', err));
+            try {
+                const resp = await fetch(`${this.getApiBaseUrl()}/api/delete_deed`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
+                    body: JSON.stringify({ studentId: sid, deedId: did, reason: reason, role: role, deletedBy: userName })
+                });
+                if (resp && resp.ok) backendDeleted = true;
+            } catch (err) {
+                console.warn('⚠️ Local API delete_deed error:', err);
+            }
+        } else {
+            // Cloudflare Pages 24/7 Edge Serverless API
+            try {
+                const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/delete_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/delete_deed';
+                const resp = await fetch(edgeUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId: sid, deedId: did, reason: reason, role: role, deletedBy: userName })
+                });
+                if (resp && resp.ok) backendDeleted = true;
+            } catch (cfErr) {
+                console.warn('⚠️ Cloudflare Edge delete notice:', cfErr);
+            }
         }
 
-        // 5. Sync to Google Apps Script (Cloud Google Sheets)
+        // 6. Direct GAS fallback if not deleted via backend/edge
         const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : (this.getSettings ? this.getSettings().gasUrl : '');
-        if (gasUrl) {
-            const user = this.getCurrentUser() || {};
-            const userName = (user.name || user.full_name || (user.rank ? (user.rank + ' ' + user.first_name + ' ' + user.last_name) : '')) || (role === 'teacher' ? 'อาจารย์ผู้ตรวจ' : 'นักเรียน');
+        if (gasUrl && !backendDeleted) {
             fetch(gasUrl, {
                 method: 'POST',
                 mode: 'no-cors',
@@ -2444,6 +2593,10 @@ const App = {
 
     // ---------- NOTIFY ALL CHANNELS ----------
     async notifyAdmins(deed, student) {
+        if (deed && deed.telegramSent) {
+            console.log('✅ Telegram already notified during submission');
+            return true;
+        }
         const settings = this.getSettings();
         const cat = this.getCategoryById(deed.categoryId);
         const sClassYear = (student && student.class_year) || deed.class_year || '69';
