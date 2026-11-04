@@ -560,5 +560,40 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
     - Delete Deed: status `success`, action `deleted`, GAS hours reversed `success`.
     - 100% SUCCESS entirely in the cloud 24/7 without local server.
 
+### Student Card Tiers & Multi-Year Cumulative Carry-Forward Hardening — 2026-11-04 (18:30)
+- User Request: "คลังการ์ด นพอ. ทุกรุ่น 67, 66 ชม หายไปบางส่วน อับเดท หน่อย บางคนที่ รุ่น 66 อย่างน้อย ต้อง 150 ชมแล้ว เพราะปีการศึกษา ละ 50 ชม และเป็น นต่างๆอีกที่ได้เพิ่มปีละ 25 ชม ตรวจสอบและอับเดทออนไลนทั้งระบบ พร้มอเทสความถูกต้อง ทุกครั้ง"
+- Investigation & Root Cause:
+  - Previously, `build_carry_forward.py` only parsed single-year totals from `summary_2568_analysis.json` (Year 2568 only, capped at ~85 hrs average for cohort 66).
+  - It omitted prior academic years:
+    - Cohort 66: already passed Year 2566 (50h) and Year 2567 (50h) = 100h base.
+    - Cohort 67: already passed Year 2567 (50h) = 50h base.
+  - It omitted the annual bonus for special roles ("น ต่างๆ"): +25 hours per year.
+- Implemented Solution:
+  1. Updated `data/build_carry_forward.py`:
+     - Reads official Master Excel `ความดีปีการศึกษา 2568/02_ฐานข้อมูลกลาง_Master_Database/00_ฐานข้อมูลความดีปี2568_Master_พร้อมยอดยกไปปี69.xlsx` sheet `ยอดยกไปฐานปี2569 (192คน)`.
+     - Fixed positions for 5 students (including `6603775 น.ตัดต่อ` and `6703850 น.แอดมิน`).
+     - Cumulative Carry-Forward Calculation:
+       - **Cohort 66**: 100h (Year 66 + 67) + Year 68 effective (`max(50.0, h_68)` for pass) + 25h ("น ต่างๆ" bonus).
+         - Result: Average 197.5 hrs (Min 145.0, Max 303.0), 60 Gold (150+), 2 Platinum (300+).
+       - **Cohort 67**: 50h (Year 67) + Year 68 effective + 25h ("น ต่างๆ" bonus).
+         - Result: Average 156.5 hrs (Min 50.0, Max 504.0), 28 Gold, 2 Platinum, 1 Diamond.
+       - **Cohort 68**: Year 68 effective + 25h ("น ต่างๆ" bonus). Average 73.4 hrs.
+       - **Cohort 69**: 0.0 hrs (Freshmen).
+  2. Updated `functions/api/students.js`:
+     - Enriches student data from Google Apps Script with `carry_forward`, `cumulative_hours`, and `position` on Cloudflare Edge 24/7.
+  3. Synchronized Static Data & Scripts:
+     - `data/students.json`, `data/students_data.js`, `frontend/data/students_data.js`, `frontend/data/carry_forward_data.js`.
+     - Updated cache-busting version `?v=20261104-cards-v2` across `view_cards.html`, `ranking.html`, `student-dashboard.html`, `teacher-dashboard.html`, `history.html`, `index.html`.
+  4. Card Tier Visual Upgrades in `view_cards.html` & `student-dashboard.html`:
+     - Cohort 66 students automatically receive 🟡 Gold Member Pass (150+ hrs) or 💎 Platinum Pass (300+ hrs).
+     - Full card previews, stars (5-10 stars), chibi avatars (lv 6-8), and rank badges verified.
+- Verification:
+  - Automated JS Tests: 153/153 PASS (`node --test tests/*.test.cjs`).
+  - Automated Python Tests: 23/23 PASS (`python3 -m unittest discover -s tests -p "test_*.py"`).
+  - Braces Syntax: 21/21 HTML files balanced 100% (`scratch/test_braces.py`).
+  - PDPA Compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+  - Cloudflare Pages Production: Deployed (`b6df6642.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`).
+  - Live Edge API Probe: `GET /api/students` verified with 380 students carrying accurate cumulative hours and positions.
+
 
 
