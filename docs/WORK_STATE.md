@@ -500,16 +500,22 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   4. **Card Collection Page Upgrade (`frontend/view_cards.html`):**
      - Updated `allStudentsList` and `allQualifiedStudents` to calculate rankings based on cumulative hours.
      - Updated card showcase boxes and filter buttons across cohorts (รุ่น 69, 68, 67, 66, 65, 64) with full cumulative breakdown.
-  5. **Backend Server Integration (`backend/server.py`):**
+  5. **Backend Server Integration (`backend/server.py` & `functions/api/students.js`):**
      - Updated `get_all_deeds()` to robustly handle both list and dictionary schemas in `deeds.json`.
      - Updated `/api/students` to return `total_hours`, `carry_forward`, and `cumulative_hours`.
+     - Added Cloudflare Edge proxy `functions/api/students.js` with CORS and 60-second caching proxying to Google Apps Script (`action=getStudents`).
   6. **Security & PDPA:**
      - Added `carry_forward` patterns to `.gitignore` and `data/check_pdpa_compliance.py`.
      - PDPA compliance: 100% PASS with 0 personal identifiers in git tracking.
+  7. **Production Online Deployment:**
+     - Deployed frontend and edge functions to Cloudflare Pages Production (`https://rtafnc-gooddeeds.pages.dev`).
+     - Verified online edge APIs: `/api/students`, `/api/health`, `/api/delete_deed`, `/api/submit_deed`, `/api/edit_deed`, `/api/approve`.
+     - Verified online pages: `/student-dashboard`, `/view_cards`, `/ranking`, `/teacher-dashboard`.
 - Verification & Test Results:
   - Syntax check: 100% PASS (`node scripts/check-syntax.cjs` and `scratch/test_braces.py`).
   - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
   - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
   - Server check: `curl http://127.0.0.1:3000/api/students` verified with cohorts 69, 68, 67, 66 carrying authentic cumulative scores.
+  - Cloudflare Pages check: `curl -s https://rtafnc-gooddeeds.pages.dev/api/students` verified 200 OK with full student stats.
 
 
