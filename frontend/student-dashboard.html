@@ -974,6 +974,27 @@
             0% { box-shadow: 0 0 5px rgba(59,130,246,0.3); }
             100% { box-shadow: 0 0 15px rgba(139,92,246,0.7); }
         }
+
+        .starbucks-card.diamond-level {
+            background: linear-gradient(135deg, #091e3a 0%, #000c18 100%),
+                        radial-gradient(circle at 80% 20%, rgba(0, 242, 254, 0.25) 0%, transparent 60%);
+            border-color: rgba(0, 242, 254, 0.5);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6), 0 0 25px rgba(0, 242, 254, 0.35);
+        }
+        .starbucks-card.diamond-level .card-level-badge {
+            background: linear-gradient(135deg, #00f2fe, #4facfe);
+            color: #000;
+            font-weight: 800;
+            border-color: rgba(255,255,255,0.7);
+            animation: diamond-glow 2s infinite alternate;
+        }
+        .starbucks-card.diamond-level .stars-count {
+            color: #00f2fe;
+        }
+        @keyframes diamond-glow {
+            0% { box-shadow: 0 0 5px rgba(0,242,254,0.4); }
+            100% { box-shadow: 0 0 20px rgba(0,242,254,0.9); }
+        }
     </style>
 </head>
 
@@ -1344,11 +1365,12 @@
 
     <!-- SCRIPT INCLUDES -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=3593"></script>
+    <script src="data/students_data.js?v=20261104-card-tier"></script>
     <script src="data/students_photos.js?v=3593"></script>
+    <script src="data/carry_forward_data.js?v=20261104-card-tier"></script>
     <script src="data/deeds_data.js?v=20261026-v50"></script>
     <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20261104-online-fix"></script>
+    <script src="app.js?v=20261104-card-tier"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
@@ -1488,8 +1510,10 @@
             const navName = document.getElementById('nav-name');
             if (navName) navName.textContent = currentUser.first_name + ' ' + currentUser.last_name;
 
-            // Update Starbucks Card Styling based on Hours
-            const hours = summary.totalHours || 0;
+            // Update Starbucks Card Styling based on Cumulative Accumulated Hours
+            const cumHours = (summary.cumulativeHours !== undefined) ? summary.cumulativeHours : (summary.totalHours || 0);
+            const annualHours = summary.totalHours || 0;
+            const carry = summary.carryForward || 0;
             const cardEl = document.getElementById('starbucks-card');
             const badgeEl = document.getElementById('card-level-badge');
             const starsRow = document.getElementById('card-stars-row');
@@ -1497,44 +1521,49 @@
             const barcodeEl = document.getElementById('card-barcode');
             const barcodeTextEl = document.getElementById('card-barcode-text');
 
-            // Determine level and color scheme
+            // Determine level and color scheme based on CUMULATIVE ACCUMULATED HOURS across all academic years
             let cardClass = 'welcome-level';
-            let badgeText = 'Welcome Level';
-            let numStars = 1;
+            let badgeText = '⚪ Welcome Member Pass';
+            let numStars = 3;
             let activeStars = 0;
 
-            if (hours >= 300) {
+            if (cumHours >= 400) {
+                cardClass = 'diamond-level';
+                badgeText = '👑 Crown Diamond (400+ ชม.)';
+                numStars = 10;
+                activeStars = 10;
+            } else if (cumHours >= 300) {
                 cardClass = 'platinum-level';
-                badgeText = 'Platinum Celestial Pass (ผ่านเกณฑ์)';
+                badgeText = '💎 Platinum Celestial Pass (300+ ชม.)';
                 numStars = 8;
                 activeStars = 8;
-            } else if (hours >= 150) {
+            } else if (cumHours >= 150) {
                 cardClass = 'gold-level';
-                badgeText = 'Gold Member Pass (ผ่านเกณฑ์)';
-                numStars = 5;
-                activeStars = Math.min(5, 3 + Math.floor(((hours - 150) / 150) * 2));
-            } else if (hours >= 50) {
-                cardClass = 'gold-level';
-                badgeText = 'Gold Member Pass (ผ่านเกณฑ์)';
-                numStars = 5;
-                activeStars = 5;
-            } else if (hours >= 25) {
+                badgeText = '🟡 Gold Member Pass (150+ ชม.)';
+                numStars = 6;
+                activeStars = Math.min(6, 4 + Math.floor(((cumHours - 150) / 150) * 2));
+            } else if (cumHours >= 50) {
                 cardClass = 'green-level';
-                badgeText = 'Green Member Pass';
-                numStars = 3;
-                activeStars = 2;
+                badgeText = '🟢 Green Member Pass (50+ ชม.)';
+                numStars = 4;
+                activeStars = Math.min(4, 2 + Math.floor(((cumHours - 50) / 100) * 2));
             } else {
                 cardClass = 'welcome-level';
-                badgeText = 'Welcome Member Pass';
-                numStars = 1;
-                activeStars = hours >= 10 ? 1 : 0;
+                badgeText = '⚪ Welcome Member Pass';
+                numStars = 3;
+                activeStars = cumHours >= 25 ? 2 : (cumHours >= 10 ? 1 : 0);
             }
 
             // Apply card styling
             cardEl.className = `starbucks-card ${cardClass}`;
             badgeEl.textContent = badgeText;
-            const targetMin = CONFIG.MIN_HOURS_PER_YEAR || 50;
-            countEl.textContent = `${Math.round(hours)} / ${targetMin} ชม.${hours >= targetMin ? ' (ผ่านเกณฑ์แล้ว ✅)' : ''}`;
+            
+            // Format card count & breakdown: Cumulative score + details
+            if (carry > 0) {
+                countEl.innerHTML = `<b>${cumHours.toFixed(1)} ชม. สะสม</b> <span style="font-size:0.75rem;opacity:0.85;">(ยอดยกมา: ${carry.toFixed(1)} + ปี 69: ${annualHours.toFixed(1)} ชม.)</span>`;
+            } else {
+                countEl.innerHTML = `<b>${cumHours.toFixed(1)} ชม. สะสม</b> <span style="font-size:0.75rem;opacity:0.85;">(ประจำปีการศึกษา 2569)</span>`;
+            }
 
             // Draw Stars
             let starsHtml = '';
@@ -1554,7 +1583,7 @@
                 barcodeHtml += `<div style="width:${barWidth}px; background:#000; height:100%; margin-right:${spaceWidth}px;"></div>`;
             }
             barcodeEl.innerHTML = barcodeHtml;
-            barcodeTextEl.textContent = currentUser.student_id;
+            barcodeTextEl.textContent = `${currentUser.student_id} • ${cumHours.toFixed(1)} ชม.`;
 
             // Init 3D tilt effect on the card
             initCardTilt();
@@ -1685,11 +1714,18 @@
                 initChibiHero('chibi-3d-mount', level, hours);
             }
 
-            // Set floating Chibi image on the Starbucks Card
+            // Set floating Chibi image on the Starbucks Card (matches cumulative level)
             const cardChibiEl = document.getElementById('card-chibi-wrap');
             if (cardChibiEl) {
-                const lvClamped = Math.max(1, Math.min(8, level));
-                cardChibiEl.innerHTML = `<img src="photos/chibi/chibi_lv${lvClamped}.png" alt="Chibi Level ${level}" style="width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.5));animation:cardChibiFloat 3s ease-in-out infinite;" onerror="this.src='photos/chibi/chibi_lv1.png'">`;
+                const cumHours = (summary.cumulativeHours !== undefined) ? summary.cumulativeHours : (summary.totalHours || 0);
+                let cardChibiLv = 1;
+                if (cumHours >= 400) cardChibiLv = 8;
+                else if (cumHours >= 300) cardChibiLv = 7;
+                else if (cumHours >= 150) cardChibiLv = 6;
+                else if (cumHours >= 50) cardChibiLv = 4;
+                else if (cumHours >= 25) cardChibiLv = 2;
+                else cardChibiLv = 1;
+                cardChibiEl.innerHTML = `<img src="photos/chibi/chibi_lv${cardChibiLv}.png" alt="Chibi Level ${cardChibiLv}" style="width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(0,0,0,0.5));animation:cardChibiFloat 3s ease-in-out infinite;" onerror="this.src='photos/chibi/chibi_lv1.png'">`;
             }
         }
 
@@ -1701,20 +1737,23 @@
         }
 
         function renderStatusBanner() {
-            const min = CONFIG.MIN_HOURS_PER_YEAR;
+            const min = CONFIG.MIN_HOURS_PER_YEAR || 50;
             const banner = document.getElementById('status-banner');
+            const annualHrs = summary.totalHours || 0;
+            const cumHrs = (summary.cumulativeHours !== undefined) ? summary.cumulativeHours : annualHrs;
+            const carry = summary.carryForward || 0;
             if (summary.passed) {
                 banner.className = 'status-banner pass';
                 document.getElementById('status-icon').textContent = '✅';
-                document.getElementById('status-text').textContent = 'ผ่านเกณฑ์ชั่วโมงความดีประจำปี!';
-                document.getElementById('status-detail').textContent = `สะสมแล้ว ${summary.totalHours} ชม. (เกณฑ์: ${min} ชม./ปี)`;
+                document.getElementById('status-text').textContent = 'ผ่านเกณฑ์ชั่วโมงความดีประจำปีการศึกษา 2569!';
+                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs} ชม. (เกณฑ์: ${min} ชม./ปี)${carry > 0 ? ` • คะแนนสะสมรวม: ${cumHrs} ชม.` : ''}`;
             } else {
                 banner.className = 'status-banner fail';
                 document.getElementById('status-icon').textContent = '⏳';
-                document.getElementById('status-text').textContent = `ยังไม่ผ่านเกณฑ์ — ต้องการอีก ${min - summary.totalHours} ชม.`;
-                document.getElementById('status-detail').textContent = `สะสมแล้ว ${summary.totalHours} ชม. จาก ${min} ชม. ที่กำหนด`;
+                document.getElementById('status-text').textContent = `ชั่วโมงความดีประจำปีการศึกษา 2569 — ต้องการอีก ${Math.max(0, min - annualHrs)} ชม.`;
+                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs} ชม. จาก ${min} ชม. ที่กำหนด${carry > 0 ? ` • คะแนนสะสมรวม: ${cumHrs} ชม.` : ''}`;
             }
-            document.getElementById('status-total-hrs').innerHTML = `<span style="font-size:1.8rem;font-weight:700;color:var(--gold)">${summary.totalHours}</span><br><span style="font-size:0.7rem;color:var(--text-muted)">ชม.</span>`;
+            document.getElementById('status-total-hrs').innerHTML = `<span style="font-size:1.8rem;font-weight:700;color:var(--gold)">${annualHrs}</span><br><span style="font-size:0.7rem;color:var(--text-muted)">ชม. ปี 69</span>`;
         }
 
         let activeCategoryFilter = 'all';

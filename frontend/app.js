@@ -1956,7 +1956,22 @@ const App = {
         return { valid: true, term: { academicYear: usage.academicYear, semester: usage.semester } };
     },
 
-    // ---------- SUMMARY ----------
+    // ---------- SUMMARY & CARRY FORWARD ----------
+    getCarryForwardHours(studentId) {
+        if (!studentId) return 0;
+        const sid = String(studentId).trim();
+        // 1. Check CARRY_FORWARD_HOURS global lookup
+        if (typeof CARRY_FORWARD_HOURS !== 'undefined' && CARRY_FORWARD_HOURS && CARRY_FORWARD_HOURS[sid] !== undefined) {
+            return parseFloat(CARRY_FORWARD_HOURS[sid]) || 0;
+        }
+        // 2. Check student record from STUDENTS_DATA
+        const stu = this.getStudentById ? this.getStudentById(sid) : null;
+        if (stu && stu.carry_forward !== undefined) {
+            return parseFloat(stu.carry_forward) || 0;
+        }
+        return 0;
+    },
+
     getStudentSummary(studentId) {
         const deeds = this.getDeeds(studentId);
         const approved = deeds.filter(d => d.status === 'approved');
@@ -1970,6 +1985,11 @@ const App = {
                 totalHours = (parseFloat(stu.total_hours) || 0);
             }
         }
+        totalHours = Math.round(totalHours * 10) / 10;
+
+        const carryForward = this.getCarryForwardHours(studentId);
+        const cumulativeHours = Math.round((totalHours + carryForward) * 10) / 10;
+
         const byCategory = CATEGORIES.map(cat => ({
             ...cat,
             hours: approved.filter(d => d.categoryId === cat.id).reduce((s, d) => s + (parseFloat(d.hours) || 0), 0),
@@ -1977,12 +1997,16 @@ const App = {
         }));
 
         return {
-            totalHours,
+            totalHours, // Annual hours for academic year 2569
+            annualHours: totalHours,
+            carryForward, // Historical carry-forward hours from previous academic years
+            cumulativeHours, // Total cumulative hours across academic years
             pendingCount: pending.length,
             rejectedCount: rejected.length,
             approvedCount: approved.length > 0 ? approved.length : (totalHours > 0 ? 1 : 0),
             totalCount: deeds.length,
-            passed: totalHours >= CONFIG.MIN_HOURS_PER_YEAR,
+            passed: totalHours >= (CONFIG.MIN_HOURS_PER_YEAR || 50),
+            cumulativePassed: cumulativeHours >= (CONFIG.MIN_HOURS_PER_YEAR || 50),
             byCategory,
         };
     },

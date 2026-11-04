@@ -781,11 +781,12 @@
         </div>
 
     <!-- SCRIPT INCLUDES -->
-    <script src="data/students_data.js?v=3580"></script>
+    <script src="data/students_data.js?v=20261104-card-tier"></script>
     <script src="data/students_photos.js?v=3580"></script>
+    <script src="data/carry_forward_data.js?v=20261104-card-tier"></script>
     <script src="data/deeds_data.js?v=3580"></script>
     <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=20260921-online-active"></script>
+    <script src="app.js?v=20261104-card-tier"></script>
 
     <script>
         let allStudentsList = [];
@@ -900,8 +901,11 @@
                             ${s.rank} ${s.first_name} ${s.last_name} (${s.student_id})
                         </span>
                         <div class="criteria-row" style="margin-top:8px;">
-                            ชั่วโมงสะสม: <b style="color:var(--gold); font-size:1.1rem;">${hrs.toFixed(1)} ชั่วโมง</b> 
-                            <span style="color:${isDiamond ? '#00f2fe' : (isPass ? '#4ade80' : '#f59e0b')}; margin-left:8px;">${isDiamond ? '👑 บรรลุเพดานสูงสุด 400+ ชม.' : (isPass ? '✅ ผ่านเกณฑ์ขั้นต่ำ' : '⏳ กำลังสะสมชั่วโมง')}</span>
+                            คะแนนสะสมรวม: <b style="color:var(--gold); font-size:1.1rem;">${hrs.toFixed(1)} ชั่วโมง</b> 
+                            <span style="color:${isDiamond ? '#00f2fe' : (isPass ? '#4ade80' : '#f59e0b')}; margin-left:8px;">${isDiamond ? '👑 บรรลุเพดานสูงสุด 400+ ชม.' : (isPass ? '✅ ผ่านเกณฑ์สะสม' : '⏳ กำลังสะสมชั่วโมง')}</span>
+                        </div>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:4px;">
+                            ${item.carryForward > 0 ? `ยอดยกมาตามชั้นปี: <b>${item.carryForward.toFixed(1)}</b> ชม. • ปี 2569: <b>${item.annualHours.toFixed(1)}</b> ชม.` : `ชั่วโมงประจำปีการศึกษา 2569: <b>${item.annualHours.toFixed(1)}</b> ชม.`}
                         </div>
                     </div>
                 </div>`;
@@ -924,10 +928,16 @@
             const currentUser = App.requireAuth(['student', 'teacher', 'admin']);
             if (!currentUser) return;
 
-            // Compute all students list (375 students) and qualified students list (>= 36 hours)
+            // Compute all students list with CUMULATIVE ACCUMULATED HOURS across all academic years
             allStudentsList = STUDENTS_DATA.map(s => {
                 const summ = App.getStudentSummary(s.student_id);
-                return { student: s, hours: summ.totalHours || 0 };
+                const cumHrs = (summ.cumulativeHours !== undefined) ? summ.cumulativeHours : (summ.totalHours || 0);
+                return { 
+                    student: s, 
+                    hours: cumHrs, 
+                    annualHours: summ.totalHours || 0,
+                    carryForward: summ.carryForward || 0
+                };
             }).sort((a, b) => b.hours - a.hours);
 
             allQualifiedStudents = allStudentsList.filter(item => item.hours >= 50);
@@ -969,15 +979,15 @@
                 // Map them by volunteer hours category
                 studentsWithPhotos.forEach(s => {
                     const summ = App.getStudentSummary(s.student_id);
-                    const hrs = summ.totalHours || 0;
+                    const hrs = (summ.cumulativeHours !== undefined) ? summ.cumulativeHours : (summ.totalHours || 0);
                     
                     if (hrs >= 300 && !levels.platinum) {
                         levels.platinum = { student: s, summary: summ };
                     } else if (hrs >= 150 && hrs < 300 && !levels.gold) {
                         levels.gold = { student: s, summary: summ };
-                    } else if (hrs >= 36 && hrs < 150 && !levels.green) {
+                    } else if (hrs >= 50 && hrs < 150 && !levels.green) {
                         levels.green = { student: s, summary: summ };
-                    } else if (hrs < 36 && !levels.welcome) {
+                    } else if (hrs < 50 && !levels.welcome) {
                         levels.welcome = { student: s, summary: summ };
                     }
                 });
@@ -987,25 +997,25 @@
                 if (!levels.welcome) {
                     levels.welcome = { 
                         student: defaultStudent, 
-                        summary: { totalHours: 4.5, approvedCount: 1, pendingCount: 0, rejectedCount: 0 } 
+                        summary: { totalHours: 4.5, cumulativeHours: 4.5, carryForward: 0, approvedCount: 1, pendingCount: 0, rejectedCount: 0 } 
                     };
                 }
                 if (!levels.green) {
                     levels.green = { 
                         student: studentsWithPhotos[1] || defaultStudent, 
-                        summary: { totalHours: 18.0, approvedCount: 3, pendingCount: 0, rejectedCount: 0 } 
+                        summary: { totalHours: 18.0, cumulativeHours: 68.0, carryForward: 50.0, approvedCount: 3, pendingCount: 0, rejectedCount: 0 } 
                     };
                 }
                 if (!levels.gold) {
                     levels.gold = { 
                         student: studentsWithPhotos[2] || defaultStudent, 
-                        summary: { totalHours: 42.5, approvedCount: 8, pendingCount: 0, rejectedCount: 0 } 
+                        summary: { totalHours: 42.5, cumulativeHours: 192.5, carryForward: 150.0, approvedCount: 8, pendingCount: 0, rejectedCount: 0 } 
                     };
                 }
                 if (!levels.platinum) {
                     levels.platinum = { 
                         student: studentsWithPhotos[3] || defaultStudent, 
-                        summary: { totalHours: 283.0, approvedCount: 35, pendingCount: 0, rejectedCount: 0 } 
+                        summary: { totalHours: 35.0, cumulativeHours: 318.0, carryForward: 283.0, approvedCount: 35, pendingCount: 0, rejectedCount: 0 } 
                     };
                 }
             }
@@ -1016,7 +1026,7 @@
                 const data = levels[type];
                 const stu = data.student;
                 const summ = data.summary;
-                const hrs = summ.totalHours;
+                const hrs = (summ.cumulativeHours !== undefined) ? summ.cumulativeHours : (summ.totalHours || 0);
 
                 const cardEl = document.querySelector(`.starbucks-card.${type}-level`);
                 if (!cardEl) return;

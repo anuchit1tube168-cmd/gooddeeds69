@@ -44,6 +44,8 @@ frontend/data/deeds.json
 frontend/data/deeds_data.js
 frontend/data/line_mappings.json
 frontend/data/photos.json
+frontend/data/carry_forward*
+data/carry_forward*
 .local_backup_pdpa/
 *.xlsx
 *.xls

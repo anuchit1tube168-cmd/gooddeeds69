@@ -466,3 +466,50 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
   - Cloudflare Edge APIs tested: `/api/delete_deed`, `/api/submit_deed`, `/api/edit_deed` verified `online`.
 
+## Multi-Year Cumulative Card Tiers & Annual Academic View Separation — 2026-11-04
+- User Request: "อับเดทการด์ของแต่ละคน เพราะนพอ แต่ละมีทำความดีมากตามปีการศึกษาแล้ว คะแนนสะสม แต่รายปี การศึกษา แสดงหน้าปกติ อย่าลืมเปลี่ยนบัตรแต่ละคนตามการสระสมคะแนนความดี"
+- Problem Analysis & Root Cause:
+  1. **Card Tier Degradation:**
+     - Students in senior cohorts (รุ่น 68, 67, 66, 65) had accumulated dozens to hundreds of volunteer hours across their study years (average 66.0 hrs for Yr 2, 99.1 hrs for Yr 3, 85.0 hrs for Yr 4 from official institutional records in `data/summary_2568_analysis.json`).
+     - However, the Member Card (`starbucks-card`) in `frontend/student-dashboard.html` and `frontend/view_cards.html` calculated its level, badge, and stars solely from `summary.totalHours` (which only contained 2569 deeds).
+     - Consequently, senior students were reverted to "Welcome Member Pass" with 0 stars, despite high cumulative service.
+  2. **Requirement Distinction:**
+     - **Cumulative Accumulated Hours (คะแนนสะสมรวมทุกปีการศึกษา):** Must drive the student's personal Member Card, badge tier, stars, and theme styling (Welcome -> Green -> Gold -> Platinum -> Crown Diamond).
+     - **Annual Academic Year View (รายปีการศึกษา 2569):** Must display the standard 2569 progress (50 hrs/yr minimum, pass status, 9 categories breakdown, deeds history) without distortion.
+- Implementation & Resolution:
+  1. **Historical Carry-Forward Integration (`data/build_carry_forward.py`):**
+     - Connected 256 verified historical student records from `data/summary_2568_analysis.json` across cohorts 68, 67, 66, 65.
+     - Generated `frontend/data/carry_forward_data.js` (`CARRY_FORWARD_HOURS` global lookup map) and updated `students.json` & `students_data.js`.
+     - 1st-year students (รุ่น 69, ปี 1) start at 0 carry-forward; active 2569 deeds accumulate directly.
+  2. **Frontend `frontend/app.js` Architecture Enhancement:**
+     - Added `App.getCarryForwardHours(studentId)` supporting `CARRY_FORWARD_HOURS` lookup, `stu.carry_forward`, and fallbacks.
+     - Enhanced `App.getStudentSummary(studentId)` to return both:
+       - `totalHours` / `annualHours`: 2569 annual hours (รายปีการศึกษา 2569).
+       - `carryForward`: Historical carry-forward hours.
+       - `cumulativeHours`: Total cumulative hours across academic years.
+       - `passed`: Annual 2569 compliance (>= 50 hrs/yr).
+       - `cumulativePassed`: Cumulative compliance (>= 50 hrs).
+     - Enhanced `getAllStudentsSummary()` to map cumulative metrics to all students.
+  3. **Student Dashboard & Member Card Upgrade (`frontend/student-dashboard.html`):**
+     - Added `.starbucks-card.diamond-level` CSS with animated cyan diamond glow (for 400+ hrs).
+     - Updated `renderHero()`: Card tier, stars (up to 10), level badges, and barcode dynamically reflect **`cumulativeHours`**.
+     - Card footer now displays: `<b>X.X ชม. สะสม</b> (ยอดยกมา: Y.Y + ปี 69: Z.Z ชม.)`.
+     - Preserved `renderStatusBanner()` as the official annual display ("ผ่านเกณฑ์ชั่วโมงความดีประจำปีการศึกษา 2569" or "ต้องการอีก ... ชม. จาก 50 ชม. ที่กำหนด").
+     - Preserved `renderStats()`, `renderCategories()`, `renderInteractiveTable()`, and `renderRecentDeeds()` as 2569 annual views.
+     - Floating Chibi on card dynamically evolves to match cumulative rank (Lv 1 to Lv 8).
+  4. **Card Collection Page Upgrade (`frontend/view_cards.html`):**
+     - Updated `allStudentsList` and `allQualifiedStudents` to calculate rankings based on cumulative hours.
+     - Updated card showcase boxes and filter buttons across cohorts (รุ่น 69, 68, 67, 66, 65, 64) with full cumulative breakdown.
+  5. **Backend Server Integration (`backend/server.py`):**
+     - Updated `get_all_deeds()` to robustly handle both list and dictionary schemas in `deeds.json`.
+     - Updated `/api/students` to return `total_hours`, `carry_forward`, and `cumulative_hours`.
+  6. **Security & PDPA:**
+     - Added `carry_forward` patterns to `.gitignore` and `data/check_pdpa_compliance.py`.
+     - PDPA compliance: 100% PASS with 0 personal identifiers in git tracking.
+- Verification & Test Results:
+  - Syntax check: 100% PASS (`node scripts/check-syntax.cjs` and `scratch/test_braces.py`).
+  - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+  - Server check: `curl http://127.0.0.1:3000/api/students` verified with cohorts 69, 68, 67, 66 carrying authentic cumulative scores.
+
+

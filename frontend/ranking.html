@@ -334,11 +334,12 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=3580"></script>
+    <script src="data/students_data.js?v=20261104-card-tier"></script>
     <script src="data/students_photos.js?v=3580"></script>
+    <script src="data/carry_forward_data.js?v=20261104-card-tier"></script>
     <script src="data/deeds_data.js?v=3580"></script>
     <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=20261104-online-fix"></script>
+    <script src="app.js?v=20261104-card-tier"></script>
     <script>
         let currentUser = null;
         let allSummary = [];
@@ -552,8 +553,9 @@
                 <div class="smodal-header">
                     <div class="smodal-kv"><div class="k">รหัสนักเรียน</div><div class="v">${stu.student_id}</div></div>
                     <div class="smodal-kv"><div class="k">ชั้นปี</div><div class="v">${App.getYearName(stu.class_year)}</div></div>
-                    <div class="smodal-kv"><div class="k">รวมชั่วโมง (ที่อนุมัติแล้ว)</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
-                    <div class="smodal-kv"><div class="k">สถานะ</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
+                    <div class="smodal-kv"><div class="k">ชั่วโมงปี 2569</div><div class="v" style="color:var(--gold)">${summ.totalHours} ชม.</div></div>
+                    <div class="smodal-kv"><div class="k">คะแนนสะสมรวม</div><div class="v" style="color:#00f2fe;font-weight:700;">${summ.cumulativeHours} ชม.${summ.carryForward > 0 ? ` (ยกมา ${summ.carryForward})` : ''}</div></div>
+                    <div class="smodal-kv"><div class="k">สถานะปี 2569</div><div class="v">${summ.passed ? '<span style="color:var(--green)">✅ ผ่านเกณฑ์</span>' : '<span style="color:var(--yellow)">⏳ ยังไม่ผ่าน</span>'}</div></div>
                 </div>
                 <div class="progress-container">
                     <div class="progress-label"><span>ความคืบหน้า</span><span>${summ.totalHours} / ${CONFIG.MIN_HOURS_PER_YEAR} ชม.</span></div>

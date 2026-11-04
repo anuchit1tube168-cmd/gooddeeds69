@@ -168,14 +168,26 @@ def get_deeds_for_student(student_id):
 def get_all_deeds():
     """Retrieve all deeds for all students (seeded + dynamic)."""
     # 1. Load all imported deeds
-    imported_deeds = {}
+    raw_deeds = []
     deeds_json_path = os.path.join(BASE_DIR, 'frontend', 'data', 'deeds.json')
     if os.path.exists(deeds_json_path):
         try:
             with open(deeds_json_path, 'r', encoding='utf-8') as f:
-                imported_deeds = json.load(f)
+                raw_deeds = json.load(f)
         except Exception as e:
             print(f"Error reading deeds.json: {e}")
+
+    imported_deeds = {}
+    if isinstance(raw_deeds, dict):
+        imported_deeds = raw_deeds
+    elif isinstance(raw_deeds, list):
+        for d in raw_deeds:
+            if isinstance(d, dict):
+                sid = str(d.get('student_id') or d.get('studentId') or '')
+                if sid:
+                    if sid not in imported_deeds:
+                        imported_deeds[sid] = []
+                    imported_deeds[sid].append(d)
 
     # 2. Walk records/ directory to find all dynamic deeds
     dynamic_deeds_by_student = {}
@@ -202,9 +214,10 @@ def get_all_deeds():
     for sid in all_students:
         student_deeds = imported_deeds.get(sid, [])
         dyn_deeds = dynamic_deeds_by_student.get(sid, [])
-        merged_map = {d['id']: d for d in student_deeds}
+        merged_map = {d.get('id', str(i)): d for i, d in enumerate(student_deeds) if isinstance(d, dict)}
         for d in dyn_deeds:
-            merged_map[d['id']] = d
+            if isinstance(d, dict) and 'id' in d:
+                merged_map[d['id']] = d
         result[sid] = list(merged_map.values())
 
     return result
@@ -1053,7 +1066,9 @@ class CustomHandler(SimpleHTTPRequestHandler):
                     'role': s.get('role', 'student'),
                     'line_user_id': s.get('line_user_id', ''),
                     'line_display_name': s.get('line_display_name', ''),
-                    'total_hours': hours_map.get(sid_str, 0)
+                    'carry_forward': float(s.get('carry_forward', 0) or 0),
+                    'total_hours': hours_map.get(sid_str, 0),
+                    'cumulative_hours': round(hours_map.get(sid_str, 0) + float(s.get('carry_forward', 0) or 0), 1)
                 })
             self.send_json_response(200, safe_list)
             return

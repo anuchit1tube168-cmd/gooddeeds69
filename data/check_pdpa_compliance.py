@@ -22,6 +22,8 @@ FORBIDDEN_TRACKED_PATTERNS = [
     'frontend/data/deeds',
     'frontend/data/line_mappings',
     'frontend/data/photos.json',
+    'frontend/data/carry_forward',
+    'data/carry_forward',
     'data/students.json',
     'data/students_data.js',
     'data/students_photos.js',
