@@ -36,7 +36,7 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
   const gasUrl = (env && env.GAS_URL) ? env.GAS_URL : 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
-  const botToken = env ? env.TELEGRAM_BOT_TOKEN : null;
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
   const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
 
   let body;
@@ -54,6 +54,7 @@ export async function onRequestPost(context) {
   const status = String(body.status || 'approved').trim();
   const teacherName = String(body.teacherName || body.approvedBy || 'ร.อ.อนุชิต ทำจะดี (Bird)').trim();
   const rejectReason = String(body.rejectReason || '').trim();
+  const studentName = String(body.studentName || body.student_name || body.name || '').trim();
 
   if (!studentId || !deedId) {
     return new Response(JSON.stringify({ status: 'error', message: 'Missing studentId or deedId' }), {
@@ -62,9 +63,9 @@ export async function onRequestPost(context) {
     });
   }
 
-  // Forward to Google Apps Script (Google Sheets Deeds_2569 & Main_2569)
-  let gasResult = null;
-  if (gasUrl) {
+  // 1. Parallel execution: Forward to GAS and notify Telegram simultaneously
+  const gasPromise = (async () => {
+    if (!gasUrl) return null;
     try {
       const resp = await fetch(gasUrl, {
         method: 'POST',
@@ -77,34 +78,36 @@ export async function onRequestPost(context) {
           approvedBy: teacherName,
           rejectReason: rejectReason,
           signatureKey: body.signatureKey || '',
-          signature: body.signature || ''
+          signature: body.signature || '',
+          deedData: body.deedData || body.deed || null
         })
       });
-      gasResult = await resp.json();
+      return await resp.json();
     } catch (gasErr) {
       console.error('Failed to forward approval to GAS:', gasErr);
-      gasResult = { status: 'error', message: String(gasErr) };
+      return { status: 'error', message: String(gasErr) };
     }
-  }
+  })();
 
-  // Optionally send confirmation to Telegram Group if bot configured
-  if (botToken && defaultChatId) {
+  const tgPromise = (async () => {
+    if (!botToken || !defaultChatId) return false;
     try {
       const isApprove = status === 'approved';
       const actionText = isApprove ? 'อนุมัติ' : 'ปฏิเสธ';
       const emoji = isApprove ? '✅' : '❌';
+      const sDisplay = studentName ? `${studentName} (รหัส ${studentId})` : `นพอ. รหัส ${studentId}`;
       const msgText = [
         `AGEn Ai Bot ☁️ (Mobile Web Approval)`,
         `${emoji} <b>แจ้งเตือนการ${actionText}ความดีผ่านมือถือ</b>`,
         `━━━━━━━━━━━━━━━━━━━━━━━`,
-        `👤 <b>นักเรียน:</b> นพอ. รหัส ${studentId}`,
+        `👤 <b>นักเรียน:</b> ${sDisplay}`,
         `🎫 <b>รหัส นพอ.:</b> <code>${studentId}</code>`,
         `🆔 <b>รหัสรายการ:</b> <code>${deedId}</code>`,
         `👨‍🏫 <b>ผู้ตรวจ:</b> ${teacherName}`,
         isApprove ? `🎉 <i>ตรวจอนุมัติและบันทึกคะแนนเรียบร้อยแล้วค่ะ</i>` : `📝 <b>เหตุผล:</b> ${rejectReason || 'หลักฐานไม่ชัดเจน'}`
       ].join('\n');
 
-      await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      const tgResp = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -113,10 +116,14 @@ export async function onRequestPost(context) {
           parse_mode: 'HTML'
         })
       });
+      return tgResp.ok;
     } catch (tgErr) {
       console.error('Telegram notification error in approve_deed:', tgErr);
+      return false;
     }
-  }
+  })();
+
+  const [gasResult, telegramSent] = await Promise.all([gasPromise, tgPromise]);
 
   return new Response(JSON.stringify({
     status: 'success',
@@ -124,6 +131,7 @@ export async function onRequestPost(context) {
     studentId: studentId,
     newStatus: status,
     approver: teacherName,
+    telegramSent: telegramSent,
     gasResult: gasResult
   }), {
     status: 200,

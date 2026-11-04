@@ -819,25 +819,45 @@ const App = {
     },
 
     async syncDeedsWithBackend(studentId) {
-        if (!this.canUseBackendApi()) return null;
+        if (this.canUseBackendApi()) {
+            try {
+                const apiUrl = `${this.getApiBaseUrl()}/api/get_deeds?studentId=${encodeURIComponent(studentId)}`;
+                const res = await fetch(apiUrl, {
+                    headers: this.getAuthHeaders(),
+                });
+                if (res.ok) {
+                    const deeds = await res.json();
+                    this.saveDeeds(studentId, deeds);
+                    console.log(`🔄 Synced ${deeds.length} deeds from backend for ${studentId}`);
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deeds } }));
+                    }
+                    return deeds;
+                }
+            } catch (e) {
+                console.error('❌ Failed to sync deeds with backend:', e);
+            }
+        }
 
+        // Cloudflare Pages 24/7 Edge Serverless API for online & mobile
         try {
-            const apiUrl = `${this.getApiBaseUrl()}/api/get_deeds?studentId=${encodeURIComponent(studentId)}`;
-            const res = await fetch(apiUrl, {
-                headers: this.getAuthHeaders(),
-            });
+            const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl(`/api/get_deeds?student_id=${encodeURIComponent(studentId)}`) : `https://rtafnc-gooddeeds.pages.dev/api/get_deeds?student_id=${encodeURIComponent(studentId)}`;
+            const res = await fetch(edgeUrl);
             if (res.ok) {
                 const deeds = await res.json();
-                this.saveDeeds(studentId, deeds);
-                console.log(`🔄 Synced ${deeds.length} deeds from backend for ${studentId}`);
-                if (typeof window !== 'undefined') {
-                    window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deeds } }));
+                if (Array.isArray(deeds)) {
+                    this.saveDeeds(studentId, deeds);
+                    console.log(`☁️ Synced ${deeds.length} deeds from Cloudflare Edge for ${studentId}`);
+                    if (typeof window !== 'undefined') {
+                        window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deeds } }));
+                    }
+                    return deeds;
                 }
-                return deeds;
             }
-        } catch (e) {
-            console.error('❌ Failed to sync deeds with backend:', e);
+        } catch (cfErr) {
+            console.warn('Edge sync deed notice:', cfErr);
         }
+
         return null;
     },
 
@@ -1272,6 +1292,8 @@ const App = {
                         rejectReason,
                         signatureKey: deed.signatureKey || '',
                         signature: deed.signature || '',
+                        studentName: deed.student_name || deed.studentName || '',
+                        deedData: deed,
                         deedData: deed
                     })
                 });
@@ -1296,7 +1318,9 @@ const App = {
                         teacherName,
                         rejectReason,
                         signatureKey: deed.signatureKey || '',
-                        signature: deed.signature || ''
+                        signature: deed.signature || '',
+                        studentName: deed.student_name || deed.studentName || '',
+                        deedData: deed
                     })
                 });
                 if (resp && resp.ok) {

@@ -975,20 +975,21 @@
                 }
 
                 // Notify admin via Telegram + LINE (if configured) with bounded timeout
-                let notified = false;
-                try {
-                    notified = await Promise.race([
-                        App.notifyAdmins(deed, currentUser),
-                        new Promise(r => setTimeout(() => r(false), 5000))
-                    ]);
-                } catch (notifErr) {
-                    console.warn('⚠️ Notification notice:', notifErr);
+                let notified = !!(deed && deed.telegramSent);
+                if (!notified) {
+                    try {
+                        notified = await Promise.race([
+                            App.notifyAdmins(deed, currentUser),
+                            new Promise(r => setTimeout(() => r(false), 12000))
+                        ]);
+                    } catch (notifErr) {
+                        console.warn('⚠️ Notification notice:', notifErr);
+                    }
                 }
 
                 if (loadingOverlay) loadingOverlay.style.display = 'none';
                 showToast('บันทึกความดีสำเร็จ! (สถานะ: รอการอนุมัติ) 🎉', 'success');
                 showSuccessModal(deed);
-                if (!notified) showToast('บันทึกแล้ว แต่ยังยืนยันการแจ้งผู้ตรวจไม่ได้ ไม่ต้องส่งรายการซ้ำ', 'warning');
             } catch (err) {
                 console.error('❌ handleSubmit error:', err);
                 showFormAlert('เกิดข้อผิดพลาดในการบันทึก: ' + (err.message || err));

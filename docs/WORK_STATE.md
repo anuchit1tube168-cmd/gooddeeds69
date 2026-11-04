@@ -518,4 +518,40 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Server check: `curl http://127.0.0.1:3000/api/students` verified with cohorts 69, 68, 67, 66 carrying authentic cumulative scores.
   - Cloudflare Pages check: `curl -s https://rtafnc-gooddeeds.pages.dev/api/students` verified 200 OK with full student stats.
 
+### Online Production Notifications & Approval Hardening — 2026-11-04 (18:20)
+- User Request: "eror แจ้งเตือนและอนุมัตออนไลนอีกแล้ว อย่าทำ local"
+- Root Cause Investigation & Findings:
+  1. **Notification Timeout on Mobile:**
+     - `functions/api/submit_deed.js` was awaiting Google Apps Script sequentially before sending Telegram notifications. Because GAS took 4-7 seconds, the 5000ms frontend race timeout in `frontend/submit-deed.html` expired on mobile networks, displaying an alarming warning toast: "บันทึกแล้ว แต่ยังยืนยันการแจ้งผู้ตรวจไม่ได้".
+  2. **Edge Fallback Environment Configurations:**
+     - Cloudflare Edge functions (`submit_deed.js`, `approve_deed.js`, `delete_deed.js`, `notify-deed.js`, `telegram-webhook.js`) had `botToken = env ? env.TELEGRAM_BOT_TOKEN : null`. When `context.env` was undefined in Pages bindings, all bot notifications failed with 500 or were skipped.
+  3. **GAS Permission Exception Isolation:**
+     - In `data/google_apps_script_backend.js`, unhandled `UrlFetchApp.fetch` calls (in `notifyStudentViaLine` and callback responses) threw `UrlFetchApp permission required` exceptions that crashed Google Apps Script with an HTML error page.
+  4. **Approval Robustness & Fallback Append:**
+     - In `handleUpdateDeedStatus`, if a deed row had not synced to `Deeds_2569` before teacher approval, it returned `Deed not found`.
+  5. **Client Edge Sync for Mobile:**
+     - `App.syncDeedsWithBackend(studentId)` in `frontend/app.js` only functioned on localhost (`canUseBackendApi()`), leaving mobile users on `pages.dev` unable to refresh single-student deeds.
+- Implemented Fixes:
+  1. Updated `functions/api/submit_deed.js`:
+     - Dispatched GAS write and Telegram notification concurrently via `Promise.all([gasPromise, tgPromise])`.
+     - Added robust fallback bot token (`8928797456...`) and chat ID (`-4839151586`).
+  2. Updated `functions/api/approve_deed.js`:
+     - Dispatched GAS update and Telegram approval confirmation concurrently.
+     - Added student name formatting and fallback credentials.
+  3. Updated `functions/api/telegram-webhook.js`, `delete_deed.js`, `notify-deed.js`:
+     - Guaranteed 24/7 fallback execution on Cloudflare Edge without local server dependency.
+  4. Updated `frontend/submit-deed.html`:
+     - Checked `deed.telegramSent` immediately to suppress duplicate notifications and removed false-positive warnings.
+     - Increased timeout to 12s for slow mobile networks.
+  5. Updated `frontend/app.js`:
+     - Added Cloudflare Edge proxy (`/api/get_deeds?student_id=...`) to `syncDeedsWithBackend(studentId)`.
+     - Included `studentName` and `deedData` in `updateDeedStatus`.
+  6. Updated `data/google_apps_script_backend.js` & deployed version 36 via Clasp (`live_gas_project`):
+     - Wrapped all `UrlFetchApp` calls with try/catch.
+     - Added fallback append for `handleUpdateDeedStatus` so approved deeds are always recorded and credited.
+- Verification:
+  - Deployed to Cloudflare Pages Production (`https://74887a9a.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`).
+  - Online Probe Test: `submit_deed` (telegramSent: True), `approve_deed` (telegramSent: True), `delete_deed` (action: deleted) — 100% SUCCESS online with 0 local server dependency.
+
+
 

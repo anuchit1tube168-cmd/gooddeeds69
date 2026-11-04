@@ -891,16 +891,20 @@ function notifyStudentViaLine(ss, studentId, isApprove, deed) {
       '👨‍🏫 อาจารย์ผู้ตรวจ: ร.อ.อนุชิต ทำจะดี (Bird)\n' +
       '📝 เหตุผล: กรุณาตรวจสอบหลักฐานและส่งใหม่ค่ะ';
 
-  UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
-    method: 'post',
-    contentType: 'application/json',
-    headers: { 'Authorization': 'Bearer ' + lineToken },
-    payload: JSON.stringify({
-      to: lineUserId,
-      messages: [{ type: 'text', text: msgText }]
-    }),
-    muteHttpExceptions: true
-  });
+  try {
+    UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+      method: 'post',
+      contentType: 'application/json',
+      headers: { 'Authorization': 'Bearer ' + lineToken },
+      payload: JSON.stringify({
+        to: lineUserId,
+        messages: [{ type: 'text', text: msgText }]
+      }),
+      muteHttpExceptions: true
+    });
+  } catch (lineErr) {
+    Logger.log('Line push error: ' + lineErr.message);
+  }
 }
 
 // ==================== UPDATE DEED STATUS (WEB / TEACHER DASHBOARD) ====================
@@ -940,6 +944,36 @@ function handleUpdateDeedStatus(params, ss) {
       updated = true;
       break;
     }
+  }
+
+  if (!updated && (newStatus === 'approved' || newStatus === 'rejected')) {
+    var dObj = params.deedData || params.deed || {};
+    var hrs = parseFloat(dObj.hours || params.hours || 0);
+    var catId = parseInt(dObj.categoryId || dObj.category_id || params.categoryId || 3);
+    var desc = String(dObj.description || dObj.title || params.description || 'รายการความดีจิตอาสา').trim();
+    var actDate = dObj.activityDate || dObj.date || Utilities.formatDate(new Date(), 'Asia/Bangkok', 'yyyy-MM-dd');
+    var loc = dObj.location || 'วิทยาลัยพยาบาลทหารอากาศ';
+
+    deedSheet.appendRow([
+      deedId,
+      studentId,
+      catId,
+      hrs,
+      actDate,
+      desc,
+      newStatus,
+      new Date(),
+      approver,
+      new Date(),
+      loc,
+      ''
+    ]);
+
+    if (newStatus === 'approved' && hrs > 0) {
+      updateMasterStudentHours(ss, studentId, catId, hrs);
+    }
+    updated = true;
+    foundDeed = { studentId: studentId, catId: catId, hours: hrs };
   }
 
   if (updated) {

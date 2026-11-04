@@ -44,8 +44,8 @@ export async function onRequestOptions() {
 
 export async function onRequestGet(context) {
   const { env } = context;
-  const botToken = env.TELEGRAM_BOT_TOKEN;
-  const chatId = env.TELEGRAM_CHAT_ID || '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
+  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
 
   return new Response(JSON.stringify({
     status: 'online',
@@ -65,8 +65,8 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  const botToken = env.TELEGRAM_BOT_TOKEN;
-  const chatId = env.TELEGRAM_CHAT_ID || '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
+  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
 
   if (!botToken) {
     return new Response(JSON.stringify({

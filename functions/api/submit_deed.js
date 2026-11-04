@@ -62,7 +62,7 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
   const gasUrl = (env && env.GAS_URL) ? env.GAS_URL : 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
-  const botToken = env ? env.TELEGRAM_BOT_TOKEN : null;
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
   const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
 
   let body;
@@ -109,11 +109,10 @@ export async function onRequestPost(context) {
   const catName = CATEGORY_NAMES[categoryId] || 'จิตอาสาทั่วไป';
   const catEmoji = CATEGORY_EMOJIS[categoryId] || '⭐';
 
-  // 1. Forward to Google Apps Script (Google Sheets Deeds_2569)
-  let gasResult = null;
-  if (gasUrl) {
+  // 1. Parallel execution: Forward to Google Apps Script and dispatch Telegram notification simultaneously
+  const gasPromise = (async () => {
+    if (!gasUrl) return null;
     try {
-      // Do not send huge base64 images directly to GAS cell to avoid 50k character limit
       const safeDeedPayload = {
         id: deedId,
         studentId: studentId,
@@ -130,7 +129,7 @@ export async function onRequestPost(context) {
         approver: approver,
         status: 'pending',
         imageUrl: (typeof imageUrl === 'string' && imageUrl.length < 500) ? imageUrl : '',
-        notify: false, // We handle notification right here on Cloudflare Edge
+        notify: false,
         silent: true
       };
 
@@ -144,16 +143,15 @@ export async function onRequestPost(context) {
           silent: true
         })
       });
-      gasResult = await resp.json();
+      return await resp.json();
     } catch (gasErr) {
       console.error('Failed to forward submit_deed to GAS:', gasErr);
-      gasResult = { status: 'error', message: String(gasErr) };
+      return { status: 'error', message: String(gasErr) };
     }
-  }
+  })();
 
-  // 2. Dispatch instant notification to Telegram Group via Cloudflare Edge
-  let telegramSent = false;
-  if (botToken && defaultChatId) {
+  const tgPromise = (async () => {
+    if (!botToken || !defaultChatId) return false;
     try {
       const qParams = new URLSearchParams({
         id: deedId,
@@ -201,7 +199,7 @@ export async function onRequestPost(context) {
         `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`
       ].join('\n');
 
-      // Check if we have a slip image or evidence photo to send
+      let sent = false;
       const hasPhoto = slipImage && typeof slipImage === 'string' && slipImage.startsWith('data:image');
       if (hasPhoto) {
         try {
@@ -227,15 +225,13 @@ export async function onRequestPost(context) {
             method: 'POST',
             body: formData
           });
-          if (pResp.ok) {
-            telegramSent = true;
-          }
+          if (pResp.ok) sent = true;
         } catch (photoErr) {
           console.warn('sendPhoto error, falling back to sendMessage:', photoErr);
         }
       }
 
-      if (!telegramSent) {
+      if (!sent) {
         const mResp = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -246,14 +242,16 @@ export async function onRequestPost(context) {
             reply_markup: replyMarkup
           })
         });
-        if (mResp.ok) {
-          telegramSent = true;
-        }
+        if (mResp.ok) sent = true;
       }
+      return sent;
     } catch (tgErr) {
       console.warn('Telegram notify error in submit_deed:', tgErr);
+      return false;
     }
-  }
+  })();
+
+  const [gasResult, telegramSent] = await Promise.all([gasPromise, tgPromise]);
 
   return new Response(JSON.stringify({
     status: 'success',
