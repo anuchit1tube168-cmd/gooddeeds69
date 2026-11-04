@@ -433,3 +433,36 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Syntax check: 100% PASS (`node scripts/check-syntax.cjs` & `scratch/test_braces.py`).
   - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
   - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+
+## Online Deed Submission & Deletion Fix (Cloudflare Edge 24/7 Serverless) — 2026-11-04
+- User Request: "นักเรียน ลบข้อมูลที่ผิดไม่ได้ ในonline และ ลงความดีไม่ไม่ได้เกิดอะไรขึ่น" (Students cannot delete incorrect entries online, and submitting a deed does nothing / does not save).
+- Problem Analysis & Root Cause:
+  1. **Deed Deletion Failure Online:**
+     - On GitHub Pages / Cloudflare Pages / LINE LIFF, `canUseBackendApi()` is false, meaning local backend API `/api/delete_deed` was never invoked.
+     - Cloudflare Pages lacked a `/api/delete_deed` Function to handle deletion requests server-side.
+     - Crucially, `App.getDeeds(studentId)` in `frontend/app.js` merged global deeds (`DEEDS_DATA`) back with local deeds, but did not filter out deleted items. Splicing memory array was temporary; on reload or next `syncAllDeedsWithBackend()`, the deleted deed was resurrected from static data or cloud cache.
+  2. **Deed Submission Stalling Online:**
+     - On online platforms, `App.addDeed()` used an unawaited background async IIFE firing `fetch(gasUrl, { mode: 'no-cors' })`.
+     - In browser `mode: 'no-cors'`, `application/json` headers were converted or dropped, and when users navigated away from `submit-deed.html` upon submission, the browser immediately aborted pending unawaited fetch calls.
+     - Cloudflare Pages lacked a `/api/submit_deed` Function, and validation errors in `submit-deed.html` (e.g. duplicate activity warnings) appeared at the top of the form outside the mobile viewport without a persistent toast.
+- Implementation & Resolution:
+  1. **Cloudflare Edge 24/7 Serverless Functions:**
+     - `functions/api/delete_deed.js`: Handles deletion requests with CORS `*`, forwards directly to Google Apps Script `action: 'delete_deed'`, reverses approved hours, and records audit logs.
+     - `functions/api/submit_deed.js`: Validates and records new deeds into Google Sheets `Deeds_2569` via GAS, dispatches instant rich Telegram notifications with inline action buttons (`[✅ อนุมัติด่วน]`, `[❌ ปฏิเสธ]`, `[✍️ ตรวจสอบ & ลงนาม]`, `[📄 พิมพ์สลิป A4]`).
+     - `functions/api/edit_deed.js`: Handles student/teacher deed edits on Cloudflare Edge.
+     - `functions/api/get_all_deeds.js` & `get_deeds.js`: Edge proxies with 15-second caching for fast cloud deed synchronization.
+  2. **Frontend `frontend/app.js` Architecture Hardening:**
+     - Added `getEdgeApiUrl(endpoint)` supporting both relative paths on Cloudflare Pages and full CORS HTTPS URLs on GitHub Pages and LINE LIFF.
+     - Added persistent `gooddeeds_deleted_ids` in `localStorage` and filtered out all deleted items (`status === 'deleted'` and `deletedSet.has(id)`) in `getDeeds()` and `syncAllDeedsWithBackend()`, permanently preventing deleted deeds from resurrecting.
+     - Hardened `App.addDeed()` to await backend/Edge API submission, update in-memory caches immediately, and return verified results.
+     - Enhanced `submit-deed.html` with viewport-anchored `showToast` notifications on validation issues.
+  3. **Deployment & Cache Busting:**
+     - Bumped script versions across HTML files to `app.js?v=20261104-online-fix`.
+     - Deployed to Cloudflare Pages production: `https://69e2354d.rtafnc-gooddeeds.pages.dev` and `https://rtafnc-gooddeeds.pages.dev`.
+     - Pushed commit `35f15799` to GitHub `origin/main`.
+- Verification & Test Results:
+  - Syntax check: 100% PASS (`node scripts/check-syntax.cjs` and `scratch/test_braces.py`).
+  - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+  - Cloudflare Edge APIs tested: `/api/delete_deed`, `/api/submit_deed`, `/api/edit_deed` verified `online`.
+
