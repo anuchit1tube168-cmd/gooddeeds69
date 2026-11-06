@@ -595,5 +595,74 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Cloudflare Pages Production: Deployed (`b6df6642.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`).
   - Live Edge API Probe: `GET /api/students` verified with 380 students carrying accurate cumulative hours and positions.
 
+## Telegram Mobile Approval Diagnostics & Webhook Edge Restoration — 2026-11-06
+- User Request: "ทำไม ใน telegram กดผ่านมือถือแล้วอนุมัตไม่ได้" (Why can't approvals be done by tapping on mobile in Telegram?)
+- Investigation & Root Cause Findings:
+  1. **Telegram Webhook Was Unregistered (`url: ""`):**
+     - Inspection of `@rtafnc_gooddeed_2569_bot` via `getWebhookInfo` revealed `"url": ""` (empty webhook destination).
+     - Without a webhook registered on Telegram, any inline button presses (`[✅ อนุมัติด่วน]` / `[❌ ปฏิเสธ]`) sent a `callback_query` that remained unhandled by any server, causing the loading spinner to spin indefinitely on mobile devices and leaving Google Sheets un-updated.
+  2. **Live Signature Constraint on Web View (`approve_sign.html`):**
+     - When tapping `[✍️ ตรวจสอบ & ลงนาม ↗️]`, the page enforces the strict military rule requiring a live signature on the canvas before approving. Tapping the approve button without drawing a signature produces an alert: *"⚠️ กรุณาลงลายมือชื่อสดในกรอบก่อนทำการอนุมัติ"*.
+     - In-App Telegram Webview on certain mobile operating systems may intercept touch gestures as page scrolls unless opened in external browser (Chrome/Safari).
+- Resolution & Actions:
+  1. Connected Telegram bot webhook directly to Cloudflare Pages 24/7 Edge Serverless endpoint:
+     `https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook`
+  2. Verified Telegram `getWebhookInfo` updated to `has_custom_certificate: false, pending_update_count: 0`.
+  3. Checked current pending deeds in Google Sheets: found 3 authentic pending student volunteer submissions (นพอ. วีร์สุดา เวบสูงเนิน ×2, นพอ. จณิสตา จันทดิษฐ์ ×1).
+- Verification & Test Results:
+  - Syntax check: 100% PASS (`node scripts/check-syntax.cjs`).
+  - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
+  - PDPA compliance: 100% PASS (`python3 data/check_pdpa_compliance.py`).
+  - Telegram Webhook: Live on Cloudflare Edge with 0 pending errors.
+
+## Production Hardening & Stabilization of 4 Online Dashboards — 2026-11-06
+- User Request:
+  - 📱 แดชบอร์ดนักเรียน: https://rtafnc-gooddeeds.pages.dev/student-dashboard (แสดงการ์ดตามคะแนนสะสม + แถบสถานะปี 69)
+  - 🗂️ คอลเลกชันบัตรความดี: https://rtafnc-gooddeeds.pages.dev/view_cards (คลังการ์ด นพอ. ทุกรุ่น 69, 68, 67, 66)
+  - 🏆 ทำเนียบความดี (Ranking): https://rtafnc-gooddeeds.pages.dev/ranking (Leaderboard ปี 2569)
+  - ✍️ แดชบอร์ดอาจารย์ผู้ตรวจ: https://rtafnc-gooddeeds.pages.dev/teacher-dashboard (ระบบตรวจและจรดลายเซ็นสด รองรับทั้งมือถือและคอมพิวเตอร์) ให้เสถียร
+- Diagnostics & Root Cause Analysis:
+  1. **Student Dashboard (`student-dashboard.html`):**
+     - Lack of dedicated visual progress bar for Year 2569 in the status banner. Students only saw raw text without milestone progress.
+  2. **Card Collection (`view_cards.html`):**
+     - Direct access redirected unauthenticated visitors/evaluators to `index.html`.
+     - Lacked a search input to quickly find specific students among 380 cards.
+     - Lacked an "All Cohorts" reset filter button.
+  3. **Ranking / Leaderboard (`ranking.html`):**
+     - A legacy filter (`if (currentUser.role === 'student') allSummary = allSummary.filter(s => s.student_id === currentUser.student_id)`) reduced the entire leaderboard to 1 person when viewed by a student, hiding the actual class rankings and podium.
+     - Direct unauthenticated access forced redirect to `index.html`.
+  4. **Teacher Dashboard (`teacher-dashboard.html`):**
+     - The 4-second aggressive interval caused repeated UI re-renders and potential touch interruption while teachers were reviewing or drawing signatures.
+     - Tapping "✍️ ตรวจ & เซ็นชื่อ" used `window.open('approve_sign.html', '_blank')`, which mobile Safari and Chrome routinely block as a popup.
+- Implemented Solutions:
+  1. **Student Dashboard (`student-dashboard.html`):**
+     - Added dedicated **Year 2569 Status Progress Bar (`#year69-progress-widget`)** with animated gradient fill, milestone markers (0, 25, 50 ชม.), and live completion percentage.
+     - Preserved cumulative Starbucks Card with tier thresholds (Crown Diamond 400+, Platinum 300+, Gold 150+, Green 50+, Welcome <50), chibi avatars, and executive badges.
+  2. **Card Collection (`view_cards.html`):**
+     - Enabled guest/public card inspection (`currentUser = App.getCurrentUser() || { role: 'guest' }`) without redirect.
+     - Added real-time search input (`#search-student-card`) filtering across student ID, first name, and last name.
+     - Added "🌐 ทุกชั้นปี" filter tab.
+  3. **Ranking / Leaderboard (`ranking.html`):**
+     - Removed self-only filter so students and teachers can view the full Leaderboard for Year 2569 across all 380 students.
+     - Added **Personal Rank Banner (`#my-rank-banner`)** prominently highlighting the student's rank, cohort, and annual hours.
+     - Added golden row highlight (`.my-rank-row`) and `⭐ คุณ` badge in the table for the logged-in student.
+     - Protected confidential deed descriptions with friendly toast notices for unauthorized clicks.
+  4. **Teacher Dashboard (`teacher-dashboard.html`):**
+     - Implemented **Built-in Native Live Signature Modal (`#modal-live-sig`)** directly on the dashboard:
+       - Touch & pointer canvas with high-DPI scaling (`window.devicePixelRatio`).
+       - Strict live stroke detection requiring a fresh signature before enabling approval.
+       - Embedded deed summary, hours, category badge, and tap-to-zoom evidence preview.
+       - Dispatches parallel Edge write + Telegram confirmation upon approval.
+     - Relaxed polling to a gentle 15-second interval and added `isSigningModalOpen` guard to prevent any interruption during signing.
+  5. **Cache-Busting Update:**
+     - Bumped cache version to `?v=20261106-live-v3` across all 4 files.
+- Verification & Test Results:
+  - JS Tests: 153/153 PASS (`node --test tests/*.test.cjs`).
+  - Python Tests: 23/23 PASS (`python3 -m unittest discover -s tests -p "test_*.py"`).
+  - Braces Check: 21/21 HTML files 100% balanced (`scratch/test_braces.py`).
+  - PDPA Compliance: 100% PASS with 0 personal identifiers in git tracking.
+  - Production Deployment: Successfully deployed to Cloudflare Pages (`https://8961c2e9.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`).
+  - Online Health Probes: All 4 production routes + Edge APIs verified returning HTTP 200 OK.
+
 
 

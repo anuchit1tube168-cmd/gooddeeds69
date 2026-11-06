@@ -744,6 +744,14 @@
                     ระบบทำการสร้างการ์ดเกียรติยศให้อัตโนมัติสำหรับนักเรียนพยาบาลทหารอากาศที่มีชั่วโมงจิตอาสาสะสมถึงเกณฑ์ (50+ ชั่วโมง / ปีการศึกษา)
                 </p>
 
+                <!-- Search Input for Student Cards -->
+                <div style="max-width:500px; margin: 0 auto 16px; position:relative;">
+                    <input type="text" id="search-student-card" 
+                           placeholder="🔍 ค้นหาชื่อ, นามสกุล หรือรหัสนักเรียน 7 หลัก..." 
+                           oninput="handleCardSearch(this.value)"
+                           style="width:100%; padding:12px 20px; border-radius:30px; border:1px solid rgba(201,162,39,0.5); background:rgba(10,22,40,0.85); color:#fff; font-size:0.95rem; font-family:'Sarabun',sans-serif; outline:none; box-shadow:0 4px 15px rgba(0,0,0,0.3); transition:all 0.3s;">
+                </div>
+
                 <!-- Filter Controls -->
                 <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-bottom:16px;">
                     <button class="back-btn" onclick="toggleCardMode('qualified')" id="btn-mode-qualified" style="background:var(--gold); color:#000;">
@@ -751,6 +759,9 @@
                     </button>
                     <button class="back-btn" onclick="toggleCardMode('all')" id="btn-mode-all">
                         👥 นักเรียนทุกคน (<span id="count-all">0</span> คน)
+                    </button>
+                    <button class="back-btn" onclick="filterBatchCards('all')" id="btn-filter-all" style="background:var(--gold); color:#000;">
+                        🌐 ทุกชั้นปี
                     </button>
                     <button class="back-btn" onclick="filterBatchCards(69)" id="btn-filter-69">
                         🎓 รุ่น 69 (<span id="count-69">0</span> คน)
@@ -781,18 +792,24 @@
         </div>
 
     <!-- SCRIPT INCLUDES -->
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
-    <script src="data/students_photos.js?v=3580"></script>
-    <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="data/deeds_data.js?v=3580"></script>
-    <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=20261104-cards-v2"></script>
+    <script src="data/students_data.js?v=20261106-live-v3"></script>
+    <script src="data/students_photos.js?v=20261106-live-v3"></script>
+    <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+    <script src="data/deeds_data.js?v=20261106-live-v3"></script>
+    <script src="data/app_settings.js?v=20261106-live-v3"></script>
+    <script src="app.js?v=20261106-live-v3"></script>
 
     <script>
         let allStudentsList = [];
         let allQualifiedStudents = [];
         let cardMode = 'qualified';
         let activeFilter = 'all';
+        let searchQuery = '';
+
+        function handleCardSearch(val) {
+            searchQuery = (val || '').trim().toLowerCase();
+            renderBatchCards();
+        }
 
         function toggleCardMode(mode) {
             cardMode = mode;
@@ -822,14 +839,25 @@
             if (!container) return;
 
             const baseList = cardMode === 'all' ? allStudentsList : allQualifiedStudents;
-            const filtered = activeFilter === 'all' 
+            let filtered = activeFilter === 'all' 
                 ? baseList 
                 : baseList.filter(item => item.student.class_year == activeFilter);
+
+            if (searchQuery) {
+                filtered = filtered.filter(item => {
+                    const s = item.student;
+                    const sid = String(s.student_id || '');
+                    const fn = String(s.first_name || '').toLowerCase();
+                    const ln = String(s.last_name || '').toLowerCase();
+                    const full = String(s.full_name || '').toLowerCase();
+                    return sid.includes(searchQuery) || fn.includes(searchQuery) || ln.includes(searchQuery) || full.includes(searchQuery);
+                });
+            }
 
             if (filtered.length === 0) {
                 container.innerHTML = `
                     <div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">
-                        <p style="font-size:1.2rem;">ไม่พบข้อมูลนักเรียนในหมวดนี้</p>
+                        <p style="font-size:1.2rem;">ไม่พบข้อมูลนักเรียนที่ตรงกับเงื่อนไข</p>
                     </div>`;
                 return;
             }
@@ -925,8 +953,11 @@
         }
 
         window.addEventListener('load', () => {
-            const currentUser = App.requireAuth(['student', 'teacher', 'admin']);
-            if (!currentUser) return;
+            let currentUser = App.getCurrentUser();
+            if (!currentUser) {
+                // Allow guest/public browsing of card collection without redirecting to index.html
+                currentUser = { role: 'guest', rank: 'นพอ.', first_name: 'ผู้เยี่ยมชม', student_id: '' };
+            }
 
             // Compute all students list with CUMULATIVE ACCUMULATED HOURS across all academic years
             allStudentsList = STUDENTS_DATA.map(s => {

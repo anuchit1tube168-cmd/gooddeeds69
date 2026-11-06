@@ -54,6 +54,28 @@
             display: block;
         }
 
+        /* My Rank Highlighting & Banner */
+        tr.my-rank-row {
+            background: rgba(201, 162, 39, 0.15) !important;
+            border-left: 4px solid var(--gold) !important;
+        }
+        tr.my-rank-row td {
+            font-weight: 600;
+        }
+        .my-rank-banner {
+            background: linear-gradient(135deg, rgba(201, 162, 39, 0.2) 0%, rgba(10, 22, 40, 0.9) 100%);
+            border: 1px solid rgba(201, 162, 39, 0.4);
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
         .year-stats-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -273,8 +295,11 @@
                         <span class="mac-title">Leaderboard - ทำเนียบความดี</span>
                     </div>
                     <div class="sec-hdr" style="display:flex; justify-content:space-between; align-items:center;">
-                        <h2>🏆 ทำเนียบความดี / จัดอันดับนักเรียน</h2>
+                        <h2>🏆 ทำเนียบความดี / จัดอันดับนักเรียน (ประจำปีการศึกษา 2569)</h2>
                     </div>
+
+                    <!-- Personal Rank Highlight Banner -->
+                    <div id="my-rank-banner-container"></div>
 
                 <div class="filter-bar" style="margin-bottom:12px; display:flex; gap:8px; flex-wrap:wrap;">
                     <button class="filter-pill active" onclick="setYearFilter('all',this)">ทั้งหมด</button>
@@ -334,26 +359,29 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
-    <script src="data/students_photos.js?v=3580"></script>
-    <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="data/deeds_data.js?v=3580"></script>
-    <script src="data/app_settings.js?v=3580"></script>
-    <script src="app.js?v=20261104-cards-v2"></script>
+    <script src="data/students_data.js?v=20261106-live-v3"></script>
+    <script src="data/students_photos.js?v=20261106-live-v3"></script>
+    <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+    <script src="data/deeds_data.js?v=20261106-live-v3"></script>
+    <script src="data/app_settings.js?v=20261106-live-v3"></script>
+    <script src="app.js?v=20261106-live-v3"></script>
     <script>
         let currentUser = null;
         let allSummary = [];
         let yearFilter = 'all';
 
         async function init() {
-            currentUser = App.requireAuth(['student', 'teacher', 'admin']);
-            if (!currentUser) return;
+            currentUser = App.getCurrentUser();
+            if (!currentUser) {
+                // Allow guest/public visitors to view leaderboard without being kicked to login
+                currentUser = { role: 'guest', rank: 'นพอ.', first_name: 'ผู้เยี่ยมชม', student_id: '' };
+            }
 
             if (typeof App.ensureStudentsLoaded === 'function') {
-                await App.ensureStudentsLoaded();
+                await App.ensureStudentsLoaded().catch(() => {});
             }
-            if (App.canUseBackendApi && App.canUseBackendApi() && typeof App.syncAllDeedsWithBackend === 'function' && (currentUser.role === 'teacher' || currentUser.role === 'admin')) {
-                await App.syncAllDeedsWithBackend();
+            if (typeof App.syncAllDeedsWithBackend === 'function') {
+                await App.syncAllDeedsWithBackend().catch(() => {});
             }
 
             // Render nav profile strictly by verified role
@@ -376,8 +404,8 @@
                     if (photo) document.getElementById('nav-avatar').innerHTML = `<img src="${photo}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%">`;
                     else document.getElementById('nav-avatar').textContent = initials;
                 } else {
-                    document.getElementById('nav-name').textContent = 'นักเรียนพยาบาล';
-                    document.getElementById('nav-avatar').textContent = '👩‍⚕️';
+                    document.getElementById('nav-name').textContent = 'ผู้เยี่ยมชม';
+                    document.getElementById('nav-avatar').textContent = '👥';
                 }
                 document.getElementById('nav-brand-link').href = 'student-dashboard.html';
                 renderStudentSidebar();
@@ -424,14 +452,57 @@
 
         function loadData() {
             allSummary = App.getAllStudentsSummary();
-            if (currentUser && currentUser.role === 'student') {
-                allSummary = allSummary.filter(s => String(s.student_id).trim() === String(currentUser.student_id).trim());
-            }
-            // Default sort: highest hours first
+            // Default sort: highest hours first (Leaderboard ปี 2569)
             allSummary.sort((a, b) => b.totalHours - a.totalHours);
 
+            renderMyRankBanner();
             renderStudents();
             renderStats();
+        }
+
+        function renderMyRankBanner() {
+            const container = document.getElementById('my-rank-banner-container');
+            if (!container) return;
+
+            if (!currentUser || currentUser.role !== 'student' || !currentUser.student_id) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const sid = String(currentUser.student_id).trim();
+            const myRankIdx = allSummary.findIndex(s => String(s.student_id).trim() === sid);
+            if (myRankIdx === -1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const me = allSummary[myRankIdx];
+            const rankNum = myRankIdx + 1;
+            const rankBadge = rankNum === 1 ? '🥇' : (rankNum === 2 ? '🥈' : (rankNum === 3 ? '🥉' : `#${rankNum}`));
+
+            container.innerHTML = `
+                <div class="my-rank-banner">
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:2rem;">${rankBadge}</span>
+                        <div>
+                            <div style="font-size:1.05rem; font-weight:700; color:#fff;">
+                                📍 ตำแหน่งของคุณ: อันดับที่ <b style="color:var(--gold);font-size:1.2rem;">${rankNum}</b> จากนักเรียนทั้งหมด ${allSummary.length} คน
+                            </div>
+                            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">
+                                ${me.rank} ${me.first_name} ${me.last_name} (${me.student_id}) • รุ่น ${me.class_year}
+                            </div>
+                        </div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:1.3rem; font-weight:800; color:var(--gold); font-family:'Kanit',sans-serif;">
+                            ${me.totalHours} ชม.
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted);">
+                            ประจำปี 2569 • ${me.passed ? '<span style="color:#4ade80;">✅ ผ่านเกณฑ์</span>' : '<span style="color:#f59e0b;">⏳ กำลังสะสม</span>'}
+                        </div>
+                    </div>
+                </div>
+            `;
         }
 
         function switchTab(name) {
@@ -484,6 +555,7 @@
             tbody.innerHTML = data.map((s, index) => {
                 const pct = Math.min((s.totalHours / CONFIG.MIN_HOURS_PER_YEAR) * 100, 100);
                 const col = s.passed ? '#22c55e' : (pct > 60 ? '#f59e0b' : '#ef4444');
+                const isMe = currentUser && currentUser.student_id && String(s.student_id).trim() === String(currentUser.student_id).trim();
 
                 // Rank visualization
                 let rankVisual = index + 1;
@@ -496,10 +568,13 @@
                     rankVisual = `<span style="color:var(--text-muted);font-weight:700">${index + 1}</span>`;
                 }
 
-                return `<tr style="cursor:pointer" onclick="openStuModal('${s.student_id}')">
+                return `<tr style="cursor:pointer" class="${isMe ? 'my-rank-row' : ''}" onclick="openStuModal('${s.student_id}')">
                     <td style="text-align:center;font-size:1.2rem;">${rankVisual}</td>
                     <td class="id-cell">${s.student_id}</td>
-                    <td style="font-weight:600;color:var(--text-primary)">${s.rank} ${s.first_name} ${s.last_name}</td>
+                    <td style="font-weight:600;color:var(--text-primary)">
+                        ${s.rank} ${s.first_name} ${s.last_name}
+                        ${isMe ? '<span class="badge" style="background:var(--gold);color:#000;font-weight:700;margin-left:6px;font-size:0.75rem;">⭐ คุณ</span>' : ''}
+                    </td>
                     <td>${App.getYearName(s.class_year)}</td>
                     <td style="font-weight:700;color:var(--gold);font-size:1.1rem">${s.totalHours}</td>
                     <td>
@@ -515,7 +590,14 @@
 
         // ===== MODAL (Reused logic from teacher dash) =====
         function openStuModal(sid) {
-            if (!App.canAccessStudent(sid)) return;
+            if (!App.canAccessStudent(sid)) {
+                if (typeof showToast === 'function') {
+                    showToast('🔒 รายละเอียดความดีสงวนสิทธิ์เฉพาะตัวนักเรียนและอาจารย์ผู้ตรวจเท่านั้น', 'warning');
+                } else {
+                    alert('🔒 รายละเอียดความดีสงวนสิทธิ์เฉพาะตัวนักเรียนและอาจารย์ผู้ตรวจเท่านั้น');
+                }
+                return;
+            }
             const students = typeof STUDENTS_DATA !== 'undefined' ? STUDENTS_DATA : [];
             const stu = students.find(s => s.student_id === sid);
             if (!stu) return;

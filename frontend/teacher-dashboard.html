@@ -779,6 +779,63 @@
     </div>
   </div>
 
+  <!-- MODAL: LIVE SIGNATURE & APPROVAL -->
+  <div class="modal-overlay" id="modal-live-sig" style="display:none; align-items:center; justify-content:center; z-index:99999;">
+    <div class="modal" style="max-width:680px; width:95vw; max-height:92vh; display:flex; flex-direction:column; overflow-y:auto; padding:20px; border-radius:18px; border:1px solid rgba(201,162,39,0.4); background:radial-gradient(circle at 50% 0%, #101c36 0%, #070d19 100%); box-shadow:0 20px 50px rgba(0,0,0,0.8);">
+      <div class="modal-header" style="border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:12px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+        <div class="modal-title" style="font-family:'Kanit',sans-serif; color:var(--gold); font-size:1.25rem; font-weight:700; display:flex; align-items:center; gap:8px;">
+          <span>✍️ ตรวจสอบความดี &amp; ลงนามสด</span>
+        </div>
+        <button class="modal-close" onclick="closeLiveSigModal()" style="font-size:1.4rem; cursor:pointer; background:transparent; border:none; color:var(--text-muted); padding:4px 8px;">✕</button>
+      </div>
+
+      <!-- Deed Details Card -->
+      <div id="sig-deed-summary" style="background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:14px 16px; margin-bottom:16px;">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Strict Live Signature Canvas Box -->
+      <div style="margin-bottom:14px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <label style="font-size:0.9rem; font-weight:700; color:#fff; display:flex; align-items:center; gap:6px;">
+            <span>✒️ ช่องจรดลายมือชื่อสดอาจารย์ผู้ตรวจ:</span>
+            <span id="sig-status-indicator" style="font-size:0.75rem; color:#ef4444; font-weight:normal;">(กรุณาลงนามสดก่อนอนุมัติ)</span>
+          </label>
+          <button type="button" class="btn btn-outline btn-sm" onclick="clearLiveSignature()" style="font-size:0.78rem; padding:3px 10px; border-color:rgba(239,68,68,0.4); color:#f87171;">
+            🔄 ล้างลายเซ็น
+          </button>
+        </div>
+
+        <div class="canvas-wrap" style="position:relative; width:100%; height:170px; background:#ffffff; border-radius:10px; border:2px dashed #0a192f; overflow:hidden; touch-action:none;">
+          <canvas id="teacher-live-canvas" style="width:100%; height:100%; display:block; cursor:crosshair; touch-action:none;"></canvas>
+          <div id="canvas-placeholder-hint" style="position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; pointer-events:none; color:#94a3b8; font-size:0.85rem; text-align:center; padding:10px;">
+            <span style="font-size:1.6rem; opacity:0.6; margin-bottom:4px;">✍️</span>
+            <span>จรดนิ้ว ปากกาสไตลัส หรือเมาส์เพื่อลงนามสดที่นี่</span>
+            <span style="font-size:0.75rem; color:#cbd5e1; margin-top:2px;">* ระบบไม่บันทึกลายเซ็นเพื่อใช้ซ้ำตามระเบียบความปลอดภัยทหาร</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display:flex; flex-wrap:wrap; gap:10px; justify-content:space-between; align-items:center; border-top:1px solid rgba(255,255,255,0.08); padding-top:14px; margin-top:auto;">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <button type="button" class="btn btn-outline" onclick="closeLiveSigModal()" style="min-height:44px; padding:8px 16px;">
+            ยกเลิก
+          </button>
+          <span id="sig-external-link-wrap"></span>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-danger" id="btn-sig-reject" onclick="rejectFromSigModal()" style="min-height:44px; padding:8px 16px;">
+            ❌ ปฏิเสธ
+          </button>
+          <button type="button" class="btn btn-success" id="btn-sig-confirm" onclick="confirmLiveSigApproval()" style="min-height:44px; padding:8px 22px; font-weight:700; background:linear-gradient(135deg, #10b981 0%, #059669 100%); opacity:0.6; cursor:not-allowed;" disabled>
+            ✅ อนุมัติพร้อมลายเซ็นสด
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: STUDENT DETAIL -->
   <div class="modal-overlay" id="stu-modal">
     <div class="modal" style="max-width:760px;width:95vw">
@@ -802,13 +859,13 @@
 
   <div class="toast-container" id="toast-container"></div>
   <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-  <script src="data/teachers_data.js?v=3593"></script>
-  <script src="data/students_data.js?v=20261104-cards-v2"></script>
-  <script src="data/students_photos.js?v=3593"></script>
-  <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-  <script src="data/deeds_data.js?v=3593"></script>
-  <script src="data/app_settings.js?v=3593"></script>
-  <script src="app.js?v=20261104-cards-v2"></script>
+  <script src="data/teachers_data.js?v=20261106-live-v3"></script>
+  <script src="data/students_data.js?v=20261106-live-v3"></script>
+  <script src="data/students_photos.js?v=20261106-live-v3"></script>
+  <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+  <script src="data/deeds_data.js?v=20261106-live-v3"></script>
+  <script src="data/app_settings.js?v=20261106-live-v3"></script>
+  <script src="app.js?v=20261106-live-v3"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -909,23 +966,279 @@
       loadData();
     });
 
-    // Periodic auto-refresh every 4 seconds to pull newly submitted deeds from students
+    let isSigningModalOpen = false;
+    let currentSigTarget = null;
+    let sigCanvas = null;
+    let sigCtx = null;
+    let isDrawingSig = false;
+    let hasLiveSignatureDrawn = false;
+    let lastSigX = 0;
+    let lastSigY = 0;
+
+    // Periodic auto-refresh to pull newly submitted deeds from students (safe 15s debounce)
     setInterval(async () => {
+      if (isSigningModalOpen) return; // Do not interrupt live signature!
       if (typeof App.syncAllDeedsWithBackend === 'function') {
         await App.syncAllDeedsWithBackend().catch(() => {});
-        loadData();
+        if (!isSigningModalOpen) loadData();
       }
-    }, 4000);
+    }, 15000);
 
     // Immediate auto-refresh when switching back to tab
     document.addEventListener('visibilitychange', async () => {
-      if (document.visibilityState === 'visible' && typeof App.syncAllDeedsWithBackend === 'function') {
+      if (document.visibilityState === 'visible' && !isSigningModalOpen && typeof App.syncAllDeedsWithBackend === 'function') {
         await App.syncAllDeedsWithBackend().catch(() => {});
         loadData();
       }
     });
 
     window.loadDashboardData = loadData;
+
+    function openLiveSigModal(studentId, deedId) {
+      const d = pendingDeeds.find(item => String(item.id) === String(deedId));
+      if (!d) {
+        showToast('⚠️ ไม่พบข้อมูลคำขอนี้ หรือได้รับการอนุมัติไปแล้ว', 'warning');
+        return;
+      }
+      isSigningModalOpen = true;
+      currentSigTarget = { studentId, deedId, deed: d };
+
+      const sid = String(studentId || d.studentId || d.student_id);
+      const s = App.getStudentById(sid) || (d.student || {});
+      const sRank = s.rank || d.rank || 'นพอ.';
+      const sFn = s.first_name || d.first_name || '';
+      const sLn = s.last_name || d.last_name || '';
+      const sFullName = d.studentName || d.student_name || (s.full_name ? s.full_name : `${sRank} ${sFn} ${sLn}`.trim());
+      const sYear = s.class_year || d.class_year || (sid ? sid.substring(0, 2) : '69');
+      const sPos = d.student_position || s.position || '';
+      const cat = App.getCategoryById(d.categoryId || d.category_id || 1);
+
+      const rawImgs = (Array.isArray(d.imageUrls) && d.imageUrls.length > 0) ? d.imageUrls : (d.imageUrl ? [d.imageUrl] : []);
+      const imgPreviews = rawImgs.map(k => {
+        const src = App.getImage(k);
+        return src ? `<img src="${src}" style="max-height:110px; border-radius:8px; border:1px solid rgba(255,255,255,0.25); cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.3);" onclick="showLightbox('${k.replace(/'/g, "\\'")}')" alt="หลักฐาน" title="แตะเพื่อขยายภาพ">` : '';
+      }).filter(Boolean).join('');
+
+      document.getElementById('sig-deed-summary').innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+          <div>
+            <div style="font-size:1.1rem; font-weight:700; color:#fff;">
+              👤 ${sFullName} 
+              <span class="badge badge-blue" style="margin-left:6px;">รุ่น ${sYear}</span>
+              <span class="badge badge-gold" style="margin-left:4px;">รหัส ${sid}</span>
+              ${sPos ? `<span class="badge" style="background:rgba(201,162,39,0.2); color:#ffd700; margin-left:4px;">⭐ ${sPos}</span>` : ''}
+            </div>
+            <div style="color:var(--gold); font-size:0.92rem; font-weight:600; margin-top:3px;">
+              ${cat.emoji} หมวด ${cat.id}: ${cat.name}
+            </div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:1.7rem; font-weight:800; color:var(--gold); font-family:'Kanit',sans-serif; line-height:1;">
+              ${d.hours} <span style="font-size:0.85rem; font-weight:normal;">ชม.</span>
+            </div>
+          </div>
+        </div>
+        <div style="font-size:0.9rem; color:var(--text-secondary); line-height:1.5; margin-bottom:10px; background:rgba(0,0,0,0.35); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
+          ${d.description || d.title || '-'}
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:${imgPreviews ? '10px' : '0'};">
+          <span>📅 วันที่ทำ: <b style="color:#fff;">${App.formatDate(d.activityDate)}</b></span>
+          <span>📍 สถานที่: <b style="color:#fff;">${d.location || 'วิทยาลัยพยาบาลทหารอากาศ'}</b></span>
+          <span>📤 ยื่นคำขอเมื่อ: <b style="color:#fff;">${App.formatDate(d.submittedAt)}</b></span>
+        </div>
+        ${imgPreviews ? `<div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:10px;">${imgPreviews}</div>` : ''}
+      `;
+
+      // Secondary fallback link to external approve_sign.html
+      const approveParams = new URLSearchParams({
+        id: d.id,
+        studentId: sid,
+        name: sFullName,
+        year: sYear,
+        cat: d.categoryId || 1,
+        catName: cat.name || '',
+        hours: d.hours || 0,
+        date: d.activityDate || '',
+        desc: d.description || '',
+        appr: d.approver || 'ร.อ.อนุชิต ทำจะดี (Bird)',
+        status: d.status || 'pending'
+      });
+      const linkWrap = document.getElementById('sig-external-link-wrap');
+      if (linkWrap) {
+        linkWrap.innerHTML = `<a href="approve_sign.html?${approveParams.toString()}" target="_blank" style="font-size:0.75rem; color:var(--text-muted); text-decoration:underline;">🔗 เปิดในแท็บใหม่</a>`;
+      }
+
+      // Show modal
+      const modal = document.getElementById('modal-live-sig');
+      modal.style.display = 'flex';
+
+      // Setup Canvas
+      setTimeout(() => {
+        initLiveSignatureCanvas();
+      }, 50);
+    }
+
+    function closeLiveSigModal() {
+      const modal = document.getElementById('modal-live-sig');
+      if (modal) modal.style.display = 'none';
+      isSigningModalOpen = false;
+      currentSigTarget = null;
+      hasLiveSignatureDrawn = false;
+    }
+
+    function initLiveSignatureCanvas() {
+      sigCanvas = document.getElementById('teacher-live-canvas');
+      if (!sigCanvas) return;
+      sigCtx = sigCanvas.getContext('2d');
+      
+      const rect = sigCanvas.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      sigCanvas.width = rect.width * dpr;
+      sigCanvas.height = rect.height * dpr;
+      sigCtx.scale(dpr, dpr);
+
+      sigCtx.strokeStyle = '#0f172a'; // Deep navy blue ink
+      sigCtx.lineWidth = 2.8;
+      sigCtx.lineCap = 'round';
+      sigCtx.lineJoin = 'round';
+
+      clearLiveSignature();
+
+      // Touch & Pointer event bindings with touch-action: none to stop screen scroll
+      sigCanvas.onpointerdown = handleSigStart;
+      sigCanvas.onpointermove = handleSigMove;
+      sigCanvas.onpointerup = handleSigEnd;
+      sigCanvas.onpointercancel = handleSigEnd;
+    }
+
+    function getCanvasCoords(e) {
+      const rect = sigCanvas.getBoundingClientRect();
+      return {
+        x: e.clientX - rect.left,
+        y: e.clientY - rect.top
+      };
+    }
+
+    function handleSigStart(e) {
+      e.preventDefault();
+      isDrawingSig = true;
+      const coords = getCanvasCoords(e);
+      lastSigX = coords.x;
+      lastSigY = coords.y;
+      sigCtx.beginPath();
+      sigCtx.moveTo(lastSigX, lastSigY);
+      sigCtx.lineTo(lastSigX + 0.1, lastSigY + 0.1);
+      sigCtx.stroke();
+      onSignatureStrokeDrawn();
+    }
+
+    function handleSigMove(e) {
+      if (!isDrawingSig) return;
+      e.preventDefault();
+      const coords = getCanvasCoords(e);
+      sigCtx.beginPath();
+      sigCtx.moveTo(lastSigX, lastSigY);
+      sigCtx.lineTo(coords.x, coords.y);
+      sigCtx.stroke();
+      lastSigX = coords.x;
+      lastSigY = coords.y;
+      onSignatureStrokeDrawn();
+    }
+
+    function handleSigEnd(e) {
+      if (!isDrawingSig) return;
+      e.preventDefault();
+      isDrawingSig = false;
+    }
+
+    function onSignatureStrokeDrawn() {
+      if (!hasLiveSignatureDrawn) {
+        hasLiveSignatureDrawn = true;
+        const hint = document.getElementById('canvas-placeholder-hint');
+        if (hint) hint.style.display = 'none';
+        const indicator = document.getElementById('sig-status-indicator');
+        if (indicator) {
+          indicator.textContent = '🟢 ลงนามสดเรียบร้อยแล้ว';
+          indicator.style.color = '#10b981';
+        }
+        const confirmBtn = document.getElementById('btn-sig-confirm');
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.style.opacity = '1';
+          confirmBtn.style.cursor = 'pointer';
+        }
+      }
+    }
+
+    function clearLiveSignature() {
+      if (!sigCanvas || !sigCtx) return;
+      const rect = sigCanvas.getBoundingClientRect();
+      sigCtx.clearRect(0, 0, rect.width, rect.height);
+      hasLiveSignatureDrawn = false;
+      const hint = document.getElementById('canvas-placeholder-hint');
+      if (hint) hint.style.display = 'flex';
+      const indicator = document.getElementById('sig-status-indicator');
+      if (indicator) {
+        indicator.textContent = '(กรุณาลงนามสดก่อนอนุมัติ)';
+        indicator.style.color = '#ef4444';
+      }
+      const confirmBtn = document.getElementById('btn-sig-confirm');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.style.opacity = '0.6';
+        confirmBtn.style.cursor = 'not-allowed';
+      }
+    }
+
+    async function confirmLiveSigApproval() {
+      if (!currentSigTarget || !hasLiveSignatureDrawn) {
+        showToast('⚠️ กรุณาจรดลายมือชื่อสดในกรอบก่อนทำการอนุมัติ', 'warning');
+        return;
+      }
+      const { studentId, deedId, deed } = currentSigTarget;
+      const confirmBtn = document.getElementById('btn-sig-confirm');
+      if (confirmBtn) {
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<span class="spinner"></span> กำลังบันทึกการอนุมัติ...';
+      }
+
+      try {
+        const u = App.getCurrentUser();
+        const approverName = (u && (u.name || u.username)) ? (u.name || u.username) : 'ร.อ.อนุชิต ทำจะดี (Bird)';
+        const sigDataUrl = sigCanvas.toDataURL('image/png');
+        const sigKey = 'sig_' + deedId;
+        App.saveImage(sigDataUrl, sigKey);
+
+        const updatedDeed = {
+          ...deed,
+          signatureKey: sigKey,
+          signature: sigDataUrl,
+          approved_by: approverName,
+          approvedBy: approverName,
+          status: 'approved'
+        };
+
+        await App.updateDeedStatus(studentId, deedId, 'approved', approverName, '', updatedDeed);
+
+        closeLiveSigModal();
+        showToast('🎉 อนุมัติความดีและบันทึกลายเซ็นสดเรียบร้อยแล้ว!', 'success');
+        loadData();
+      } catch (err) {
+        console.error('Approval error:', err);
+        showToast('❌ เกิดข้อผิดพลาดในการบันทึก: ' + err.message, 'error');
+        if (confirmBtn) {
+          confirmBtn.disabled = false;
+          confirmBtn.innerHTML = '✅ อนุมัติพร้อมลายเซ็นสด';
+        }
+      }
+    }
+
+    function rejectFromSigModal() {
+      if (!currentSigTarget) return;
+      const { studentId, deedId } = currentSigTarget;
+      closeLiveSigModal();
+      openRejectModal(studentId, deedId);
+    }
 
     function loadData() {
       pendingDeeds = App.getAllPendingDeeds();
@@ -1062,7 +1375,7 @@
       </div>
       <div class="pcard-actions">
         <button class="btn btn-outline btn-sm" onclick="openStuModal('${sid}')">👁️ ดูโปรไฟล์</button>
-        <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.4);" onclick="window.open('approve_sign.html?${approveParams.toString()}','_blank')">✍️ ตรวจ & เซ็นชื่อ</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--gold); border-color:rgba(201,162,39,0.5); font-weight:600;" onclick="openLiveSigModal('${sid}','${d.id}')">✍️ ตรวจ &amp; เซ็นชื่อ</button>
         <button class="btn btn-danger btn-sm" onclick="openRejectModal('${sid}','${d.id}')">❌ ปฏิเสธ</button>
         <button class="btn btn-outline btn-sm" style="color:var(--red); border-color:rgba(239,68,68,0.3);" onclick="teacherRevokeDeed('${sid}','${d.id}',${d.hours},'pending')">🗑️ ลบคำขอ</button>
         <button class="btn btn-success btn-sm" onclick="quickApprove('${sid}','${d.id}')">✅ อนุมัติด่วน</button>
@@ -1343,7 +1656,7 @@
       const deedRows = deeds.slice(0, 15).map(d => {
         const cat = App.getCategoryById(d.categoryId);
         const badges = { pending: '<span class="badge badge-pending">รอ</span>', approved: '<span class="badge badge-approved">✅</span>', rejected: '<span class="badge badge-rejected">❌</span>' };
-        const approveBtn = d.status === 'pending' ? `<button class="btn btn-success btn-sm" style="padding:4px 10px;font-size:0.75rem" onclick="quickApprove('${sid}','${d.id}');closeStuModal()">อนุมัติ</button>` : '';
+        const approveBtn = d.status === 'pending' ? `<button class="btn btn-success btn-sm" style="padding:4px 10px;font-size:0.75rem;background:linear-gradient(135deg, #10b981 0%, #059669 100%);" onclick="closeStuModal();openLiveSigModal('${sid}','${d.id}')">✍️ ตรวจ &amp; เซ็น</button>` : '';
         const pdfBtn = `<a href="deed_slip.html?id=${d.id}&studentId=${sid}&autoprint=true" target="_blank" class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;text-decoration:none;color:var(--gold);border-color:var(--gold)" title="พิมพ์ใบบันทึกความดี PDF">📄 PDF</a>`;
         const deleteBtn = `<button class="btn btn-outline btn-sm" style="padding:2px 8px;font-size:0.75rem;color:var(--red);border-color:rgba(239,68,68,0.4)" onclick="teacherRevokeDeed('${sid}','${d.id}',${d.hours},'${d.status}')" title="ลบ / ยกเลิกรายการนี้ (หักชั่วโมงคืน)">🗑️ ลบ</button>`;
         return `<div class="deed-row">

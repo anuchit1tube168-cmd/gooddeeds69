@@ -77,37 +77,109 @@
             gap: 4px;
         }
 
-        /* Status Banner */
+        /* Status Banner & Year 2569 Progress Bar */
         .status-banner {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: var(--radius-lg);
+            margin-bottom: 24px;
+            font-weight: 600;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+        }
+
+        .status-banner-header {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 14px 20px;
-            border-radius: var(--radius-md);
-            margin-bottom: 24px;
-            font-weight: 600;
+            width: 100%;
         }
 
         .status-banner.pass {
-            background: var(--green-bg);
-            border: 1px solid rgba(34, 197, 94, 0.3);
+            background: linear-gradient(135deg, rgba(34, 197, 94, 0.15) 0%, rgba(10, 25, 47, 0.8) 100%);
+            border: 1px solid rgba(34, 197, 94, 0.4);
             color: var(--green);
         }
 
         .status-banner.fail {
-            background: var(--yellow-bg);
-            border: 1px solid rgba(245, 158, 11, 0.3);
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.15) 0%, rgba(10, 25, 47, 0.8) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.4);
             color: var(--yellow);
         }
 
         .status-banner .icon {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
+            flex-shrink: 0;
         }
 
         .status-banner .detail {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 400;
-            margin-top: 2px;
+            color: var(--text-muted);
+            margin-top: 3px;
+        }
+
+        /* Year 69 Progress Bar Widget */
+        .year69-progress-widget {
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-top: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .year69-progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .year69-label {
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .year69-val {
+            color: var(--gold);
+            font-family: 'Kanit', sans-serif;
+            font-weight: 600;
+        }
+
+        .year69-bar-track {
+            height: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+        }
+
+        .year69-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            background: linear-gradient(90deg, #f59e0b 0%, #10b981 100%);
+            transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+        }
+
+        .year69-markers {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            padding: 0 2px;
         }
 
         /* Category bars */
@@ -1118,14 +1190,32 @@
                 </div>
             </div>
 
-            <!-- STATUS BANNER -->
+            <!-- STATUS BANNER & YEAR 2569 STATUS BAR -->
             <div class="status-banner" id="status-banner">
-                <span class="icon" id="status-icon">⏳</span>
-                <div>
-                    <div id="status-text">กำลังโหลดสถานะ...</div>
-                    <div class="detail" id="status-detail"></div>
+                <div class="status-banner-header">
+                    <span class="icon" id="status-icon">⏳</span>
+                    <div style="flex:1;">
+                        <div id="status-text" style="font-size:1.05rem;">กำลังโหลดสถานะ...</div>
+                        <div class="detail" id="status-detail"></div>
+                    </div>
+                    <div style="margin-left:auto; text-align:right;" id="status-total-hrs"></div>
                 </div>
-                <span style="margin-left:auto" id="status-total-hrs"></span>
+
+                <!-- แถบสถานะความดีประจำปีการศึกษา 2569 -->
+                <div class="year69-progress-widget">
+                    <div class="year69-progress-info">
+                        <span class="year69-label">📊 แถบสถานะชั่วโมงความดี ประจำปีการศึกษา 2569</span>
+                        <span class="year69-val" id="year69-progress-text">0 / 50 ชม. (0%)</span>
+                    </div>
+                    <div class="year69-bar-track">
+                        <div class="year69-bar-fill" id="year69-progress-fill" style="width: 0%;"></div>
+                    </div>
+                    <div class="year69-markers">
+                        <span>0 ชม.</span>
+                        <span>25 ชม. (ครึ่งทาง)</span>
+                        <span style="color:var(--gold);font-weight:600;">🏁 50 ชม. (ผ่านเกณฑ์)</span>
+                    </div>
+                </div>
             </div>
 
             <!-- macOS CRYSTAL CHIBI HERO WIDGET -->
@@ -1365,12 +1455,12 @@
 
     <!-- SCRIPT INCLUDES -->
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
-    <script src="data/students_photos.js?v=3593"></script>
-    <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="data/deeds_data.js?v=20261026-v50"></script>
-    <script src="data/app_settings.js?v=3593"></script>
-    <script src="app.js?v=20261104-cards-v2"></script>
+    <script src="data/students_data.js?v=20261106-live-v3"></script>
+    <script src="data/students_photos.js?v=20261106-live-v3"></script>
+    <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+    <script src="data/deeds_data.js?v=20261106-live-v3"></script>
+    <script src="data/app_settings.js?v=20261106-live-v3"></script>
+    <script src="app.js?v=20261106-live-v3"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
@@ -1742,18 +1832,40 @@
             const annualHrs = summary.totalHours || 0;
             const cumHrs = (summary.cumulativeHours !== undefined) ? summary.cumulativeHours : annualHrs;
             const carry = summary.carryForward || 0;
+            const pct = Math.min(100, Math.round((annualHrs / min) * 100));
+
             if (summary.passed) {
                 banner.className = 'status-banner pass';
                 document.getElementById('status-icon').textContent = '✅';
-                document.getElementById('status-text').textContent = 'ผ่านเกณฑ์ชั่วโมงความดีประจำปีการศึกษา 2569!';
-                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs} ชม. (เกณฑ์: ${min} ชม./ปี)${carry > 0 ? ` • คะแนนสะสมรวม: ${cumHrs} ชม.` : ''}`;
+                document.getElementById('status-text').textContent = 'ผ่านเกณฑ์ชั่วโมงความดีประจำปีการศึกษา 2569 เรียบร้อยแล้ว!';
+                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs.toFixed(1)} ชม. (เกินเกณฑ์ +${(annualHrs - min).toFixed(1)} ชม.)${carry > 0 ? ` • ยอดยกมา: ${carry.toFixed(1)} ชม. • รวมสะสมทุกปี: ${cumHrs.toFixed(1)} ชม.` : ''}`;
             } else {
                 banner.className = 'status-banner fail';
                 document.getElementById('status-icon').textContent = '⏳';
-                document.getElementById('status-text').textContent = `ชั่วโมงความดีประจำปีการศึกษา 2569 — ต้องการอีก ${Math.max(0, min - annualHrs)} ชม.`;
-                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs} ชม. จาก ${min} ชม. ที่กำหนด${carry > 0 ? ` • คะแนนสะสมรวม: ${cumHrs} ชม.` : ''}`;
+                document.getElementById('status-text').textContent = `ชั่วโมงความดีประจำปีการศึกษา 2569 — ต้องการอีก ${(min - annualHrs).toFixed(1)} ชม.`;
+                document.getElementById('status-detail').textContent = `ปี 2569 บันทึกแล้ว ${annualHrs.toFixed(1)} ชม. จากเกณฑ์ ${min} ชม.${carry > 0 ? ` • ยอดยกมา: ${carry.toFixed(1)} ชม. • รวมสะสมทุกปี: ${cumHrs.toFixed(1)} ชม.` : ''}`;
             }
-            document.getElementById('status-total-hrs').innerHTML = `<span style="font-size:1.8rem;font-weight:700;color:var(--gold)">${annualHrs}</span><br><span style="font-size:0.7rem;color:var(--text-muted)">ชม. ปี 69</span>`;
+            document.getElementById('status-total-hrs').innerHTML = `<span style="font-size:1.8rem;font-weight:700;color:var(--gold)">${annualHrs.toFixed(1)}</span><br><span style="font-size:0.75rem;color:var(--text-muted)">ชม. ปี 69</span>`;
+
+            // Update Year 69 Progress Bar
+            const fillEl = document.getElementById('year69-progress-fill');
+            if (fillEl) {
+                fillEl.style.width = `${pct}%`;
+                if (annualHrs >= min) {
+                    fillEl.style.background = 'linear-gradient(90deg, #10b981 0%, #059669 100%)';
+                    fillEl.style.boxShadow = '0 0 12px rgba(16, 185, 129, 0.6)';
+                } else if (annualHrs >= 25) {
+                    fillEl.style.background = 'linear-gradient(90deg, #f59e0b 0%, #10b981 100%)';
+                    fillEl.style.boxShadow = '0 0 10px rgba(245, 158, 11, 0.4)';
+                } else {
+                    fillEl.style.background = 'linear-gradient(90deg, #ef4444 0%, #f59e0b 100%)';
+                    fillEl.style.boxShadow = '0 0 8px rgba(239, 68, 68, 0.4)';
+                }
+            }
+            const textEl = document.getElementById('year69-progress-text');
+            if (textEl) {
+                textEl.innerHTML = `<b>${annualHrs.toFixed(1)}</b> / ${min} ชม. <b>(${pct}%)</b> ${annualHrs >= min ? '<span style="color:#4ade80;margin-left:4px;">✅ ผ่านเกณฑ์</span>' : `<span style="color:#f59e0b;margin-left:4px;">(ขาดอีก ${(min - annualHrs).toFixed(1)} ชม.)</span>`}`;
+            }
         }
 
         let activeCategoryFilter = 'all';
