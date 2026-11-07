@@ -13,7 +13,7 @@ const jsEndpoints = [
 for (const name of jsEndpoints) {
   test(name + ' contains no Telegram bot token literal', () => {
     const source = fs.readFileSync(path.join(root, name), 'utf8');
-    assert.doesNotMatch(source, /\\b\\d{8,12}:[A-Za-z0-9_-]{25,}/);
+    assert.doesNotMatch(source, /\b\d{8,12}:[A-Za-z0-9_-]{25,}/);
     assert.match(source, /TELEGRAM_BOT_TOKEN/);
   });
 }
@@ -25,7 +25,7 @@ test('webhook requires Telegram secret and allowlisted approvers', () => {
 });
 test('bridge verifies TLS and does not auto-register webhook', () => {
   const source = fs.readFileSync(path.join(root, 'scripts/live_telegram_bridge.py'), 'utf8');
-  assert.match(source, /ssl\\.create_default_context\\(\\)/);
-  assert.doesNotMatch(source, /ssl\\._create_unverified_context\\(\\)/);
-  assert.doesNotMatch(source, /call_telegram\\('setWebhook'/);
+  assert.match(source, /ssl\.create_default_context\(\)/);
+  assert.doesNotMatch(source, /ssl\._create_unverified_context\(\)/);
+  assert.doesNotMatch(source, /call_telegram\('setWebhook'/);
 });
