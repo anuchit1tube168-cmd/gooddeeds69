@@ -697,6 +697,36 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - `python3 data/check_pdpa_compliance.py`: 100% compliant.
   - Cloudflare Pages Deployment: Deployed to `https://568f3942.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`.
 
+## Mobile Approval Root Cause & Fix Continuation — 2026-11-07
+- User Request: "ตรวจสอบทำไมอนุมัติผ่านมือถืไม่ได้" (Investigate why approving via mobile does not work).
+- Root Causes Identified:
+  1. **Query Param Student Session Forgery (`app.js:610`):**
+     - When teachers clicked `[✍️ ตรวจสอบ & ลงนาม ↗️]` in Telegram on their mobile phone, the URL included `?studentId=<student_id>`.
+     - In `App.getCurrentUser()`, line 610 checked `params.get('studentId')` and automatically forged a session with `role: 'student'` for that student.
+     - On `approve_sign.html`, line 703 checked `if (u && u.role === 'student')`: Because `u.role` was just set to `'student'`, the browser showed `alert('⚠️ หน้านี้สำหรับอาจารย์ผู้ตรวจประเมินเท่านั้น นักเรียนไม่สามารถเข้าถึงได้')` and immediately redirected them to `student-dashboard.html`, completely preventing anyone from reviewing or signing on mobile via Telegram links!
+  2. **Self-Approval vs Evaluator Distinction:**
+     - `approve_sign.html` previously blocked anyone who had a student session in `localStorage` from testing, without checking if they were the owner of the deed.
+  3. **Canvas Gestures & Touch Action on Mobile:**
+     - The canvas element lacked explicit `touch-action: none;` and `-webkit-user-select: none;`, which could cause iOS/Safari to capture dragging gestures.
+     - Canvas resizing on mobile was only executed once at script parse time before full layout was settled.
+- Solutions Applied:
+  1. **Fixed `App.getCurrentUser()`:**
+     - Strictly prohibited deriving student sessions from query parameters on review/approval surfaces (`approve_sign`, `deed_slip`, `teacher-dashboard`).
+  2. **Refined Role Guard in `approve_sign.html`:**
+     - Specifically checks if the logged-in student is the actual author of the deed (`u.student_id === targetStudentId`). If so, blocks self-approval. If an evaluator opens the link on a device with stale student cache, automatically clears the student session to allow evaluator review.
+  3. **Mobile Canvas & Gestures Hardening:**
+     - Added `touch-action: none; -webkit-user-select: none; user-select: none;` to `canvas`.
+     - Added window resize listener and `requestAnimationFrame` + `setTimeout(resizeCanvas, 100)` guarantee for mobile viewports.
+     - Bound `window.teacherRevokeDeed` in `teacher-dashboard.html`.
+     - Bumped script cache buster to `?v=20261107-mobile-approve-fix`.
+- Verification:
+  - `node scripts/check-syntax.cjs`: Syntax PASSED.
+  - `node --test tests/*.test.cjs`: 153/153 PASSED.
+  - `python3 -m unittest discover -s tests -p "test_*.py"`: 23/23 PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+
+
 
 
 

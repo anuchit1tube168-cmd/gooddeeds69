@@ -159,6 +159,9 @@
             height: 100%;
             border-radius: 8px;
             cursor: crosshair;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
         }
 
         .sig-hint {
@@ -435,7 +438,7 @@
     <script src="data/teachers_data.js?v=3593"></script>
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
-    <script src="app.js?v=20261107-admin-fix"></script>
+    <script src="app.js?v=20261107-mobile-approve-fix"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -513,6 +516,12 @@
                 ctx.lineJoin = 'round';
             }
             resizeCanvas();
+            window.addEventListener('resize', () => {
+                if (!hasSignature) resizeCanvas();
+            });
+            requestAnimationFrame(() => {
+                setTimeout(resizeCanvas, 100);
+            });
 
             function getPos(e) {
                 const rect = canvas.getBoundingClientRect();
@@ -698,17 +707,23 @@
         }
 
         async function loadDeedData() {
-            // Strict role guard: Students can NEVER access approve_sign.html
-            const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
-            if (u && u.role === 'student') {
-                alert('⚠️ หน้านี้สำหรับอาจารย์ผู้ตรวจประเมินเท่านั้น นักเรียนไม่สามารถเข้าถึงได้');
-                window.location.href = 'student-dashboard.html';
-                return;
-            }
-
             const params = new URLSearchParams(window.location.search);
             const deedId = params.get('id');
             const studentId = params.get('studentId');
+
+            // Strict role guard: Students can NEVER approve their own deeds
+            const u = (typeof App !== 'undefined' && App.getCurrentUser) ? App.getCurrentUser() : null;
+            if (u && u.role === 'student') {
+                if (studentId && String(u.student_id) === String(studentId)) {
+                    alert('⚠️ นักเรียนไม่สามารถตรวจหรือลงนามอนุมัติความดีของตนเองได้ (ตามระเบียบ วพอ. ต้องได้รับการตรวจรับรองจากอาจารย์หรือผู้รับรอง)');
+                    window.location.href = 'student-dashboard.html';
+                    return;
+                }
+                // If it is another student session left in localStorage or tester device, purge it so evaluator can sign
+                console.warn('⚠️ Student session detected on approval page. Switching to evaluator mode.');
+                Storage.remove('session');
+            }
+
             const urlName = params.get('name') || '';
             const urlCat = params.get('cat');
             const urlCatName = params.get('catName');

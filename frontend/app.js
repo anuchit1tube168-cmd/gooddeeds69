@@ -607,12 +607,17 @@ const App = {
         if (!user && typeof window !== 'undefined' && window.location) {
             try {
                 const params = new URLSearchParams(window.location.search);
-                const autoSid = params.get('studentId') || params.get('sid') || params.get('autoLogin');
-                if (autoSid) {
-                    const s = this.findStudent(autoSid);
-                    if (s) {
-                        user = { ...s, role: 'student', loginAt: Date.now() };
-                        Storage.set('session', user);
+                const path = (window.location.pathname || '') + (window.location.search || '');
+                // NEVER forge a student session from query parameters on review, approval, slip or dashboard pages!
+                const isReviewOrAdmin = path.includes('approve_sign') || path.includes('deed_slip') || path.includes('teacher-dashboard');
+                if (!isReviewOrAdmin) {
+                    const autoSid = params.get('autoLogin');
+                    if (autoSid) {
+                        const s = this.findStudent(autoSid);
+                        if (s) {
+                            user = { ...s, role: 'student', loginAt: Date.now() };
+                            Storage.set('session', user);
+                        }
                     }
                 }
             } catch (e) {}
