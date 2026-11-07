@@ -44,15 +44,15 @@ export async function onRequestOptions() {
 
 export async function onRequestGet(context) {
   const { env } = context;
-  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '';
+  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '';
 
   return new Response(JSON.stringify({
     status: 'online',
     service: 'RTAFNC Good Deeds Telegram Notification Dispatcher',
     environment: 'Cloudflare Edge 24/7 Serverless',
     telegramConfigured: !!botToken,
-    chatId: chatId,
+    chatConfigured: !!chatId,
     timestamp: new Date().toISOString()
   }, null, 2), {
     headers: {
@@ -65,8 +65,8 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '';
+  const chatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '';
 
   if (!botToken) {
     return new Response(JSON.stringify({
@@ -75,6 +75,15 @@ export async function onRequestPost(context) {
     }), {
       status: 500,
       headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+    });
+  }
+
+  // Incident containment: this endpoint is publicly routable and must fail closed.
+  // Do not enable until the server-side caller is authenticated and authorized.
+  if (!env || env.PRODUCTION_WRITE_ENABLED !== 'true' || env.TELEGRAM_NOTIFICATIONS_ENABLED !== 'true') {
+    return new Response(JSON.stringify({ ok: false, error: 'NOTIFICATIONS_DISABLED' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' }
     });
   }
 
