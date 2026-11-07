@@ -6,8 +6,8 @@
 
 export async function onRequestGet(context) {
   const { env } = context;
-  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '';
+  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '';
   const hasGasUrl = !!(env && env.GAS_URL);
 
   return new Response(JSON.stringify({
@@ -15,10 +15,10 @@ export async function onRequestGet(context) {
     service: 'RTAFNC Good Deeds Telegram Bot Webhook Bridge',
     environment: 'Cloudflare Edge 24/7 Serverless',
     telegramConfigured: !!botToken,
-    chatId: defaultChatId,
+    chatConfigured: !!defaultChatId,
     hasGasUrl: hasGasUrl,
     timestamp: new Date().toISOString(),
-    ready: true
+    ready: false // Runtime readiness requires verified webhook and authorization canary
   }, null, 2), {
     headers: { 'Content-Type': 'application/json; charset=utf-8' }
   });
@@ -27,14 +27,29 @@ export async function onRequestGet(context) {
 export async function onRequestPost(context) {
   const { request, env } = context;
 
-  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+  const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '';
+  const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '';
   const gasUrl = (env && env.GAS_URL) ? env.GAS_URL : 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
 
   if (!botToken) {
     return new Response(JSON.stringify({ error: 'TELEGRAM_BOT_TOKEN not configured' }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  // Telegram's setWebhook(secret_token) sends this header on every update.
+  // Absence of either value disables the endpoint (fail closed).
+  const expectedSecret = (env && env.TELEGRAM_WEBHOOK_SECRET) || '';
+  const providedSecret = request.headers.get('X-Telegram-Bot-Api-Secret-Token') || '';
+  if (!expectedSecret || providedSecret !== expectedSecret) {
+    return new Response(JSON.stringify({ ok: false, error: 'UNAUTHORIZED_WEBHOOK' }), {
+      status: 403, headers: { 'Content-Type': 'application/json' }
+    });
+  }
+  if (!defaultChatId) {
+    return new Response(JSON.stringify({ ok: false, error: 'TELEGRAM_CHAT_NOT_CONFIGURED' }), {
+      status: 503, headers: { 'Content-Type': 'application/json' }
     });
   }
 
@@ -74,6 +89,16 @@ export async function onRequestPost(context) {
     const msgId = msg.message_id;
 
     const fromUser = cq.from || {};
+    const permittedApprovers = String((env && env.TELEGRAM_APPROVER_IDS) || '')
+      .split(',').map(id => id.trim()).filter(Boolean);
+    // Validate real chat and numeric Telegram user ID, never display name.
+    if (String(chat.id || '') !== String(defaultChatId) ||
+        !permittedApprovers.includes(String(fromUser.id || ''))) {
+      return new Response(JSON.stringify({ ok: false, error: 'UNAUTHORIZED_APPROVER' }), {
+        status: 403, headers: { 'Content-Type': 'application/json' }
+      });
+    }
+
     let approverName = 'ร.อ.อนุชิต ทำจะดี (Bird)';
     if (fromUser.first_name) {
       const uName = `${fromUser.first_name} ${fromUser.last_name || ''}`.trim();
@@ -196,6 +221,11 @@ export async function onRequestPost(context) {
   if (body.message && body.message.text) {
     const text = body.message.text.trim();
     const chatId = body.message.chat.id;
+    if (String(chatId) !== String(defaultChatId)) {
+      return new Response(JSON.stringify({ ok: false, error: 'UNAUTHORIZED_CHAT' }), {
+        status: 403, headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     if (text === '/status' || text === '/ping' || text.startsWith('/start')) {
       const statusMsg = [

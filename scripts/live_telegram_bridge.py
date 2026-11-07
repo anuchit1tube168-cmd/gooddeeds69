@@ -44,7 +44,7 @@ BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN') or ENV.get('TELEGRAM_BOT_TOKEN'
 CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID') or ENV.get('TELEGRAM_CHAT_ID', '')
 GAS_URL = os.environ.get('GAS_URL') or ENV.get('GAS_URL', 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec')
 
-SSL_CTX = ssl._create_unverified_context()
+SSL_CTX = ssl.create_default_context()
 
 def load_notified_deeds():
     if os.path.exists(NOTIFIED_FILE):
@@ -787,9 +787,8 @@ def run_polling():
     wh = call_telegram('getWebhookInfo', {})
     wh_url = (wh.get('result', {}) or {}).get('url', '')
     if not wh_url:
-        cf_wh = 'https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook'
-        call_telegram('setWebhook', {'url': cf_wh, 'allowed_updates': ['message', 'callback_query']})
-        print(f"✅ ตั้งค่า Webhook 24/7 ชี้ไปที่ Cloudflare Pages: {cf_wh}")
+        print("⚠️ No verified Telegram webhook. Refusing auto-registration without a managed webhook secret.")
+        return
     else:
         print(f"✅ Webhook ออนไลน์อยู่แล้วบน: {wh_url} (Cloudflare 24/7)")
 
