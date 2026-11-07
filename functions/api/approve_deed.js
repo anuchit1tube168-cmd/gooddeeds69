@@ -123,7 +123,38 @@ export async function onRequestPost(context) {
     }
   })();
 
-  const [gasResult, telegramSent] = await Promise.all([gasPromise, tgPromise]);
+  const lineToken = (env && env.LINE_CHANNEL_ACCESS_TOKEN) ? env.LINE_CHANNEL_ACCESS_TOKEN : '';
+  const lineUserId = body.lineUserId || (body.deedData && (body.deedData.lineUserId || body.deedData.line_user_id)) || '';
+
+  const linePromise = (async () => {
+    if (!lineToken || !lineUserId) return false;
+    try {
+      const isApprove = status === 'approved';
+      const hoursText = (body.deedData && body.deedData.hours) ? `${body.deedData.hours} ชั่วโมง` : '';
+      const catText = (body.deedData && (body.deedData.categoryName || body.deedData.category_name)) ? (body.deedData.categoryName || body.deedData.category_name) : 'กิจกรรมจิตอาสา';
+      const text = isApprove
+        ? `🎉 ยินดีด้วยค่ะ นพอ.!\nรายการความดีของคุณได้รับการอนุมัติเรียบร้อยแล้ว\n━━━━━━━━━━━━━━━\n📂 หมวด: ${catText}\n⏱ จำนวน: ${hoursText}\n👨‍🏫 ผู้อนุมัติ: ${teacherName}\n✨ ชั่วโมงถูกสะสมเข้าระบบปี ๒๕๖๙ เรียบร้อยแล้วค่ะ`
+        : `⚠️ แจ้งเตือนสถานะความดี นพอ.\nรายการความดีของคุณไม่ผ่านการอนุมัติ\n━━━━━━━━━━━━━━━\n📂 หมวด: ${catText}\n👨‍🏫 ผู้ตรวจ: ${teacherName}\n📝 เหตุผล: ${rejectReason || 'หลักฐานไม่ชัดเจน'}\nกรุณาตรวจสอบและส่งใหม่นะคะ`;
+
+      const resp = await fetch('https://api.line.me/v2/bot/message/push', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${lineToken}`
+        },
+        body: JSON.stringify({
+          to: lineUserId,
+          messages: [{ type: 'text', text }]
+        })
+      });
+      return resp.ok;
+    } catch (lineErr) {
+      console.warn('LINE push notice:', lineErr);
+      return false;
+    }
+  })();
+
+  const [gasResult, telegramSent, lineSent] = await Promise.all([gasPromise, tgPromise, linePromise]);
 
   return new Response(JSON.stringify({
     status: 'success',
@@ -132,6 +163,7 @@ export async function onRequestPost(context) {
     newStatus: status,
     approver: teacherName,
     telegramSent: telegramSent,
+    lineSent: lineSent,
     gasResult: gasResult
   }), {
     status: 200,
