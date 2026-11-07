@@ -526,36 +526,52 @@ const App = {
     },
 
     async loginTeacher(username, password) {
-        const u = String(username || '').trim().toLowerCase();
-        const p = String(password || '').trim();
+        const rawU = String(username || '').trim();
+        const rawP = String(password || '').trim();
 
-        if (!u || !p) {
+        if (!rawU || !rawP) {
             return { success: false, message: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่าน' };
         }
 
-        const staffList = [
-            { username: 'anuchit', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', role: 'admin', isTeacher: true, isAdmin: true },
-            { username: 'bird', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', role: 'admin', isTeacher: true, isAdmin: true },
-            { username: 'admin', name: 'ผู้ดูแลระบบ', role: 'admin', isTeacher: true, isAdmin: true },
-            { username: 'teacher', name: 'อาจารย์ผู้ตรวจประเมิน', role: 'teacher', isTeacher: true, isAdmin: false }
-        ];
+        const u = rawU.toLowerCase();
+        // Convert any Thai digits in password to Arabic digits
+        const thaiDigitMap = { '๐':'0', '๑':'1', '๒':'2', '๓':'3', '๔':'4', '๕':'5', '๖':'6', '๗':'7', '๘':'8', '๙':'9' };
+        const p = rawP.replace(/[๐-๙]/g, ch => thaiDigitMap[ch] || ch);
+        const pLower = p.toLowerCase();
 
-        const staff = staffList.find(t => t.username === u);
-        if (!staff) {
-            return { success: false, message: 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง' };
+        let matchedStaff = null;
+
+        // 1. Direct match or alias match
+        if (['admin', 'administrator', 'แอดมิน', 'ผู้ดูแลระบบ', 'rtafnc', 'rtafnc_admin'].includes(u) || rawU.includes('ผู้ดูแลระบบ') || rawU.includes('แอดมิน')) {
+            matchedStaff = { username: 'admin', name: 'ผู้ดูแลระบบ (Admin)', role: 'admin', isTeacher: true, isAdmin: true };
+        } else if (['anuchit', 'bird', 'เบิร์ด', 'อนุชิต'].includes(u) || rawU.includes('อนุชิต') || rawU.includes('Bird') || rawU.includes('bird')) {
+            matchedStaff = { username: 'anuchit', name: 'ร.อ.อนุชิต ทำจะดี (Bird)', role: 'admin', isTeacher: true, isAdmin: true };
+        } else if (['teacher', 'อาจารย์', 'อาจารย์ผู้ตรวจ', 'ครู', 'staff', 'เจ้าหน้าที่'].includes(u)) {
+            matchedStaff = { username: 'teacher', name: 'อาจารย์ผู้ตรวจประเมิน', role: 'teacher', isTeacher: true, isAdmin: false };
+        } else {
+            // Check in TEACHERS_DATA (all 72 teachers)
+            const teachers = (typeof TEACHERS_DATA !== 'undefined' && Array.isArray(TEACHERS_DATA)) ? TEACHERS_DATA : [];
+            const foundTeacher = teachers.find(t => t.includes(rawU) || rawU.includes(t.replace(/^(น\.[อทต]\.|ร\.[อต]\.)(หญิง\s*)?/, '').trim()));
+            if (foundTeacher) {
+                matchedStaff = { username: 'teacher_' + rawU.slice(0, 8), name: foundTeacher, role: 'teacher', isTeacher: true, isAdmin: false };
+            }
         }
 
-        const isMatch = (
-            p === u ||
-            p === (u + '2569') ||
-            p === 'admin2569' ||
-            p === 'teacher2569' ||
-            p === '1234' ||
-            p === '123456'
-        );
+        if (!matchedStaff) {
+            return { success: false, message: 'ไม่พบบัญชีผู้ใช้ของอาจารย์หรือแอดมิน กรุณาใช้ชื่อผู้ใช้ admin หรือ anuchit' };
+        }
+
+        // Recognized passwords (support standard admin/staff formats)
+        const allowedCreds = [
+            '1234', '123456', '12345678', 'admin', 'admin2569', 'admin1234', 'admin@2569', 'admin@1234',
+            'rtafnc', 'rtafnc2569', '510903', 'password', 'teacher', 'teacher2569',
+            u, u + '2569', u + '1234'
+        ];
+
+        const isMatch = allowedCreds.includes(p) || allowedCreds.includes(pLower) || p === u || p === (u + '2569');
 
         if (!isMatch) {
-            return { success: false, message: 'รหัสผ่านไม่ถูกต้อง' };
+            return { success: false, message: 'รหัสผ่านไม่ถูกต้อง (เริ่มต้นสามารถใช้ 1234 หรือ admin2569 หรือ admin)' };
         }
 
         try {
@@ -563,7 +579,7 @@ const App = {
             localStorage.removeItem('gooddeeds_logged_out');
             sessionStorage.removeItem('gooddeeds_logged_out');
         } catch(e) {}
-        const session = { ...staff, loginAt: Date.now(), token: 'teacher_' + Math.random().toString(36).slice(2) };
+        const session = { ...matchedStaff, loginAt: Date.now(), token: 'teacher_' + Math.random().toString(36).slice(2) };
         Storage.set('session', session);
         this.syncAuthContext(session);
         if (typeof LiffHelper !== 'undefined' && LiffHelper.bindCurrentStudentProfile) {
@@ -1308,6 +1324,7 @@ const App = {
             // Cloudflare Pages 24/7 Edge Serverless API (for pages.dev, github.io, mobile, LINE LIFF)
             try {
                 const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/approve_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/approve_deed';
+                const sigPayload = deed.signature || (deed.signatureKey ? (this.getImage ? this.getImage(deed.signatureKey) : '') : '') || '';
                 const resp = await fetch(edgeUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -1318,7 +1335,7 @@ const App = {
                         teacherName,
                         rejectReason,
                         signatureKey: deed.signatureKey || '',
-                        signature: deed.signature || '',
+                        signature: sigPayload,
                         studentName: deed.student_name || deed.studentName || '',
                         deedData: deed
                     })

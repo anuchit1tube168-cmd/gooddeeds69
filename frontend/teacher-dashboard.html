@@ -865,7 +865,7 @@
   <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
   <script src="data/deeds_data.js?v=20261106-live-v3"></script>
   <script src="data/app_settings.js?v=20261106-live-v3"></script>
-  <script src="app.js?v=20261106-live-v3"></script>
+  <script src="app.js?v=20261107-admin-fix"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -905,7 +905,7 @@
             Storage.remove('session');
           }
           if (currentUser && currentUser.role === 'student') {
-            window.location.href = 'student-dashboard.html';
+            window.location.href = 'index.html?tab=teacher';
             return;
           }
           window.location.href = 'index.html?tab=teacher';
@@ -1072,10 +1072,10 @@
       const modal = document.getElementById('modal-live-sig');
       modal.style.display = 'flex';
 
-      // Setup Canvas
-      setTimeout(() => {
-        initLiveSignatureCanvas();
-      }, 50);
+      // Setup Canvas with safe multi-frame layout guarantee
+      requestAnimationFrame(() => {
+        setTimeout(initLiveSignatureCanvas, 60);
+      });
     }
 
     function closeLiveSigModal() {
@@ -1091,64 +1091,102 @@
       if (!sigCanvas) return;
       sigCtx = sigCanvas.getContext('2d');
       
-      const rect = sigCanvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      sigCanvas.width = rect.width * dpr;
-      sigCanvas.height = rect.height * dpr;
+      const wrap = sigCanvas.parentElement;
+      const rect = wrap ? wrap.getBoundingClientRect() : sigCanvas.getBoundingClientRect();
+      const dpr = Math.max(window.devicePixelRatio || 1, 1);
+      const w = Math.floor(rect.width) || 350;
+      const h = Math.floor(rect.height) || 170;
+
+      sigCanvas.width = w * dpr;
+      sigCanvas.height = h * dpr;
+
+      sigCtx.setTransform(1, 0, 0, 1, 0, 0);
       sigCtx.scale(dpr, dpr);
 
-      sigCtx.strokeStyle = '#0f172a'; // Deep navy blue ink
-      sigCtx.lineWidth = 2.8;
+      sigCtx.strokeStyle = '#0b2f64'; // Deep navy blue ink
+      sigCtx.lineWidth = 3.0;
       sigCtx.lineCap = 'round';
       sigCtx.lineJoin = 'round';
 
       clearLiveSignature();
 
-      // Touch & Pointer event bindings with touch-action: none to stop screen scroll
-      sigCanvas.onpointerdown = handleSigStart;
-      sigCanvas.onpointermove = handleSigMove;
-      sigCanvas.onpointerup = handleSigEnd;
-      sigCanvas.onpointercancel = handleSigEnd;
-    }
+      function getPos(e) {
+        const r = sigCanvas.getBoundingClientRect();
+        let cx = e.clientX;
+        let cy = e.clientY;
+        if (e.touches && e.touches.length > 0) {
+          cx = e.touches[0].clientX;
+          cy = e.touches[0].clientY;
+        } else if (e.changedTouches && e.changedTouches.length > 0) {
+          cx = e.changedTouches[0].clientX;
+          cy = e.changedTouches[0].clientY;
+        }
+        return {
+          x: cx - r.left,
+          y: cy - r.top
+        };
+      }
 
-    function getCanvasCoords(e) {
-      const rect = sigCanvas.getBoundingClientRect();
-      return {
-        x: e.clientX - rect.left,
-        y: e.clientY - rect.top
-      };
-    }
+      function startStroke(e) {
+        if (e.cancelable) e.preventDefault();
+        isDrawingSig = true;
+        const p = getPos(e);
+        lastSigX = p.x;
+        lastSigY = p.y;
+        sigCtx.beginPath();
+        sigCtx.moveTo(lastSigX, lastSigY);
+        sigCtx.lineTo(lastSigX + 0.5, lastSigY + 0.5);
+        sigCtx.stroke();
+        onSignatureStrokeDrawn();
+      }
 
-    function handleSigStart(e) {
-      e.preventDefault();
-      isDrawingSig = true;
-      const coords = getCanvasCoords(e);
-      lastSigX = coords.x;
-      lastSigY = coords.y;
-      sigCtx.beginPath();
-      sigCtx.moveTo(lastSigX, lastSigY);
-      sigCtx.lineTo(lastSigX + 0.1, lastSigY + 0.1);
-      sigCtx.stroke();
-      onSignatureStrokeDrawn();
-    }
+      function moveStroke(e) {
+        if (!isDrawingSig) return;
+        if (e.cancelable) e.preventDefault();
+        const p = getPos(e);
+        sigCtx.beginPath();
+        sigCtx.moveTo(lastSigX, lastSigY);
+        sigCtx.lineTo(p.x, p.y);
+        sigCtx.stroke();
+        lastSigX = p.x;
+        lastSigY = p.y;
+        onSignatureStrokeDrawn();
+      }
 
-    function handleSigMove(e) {
-      if (!isDrawingSig) return;
-      e.preventDefault();
-      const coords = getCanvasCoords(e);
-      sigCtx.beginPath();
-      sigCtx.moveTo(lastSigX, lastSigY);
-      sigCtx.lineTo(coords.x, coords.y);
-      sigCtx.stroke();
-      lastSigX = coords.x;
-      lastSigY = coords.y;
-      onSignatureStrokeDrawn();
-    }
+      function endStroke(e) {
+        if (isDrawingSig) {
+          isDrawingSig = false;
+        }
+      }
 
-    function handleSigEnd(e) {
-      if (!isDrawingSig) return;
-      e.preventDefault();
-      isDrawingSig = false;
+      // Check for unified Pointer Events vs Touch/Mouse fallback
+      if (window.PointerEvent) {
+        sigCanvas.onpointerdown = (e) => {
+          try { sigCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+          startStroke(e);
+        };
+        sigCanvas.onpointermove = (e) => {
+          moveStroke(e);
+        };
+        sigCanvas.onpointerup = (e) => {
+          endStroke(e);
+          try { sigCanvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        };
+        sigCanvas.onpointercancel = (e) => {
+          endStroke(e);
+          try { sigCanvas.releasePointerCapture(e.pointerId); } catch (_) {}
+        };
+      } else {
+        sigCanvas.onmousedown = startStroke;
+        sigCanvas.onmousemove = moveStroke;
+        sigCanvas.onmouseup = endStroke;
+        sigCanvas.onmouseleave = endStroke;
+
+        sigCanvas.ontouchstart = startStroke;
+        sigCanvas.ontouchmove = moveStroke;
+        sigCanvas.ontouchend = endStroke;
+        sigCanvas.ontouchcancel = endStroke;
+      }
     }
 
     function onSignatureStrokeDrawn() {
@@ -1172,8 +1210,11 @@
 
     function clearLiveSignature() {
       if (!sigCanvas || !sigCtx) return;
-      const rect = sigCanvas.getBoundingClientRect();
-      sigCtx.clearRect(0, 0, rect.width, rect.height);
+      isDrawingSig = false;
+      sigCtx.save();
+      sigCtx.setTransform(1, 0, 0, 1, 0, 0);
+      sigCtx.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+      sigCtx.restore();
       hasLiveSignatureDrawn = false;
       const hint = document.getElementById('canvas-placeholder-hint');
       if (hint) hint.style.display = 'flex';
@@ -2545,6 +2586,11 @@
     window.updateBroadcastPreview = updateBroadcastPreview;
     window.executeLineBroadcast = executeLineBroadcast;
     window.quickSendStudentLine = quickSendStudentLine;
+    window.openLiveSigModal = openLiveSigModal;
+    window.closeLiveSigModal = closeLiveSigModal;
+    window.clearLiveSignature = clearLiveSignature;
+    window.confirmLiveSigApproval = confirmLiveSigApproval;
+    window.rejectFromSigModal = rejectFromSigModal;
 
     init();
   </script>

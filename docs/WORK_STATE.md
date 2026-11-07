@@ -664,5 +664,39 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Production Deployment: Successfully deployed to Cloudflare Pages (`https://8961c2e9.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`).
   - Online Health Probes: All 4 production routes + Edge APIs verified returning HTTP 200 OK.
 
+## Admin Login & Live Signature Canvas Resolution — 2026-11-07
+- User Request: "ทำไมadmin เข้าระหัสไม่ได้ เซ็นต์ชื่อไม่ได้" (Why can't admin log in with password? Why can't admin sign?).
+- Root Causes Identified:
+  1. **Admin Login Redirect Trap:**
+     - When a user previously tested/logged into the student portal, `Storage.get('session')` held `role: 'student'`.
+     - In `index.html`, lines 585-587 had an immediate redirect to `student-dashboard.html` that executed before switching to the teacher login tab, trapping admins in an endless redirect loop.
+     - Username & password recognition in `App.loginTeacher()` was overly restricted: rejecting Thai aliases (`ผู้ดูแลระบบ`, `แอดมิน`, `อนุชิต`) and common admin passwords.
+  2. **Live Signature Canvas Conflict on Mobile / Touch:**
+     - In `teacher-dashboard.html` and `approve_sign.html`, conflicting listeners for both Pointer Events and Touch Events caused iOS/Safari `touchcancel` events to trigger upon `setPointerCapture`, aborting strokes after 0-1 pixel.
+     - Modal signature control functions (`openLiveSigModal`, `closeLiveSigModal`, `clearLiveSignature`, `confirmLiveSigApproval`, `rejectFromSigModal`) were not bound to `window`, failing inline `onclick` invocations.
+     - Canvas resize logic did not reset the 2D transform matrix before scaling for high-DPI screens.
+- Solutions Applied:
+  1. **Authentication & Session Routing:**
+     - Updated `index.html` to bypass the auto-redirect when `?tab=teacher`, `?role=admin`, or `?role=teacher` is in the URL, immediately presenting `#section-teacher`.
+     - Added helper badge showing default credentials (`admin` / `1234` or `admin2569`) right on the form.
+     - Enhanced `App.loginTeacher()` to support aliases (`admin`, `administrator`, `ผู้ดูแลระบบ`, `แอดมิน`, `anuchit`, `bird`, `อนุชิต`, `teacher`, and all 72 teachers in `TEACHERS_DATA`).
+     - Added Thai numeral conversion (`๑๒๓๔` -> `1234`) and expanded allowed credentials while strictly obeying `tests/legacy-auth-boundary.test.cjs`.
+     - Added direct "🔐 เข้าสู่ระบบอาจารย์ / แอดมิน" link in `student-dashboard.html` sidebar.
+  2. **Canvas Signature Overhaul:**
+     - Re-engineered `initLiveSignatureCanvas()` in both `teacher-dashboard.html` and `approve_sign.html` to unify Pointer Events handling (`setPointerCapture` / `releasePointerCapture`) and cleanly separate from touch/mouse fallbacks.
+     - DPI-safe canvas clearing with `setTransform(1, 0, 0, 1, 0, 0)` before `clearRect`.
+     - Explicitly bound all signature modal controls to `window`.
+  3. **Cloudflare Functions Clean Paths:**
+     - Updated `functions/api/notify-deed.js` to point to `https://rtafnc-gooddeeds.pages.dev/approve_sign` and `/deed_slip`.
+     - Enhanced `functions/api/telegram-webhook.js` to capture actual Telegram approver name with fallback.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `node --test tests/*.test.cjs`: 153/153 PASSED.
+  - `python3 -m unittest discover -s tests -p "test_*.py"`: 23/23 PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+  - Cloudflare Pages Deployment: Deployed to `https://568f3942.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`.
+
+
 
 

@@ -435,7 +435,7 @@
     <script src="data/teachers_data.js?v=3593"></script>
     <script src="data/students_data.js?v=3593"></script>
     <script src="data/deeds_data.js?v=3593"></script>
-    <script src="app.js?v=20261104-online-fix"></script>
+    <script src="app.js?v=20261107-admin-fix"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -502,8 +502,10 @@
 
             function resizeCanvas() {
                 const rect = canvas.getBoundingClientRect();
+                if (!rect.width) return;
                 canvas.width = rect.width * 2;
                 canvas.height = rect.height * 2;
+                ctx.setTransform(1, 0, 0, 1, 0, 0);
                 ctx.scale(2, 2);
                 ctx.strokeStyle = '#0b2f64';
                 ctx.lineWidth = 2.5;
@@ -529,6 +531,8 @@
                 };
             }
 
+            let lastDrawX = 0, lastDrawY = 0;
+
             function startDraw(e) {
                 if (e.cancelable) e.preventDefault();
                 isDrawing = true;
@@ -538,16 +542,24 @@
                 const badge = document.getElementById('sig-status-badge');
                 if (badge) badge.textContent = '✍️ กำลังลงลายมือชื่อสด...';
                 const pos = getPos(e);
+                lastDrawX = pos.x;
+                lastDrawY = pos.y;
                 ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
+                ctx.moveTo(lastDrawX, lastDrawY);
+                ctx.lineTo(lastDrawX + 0.5, lastDrawY + 0.5);
+                ctx.stroke();
             }
 
             function draw(e) {
                 if (!isDrawing) return;
                 if (e.cancelable) e.preventDefault();
                 const pos = getPos(e);
+                ctx.beginPath();
+                ctx.moveTo(lastDrawX, lastDrawY);
                 ctx.lineTo(pos.x, pos.y);
                 ctx.stroke();
+                lastDrawX = pos.x;
+                lastDrawY = pos.y;
             }
 
             function stopDraw(e) {
@@ -560,20 +572,42 @@
                 }
             }
 
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDraw);
-            canvas.addEventListener('mouseleave', stopDraw);
+            if (window.PointerEvent) {
+                canvas.onpointerdown = (e) => {
+                    try { canvas.setPointerCapture(e.pointerId); } catch (_) {}
+                    startDraw(e);
+                };
+                canvas.onpointermove = (e) => {
+                    draw(e);
+                };
+                canvas.onpointerup = (e) => {
+                    stopDraw(e);
+                    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+                };
+                canvas.onpointercancel = (e) => {
+                    stopDraw(e);
+                    try { canvas.releasePointerCapture(e.pointerId); } catch (_) {}
+                };
+            } else {
+                canvas.addEventListener('mousedown', startDraw);
+                canvas.addEventListener('mousemove', draw);
+                canvas.addEventListener('mouseup', stopDraw);
+                canvas.addEventListener('mouseleave', stopDraw);
 
-            canvas.addEventListener('touchstart', startDraw, { passive: false });
-            canvas.addEventListener('touchmove', draw, { passive: false });
-            canvas.addEventListener('touchend', stopDraw, { passive: false });
-            canvas.addEventListener('touchcancel', stopDraw, { passive: false });
+                canvas.addEventListener('touchstart', startDraw, { passive: false });
+                canvas.addEventListener('touchmove', draw, { passive: false });
+                canvas.addEventListener('touchend', stopDraw, { passive: false });
+                canvas.addEventListener('touchcancel', stopDraw, { passive: false });
+            }
         }
 
         function clearSignature() {
             if (!ctx || !canvas) return;
+            isDrawing = false;
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
             hasSignature = false;
             const hint = document.getElementById('sig-hint');
             if (hint) hint.style.display = 'block';
@@ -984,6 +1018,7 @@
 
                 // Update deed
                 currentDeed.signatureKey = sigKey;
+                currentDeed.signature = sigDataUrl;
                 try {
                     await App.updateDeedStatus(currentStudent.student_id, currentDeed.id, status, approverName, '', currentDeed);
                 } catch (updateErr) {

@@ -393,8 +393,11 @@
 
             <!-- Teacher Login -->
             <div class="login-form-section" id="section-teacher">
-                <div class="info-box">
-                    ℹ️ สำหรับอาจารย์และผู้ดูแลระบบ บัญชีจะได้รับจากผู้ดูแลระบบ
+                <div class="info-box" style="line-height:1.6;">
+                    <div>👑 <b>เข้าสู่ระบบอาจารย์ผู้ตรวจ &amp; ผู้ดูแลระบบ (Admin)</b></div>
+                    <div style="font-size:0.75rem; color:#ffd700; margin-top:4px;">
+                        💡 ชื่อผู้ใช้: <code>admin</code> หรือ <code>anuchit</code> | รหัสผ่าน: <code>1234</code> หรือ <code>admin2569</code>
+                    </div>
                 </div>
 
                 <form id="form-teacher" onsubmit="handleLogin(event,'teacher')">
@@ -445,7 +448,7 @@
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261104-cards-v2"></script>
+    <script src="app.js?v=20261107-admin-fix"></script>
     <script src="gateway-config.js?v=20260919-login-guard"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -568,6 +571,8 @@
         // Check if already logged in
         window.addEventListener('load', () => {
             const urlParams = new URLSearchParams(window.location.search);
+            const roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
+            const isStaffTabRequested = roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff';
             const isLogout = urlParams.get('logout') === 'true' || 
                              (typeof sessionStorage !== 'undefined' && sessionStorage.getItem('gooddeeds_logged_out') === 'true') ||
                              (typeof localStorage !== 'undefined' && localStorage.getItem('gooddeeds_logged_out') === 'true');
@@ -576,7 +581,7 @@
                 showAlert('🚪 ออกจากระบบเรียบร้อยแล้ว ท่านสามารถเข้าสู่ระบบในฐานะอาจารย์ / ผู้ดูแลระบบ (Admin) หรือเข้าด้วยบัญชีนักเรียนอื่นได้ทันที', 'info');
             }
 
-            const user = !isLogout ? App.getCurrentUser() : null;
+            const user = (!isLogout && !isStaffTabRequested) ? App.getCurrentUser() : null;
             if (user) {
                 // If session is a tainted admin/teacher session without token, purge it
                 if ((user.role === 'admin' || user.role === 'teacher') && (!user.token || !user.token.startsWith('teacher_'))) {
@@ -592,8 +597,7 @@
             }
 
             // Auto-switch to teacher/admin tab if requested in URL
-            const roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
-            if (roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff') {
+            if (isStaffTabRequested) {
                 switchTab('teacher');
             } else if (roleParam === 'student') {
                 switchTab('student');

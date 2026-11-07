@@ -122,7 +122,7 @@ export async function onRequestPost(context) {
   const location = deed.location || deed.note || 'วิทยาลัยพยาบาลทหารอากาศ';
   const approver = deed.approver || deed.approved_by || deed.signer || 'ร.อ.อนุชิต ทำจะดี (Bird)';
 
-  const baseUrl = 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend';
+  const baseUrl = (env && env.APP_URL) ? env.APP_URL : 'https://rtafnc-gooddeeds.pages.dev';
   const qParams = new URLSearchParams({
     id: deedId,
     studentId: studentId,
@@ -138,8 +138,8 @@ export async function onRequestPost(context) {
     status: 'pending'
   });
 
-  const approveUrl = `${baseUrl}/approve_sign.html?${qParams.toString()}`;
-  const slipUrl = `${baseUrl}/deed_slip.html?${qParams.toString()}`;
+  const approveUrl = `${baseUrl}/approve_sign?${qParams.toString()}`;
+  const slipUrl = `${baseUrl}/deed_slip?${qParams.toString()}`;
 
   const replyMarkup = {
     inline_keyboard: [

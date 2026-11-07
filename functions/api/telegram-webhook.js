@@ -74,7 +74,11 @@ export async function onRequestPost(context) {
     const msgId = msg.message_id;
 
     const fromUser = cq.from || {};
-    const approverName = 'ร.อ.อนุชิต ทำจะดี (Bird)';
+    let approverName = 'ร.อ.อนุชิต ทำจะดี (Bird)';
+    if (fromUser.first_name) {
+      const uName = `${fromUser.first_name} ${fromUser.last_name || ''}`.trim();
+      if (uName) approverName = uName;
+    }
 
     const isApprove = data.startsWith('approve_');
     const isReject = data.startsWith('reject_');
