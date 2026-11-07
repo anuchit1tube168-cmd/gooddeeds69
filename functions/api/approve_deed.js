@@ -123,11 +123,12 @@ export async function onRequestPost(context) {
     }
   })();
 
-  const lineToken = (env && env.LINE_CHANNEL_ACCESS_TOKEN) ? env.LINE_CHANNEL_ACCESS_TOKEN : '';
   const lineUserId = body.lineUserId || (body.deedData && (body.deedData.lineUserId || body.deedData.line_user_id)) || '';
 
   const linePromise = (async () => {
-    if (!lineToken || !lineUserId) return false;
+    if (!lineUserId) return false;
+    const lineToken = await getEffectiveLineToken(env);
+    if (!lineToken) return false;
     try {
       const isApprove = status === 'approved';
       const hoursText = (body.deedData && body.deedData.hours) ? `${body.deedData.hours} ชั่วโมง` : '';
@@ -169,4 +170,35 @@ export async function onRequestPost(context) {
     status: 200,
     headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
   });
+}
+
+/**
+ * Get or automatically issue a valid LINE Channel Access Token
+ */
+async function getEffectiveLineToken(env) {
+  if (env && env.LINE_CHANNEL_ACCESS_TOKEN) {
+    return env.LINE_CHANNEL_ACCESS_TOKEN;
+  }
+  const channelId = (env && env.LINE_CHANNEL_ID) ? env.LINE_CHANNEL_ID : '1654464250';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+
+  try {
+    const params = new URLSearchParams();
+    params.append('grant_type', 'client_credentials');
+    params.append('client_id', channelId);
+    params.append('client_secret', channelSecret);
+
+    const res = await fetch('https://api.line.me/v2/oauth/accessToken', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.access_token || '';
+    }
+  } catch (err) {
+    console.warn('Auto fetch LINE token error in approve_deed:', err);
+  }
+  return '';
 }

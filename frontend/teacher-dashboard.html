@@ -684,11 +684,15 @@
 
             <div class="form-group" style="margin-bottom:16px">
               <label class="form-label" style="font-weight:600">📌 รูปแบบข้อความ Flex Template:</label>
-              <select class="form-select" id="broadcast-template" onchange="updateBroadcastPreview()">
+              <select class="form-select" id="broadcast-template" onchange="updateBroadcastTemplate()">
                 <option value="summary">🎖️ การ์ดสรุปชั่วโมงสะสมและความคืบหน้า (ทางการ)</option>
-                <option value="reminder">⏰ การ์ดแจ้งเตือนเร่งสะสมชั่วโมงจิตอาสา (ใกล้ปิดรอบ)</option>
+                <option value="reminder">⏰ การ์ดแจ้งเตือนเร่งสะสมชั่วโมงจิตอาสา (ใกล้ปิดรอบ - นพอ. ที่ยังไม่ครบ)</option>
                 <option value="custom">✍️ การ์ดข้อความประกาศกิจกรรมพิเศษ (กำหนดเอง)</option>
               </select>
+            </div>
+
+            <div style="font-size:0.8rem; color:#22c55e; margin-bottom:14px; background:rgba(34,197,94,0.1); padding:10px 14px; border-radius:8px; border:1px solid rgba(34,197,94,0.3); line-height:1.5;">
+              🟢 <b>ระบบบรอดแคสต์ 24 ชม.:</b> ข้อความจะถูกส่งตรงไปยัง <b>LINE OA (@586diwio)</b> และ <b>กลุ่ม Telegram อาจารย์</b> พร้อมกันโดยอัตโนมัติ
             </div>
 
             <div class="form-group" style="margin-bottom:16px">
@@ -2291,6 +2295,23 @@
       }
     }
 
+    function updateBroadcastTemplate() {
+      const tmpl = document.getElementById('broadcast-template').value;
+      const titleInput = document.getElementById('broadcast-title');
+      const bodyInput = document.getElementById('broadcast-body');
+      
+      if (tmpl === 'reminder') {
+        const notPassed = (allSummary || []).filter(s => s && s.year >= 1 && s.year <= 4 && (s.totalHours || 0) < 50);
+        titleInput.value = '⏰ แจ้งเตือน นพอ. เร่งสะสมชั่วโมงความดีจิตอาสา';
+        bodyInput.value = `ขอให้นักเรียนนายเรืออากาศพยาบาล (นพอ.) ทุกชั้นปี ตรวจสอบยอดสะสมชั่วโมงความดีจิตอาสา\nขณะนี้ยังมี นพอ. ที่สะสมชั่วโมงยังไม่ครบเกณฑ์ 50 ชม. จำนวน ${notPassed.length} นาย\nกรุณาเร่งปฏิบัติกิจกรรมและส่งหลักฐานผ่านระบบออนไลน์โดยเร็วค่ะ`;
+      } else if (tmpl === 'summary') {
+        const passed = (allSummary || []).filter(s => s && s.year >= 1 && s.year <= 4 && (s.totalHours || 0) >= 50);
+        titleInput.value = '📢 แจ้งผลการสะสมชั่วโมงความดีจิตอาสา ๒๕๖๙';
+        bodyInput.value = `วิทยาลัยพยาบาลทหารอากาศ ขอสรุปภาพรวมการทำความดีจิตอาสา\nมี นพอ. ผ่านเกณฑ์แล้วจำนวน ${passed.length} นาย ขอชื่นชมในความตั้งใจและมีจิตสาธารณะของ นพอ. ทุกท่านค่ะ`;
+      }
+      updateBroadcastPreview();
+    }
+
     function updateBroadcastPreview() {
       const title = document.getElementById('broadcast-title').value || '📢 แจ้งผลการสะสมชั่วโมงความดีจิตอาสา';
       const body = document.getElementById('broadcast-body').value || 'รายละเอียดประกาศ...';
@@ -2308,26 +2329,21 @@
       const title = document.getElementById('broadcast-title').value.trim();
       const body = document.getElementById('broadcast-body').value.trim();
       const btnText = (document.getElementById('broadcast-btn-text')?.value || '📄 ตรวจสอบความดี / พิมพ์ PDF').trim();
-      const btnUrl = (document.getElementById('broadcast-btn-url')?.value || 'https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/index.html').trim();
+      const btnUrl = (document.getElementById('broadcast-btn-url')?.value || 'https://rtafnc-gooddeeds.pages.dev').trim();
       const studentId = (document.getElementById('broadcast-student-id')?.value || '').trim();
-      const settings = App.getSettings();
-      const token = settings.lineChannelToken || '';
-
-      if (!token) {
-        if (confirm('⚠️ ยังไม่ได้กรอก LINE Channel Access Token\nต้องการไปที่หน้า "⚙️ ตั้งค่าระบบ" เพื่อกรอก Token ตอนนี้เลยหรือไม่?')) {
-          window.location.href = 'settings.html';
-        }
-        return;
-      }
 
       if (target === 'single' && !studentId) {
         showToast('กรุณากรอกรหัส นพอ. ที่ต้องการส่ง', 'warning');
         return;
       }
 
+      if (!confirm(`ยืนยันการส่งข้อความบรอดแคสต์:\n"${title}"\nไปยัง LINE OA (@586diwio) และกลุ่ม Telegram อาจารย์ทันทีหรือไม่?`)) {
+        return;
+      }
+
       const btn = document.getElementById('btn-broadcast-submit');
       btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span> กำลังส่ง LINE Flex Message...';
+      btn.innerHTML = '<span class="spinner"></span> กำลังส่ง Broadcast...';
 
       try {
         // Build Flex Message Payload with Custom Link & Text
@@ -2398,52 +2414,40 @@
           }
         };
 
-        const endpoint = (target === 'single') ? 'https://api.line.me/v2/bot/message/push' : 'https://api.line.me/v2/bot/message/broadcast';
-        
-        let requestBody = { messages: [flexPayload] };
-        if (target === 'single') {
-          // get student line id
-          const s = (typeof STUDENTS_DATA !== 'undefined') ? STUDENTS_DATA.find(x => String(x.student_id) === String(studentId)) : null;
-          const toId = s?.line_user_id || studentId;
-          requestBody.to = toId;
-        }
-
-        // Use Google Apps Script Cloud Server as Relay Proxy (Bypasses Browser CORS 100%)
-        const gasUrl = (typeof CONFIG !== 'undefined' && CONFIG.GAS_URL) ? CONFIG.GAS_URL : '';
-        if (gasUrl) {
-          const proxyPayload = {
-            action: 'send_line_message',
-            target: target,
+        // Call Cloudflare Edge Serverless Broadcast API
+        const resp = await fetch('/api/line-broadcast', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title: title,
+            message: body,
             messages: [flexPayload],
-            to: requestBody.to || '',
-            token: token
-          };
+            channels: ['line', 'telegram'],
+            target: target,
+            to: target === 'single' ? studentId : '',
+            senderName: teacher ? (teacher.name || teacher.username) : 'อาจารย์ผู้ตรวจ'
+          })
+        });
 
-          const resp = await fetch(gasUrl, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(proxyPayload)
-          });
-
-          showToast('🚀 ส่ง LINE Flex Message ผ่านระบบคลาวด์สำเร็จเรียบร้อยแล้ว!', 'success');
-        } else {
-          // Direct fallback
-          const resp = await fetch(endpoint, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(requestBody)
-          });
-          if (resp.ok) {
-            showToast('🚀 ส่ง LINE Flex Message สำเร็จเรียบร้อยแล้ว!', 'success');
+        if (resp.ok) {
+          const resData = await resp.json();
+          const lineOk = resData.results?.line?.sent;
+          const tgOk = resData.results?.telegram?.sent;
+          if (lineOk && tgOk) {
+            showToast('🚀 ส่ง Broadcast ผ่าน LINE OA และ Telegram เรียบร้อยแล้ว!', 'success');
+          } else if (lineOk) {
+            showToast('🚀 ส่ง Broadcast ผ่าน LINE OA สำเร็จเรียบร้อย!', 'success');
+          } else if (tgOk) {
+            showToast('🚀 ส่งรายงานเข้า Telegram สำเร็จเรียบร้อย!', 'success');
+          } else {
+            showToast('ส่งข้อความผ่านระบบคลาวด์เรียบร้อยแล้ว', 'info');
           }
+        } else {
+          showToast('ไม่สามารถส่ง Broadcast ได้ (โปรดตรวจสอบสถานะการเชื่อมต่อ)', 'error');
         }
       } catch (err) {
         console.error('Broadcast Error:', err);
-        showToast('🚀 สั่งส่งข้อมูลผ่านระบบคลาวด์เรียบร้อยแล้ว!', 'success');
+        showToast('เกิดข้อผิดพลาดในการส่ง: ' + err.message, 'error');
       } finally {
         btn.disabled = false;
         btn.innerHTML = '🚀 ยืนยันส่งข้อความ LINE ทันที';

@@ -282,6 +282,67 @@
             margin-bottom: 20px;
         }
 
+        /* High-contrast Admin/Student Quick Box */
+        .admin-quick-card {
+            background: rgba(14, 165, 233, 0.08);
+            border: 1px solid rgba(14, 165, 233, 0.25);
+            border-radius: var(--radius-md);
+            padding: 14px;
+            margin-bottom: 18px;
+        }
+        body.theme-day .admin-quick-card {
+            background: #f0f7ff !important;
+            border-color: #bae6fd !important;
+        }
+        .admin-quick-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .admin-quick-chips {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+        .quick-chip-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(201, 162, 39, 0.5);
+            background: rgba(201, 162, 39, 0.15);
+            color: #d97706;
+            font-family: inherit;
+            font-size: 0.84rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            width: 100%;
+        }
+        body.theme-day .quick-chip-btn {
+            background: #ffffff !important;
+            border-color: #d97706 !important;
+            color: #92400e !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        .quick-chip-btn:hover, .quick-chip-btn:active {
+            transform: scale(0.99);
+            background: rgba(201, 162, 39, 0.25);
+            border-color: #d97706;
+        }
+        .input-highlight {
+            animation: pulseInput 1.2s ease;
+        }
+        @keyframes pulseInput {
+            0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6); border-color: #22c55e; }
+            70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); border-color: #22c55e; }
+            100% { border-color: var(--input-border); }
+        }
+
         .login-footer {
             margin-top: 24px;
             text-align: center;
@@ -379,6 +440,12 @@
                         <a href="javascript:void(0)" onclick="showForgotPasswordHelp(event)" class="link-text">ลืมรหัสผ่าน?</a>
                     </div>
 
+                    <div style="margin-bottom: 14px;">
+                        <button type="button" class="quick-chip-btn" onclick="selectStudentAccount('6903987', '1234')">
+                            ⚡ ตัวอย่าง นพอ.: แตะเลือก <strong>6903987</strong> (รหัส 1234)
+                        </button>
+                    </div>
+
                     <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-student-login">
                         <span>🔓</span> เข้าสู่ระบบ
                     </button>
@@ -393,10 +460,21 @@
 
             <!-- Teacher Login -->
             <div class="login-form-section" id="section-teacher">
-                <div class="info-box" style="line-height:1.6;">
-                    <div>👑 <b>เข้าสู่ระบบอาจารย์ผู้ตรวจ &amp; ผู้ดูแลระบบ (Admin)</b></div>
-                    <div style="font-size:0.75rem; color:#ffd700; margin-top:4px;">
-                        💡 ชื่อผู้ใช้: <code>admin</code> หรือ <code>anuchit</code> | รหัสผ่าน: <code>1234</code> หรือ <code>admin2569</code>
+                <div class="admin-quick-card">
+                    <div class="admin-quick-header">
+                        <span style="font-size:1.3rem;">👑</span>
+                        <div>
+                            <div style="font-weight:700; font-size:0.92rem; color:var(--text-primary);">เข้าสู่ระบบอาจารย์ผู้ตรวจ &amp; ผู้ดูแลระบบ (Admin)</div>
+                            <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">แตะปุ่มลัดด้านล่างเพื่อใส่ข้อมูล:</div>
+                        </div>
+                    </div>
+                    <div class="admin-quick-chips">
+                        <button type="button" class="quick-chip-btn" onclick="selectTeacherAccount('admin', '1234')">
+                            ⚡ บัญชี Admin: แตะเลือก <strong>admin</strong> (รหัส <strong>1234</strong>)
+                        </button>
+                        <button type="button" class="quick-chip-btn" onclick="selectTeacherAccount('anuchit', '1234')">
+                            ⚡ บัญชี อ.อนุชิต: แตะเลือก <strong>anuchit</strong> (รหัส <strong>1234</strong>)
+                        </button>
                     </div>
                 </div>
 
@@ -448,7 +526,7 @@
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261107-mobile-approve-fix"></script>
+    <script src="app.js?v=20261107-quick-login-v2"></script>
     <script src="gateway-config.js?v=20260919-login-guard"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20260908"></script>
@@ -483,6 +561,38 @@
             showAlert('กรุณาติดต่อผู้ดูแลเพื่อยืนยันตัวตนและตั้งรหัสผ่านใหม่');
         }
 
+        function selectTeacherAccount(username, pwd) {
+            const uInput = document.getElementById('teacher-username');
+            const pInput = document.getElementById('teacher-password');
+            if (uInput && pInput) {
+                uInput.value = username;
+                pInput.value = pwd;
+                uInput.classList.remove('input-highlight');
+                pInput.classList.remove('input-highlight');
+                void uInput.offsetWidth;
+                uInput.classList.add('input-highlight');
+                pInput.classList.add('input-highlight');
+                showToast('⚡ ใส่ชื่อ ' + username + ' เรียบร้อย แตะปุ่ม "เข้าสู่ระบบ" ได้เลยค่ะ', 'success');
+                hideAlert();
+            }
+        }
+
+        function selectStudentAccount(sid, pwd) {
+            const sInput = document.getElementById('student-id');
+            const pInput = document.getElementById('student-password');
+            if (sInput && pInput) {
+                sInput.value = sid;
+                pInput.value = pwd;
+                sInput.classList.remove('input-highlight');
+                pInput.classList.remove('input-highlight');
+                void sInput.offsetWidth;
+                sInput.classList.add('input-highlight');
+                pInput.classList.add('input-highlight');
+                showToast('⚡ ใส่รหัส นพอ. ' + sid + ' เรียบร้อย แตะปุ่ม "เข้าสู่ระบบ" ได้เลยค่ะ', 'success');
+                hideAlert();
+            }
+        }
+
         async function handleLogin(e, role) {
             e.preventDefault();
             hideAlert();
@@ -492,7 +602,7 @@
                 const pwd = document.getElementById('student-password').value;
                 const btn = document.getElementById('btn-student-login');
 
-                if (!sid) { showAlert('กรุณากรอกรหัสนักเรียน'); return; }
+                if (!sid) { showAlert('กรุณากรอกรหัสนักเรียน (หรือแตะปุ่มด้านบนเพื่อเลือกตัวอย่าง 6903987)'); return; }
                 if (!pwd) { showAlert('กรุณากรอกรหัสผ่าน'); return; }
 
                 btn.disabled = true;
@@ -532,7 +642,10 @@
                 const pwd = document.getElementById('teacher-password').value;
                 const btn = document.getElementById('btn-teacher-login');
 
-                if (!user || !pwd) { showAlert('กรุณากรอกข้อมูลให้ครบถ้วน'); return; }
+                if (!user || !pwd) { 
+                    showAlert('กรุณากรอกข้อมูลให้ครบถ้วน (หรือแตะที่ปุ่มด้านบนเพื่อเลือก: admin / 1234)'); 
+                    return; 
+                }
 
                 btn.disabled = true;
                 btn.innerHTML = '<span class="spinner"></span> กำลังเข้าสู่ระบบ...';

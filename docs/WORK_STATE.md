@@ -726,6 +726,39 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
   - `python3 data/check_pdpa_compliance.py`: 100% compliant.
 
+## LINE OA Full Dimension & Broadcast & Admin Isolation Continuation — 2026-11-07
+- User Request: 
+  1. Add LINE OA status and quick check in Settings page (`frontend/settings.html`).
+  2. Implement Broadcast / Rich Notice feature in Teacher Dashboard so teachers can send announcements and warn students with incomplete hours via LINE OA and Telegram.
+  3. Security test: strictly prevent students from logging in as Admin or accessing Admin surfaces.
+- Solutions Applied:
+  1. **LINE OA Broadcast Edge API (`functions/api/line-broadcast.js`):**
+     - Edge Serverless endpoint supporting broadcast to all followers on LINE OA (`@586diwio`) and Telegram teacher group.
+     - Auto-fetches and auto-refreshes Channel Access Token dynamically from LINE OAuth 2.0 API.
+  2. **Settings Enhancement (`frontend/settings.html`):**
+     - Updated LINE Official Account card showing live 24/7 gateway status, Channel ID `1654464250`, Webhook URL, and quick test button `testLineGatewayStatus()` calling `/api/line-webhook`.
+  3. **Broadcast & Incomplete Hours Warning (`frontend/teacher-dashboard.html`):**
+     - Updated `executeLineBroadcast()` to route directly to Cloudflare Serverless `/api/line-broadcast`.
+     - Added dynamic template calculation in `updateBroadcastTemplate()` for "reminder" template, summarizing how many students across all classes haven't met the 50-hour requirement.
+  4. **Student vs Admin Security Isolation (`tests/student-admin-isolation.test.cjs`):**
+     - Created 5 comprehensive security gates:
+       - Gate 1: Prohibits student IDs or arbitrary inputs from logging into teacher/admin accounts.
+       - Gate 2: Guarantees student sessions have `isAdmin: false` and `isTeacher: false`.
+       - Gate 3: Enforces token prefix `teacher_` and staff role guard on `teacher-dashboard.html`.
+       - Gate 4: Enforces verified admin guard on `settings.html`.
+       - Gate 5: Prohibits students from approving their own deeds on `approve_sign.html`.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 -m unittest discover -s tests -p "test_*.py"`: 23/23 PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+  - Cloudflare Pages Deployment: Deployed to `https://2c9835ed.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`.
+  - Google Drive Sync:
+    - `python3 scripts/sync_to_gdrive.py`: Synced 224 files (11 new student folders, 13 updated student records, `records/AY2569`, and central databases `deeds.json`, `students.json`).
+    - Code & Config mirror: 10 files mirrored to Google Drive project path (`GoogleDrive-anuchit1tube168@gmail.com`).
+
+
 
 
 

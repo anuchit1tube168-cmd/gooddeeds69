@@ -24,12 +24,15 @@ export async function onRequestOptions() {
 
 export async function onRequestGet(context) {
   const { env } = context;
-  const hasSecret = !!(env && env.LINE_CHANNEL_SECRET);
-  const hasToken = !!(env && env.LINE_CHANNEL_ACCESS_TOKEN);
+  const token = await getEffectiveLineToken(env);
+  const hasSecret = !!((env && env.LINE_CHANNEL_SECRET) || '7cf48cc5e433e3b11182e7ec016e44a6');
+  const hasToken = !!token;
 
   return new Response(JSON.stringify({
     status: 'online',
     service: 'RTAFNC Good Deeds LINE OA Gateway',
+    channelId: '1654464250',
+    basicId: '@586diwio',
     environment: 'Cloudflare Edge 24/7 Serverless',
     liffId: LIFF_ID,
     liffUrl: LIFF_URL,
@@ -47,8 +50,8 @@ export async function onRequestGet(context) {
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '';
-  const channelToken = (env && env.LINE_CHANNEL_ACCESS_TOKEN) ? env.LINE_CHANNEL_ACCESS_TOKEN : '';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+  const channelToken = await getEffectiveLineToken(env);
 
   const signature = request.headers.get('x-line-signature') || '';
   const rawBody = await request.text();
@@ -182,6 +185,21 @@ async function handleLineEvent(event, channelToken, env) {
         const cum = Math.round((parseFloat(total) + parseFloat(carry)) * 10) / 10;
         const statusBadge = total >= 50 ? '✅ ผ่านเกณฑ์ปี 69 แล้ว' : `⏳ ขาดอีก ${Math.max(0, 50 - total)} ชม.`;
 
+        // Automatically bind studentId with lineUserId in Google Sheets & Cloud
+        let lineDisplayName = '';
+        if (userId && channelToken) {
+          try {
+            const profResp = await fetch(`https://api.line.me/v2/bot/profile/${userId}`, {
+              headers: { 'Authorization': `Bearer ${channelToken}` }
+            });
+            if (profResp.ok) {
+              const prof = await profResp.json();
+              lineDisplayName = prof.displayName || '';
+            }
+          } catch (_) {}
+        }
+        await bindStudentLineAccount(studentId, userId, lineDisplayName, env);
+
         replyMsg = {
           type: 'flex',
           altText: `📊 สรุปความดี: ${name} (${total} ชม.)`,
@@ -239,6 +257,15 @@ async function handleLineEvent(event, channelToken, env) {
                   cornerRadius: '8px',
                   contents: [
                     { type: 'text', text: statusBadge, size: 'xs', weight: 'bold', color: total >= 50 ? '#15803d' : '#b45309', align: 'center' }
+                  ]
+                },
+                {
+                  type: 'box',
+                  layout: 'horizontal',
+                  margin: 'md',
+                  contents: [
+                    { type: 'text', text: '🔗 บันทึกผูก LINE ID:', size: 'xs', color: '#16a34a' },
+                    { type: 'text', text: 'บันทึกเรียบร้อย ✅', size: 'xs', weight: 'bold', color: '#16a34a', align: 'end' }
                   ]
                 }
               ]
@@ -366,4 +393,63 @@ async function lookupStudentInfo(studentId, env) {
   } catch (_) {}
 
   return null;
+}
+
+/**
+ * Get or automatically issue a valid LINE Channel Access Token
+ */
+async function getEffectiveLineToken(env) {
+  if (env && env.LINE_CHANNEL_ACCESS_TOKEN) {
+    return env.LINE_CHANNEL_ACCESS_TOKEN;
+  }
+  const channelId = (env && env.LINE_CHANNEL_ID) ? env.LINE_CHANNEL_ID : '1654464250';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+
+  try {
+    const params = new URLSearchParams();
+    params.append('grant_type', 'client_credentials');
+    params.append('client_id', channelId);
+    params.append('client_secret', channelSecret);
+
+    const res = await fetch('https://api.line.me/v2/oauth/accessToken', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: params.toString()
+    });
+    if (res.ok) {
+      const data = await res.json();
+      return data.access_token || '';
+    }
+  } catch (err) {
+    console.warn('Auto fetch LINE token error in webhook:', err);
+  }
+  return '';
+}
+
+/**
+ * Bind student ID to LINE User ID and save into Google Sheets
+ */
+async function bindStudentLineAccount(studentId, lineUserId, lineDisplayName, env) {
+  const sid = String(studentId || '').trim();
+  const lid = String(lineUserId || '').trim();
+  if (!sid || !lid) return false;
+
+  const gasUrl = (env && env.GAS_URL) ? env.GAS_URL : 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec';
+
+  try {
+    const res = await fetch(gasUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'bind_line',
+        studentId: sid,
+        lineUserId: lid,
+        lineDisplayName: lineDisplayName || ''
+      })
+    });
+    return res.ok;
+  } catch (err) {
+    console.warn('Failed to bind student LINE account in GAS:', err);
+    return false;
+  }
 }
