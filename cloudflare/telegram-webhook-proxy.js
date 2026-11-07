@@ -7,7 +7,7 @@
  * แก้ปัญหา Telegram Webhook ได้รับ HTTP 302 Redirect จาก Google Apps Script
  */
 
-const GAS_URL = 'https://script.google.com/macros/s/AKfycbynhi6e37swFUaOqIBqYqxFVzZzRYm8ZL5-vmxtZvM4FOAS9O7b_Y2UblnXjd7E6hKyaA/exec';
+const GAS_URL = '';
 
 export default {
   async fetch(request, env, ctx) {
@@ -22,6 +22,13 @@ export default {
       });
     }
 
+    const secret = (env && env.TELEGRAM_WEBHOOK_SECRET) || '';
+    if (!secret || request.headers.get('X-Telegram-Bot-Api-Secret-Token') !== secret) {
+      return new Response(JSON.stringify({ ok: false, error: 'UNAUTHORIZED_WEBHOOK' }), { status: 403 });
+    }
+    if (!env || !env.GAS_URL) {
+      return new Response(JSON.stringify({ ok: false, error: 'UPSTREAM_NOT_CONFIGURED' }), { status: 503 });
+    }
     try {
       const body = await request.text();
       const targetUrl = (env && env.GAS_URL) ? env.GAS_URL : GAS_URL;
@@ -37,14 +44,14 @@ export default {
       const responseText = await upstream.text();
 
       // ส่ง HTTP 200 OK กลับไปหา Telegram ทันที เพื่อไม่ให้ Telegram ค้างหรือฟ้อง 302
-      return new Response(JSON.stringify({ ok: true, forwarded: true }), {
-        status: 200,
+      return new Response(JSON.stringify({ ok: upstream.ok, forwarded: upstream.ok }), {
+        status: upstream.ok ? 200 : 502,
         headers: { 'Content-Type': 'application/json; charset=utf-8' }
       });
     } catch (err) {
       // แม้เกิดข้อผิดพลาด ให้ส่ง HTTP 200 กลับไปหา Telegram เสมอเพื่อป้องกัน Webhook โดนระงับ
-      return new Response(JSON.stringify({ ok: false, error: err.message }), {
-        status: 200,
+      return new Response(JSON.stringify({ ok: false, error: 'UPSTREAM_FAILURE' }), {
+        status: 502,
         headers: { 'Content-Type': 'application/json; charset=utf-8' }
       });
     }
