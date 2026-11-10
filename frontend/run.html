@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>วิ่งเพื่อสุขภาพ (หมวด 10) — ระบบบันทึกความดี วพอ.พอ.</title>
+<script src="theme.js?v=20261108"></script>
+<link rel="stylesheet" href="style.css?v=3580">
+<link rel="stylesheet" href="theme.css?v=20261108">
+<link rel="stylesheet" href="pro.css?v=20261111">
+<link rel="stylesheet" href="run.css?v=20261111">
+</head>
+<body>
+<header class="rn-top">
+  <a href="student-dashboard.html" class="rn-back" aria-label="กลับหน้าหลัก">‹ หน้าหลัก</a>
+  <div class="rn-top-title">หมวด 10 · วิ่งเพื่อสุขภาพ</div>
+  <span></span>
+</header>
+
+<main class="rn-wrap">
+  <!-- Hero: chibi + ค่าพลัง -->
+  <section class="rn-card rn-hero">
+    <div class="rn-chibi" id="chibi">
+      <div class="rn-aura" id="aura"></div>
+      <img id="chibi-img" src="photos/chibi/chibi_lv1.png" alt="ตัวละครฮีโร่ประจำตัว">
+    </div>
+    <div class="rn-hero-info">
+      <div class="rn-name" id="stu-name">—</div>
+      <div class="rn-level"><span id="lv-badge">Lv.1</span> <span id="lv-name">นักฝึกหัด</span></div>
+      <div class="rn-score"><b id="score">0</b><small>/1000 ค่าพลัง</small></div>
+      <div class="rn-bar"><i id="score-bar"></i></div>
+      <div class="rn-hint" id="next-hint"></div>
+      <div class="rn-aura-label" id="aura-label"></div>
+    </div>
+  </section>
+
+  <div class="rn-pending" id="pending-box" hidden></div>
+
+  <!-- สถิติ -->
+  <section class="rn-stats">
+    <div class="rn-stat"><small>ระยะสะสม</small><b id="st-km">0</b><span>กม.</span></div>
+    <div class="rn-stat"><small>เพซเฉลี่ย</small><b id="st-pace">–</b><span>นาที/กม.</span></div>
+    <div class="rn-stat"><small>ชม.วิ่งที่ได้</small><b id="st-hours">0</b><span>ชม.</span></div>
+    <div class="rn-stat"><small>สม่ำเสมอ</small><b id="st-weeks">0</b><span>/8 สัปดาห์</span></div>
+  </section>
+
+  <section class="rn-card">
+    <h2 class="rn-h">ชั่วโมงหมวด 10 ที่ใช้ไป</h2>
+    <div id="quota"></div>
+    <details class="rn-rules"><summary>กติกาการได้ชั่วโมงจากการวิ่ง</summary><div id="rules"></div></details>
+  </section>
+
+  <section class="rn-card">
+    <h2 class="rn-h">ค่าพลัง 5 ด้าน</h2>
+    <div id="parts"></div>
+    <p class="rn-note" id="fit-note"></p>
+  </section>
+
+  <!-- ส่งผลวิ่ง -->
+  <section class="rn-card" id="submit-card">
+    <h2 class="rn-h">บันทึกการวิ่ง</h2>
+    <div class="rn-seg" role="tablist">
+      <button class="active" data-mode="shot" role="tab">ภาพจากแอปวิ่ง</button>
+      <button data-mode="gps" role="tab">จับ GPS ในแอปนี้</button>
+    </div>
+
+    <div id="mode-gps" hidden>
+      <div class="rn-gps">
+        <div><small>ระยะ</small><b id="g-km">0.00</b><span>กม.</span></div>
+        <div><small>เวลา</small><b id="g-time">00:00</b></div>
+        <div><small>เพซ</small><b id="g-pace">–</b></div>
+      </div>
+      <div class="rn-gps-status" id="g-status">กด "เริ่มวิ่ง" แล้วเปิดหน้าจอค้างไว้ระหว่างวิ่ง</div>
+      <div class="rn-row">
+        <button class="btn btn-primary" id="g-start">เริ่มวิ่ง</button>
+        <button class="btn" id="g-pause" disabled>พัก</button>
+        <button class="btn" id="g-stop" disabled>จบการวิ่ง</button>
+      </div>
+      <canvas id="g-canvas" width="640" height="400" hidden></canvas>
+    </div>
+
+    <form id="run-form" novalidate>
+      <div class="form-group">
+        <label class="form-label">ประเภท</label>
+        <div class="rn-type">
+          <label><input type="radio" name="rtype" value="personal" checked> <span><b>10.1 วิ่งส่วนตัว</b><small>วิ่งออกกำลังกายเอง</small></span></label>
+          <label><input type="radio" name="rtype" value="event"> <span><b>10.2 งานวิ่ง / วิ่งการกุศล</b><small>มีผู้จัด มีเบอร์วิ่งหรือใบประกาศ</small></span></label>
+        </div>
+      </div>
+      <div class="form-group" id="event-box" hidden>
+        <label class="form-label">ชื่องานวิ่ง <span class="required">*</span></label>
+        <input class="form-input" id="f-event" maxlength="150" placeholder="เช่น งานวิ่งการกุศล …">
+        <small class="rn-note">แนบภาพเบอร์วิ่ง/ใบประกาศ/ภาพเส้นชัย ถ้าไปตามคำสั่ง วพอ. ให้บันทึกเป็นหมวด 2 แทน</small>
+      </div>
+      <div id="mode-shot">
+        <label class="form-label">ภาพหน้าจอผลวิ่ง (Strava / Garmin / Nike Run / นาฬิกา) <span class="required">*</span></label>
+        <label class="rn-upload" for="f-img"><span id="f-img-text">แตะเพื่อเลือกภาพ</span></label>
+        <input type="file" id="f-img" accept="image/*" hidden>
+        <img id="f-preview" class="rn-preview" alt="ภาพหลักฐาน" hidden>
+      </div>
+      <div class="rn-grid">
+        <div class="form-group"><label class="form-label">วันที่วิ่ง</label><input type="date" class="form-input" id="f-date" required></div>
+        <div class="form-group"><label class="form-label">ระยะทาง (กม.)</label><input type="number" class="form-input" id="f-km" step="0.01" min="0.5" max="42.2" inputmode="decimal" required></div>
+        <div class="form-group"><label class="form-label">เวลา (นาที)</label><input type="number" class="form-input" id="f-min" step="0.1" min="1" max="600" inputmode="decimal" required></div>
+      </div>
+      <div class="rn-estimate" id="f-est">กรอกระยะทางและเวลาเพื่อดูชั่วโมงโดยประมาณ</div>
+      <div class="alert alert-error" id="f-err" hidden></div>
+      <button type="submit" class="btn btn-primary btn-full" id="f-submit">ส่งให้ผู้ตรวจอนุมัติ</button>
+      <p class="rn-note">ชั่วโมงจะยังไม่ถูกนับจนกว่าผู้ตรวจจะอนุมัติ ระบบคิดเพดานต่อวัน/ต่อภาคเรียนตอนอนุมัติ</p>
+    </form>
+  </section>
+
+  <section class="rn-card">
+    <h2 class="rn-h">ประวัติการวิ่ง</h2>
+    <div id="history"><p class="rn-note">กำลังโหลด…</p></div>
+  </section>
+</main>
+
+<div class="rn-toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data/students_data.js?v=20261108-acting-cmd"></script>
+<script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+<script src="data/deeds_data.js?v=20261106-live-v3"></script>
+<script src="data/app_settings.js?v=20261106-live-v3"></script>
+<script src="app.js?v=20261107-mobile-approve-fix"></script>
+<script src="strength.js?v=20261111"></script>
+<script src="run.js?v=20261111"></script>
+</body>
+</html>

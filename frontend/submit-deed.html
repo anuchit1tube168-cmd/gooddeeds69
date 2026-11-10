@@ -6,13 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกความดีจิตอาสา วพอ.พอ. (LINE Official LIFF)</title>
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3580">
     <link rel="stylesheet" href="theme.css?v=20261026">
+    <link rel="stylesheet" href="pro.css?v=20261111">
     <script src="theme.js?v=20261026"></script>
     <style>
         .page-header {
@@ -33,12 +29,45 @@
             font-size: 0.95rem;
         }
 
-        /* Category Selector - Modern Cards */
+        /* Category Selector - Modern Responsive Cards */
         .cat-select-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(3, 1fr);
             gap: 12px;
             margin-bottom: 12px;
+        }
+
+        @media (max-width: 639px) {
+            .cat-select-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .cat-option {
+                padding: 10px 8px !important;
+                font-size: 0.78rem !important;
+                gap: 4px !important;
+            }
+            .cat-option .icon {
+                font-size: 1.4rem !important;
+                margin-bottom: 2px !important;
+            }
+            .custom-card {
+                padding: 16px 12px !important;
+                border-radius: var(--radius-md) !important;
+            }
+            .page-header h1 {
+                font-size: 1.35rem !important;
+            }
+            .submit-layout-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+            .hero-chibi-card {
+                position: relative !important;
+                top: auto !important;
+                margin-top: 16px;
+                padding: 16px !important;
+            }
         }
 
         .cat-option {
@@ -226,6 +255,10 @@
         @media (max-width: 900px) {
             .submit-layout-grid {
                 grid-template-columns: 1fr;
+            }
+            .hero-chibi-card {
+                position: relative !important;
+                top: auto !important;
             }
         }
 
@@ -509,7 +542,7 @@
             <div id="modal-deed-summary" style="background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); border-radius:12px; padding:12px 16px; margin:14px 0 18px 0; text-align:left; font-size:0.85rem;">
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                     <span style="color:#94a3b8;">ผู้บันทึก:</span>
-                    <strong style="color:#f8fafc;" id="modal-student-name">นพอ. กรกนก เจียรนัย</strong>
+                    <strong style="color:#f8fafc;" id="modal-student-name">นพอ. —</strong>
                 </div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
                     <span style="color:#94a3b8;">หมวดความดี:</span>
@@ -553,12 +586,11 @@
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
     <script src="data/teachers_data.js?v=3593"></script>
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
-    <script src="data/deeds_data.js?v=3593"></script>
+    <script src="data/students_data.js?v=20261108-acting-cmd"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261104-cards-v2"></script>
+    <script src="app.js?v=20261108-perf-responsive-v1"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261102-liff-line-v1"></script>
@@ -585,7 +617,7 @@
 
             renderCategories();
 
-            // Set up listeners
+            // Set up listeners with debouncing to prevent mobile input stutter
             const dateEl = document.getElementById('activity-date');
             if (dateEl) {
                 dateEl.addEventListener('change', () => {
@@ -593,9 +625,15 @@
                 });
             }
 
+            let chibiTimer = null;
+            function debouncedChibi() {
+                if (chibiTimer) clearTimeout(chibiTimer);
+                chibiTimer = setTimeout(calculateProjectedChibi, 120);
+            }
+
             const hoursEl = document.getElementById('hours');
             if (hoursEl) {
-                hoursEl.addEventListener('input', calculateProjectedChibi);
+                hoursEl.addEventListener('input', debouncedChibi);
                 hoursEl.addEventListener('change', calculateProjectedChibi);
             }
             calculateProjectedChibi();
@@ -804,7 +842,10 @@
                 const chibiImg = document.getElementById('chibi-calc-img');
                 if (chibiImg) {
                     const lvClamped = Math.max(1, Math.min(10, level));
-                    chibiImg.src = `photos/chibi/chibi_lv${lvClamped}.png`;
+                    const targetSrc = `photos/chibi/chibi_lv${lvClamped}.png`;
+                    if (chibiImg.getAttribute('src') !== targetSrc) {
+                        chibiImg.src = targetSrc;
+                    }
                     chibiImg.onerror = () => {
                         if (typeof ChibiHero3D !== 'undefined' && ChibiHero3D.getSvgDataUrl) {
                             chibiImg.src = ChibiHero3D.getSvgDataUrl(lvClamped);

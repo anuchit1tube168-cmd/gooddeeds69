@@ -105,10 +105,10 @@ def main():
     if isinstance(gas_students, list):
         print(f"✅ ดึงสำเร็จ! พบนักเรียน {len(gas_students)} คน")
         
-        # ตรวจสอบตัวอย่าง นพอ. 6903979
-        sample_s = next((s for s in gas_students if str(s.get('student_id')) == '6903979'), None)
+        # ตรวจสอบตัวอย่าง: ตั้ง SAMPLE_STUDENT_ID ถ้าต้องการดูยอดของคนใดคนหนึ่ง
+        sample_s = next((s for s in gas_students if str(s.get('student_id')) == os.environ.get('SAMPLE_STUDENT_ID', '')), None)
         if sample_s:
-            print(f"   📌 ตรวจสอบ นพอ. 6903979: ชม.รวม = {sample_s.get('total_hours')} ชม. (หมวด 1: {sample_s.get('categories', [0])[0]} ชม.)")
+            print(f"   📌 ตรวจสอบ นพอ. {sample_s.get('student_id')}: ชม.รวม = {sample_s.get('total_hours')} ชม. (หมวด 1: {sample_s.get('categories', [0])[0]} ชม.)")
 
     # 6. รัน organize_student_records เพื่อจัดแฟ้มแยกรายบุคคลใน records/
     print("\n4. จัดระเบียบแฟ้มข้อมูลและใบบันทึกความดีแยกตามนักเรียนแต่ละคน (records/)...")

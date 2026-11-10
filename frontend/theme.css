@@ -10,8 +10,14 @@
 }
 
 /* Day Mode (Light Theme) — Soothing Anti-Glare, High-Contrast */
+html.theme-day,
+html[data-theme="day"],
 body.theme-day,
-html[data-theme="day"] body {
+html[data-theme="day"] body,
+html.theme-day body,
+body.theme-day.mac-glass,
+html.theme-day body.mac-glass,
+html[data-theme="day"] body.mac-glass {
   --navy: #eaf0f8;
   --navy-mid: #ffffff;
   --navy-light: #dfe8f4;

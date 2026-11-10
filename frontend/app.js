@@ -30,7 +30,7 @@ const CONFIG = {
     GAS_URL: 'https://script.google.com/macros/s/AKfycbwaG05E5dNew4dsf0vD8LBLuWdbThXIkMih1UI8Ba9rnRBCK4xmnlArzZdwtmqV9vOdcw/exec', // Google Apps Script Enterprise Cloud Web App
     CLOUDFLARE_NOTIFY_URL: 'https://rtafnc-gooddeeds.pages.dev/api/notify-deed', // Cloudflare 24/7 Edge Telegram Dispatcher
     TELEGRAM_BOT_TOKEN: '',
-    TELEGRAM_CHAT_ID: '-4839151586', // กลุ่มแจ้งเตือน AGEn Ai bot
+    TELEGRAM_CHAT_ID: '', // ตั้งค่าฝั่ง server เท่านั้น (Cloudflare secret) — ไม่เก็บในหน้าเว็บสาธารณะ
     SYSTEM_URL: '',
     MIN_HOURS_PER_SEMESTER: 25, // เกณฑ์ขั้นต่ำ 25 ชั่วโมง/ภาคเรียน (เทอม)
     MIN_HOURS_PER_YEAR: 50, // เกณฑ์ขั้นต่ำ 50 ชั่วโมง/ปีการศึกษา
@@ -2757,7 +2757,7 @@ const App = {
 
         let sentTg = false;
         const rawChatId = settings.adminChatId && String(settings.adminChatId).trim() ? String(settings.adminChatId).trim() : '';
-        const chatId = rawChatId || (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_CHAT_ID : '') || '-4839151586';
+        const chatId = rawChatId || (typeof CONFIG !== 'undefined' ? CONFIG.TELEGRAM_CHAT_ID : '') || '';
 
         // 1. Dispatch via 24/7 Cloudflare Pages Edge Serverless (Works anywhere, mobile, LINE LIFF)
         try {
@@ -2765,19 +2765,21 @@ const App = {
                 ? CONFIG.CLOUDFLARE_NOTIFY_URL
                 : 'https://rtafnc-gooddeeds.pages.dev/api/notify-deed';
 
-            let slipBase64 = null;
-            try {
-                const formSlipBlob = await this.generateDeedFormSlipBlob(deed, student);
-                if (formSlipBlob) {
-                    slipBase64 = await new Promise((res) => {
-                        const reader = new FileReader();
-                        reader.onloadend = () => res(reader.result);
-                        reader.onerror = () => res(null);
-                        reader.readAsDataURL(formSlipBlob);
-                    });
+            let slipBase64 = deed.slipImage || null;
+            if (!slipBase64) {
+                try {
+                    const formSlipBlob = await this.generateDeedFormSlipBlob(deed, student);
+                    if (formSlipBlob) {
+                        slipBase64 = await new Promise((res) => {
+                            const reader = new FileReader();
+                            reader.onloadend = () => res(reader.result);
+                            reader.onerror = () => res(null);
+                            reader.readAsDataURL(formSlipBlob);
+                        });
+                    }
+                } catch (bErr) {
+                    console.warn('Slip image generator notice:', bErr);
                 }
-            } catch (bErr) {
-                console.warn('Slip image generator notice:', bErr);
             }
 
             const cfResp = await fetch(cfEndpoint, {

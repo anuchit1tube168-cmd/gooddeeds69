@@ -263,6 +263,80 @@
             margin: 0 auto !important;
         }
 
+        /* Mobile & Tablet Responsive View */
+        @media screen and (max-width: 799px) {
+            body {
+                padding: 10px 6px;
+            }
+            .no-print-bar {
+                padding: 8px 12px;
+                font-size: 0.85rem;
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            .no-print-bar div {
+                font-size: 0.85rem !important;
+                order: -1;
+                width: 100%;
+                text-align: center;
+            }
+            .btn-print {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                flex: 1;
+                justify-content: center;
+            }
+            .btn-back {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+            }
+            .a4-page {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-height: auto !important;
+                padding: 8px !important;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+            }
+            .doc-outer-border {
+                padding: 10px 8px !important;
+            }
+            .doc-header {
+                gap: 8px;
+            }
+            .doc-logo {
+                width: 52px;
+                height: 52px;
+            }
+            .doc-title-group h1 {
+                font-size: 16px !important;
+            }
+            .doc-title-group h2 {
+                font-size: 14px !important;
+            }
+            .info-box {
+                padding: 10px 12px !important;
+                font-size: 14px !important;
+                line-height: 1.8 !important;
+            }
+            .info-row {
+                flex-wrap: wrap;
+                margin-bottom: 6px;
+            }
+            .evidence-photo-wrapper {
+                height: 240px !important;
+            }
+            .signature-section {
+                min-width: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+            }
+            .sig-name-dotted {
+                min-width: 0 !important;
+                width: 90% !important;
+            }
+        }
+
         @media print {
             body {
                 background: none;

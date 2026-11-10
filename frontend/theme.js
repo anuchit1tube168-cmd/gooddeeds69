@@ -27,6 +27,8 @@
 
   const initialTheme = getInitialTheme();
   document.documentElement.setAttribute('data-theme', initialTheme);
+  document.documentElement.classList.remove('theme-day', 'theme-night');
+  document.documentElement.classList.add(initialTheme === 'day' ? 'theme-day' : 'theme-night');
 
   function applyBodyTheme(theme) {
     if (!document.body) return;
@@ -42,6 +44,16 @@
   if (document.body) {
     applyBodyTheme(initialTheme);
   } else {
+    // Fast path: attach theme to body the exact millisecond body is attached (zero paint flicker)
+    if (typeof MutationObserver !== 'undefined') {
+      const observer = new MutationObserver(() => {
+        if (document.body) {
+          applyBodyTheme(initialTheme);
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.documentElement, { childList: true });
+    }
     document.addEventListener('DOMContentLoaded', () => applyBodyTheme(getInitialTheme()));
   }
 

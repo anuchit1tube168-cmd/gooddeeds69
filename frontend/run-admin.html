@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ศูนย์บัญชาการวิ่งเพื่อสุขภาพ (ผู้ตรวจ) — วพอ.พอ.</title>
+<script src="theme.js?v=20261108"></script>
+<link rel="stylesheet" href="style.css?v=3580">
+<link rel="stylesheet" href="theme.css?v=20261108">
+<link rel="stylesheet" href="pro.css?v=20261111">
+<link rel="stylesheet" href="run.css?v=20261111">
+</head>
+<body>
+<header class="rn-top">
+  <a href="teacher-dashboard.html" class="rn-back">‹ แดชบอร์ดอาจารย์</a>
+  <div class="rn-top-title">วิ่งเพื่อสุขภาพ · ผู้ตรวจ</div>
+  <span></span>
+</header>
+
+<main class="rn-wrap" style="max-width:1080px">
+  <section class="rn-card" id="key-card" hidden>
+    <h2 class="rn-h">ยืนยันสิทธิ์ผู้ตรวจ</h2>
+    <p class="rn-note" style="margin:0 0 10px">กรอกรหัสผู้ตรวจระบบวิ่ง (RUN_ADMIN_KEY) ที่ผู้ดูแลระบบตั้งไว้ใน Cloudflare — ระบบจำไว้เฉพาะแท็บนี้</p>
+    <form id="key-form" class="rn-row" style="grid-template-columns:1fr auto">
+      <input type="password" class="form-input" id="key-input" autocomplete="off" placeholder="รหัสผู้ตรวจ">
+      <button class="btn btn-primary">เข้าสู่ระบบ</button>
+    </form>
+    <div class="alert alert-error" id="key-err" hidden></div>
+  </section>
+
+  <div id="app" hidden>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:.82rem;color:#94a3b8">
+      <span>ผู้ตรวจ: <b id="who"></b></span>
+      <button class="btn btn-sm" id="btn-lock" type="button">ออกจากโหมดผู้ตรวจ</button>
+    </div>
+    <div class="rn-seg" style="grid-template-columns:repeat(4,1fr)">
+      <button class="active" data-tab="dash">ภาพรวม</button>
+      <button data-tab="queue">รอตรวจ <span id="q-count"></span></button>
+      <button data-tab="fit">สมรรถภาพ</button>
+      <button data-tab="set">ตั้งค่ากติกา</button>
+    </div>
+
+    <section data-pane="dash">
+      <div class="rn-stats">
+        <div class="rn-stat"><small>รอตรวจ</small><b id="k-pending">0</b><span>รายการ</span></div>
+        <div class="rn-stat"><small>นักเรียนที่วิ่ง</small><b id="k-runners">0</b><span>คน</span></div>
+        <div class="rn-stat"><small>ระยะอนุมัติรวม</small><b id="k-km">0</b><span>กม.</span></div>
+        <div class="rn-stat"><small>ชม.วิ่งที่ให้แล้ว</small><b id="k-hours">0</b><span>ชม.</span></div>
+      </div>
+      <div class="rn-card" style="margin-top:14px"><h2 class="rn-h">ระยะวิ่งที่อนุมัติ 8 สัปดาห์ล่าสุด</h2><div class="ad-weeks" id="weeks"></div></div>
+      <div class="rn-card" style="margin-top:14px"><h2 class="rn-h">สรุปรายชั้นปี</h2><div class="ad-table" id="by-year"></div></div>
+      <div class="rn-card" style="margin-top:14px"><h2 class="rn-h">ค่าพลังสูงสุด 15 อันดับ</h2><div class="ad-table" id="top"></div></div>
+    </section>
+
+    <section data-pane="queue" hidden><div id="queue"></div></section>
+
+    <section data-pane="fit" hidden>
+      <div class="rn-card">
+        <h2 class="rn-h">บันทึกผลทดสอบสมรรถภาพ</h2>
+        <form id="fit-form">
+          <div class="rn-grid">
+            <div class="form-group"><label class="form-label">รหัสนักเรียน</label><input class="form-input" id="fit-sid" list="stu-list" inputmode="numeric" maxlength="7" required><datalist id="stu-list"></datalist><small id="fit-name" class="rn-note"></small></div>
+            <div class="form-group"><label class="form-label">วันที่ทดสอบ</label><input type="date" class="form-input" id="fit-date" required></div>
+            <div class="form-group"><label class="form-label">วิ่ง 2.4 กม. (นาที:วินาที)</label><input class="form-input" id="fit-run" placeholder="12:30"></div>
+            <div class="form-group"><label class="form-label">ดันพื้น (ครั้ง/2 นาที)</label><input type="number" class="form-input" id="fit-push" min="0" max="200"></div>
+            <div class="form-group"><label class="form-label">ลุกนั่ง (ครั้ง/2 นาที)</label><input type="number" class="form-input" id="fit-sit" min="0" max="200"></div>
+          </div>
+          <div class="alert alert-error" id="fit-err" hidden></div>
+          <button class="btn btn-primary">บันทึกผล</button>
+        </form>
+      </div>
+      <div class="rn-card" style="margin-top:14px"><h2 class="rn-h">ผลทดสอบล่าสุด</h2><div class="ad-table" id="fit-list"></div></div>
+    </section>
+
+    <section data-pane="set" hidden>
+      <div class="rn-card">
+        <h2 class="rn-h">กติกาหมวด 10</h2>
+        <p class="rn-note" style="margin:0 0 12px">ค่าเหล่านี้ใช้ตอน "อนุมัติ" — รายการที่อนุมัติแล้วไม่ถูกคำนวณใหม่ ควรยืนยันกับระเบียบวิทยาลัยก่อนเปลี่ยน</p>
+        <form id="set-form">
+          <div class="rn-grid" id="set-fields"></div>
+          <div class="form-group"><label class="form-label">ช่วงภาคเรียน (JSON)</label><textarea class="form-input" id="set-sem" rows="5" style="font-family:monospace"></textarea></div>
+          <div class="alert alert-error" id="set-err" hidden></div>
+          <button class="btn btn-primary">บันทึกกติกา</button>
+        </form>
+      </div>
+    </section>
+  </div>
+</main>
+<div class="rn-toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="data/students_data.js?v=20261108-acting-cmd"></script>
+<script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
+<script src="data/deeds_data.js?v=20261106-live-v3"></script>
+<script src="data/app_settings.js?v=20261106-live-v3"></script>
+<script src="app.js?v=20261107-mobile-approve-fix"></script>
+<script src="strength.js?v=20261111"></script>
+<script src="run-admin.js?v=20261111"></script>
+</body>
+</html>

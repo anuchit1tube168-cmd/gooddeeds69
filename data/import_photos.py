@@ -108,7 +108,7 @@ def read_students(wb):
 
 # -------- match photos --------
 def extract_name_from_filename(img_path: Path) -> str:
-    """ดึงชื่อ-สกุลจากชื่อไฟล์รูป เช่น '01_นพอ.กมลฉัตร ชาสุรีย์.jpg' → 'กมลฉัตร ชาสุรีย์'"""
+    """ดึงชื่อ-สกุลจากชื่อไฟล์รูป เช่น '01_นพอ.ชื่อ สกุล.jpg' → 'ชื่อ สกุล'"""
     stem = img_path.stem.strip()
     # ตัดหมายเลขนำหน้า เช่น "01_", "01 "
     stem = re.sub(r"^\d+[_\s]+", "", stem)

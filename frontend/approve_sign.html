@@ -242,6 +242,45 @@
             font-size: 0.95rem;
             margin-top: 6px;
         }
+
+        /* Responsive Multi-Device Adaptivity (Mobile, Tablet, Desktop) */
+        @media (max-width: 639px) {
+            body {
+                padding: 8px;
+            }
+            .approve-card {
+                padding: 16px 12px;
+                border-radius: 12px;
+                margin-bottom: 20px;
+            }
+            .header img {
+                width: 52px;
+                height: 52px;
+            }
+            .header h1 {
+                font-size: 1.15rem;
+            }
+            .deed-details {
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            .canvas-box {
+                height: 150px;
+            }
+            .actions {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .btn-approve, .btn-reject {
+                width: 100%;
+                min-height: 48px;
+                font-size: 1rem;
+            }
+            .role-tab {
+                padding: 6px 4px;
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -437,8 +476,7 @@
 
     <script src="data/teachers_data.js?v=3593"></script>
     <script src="data/students_data.js?v=3593"></script>
-    <script src="data/deeds_data.js?v=3593"></script>
-    <script src="app.js?v=20261107-mobile-approve-fix"></script>
+    <script src="app.js?v=20261108-perf-responsive-v1"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {

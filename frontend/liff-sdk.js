@@ -112,9 +112,76 @@ const LiffHelper = {
         this.verifiedSession = null;
         const loggedOut = ['gooddeeds_logged_out', 'gooddeeds_auto_login_disabled'].some(key => localStorage.getItem(key) === 'true') || sessionStorage.getItem('gooddeeds_logged_out') === 'true';
         if (!interactive && (loggedOut || new URLSearchParams(window.location.search).has('logout'))) return false;
+
+        // 1. Direct Edge Verification via Cloudflare Serverless
+        if (this.profile && this.profile.userId) {
+            this.connectionState = 'checking';
+            this.updateProfileUI();
+            try {
+                const edgeUrl = (typeof App !== 'undefined' && App.getEdgeApiUrl)
+                    ? App.getEdgeApiUrl('/api/bind_line?lineUserId=' + encodeURIComponent(this.profile.userId))
+                    : 'https://rtafnc-gooddeeds.pages.dev/api/bind_line?lineUserId=' + encodeURIComponent(this.profile.userId);
+
+                const resp = await fetch(edgeUrl);
+                if (resp.ok) {
+                    const data = await resp.json();
+                    if (data && data.bound && data.student) {
+                        const stu = data.student;
+                        console.log('✅ LINE Account automatically verified for student:', stu.student_id);
+
+                        // Strict Security: Session is locked to this verified student only (Self)
+                        if (typeof App !== 'undefined' && App.setSession) {
+                            App.setSession({
+                                student_id: stu.student_id,
+                                rank: stu.rank || 'นพอ.',
+                                first_name: stu.first_name || '',
+                                last_name: stu.last_name || '',
+                                full_name: stu.full_name || '',
+                                class_year: stu.class_year || '',
+                                year_level: stu.year_level || 1,
+                                role: 'student',
+                                position: stu.position || 'นักเรียนพยาบาล',
+                                lineUserId: this.profile.userId,
+                                lineDisplayName: this.profile.displayName || '',
+                                linePictureUrl: this.profile.pictureUrl || ''
+                            });
+                        }
+                        this.verifiedSession = stu;
+                        this.connectionState = 'verified';
+                        this.updateProfileUI();
+
+                        // If on landing/index page, automatically navigate to requested destination
+                        const path = window.location.pathname;
+                        const isLanding = path === '/' || path.endsWith('/') || path.endsWith('index.html') || path.includes('index');
+                        if (isLanding) {
+                            const urlParams = new URLSearchParams(window.location.search);
+                            const redirect = urlParams.get('redirect');
+                            const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
+                                ? redirect
+                                : 'student-dashboard.html';
+                            window.location.replace(targetPage);
+                        }
+                        return true;
+                    } else {
+                        // User's LINE is not bound to a student ID yet
+                        this.connectionState = 'pending';
+                        this.updateProfileUI();
+                        document.documentElement.classList.remove('liff-pending-auth');
+                    }
+                }
+            } catch (edgeErr) {
+                console.warn('⚠️ LIFF Edge check note:', edgeErr);
+                document.documentElement.classList.remove('liff-pending-auth');
+            }
+        }
+
         const config = window.GOODDEED_GATEWAY_CONFIG;
         if (!config?.origin || typeof window.createGoodDeedGatewayClient !== 'function') {
-            this.connectionState = 'unavailable'; this.updateProfileUI(); return false;
+            if (this.connectionState !== 'pending' && this.connectionState !== 'verified') {
+                this.connectionState = 'unavailable';
+            }
+            this.updateProfileUI();
+            return false;
         }
         this.gateway ||= window.createGoodDeedGatewayClient(config);
         this.connectionState = 'checking'; this.updateProfileUI();
@@ -123,7 +190,6 @@ const LiffHelper = {
             const result = await this.gateway.verifyLine(token);
             this.verifiedSession = result;
             this.connectionState = result.studentLinked ? 'verified' : 'pending';
-            // No App.setSession, role guessing, roster lookup or mapping export.
             return true;
         } catch (_) { this.connectionState = 'error'; return false; }
         finally { this.updateProfileUI(); }
@@ -133,20 +199,52 @@ const LiffHelper = {
         const titleEl = document.getElementById('line-liff-title');
         const detailEl = document.getElementById('line-liff-detail');
         const btnEl = document.getElementById('btn-line-connect');
-        if (!titleEl || !detailEl) return;
-        const messages = {
-            idle:['เชื่อมต่อบัญชี LINE', 'เข้าสู่ LINE เพื่อให้ระบบตรวจสอบบัญชีของคุณ', 'ตรวจสอบบัญชี'],
-            checking:['กำลังตรวจสอบบัญชี', 'กรุณารอสักครู่', 'กำลังตรวจสอบ…'],
-            verified:['ยืนยันบัญชี LINE แล้ว', 'ระบบยืนยันการเชื่อมบัญชีนักเรียนแล้ว สถานะการรับแจ้งเตือนต้องตรวจแยกต่างหาก', 'ตรวจสอบอีกครั้ง'],
-            pending:['ยืนยัน LINE แล้ว รอเชื่อมบัญชีนักเรียน', 'ติดต่อผู้ดูแลเพื่อตรวจสอบสิทธิ์และเชื่อมบัญชี', 'ตรวจสอบอีกครั้ง'],
-            unavailable:['การยืนยันบัญชียังไม่พร้อม', 'กรุณาติดต่อผู้ดูแลเพื่อเปิดใช้งานการยืนยันบัญชี', 'ตรวจสอบอีกครั้ง'],
-            error:['ยังยืนยันบัญชีไม่ได้', 'ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง ข้อมูลในเครื่องไม่ใช้แทนการยืนยันบัญชี', 'ลองอีกครั้ง']
-        };
-        const message = messages[this.connectionState] || messages.idle;
-        titleEl.textContent = message[0]; detailEl.textContent = message[1];
-        titleEl.style.color = this.connectionState === 'verified' ? '#146c43' : '';
-        detailEl.setAttribute('role', 'status'); detailEl.setAttribute('aria-live', 'polite');
-        if (btnEl) { btnEl.textContent = message[2]; btnEl.disabled = this.connectionState === 'checking'; }
+        if (titleEl && detailEl) {
+            const messages = {
+                idle:['เชื่อมต่อบัญชี LINE', 'เข้าสู่ LINE เพื่อให้ระบบตรวจสอบบัญชีของคุณ', 'ตรวจสอบบัญชี'],
+                checking:['กำลังตรวจสอบบัญชี', 'กรุณารอสักครู่', 'กำลังตรวจสอบ…'],
+                verified:['ยืนยันบัญชี LINE แล้ว', 'ระบบยืนยันการเชื่อมบัญชีนักเรียนแล้ว สถานะการรับแจ้งเตือนต้องตรวจแยกต่างหาก', 'ตรวจสอบอีกครั้ง'],
+                pending:['ยืนยัน LINE แล้ว รอเชื่อมบัญชีนักเรียน', 'ติดต่อผู้ดูแลเพื่อตรวจสอบสิทธิ์และเชื่อมบัญชี', 'ตรวจสอบอีกครั้ง'],
+                unavailable:['การยืนยันบัญชียังไม่พร้อม', 'กรุณาติดต่อผู้ดูแลเพื่อเปิดใช้งานการยืนยันบัญชี', 'ตรวจสอบอีกครั้ง'],
+                error:['ยังยืนยันบัญชีไม่ได้', 'ตรวจสอบการเชื่อมต่อแล้วลองอีกครั้ง ข้อมูลในเครื่องไม่ใช้แทนการยืนยันบัญชี', 'ลองอีกครั้ง']
+            };
+            const message = messages[this.connectionState] || messages.idle;
+            titleEl.textContent = message[0]; detailEl.textContent = message[1];
+            titleEl.style.color = this.connectionState === 'verified' ? '#146c43' : '';
+            detailEl.setAttribute('role', 'status'); detailEl.setAttribute('aria-live', 'polite');
+            if (btnEl) { btnEl.textContent = message[2]; btnEl.disabled = this.connectionState === 'checking'; }
+        }
+
+        const liffBanner = document.getElementById('liff-login-banner');
+        if (liffBanner && this.profile) {
+            if (this.connectionState === 'verified' && this.verifiedSession) {
+                liffBanner.innerHTML = `
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;">
+                        <span style="font-size:1.2rem;">✅</span>
+                        <span style="font-weight:700; color:#4ade80; font-size:0.95rem;">ยืนยันตัวตนผ่าน LINE สำเร็จ</span>
+                    </div>
+                    <div style="font-size:0.85rem; color:#ffffff; font-weight:600;">
+                        ${this.verifiedSession.full_name} (รหัส ${this.verifiedSession.student_id})
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px;">
+                        เข้าสู่ระบบเฉพาะบัญชีของตนเองเรียบร้อยแล้ว
+                    </div>
+                `;
+            } else if (this.connectionState === 'pending') {
+                liffBanner.innerHTML = `
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;">
+                        <span style="font-size:1.2rem;">🟢</span>
+                        <span style="font-weight:700; color:#4ade80; font-size:0.95rem;">LINE: ${this.profile.displayName}</span>
+                    </div>
+                    <div style="font-size:0.8rem; color:#fde047; margin-bottom:4px;">
+                        ⚠️ ยังไม่ได้ผูกรหัสนักเรียน นพอ. กับบัญชี LINE นี้
+                    </div>
+                    <div style="font-size:0.75rem; color:var(--text-muted);">
+                        กรุณาเข้าสู่ระบบด้วยรหัสนักเรียน 7 หลักด้านล่าง เพื่อผูกบัญชีใช้งานเฉพาะตนเองค่ะ
+                    </div>
+                `;
+            }
+        }
     },
 
     // ---------- FLEX MESSAGE TEMPLATES ----------
@@ -356,11 +454,12 @@ const LiffHelper = {
     }
 };
 
-// Safe conditional initialize on load - Auto-initialize on landing, submit-deed, and history pages
+// Safe conditional initialize on load - Auto-initialize on landing, submit-deed, dashboard, and history pages
 window.addEventListener('load', () => {
-    const isLanding = window.location.pathname.endsWith('index.html') || window.location.pathname === '/' || window.location.pathname.endsWith('/');
-    const isSubmitOrHistory = window.location.pathname.includes('submit-deed.html') || window.location.pathname.includes('history.html');
-    if ((isLanding || isSubmitOrHistory) && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
+    const path = window.location.pathname;
+    const isLanding = path.endsWith('index.html') || path === '/' || path.endsWith('/') || path.includes('index');
+    const isStudentPage = path.includes('submit-deed') || path.includes('history') || path.includes('student-dashboard');
+    if ((isLanding || isStudentPage) && typeof liff !== 'undefined' && LiffHelper.liffId && LiffHelper.liffId.includes('-')) {
         try {
             LiffHelper.init().catch(e => console.log('LIFF Standby mode:', e));
         } catch(e) {}

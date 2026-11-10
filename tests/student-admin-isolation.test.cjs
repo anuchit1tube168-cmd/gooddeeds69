@@ -48,7 +48,7 @@ test('Security Gate 1: Students cannot log in via Teacher/Admin login using Stud
   const { app } = createAppContext();
 
   // Test 1: Student ID in teacher login
-  const res1 = await app.loginTeacher('6903987', '1234');
+  const res1 = await app.loginTeacher('6900001', '1234');
   assert.equal(res1.success, false, 'Student ID must never be accepted as teacher username');
   assert.match(res1.message, /ไม่พบบัญชีผู้ใช้ของอาจารย์หรือแอดมิน/);
 
@@ -60,14 +60,14 @@ test('Security Gate 1: Students cannot log in via Teacher/Admin login using Stud
   assert.equal(res3.success, false, 'Arbitrary username must fail');
 
   // Test 3: Correct student credentials on teacher login
-  const res4 = await app.loginTeacher('6903987', '6903987');
+  const res4 = await app.loginTeacher('6900001', '6900001');
   assert.equal(res4.success, false, 'Student ID cannot bypass teacher login');
 });
 
 test('Security Gate 2: Student session role is strictly student and has no admin privileges', async () => {
   const { app } = createAppContext();
 
-  const studentLogin = await app.loginStudent('6903987', '1234');
+  const studentLogin = await app.loginStudent('6900001', '1234');
   assert.equal(studentLogin.success, true);
   assert.equal(studentLogin.user.role, 'student');
   assert.equal(!!studentLogin.user.isAdmin, false);

@@ -7,11 +7,6 @@
     <title>ระบบบันทึกความดีจิตอาสา วพอ.พอ. (LINE Official LIFF)</title>
     <meta name="description" content="ระบบบันทึกชั่วโมงความดีจิตอาสาสำหรับนักเรียนพยาบาลทหารอากาศ">
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3580">
     <style>
         body {
@@ -282,58 +277,6 @@
             margin-bottom: 20px;
         }
 
-        /* High-contrast Admin/Student Quick Box */
-        .admin-quick-card {
-            background: rgba(14, 165, 233, 0.08);
-            border: 1px solid rgba(14, 165, 233, 0.25);
-            border-radius: var(--radius-md);
-            padding: 14px;
-            margin-bottom: 18px;
-        }
-        body.theme-day .admin-quick-card {
-            background: #f0f7ff !important;
-            border-color: #bae6fd !important;
-        }
-        .admin-quick-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-        .admin-quick-chips {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
-        .quick-chip-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid rgba(201, 162, 39, 0.5);
-            background: rgba(201, 162, 39, 0.15);
-            color: #d97706;
-            font-family: inherit;
-            font-size: 0.84rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-align: center;
-            width: 100%;
-        }
-        body.theme-day .quick-chip-btn {
-            background: #ffffff !important;
-            border-color: #d97706 !important;
-            color: #92400e !important;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-        }
-        .quick-chip-btn:hover, .quick-chip-btn:active {
-            transform: scale(0.99);
-            background: rgba(201, 162, 39, 0.25);
-            border-color: #d97706;
-        }
         .input-highlight {
             animation: pulseInput 1.2s ease;
         }
@@ -354,13 +297,79 @@
             color: var(--gold);
             text-decoration: none;
         }
+
+        /* Smooth Zero-Flicker LIFF Loader */
+        html.liff-pending-auth .login-card {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+        .liff-transition-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 22, 40, 0.75);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            z-index: 9999;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 14px;
+            color: #ffffff;
+            font-family: inherit;
+        }
+        body.theme-day .liff-transition-overlay,
+        html.theme-day .liff-transition-overlay {
+            background: rgba(234, 240, 248, 0.88);
+            color: #0f172a;
+        }
+        html.liff-pending-auth .liff-transition-overlay {
+            display: flex;
+        }
     </style>
+    <script>
+        // Instant Zero-Flicker Session & Role Router (Runs synchronously in <head>)
+        (function() {
+            try {
+                var urlParams = new URLSearchParams(window.location.search);
+                var isLogout = urlParams.get('logout') === 'true' || 
+                               sessionStorage.getItem('gooddeeds_logged_out') === 'true' ||
+                               localStorage.getItem('gooddeeds_logged_out') === 'true';
+                var roleParam = (urlParams.get('role') || urlParams.get('tab') || '').toLowerCase();
+                var isStaffTab = roleParam === 'admin' || roleParam === 'teacher' || roleParam === 'staff';
+                
+                if (!isLogout && !isStaffTab) {
+                    var raw = localStorage.getItem('gooddeeds_session');
+                    if (raw) {
+                        var user = JSON.parse(raw);
+                        if (user && user.student_id && user.role === 'student') {
+                            var redirect = urlParams.get('redirect');
+                            var target = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
+                                ? redirect
+                                : 'student-dashboard.html';
+                            window.location.replace(target);
+                            return;
+                        }
+                    }
+                }
+                if (urlParams.has('redirect') && !isLogout && !isStaffTab) {
+                    document.documentElement.classList.add('liff-pending-auth');
+                }
+            } catch(e) {}
+        })();
+    </script>
     <link rel="stylesheet" href="mac-glass.css?v=20260915">
-    <link rel="stylesheet" href="theme.css?v=20261026">
-    <script src="theme.js?v=20261026"></script>
+    <link rel="stylesheet" href="theme.css?v=20261108">
+    <link rel="stylesheet" href="pro.css?v=20261111">
+    <script src="theme.js?v=20261108"></script>
 </head>
 
 <body class="mac-glass">
+    <div class="liff-transition-overlay" id="liff-transition-overlay">
+        <div class="spinner" style="width: 36px; height: 36px; border-width: 3.5px; border-color: rgba(201, 162, 39, 0.2); border-top-color: var(--gold);"></div>
+        <div style="font-weight: 600; font-size: 0.95rem;">กำลังเชื่อมต่อระบบ LINE...</div>
+    </div>
     <div class="login-wrapper">
         <!-- Logo -->
         <div class="login-header">
@@ -371,19 +380,17 @@
 
         <!-- Card -->
         <div class="login-card crystal-card">
-            <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
-                <span class="light red"></span>
-                <span class="light yellow"></span>
-                <span class="light green"></span>
-                <span class="mac-title">HeroHQ Lock Screen</span>
+            <div class="pro-card-head">
+                <div class="pro-card-title">เข้าสู่ระบบ</div>
+                <div class="pro-card-sub">เลือกประเภทผู้ใช้งาน แล้วกรอกข้อมูลบัญชีของท่าน</div>
             </div>
             <!-- Tab Switcher -->
             <div class="tab-bar">
                 <button class="tab-btn active" id="tab-student" onclick="switchTab('student')">
-                    👨‍⚕️ นักเรียน
+                    นักเรียน (นพอ.)
                 </button>
                 <button class="tab-btn" id="tab-teacher" onclick="switchTab('teacher')">
-                    👩‍🏫 อาจารย์ / แอดมิน
+                    อาจารย์ / ผู้ดูแลระบบ
                 </button>
             </div>
 
@@ -395,17 +402,9 @@
             <!-- Student Login -->
             <div class="login-form-section active" id="section-student">
                 <!-- Direct Web App Banner -->
-                <div id="liff-login-banner" style="background: linear-gradient(135deg, rgba(6, 199, 85, 0.15) 0%, rgba(10, 22, 40, 0.9) 100%); border: 1px solid rgba(6, 199, 85, 0.4); border-radius: var(--radius-md); padding: 14px; margin-bottom: 20px; text-align: center;">
-                    <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:6px;">
-                        <span style="font-size:1.4rem;">🌟</span>
-                        <span style="font-weight:700; color:#4ade80; font-size:0.95rem;">ระบบบันทึกความดีจิตอาสา วพอ. 2569</span>
-                    </div>
-                    <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:12px;">
-                        วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ
-                    </div>
-                    <a href="https://line.me/R/ti/p/@586diwio" target="_blank" class="btn btn-full btn-sm" style="background:#06c755; color:#ffffff; font-weight:700; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; border-radius:8px; padding:10px;">
-                        <span>💬</span> ติดต่อ LINE OA: @586diwio
-                    </a>
+                <div id="liff-login-banner" class="pro-line-banner">
+                    <div class="pro-line-text">ใช้งานผ่าน LINE Official Account ของวิทยาลัย</div>
+                    <a href="https://line.me/R/ti/p/@586diwio" target="_blank" rel="noopener" class="pro-line-btn">เพิ่มเพื่อน LINE OA @586diwio</a>
                 </div>
 
                 <div style="display:flex; align-items:center; gap:12px; margin: 16px 0; color:var(--text-muted); font-size:0.75rem;">
@@ -433,17 +432,11 @@
                         </div>
                     </div>
 
-                    <div class="login-meta">
+                    <div class="login-meta" style="margin-bottom: 20px;">
                         <label class="checkbox-label">
                             <input type="checkbox" id="remember-student"> จดจำการเข้าสู่ระบบ
                         </label>
                         <a href="javascript:void(0)" onclick="showForgotPasswordHelp(event)" class="link-text">ลืมรหัสผ่าน?</a>
-                    </div>
-
-                    <div style="margin-bottom: 14px;">
-                        <button type="button" class="quick-chip-btn" onclick="selectStudentAccount('6903987', '1234')">
-                            ⚡ ตัวอย่าง นพอ.: แตะเลือก <strong>6903987</strong> (รหัส 1234)
-                        </button>
                     </div>
 
                     <button type="submit" class="btn btn-primary btn-full btn-lg" id="btn-student-login">
@@ -460,21 +453,11 @@
 
             <!-- Teacher Login -->
             <div class="login-form-section" id="section-teacher">
-                <div class="admin-quick-card">
-                    <div class="admin-quick-header">
-                        <span style="font-size:1.3rem;">👑</span>
-                        <div>
-                            <div style="font-weight:700; font-size:0.92rem; color:var(--text-primary);">เข้าสู่ระบบอาจารย์ผู้ตรวจ &amp; ผู้ดูแลระบบ (Admin)</div>
-                            <div style="font-size:0.78rem; color:var(--text-secondary); margin-top:2px;">แตะปุ่มลัดด้านล่างเพื่อใส่ข้อมูล:</div>
-                        </div>
-                    </div>
-                    <div class="admin-quick-chips">
-                        <button type="button" class="quick-chip-btn" onclick="selectTeacherAccount('admin', '1234')">
-                            ⚡ บัญชี Admin: แตะเลือก <strong>admin</strong> (รหัส <strong>1234</strong>)
-                        </button>
-                        <button type="button" class="quick-chip-btn" onclick="selectTeacherAccount('anuchit', '1234')">
-                            ⚡ บัญชี อ.อนุชิต: แตะเลือก <strong>anuchit</strong> (รหัส <strong>1234</strong>)
-                        </button>
+                <div style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.25); border-radius: var(--radius-md); padding: 14px 16px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px;">
+                    <div style="font-size: 1.6rem; line-height: 1;">👩‍🏫</div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 0.92rem; color: var(--text-primary);">เข้าสู่ระบบอาจารย์ผู้ตรวจ &amp; ผู้ดูแลระบบ</div>
+                        <div style="font-size: 0.78rem; color: var(--text-secondary); margin-top: 2px;">สำหรับตรวจอนุมัติความดีและบริหารจัดการระบบ</div>
                     </div>
                 </div>
 
@@ -522,7 +505,7 @@
     <div class="toast-container" id="toast-container"></div>
 
     <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
+    <script src="data/students_data.js?v=20261108-acting-cmd"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
@@ -561,38 +544,6 @@
             showAlert('กรุณาติดต่อผู้ดูแลเพื่อยืนยันตัวตนและตั้งรหัสผ่านใหม่');
         }
 
-        function selectTeacherAccount(username, pwd) {
-            const uInput = document.getElementById('teacher-username');
-            const pInput = document.getElementById('teacher-password');
-            if (uInput && pInput) {
-                uInput.value = username;
-                pInput.value = pwd;
-                uInput.classList.remove('input-highlight');
-                pInput.classList.remove('input-highlight');
-                void uInput.offsetWidth;
-                uInput.classList.add('input-highlight');
-                pInput.classList.add('input-highlight');
-                showToast('⚡ ใส่ชื่อ ' + username + ' เรียบร้อย แตะปุ่ม "เข้าสู่ระบบ" ได้เลยค่ะ', 'success');
-                hideAlert();
-            }
-        }
-
-        function selectStudentAccount(sid, pwd) {
-            const sInput = document.getElementById('student-id');
-            const pInput = document.getElementById('student-password');
-            if (sInput && pInput) {
-                sInput.value = sid;
-                pInput.value = pwd;
-                sInput.classList.remove('input-highlight');
-                pInput.classList.remove('input-highlight');
-                void sInput.offsetWidth;
-                sInput.classList.add('input-highlight');
-                pInput.classList.add('input-highlight');
-                showToast('⚡ ใส่รหัส นพอ. ' + sid + ' เรียบร้อย แตะปุ่ม "เข้าสู่ระบบ" ได้เลยค่ะ', 'success');
-                hideAlert();
-            }
-        }
-
         async function handleLogin(e, role) {
             e.preventDefault();
             hideAlert();
@@ -602,7 +553,7 @@
                 const pwd = document.getElementById('student-password').value;
                 const btn = document.getElementById('btn-student-login');
 
-                if (!sid) { showAlert('กรุณากรอกรหัสนักเรียน (หรือแตะปุ่มด้านบนเพื่อเลือกตัวอย่าง 6903987)'); return; }
+                if (!sid) { showAlert('กรุณากรอกรหัสนักเรียน 7 หลัก'); return; }
                 if (!pwd) { showAlert('กรุณากรอกรหัสผ่าน'); return; }
 
                 btn.disabled = true;
@@ -621,11 +572,21 @@
                             localStorage.removeItem('gooddeeds_auto_login_disabled');
                         } catch(e) {}
                         // Immediately bind LINE LIFF profile if LIFF profile is loaded
-                        if (typeof LiffHelper !== 'undefined' && LiffHelper.profile) {
-                            LiffHelper.bindCurrentStudentProfile();
+                        if (typeof LiffHelper !== 'undefined' && LiffHelper.profile && LiffHelper.profile.userId) {
+                            if (typeof App !== 'undefined' && App.bindLineAccount) {
+                                App.bindLineAccount(sid, LiffHelper.profile.userId, LiffHelper.profile.displayName, LiffHelper.profile.pictureUrl);
+                            }
+                            if (typeof LiffHelper.bindCurrentStudentProfile === 'function') {
+                                LiffHelper.bindCurrentStudentProfile();
+                            }
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'student-dashboard.html', 800);
+                        const urlParams = new URLSearchParams(window.location.search);
+                        const redirect = urlParams.get('redirect');
+                        const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
+                            ? redirect
+                            : 'student-dashboard.html';
+                        setTimeout(() => window.location.href = targetPage, 800);
                     } else {
                         showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -643,8 +604,13 @@
                 const btn = document.getElementById('btn-teacher-login');
 
                 if (!user || !pwd) { 
-                    showAlert('กรุณากรอกข้อมูลให้ครบถ้วน (หรือแตะที่ปุ่มด้านบนเพื่อเลือก: admin / 1234)'); 
+                    showAlert('กรุณากรอกชื่อผู้ใช้และรหัสผ่านให้ครบถ้วน'); 
                     return; 
+                }
+
+                if (/^\d{7}$/.test(user)) {
+                    showAlert('⚠️ รหัสนักเรียน 7 หลัก ไม่สามารถเข้าใช้งานในฐานะอาจารย์หรือผู้ดูแลระบบได้ กรุณาสลับไปที่แท็บ "นักเรียน"');
+                    return;
                 }
 
                 btn.disabled = true;
@@ -701,7 +667,11 @@
                     console.warn('⚠️ Purging tainted admin session on login page');
                     Storage.remove('session');
                 } else if (user.role === 'student') {
-                    window.location.href = 'student-dashboard.html';
+                    const redirect = urlParams.get('redirect');
+                    const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
+                        ? redirect
+                        : 'student-dashboard.html';
+                    window.location.href = targetPage;
                     return;
                 } else {
                     window.location.href = 'teacher-dashboard.html';

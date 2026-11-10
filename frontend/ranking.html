@@ -5,11 +5,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกความดีจิตอาสา วพอ.พอ. (LINE Official LIFF)</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3580">
     <style>
         /* Shared Styles from Dashboards */
@@ -226,9 +221,55 @@
             border-radius: 999px;
             transition: width 0.4s;
         }
+
+        /* Mobile & Tablet Responsive Media Queries */
+        @media (max-width: 639px) {
+            .tab-bar {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                flex-wrap: nowrap;
+                padding-bottom: 4px;
+            }
+            .tab-btn {
+                white-space: nowrap;
+                padding: 8px 12px;
+                font-size: 0.8rem;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch !important;
+            }
+            .filter-bar > div {
+                margin-left: 0 !important;
+                width: 100%;
+                display: flex;
+                gap: 8px;
+            }
+            .filter-bar > div select,
+            .filter-bar > div input {
+                flex: 1;
+                width: 100% !important;
+            }
+            .year-stats-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px;
+            }
+            .card.crystal-card {
+                padding: 16px 12px !important;
+            }
+            .sec-hdr h2 {
+                font-size: 1.05rem !important;
+            }
+            .my-rank-banner {
+                padding: 12px 14px;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
     </style>
     <link rel="stylesheet" href="mac-glass.css?v=20260915">
     <link rel="stylesheet" href="theme.css?v=20261026">
+    <link rel="stylesheet" href="pro.css?v=20261111">
     <script src="theme.js?v=20261026"></script>
 </head>
 
@@ -359,7 +400,7 @@
         </div>
     </div>
 
-    <script src="data/students_data.js?v=20261106-live-v3"></script>
+    <script src="data/students_data.js?v=20261108-acting-cmd"></script>
     <script src="data/students_photos.js?v=20261106-live-v3"></script>
     <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
     <script src="data/deeds_data.js?v=20261106-live-v3"></script>

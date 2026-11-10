@@ -123,8 +123,8 @@ export async function onRequestPost(context) {
       telegramSuccess = true;
     } else {
       try {
-        const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-        const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '-4839151586';
+        const botToken = (env && env.TELEGRAM_BOT_TOKEN) ? env.TELEGRAM_BOT_TOKEN : '';
+        const defaultChatId = (env && env.TELEGRAM_CHAT_ID) ? env.TELEGRAM_CHAT_ID : '';
 
         const tgText = `📢 <b>${escapeHtml(title)}</b>\n━━━━━━━━━━━━━━━\n${escapeHtml(messageText)}\n\n👨‍🏫 <b>โดย:</b> ${escapeHtml(senderName)}\n📅 <i>${new Date().toLocaleDateString('th-TH')}</i>`;
 
@@ -170,7 +170,7 @@ async function getEffectiveLineToken(env) {
     return env.LINE_CHANNEL_ACCESS_TOKEN;
   }
   const channelId = (env && env.LINE_CHANNEL_ID) ? env.LINE_CHANNEL_ID : '1654464250';
-  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '';
 
   try {
     const params = new URLSearchParams();

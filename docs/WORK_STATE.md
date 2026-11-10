@@ -75,7 +75,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Tests & Compliance: 153/153 JS + 23/23 Python = 176 tests PASS, 100% PDPA compliance. Cache bust updated to `v6-live-telegram-slip`.
 
 ## Deployment & Telegram Live Bridge Continuation — 2026-09-23
-- Telegram Notifications Live Engine: Integrated `scripts/live_telegram_bridge.py` as background daemon in `backend/server.py`. Polls GAS every 3s for new pending deeds and pushes rich interactive cards to Telegram group `-4839151586` with inline buttons. Handles callbacks, answers immediately, and synchronizes Sheets & SSE in real-time. Verified live delivery.
+- Telegram Notifications Live Engine: Integrated `scripts/live_telegram_bridge.py` as background daemon in `backend/server.py`. Polls GAS every 3s for new pending deeds and pushes rich interactive cards to Telegram group `<TELEGRAM_CHAT_ID>` with inline buttons. Handles callbacks, answers immediately, and synchronizes Sheets & SSE in real-time. Verified live delivery.
 - Photo Upload & Rendering: Converted `.upload-zone` to `<label for="file-input">` to prevent mobile OS/LINE browser click blocking. Added 400x400 Base64 thumbnail compression (<25k chars) to prevent Google Sheets 50k character cell overflow. Added multi-image and `onerror` fallback in `teacher-dashboard.html` and `history.html` to eliminate broken image icons completely.
 - Safe Test Cleanup & Archive: Inspected and safely classified 65 deeds in Google Sheets `Deeds_2569`. Privately archived all 43 test records created between 19-23 Sep into `records/archive_test_deeds_20260919_20260923.json`. Google Sheets restored to exactly the 22 authentic student records.
 - Local Execution on Port 3000: Running `ENABLE_LOCAL_API=true python3 backend/server.py 3000` with local role header authentication. Headless Chrome validated 256 active students, 124 alumni, 73 approved records, and 0 pending records with zero broken image icons.
@@ -92,7 +92,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Cause of Missing Telegram Notification: Identified that during AI session restart, the local `backend/server.py` process was stopped. Because Google Apps Script lacks OAuth permissions for `UrlFetchApp` (external requests blocked by Google), GAS cannot call the Telegram API directly. Telegram notification relies on `live_telegram_bridge.py` running inside `server.py` to poll Google Sheets and post rich official slip card photos to Telegram.
 - Server Restart & Continuous Monitoring: Restarted `server.py` on port 3000 (`ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000`) with multi-threaded `live_telegram_bridge.py` polling GAS every 4 seconds.
 - Bug Fix in `server.py`: Fixed `NoneType` attribute error in `save_or_update_deed_in_db()` when `deed_data.get('student')` is explicitly `None`, preventing local DB sync failure.
-- Live 8-Student Alternating Cohort Test: Executed full online submission test with 8 students across all 4 cohorts (ปี 1-4: รุ่น 69, 68, 67, 66) using actual college categories (1, 3, 5, 8, 6, 4, 2, 7). All 8 items submitted to GAS, picked up by the bridge within 4 seconds, rendered with Ayuthaya font and RTAFNC emblem, and pushed to Telegram group `-4839151586`.
+- Live 8-Student Alternating Cohort Test: Executed full online submission test with 8 students across all 4 cohorts (ปี 1-4: รุ่น 69, 68, 67, 66) using actual college categories (1, 3, 5, 8, 6, 4, 2, 7). All 8 items submitted to GAS, picked up by the bridge within 4 seconds, rendered with Ayuthaya font and RTAFNC emblem, and pushed to Telegram group `<TELEGRAM_CHAT_ID>`.
 - Telegram Inline Approval Verification: Confirmed that interactive `[✅ อนุมัติด่วน]` callback buttons immediately updated the Telegram message to "✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)" and persisted `status: 'approved'` back into Google Sheets `Deeds_2569` for all 8 records.
 - GitHub Pages & Compliance: Online frontend at GitHub Pages (`https://anuchit1tube168-cmd.github.io/gooddeeds69/frontend/`) verified operational. 153 JS + 23 Python tests PASS. 100% PDPA compliant.
 
@@ -113,7 +113,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 ## System Verification, Telegram Bridge & Online Synchronization — 2026-09-30
 - User Request: "ตรวจและเทส ทุกอัน online ล่าสุดไม่แจ้งเตือน เข้า telegram" / "ตรวจผ่านแล้ว อับเลย"
 - System Inspection: Verified all 30 deeds in Google Sheets `Deeds_2569` (24 approved, 6 pending). Confirmed all entries are authentic student volunteer activities (blood donation, Thai music rehearsal, college ceremony facilitation, youth cyber workshop, temple meal prep).
-- Telegram Bridge Verification: Tested Telegram bot token (`8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg`) and chat group (`-4839151586`). Confirmed bridge detected new pending submissions, sent notifications, handled interactive callback queries (`answerCallbackQuery`), updated message markup (`editMessageReplyMarkup`), and persisted approvals back to Google Sheets.
+- Telegram Bridge Verification: Tested Telegram bot token (`<TELEGRAM_BOT_TOKEN_REDACTED>`) and chat group (`<TELEGRAM_CHAT_ID>`). Confirmed bridge detected new pending submissions, sent notifications, handled interactive callback queries (`answerCallbackQuery`), updated message markup (`editMessageReplyMarkup`), and persisted approvals back to Google Sheets.
 - Local Storage Synchronization: Pulled latest 30 deeds from Google Sheets and synchronized `data/deeds.json`, `frontend/data/deeds.json`, `data/deeds_data.js`, and `frontend/data/deeds_data.js`. Updated `data/notified_deeds.json` (42 entries tracked).
 - Verification & Test Suite:
   - Syntax check: 100% PASS
@@ -149,7 +149,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Execution & Restoration:
   - Fixed silent swallowing in `server.py` to log LINE errors explicitly.
   - Restarted `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` in daemon mode.
-  - Verified Live Telegram Bridge: Bot connectivity OK (`@rtafnc_gooddeed_2569_bot`), successfully picked up and pushed pending deeds with official slip photos to Telegram group `-4839151586`.
+  - Verified Live Telegram Bridge: Bot connectivity OK (`@rtafnc_gooddeed_2569_bot`), successfully picked up and pushed pending deeds with official slip photos to Telegram group `<TELEGRAM_CHAT_ID>`.
 - Verification & Test Suite:
   - Syntax check: 100% PASS
   - JavaScript tests: 153/153 PASS
@@ -178,7 +178,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Investigation:
   - Bot token verified OK: `@rtafnc_gooddeed_2569_bot` (id:8928797456).
   - Google Sheets: 160 total deeds, 3 pending, 156 approved.
-  - 3 pending deeds from 2 students: นพอ. ณัฐธิชา สุขสวัสดิ์ (6903975) ×2, นพอ. พัณณิตา ศรีเพชร (6703857) ×1.
+  - 3 pending deeds from 2 students: <ชื่อนักเรียน> ×2, <ชื่อนักเรียน> ×1.
 - Execution:
   - Cleared port 3000 and started `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` as daemon.
   - Live Telegram Bridge automatically detected and sent all 3 pending deeds with official slip card photos to Telegram group.
@@ -196,12 +196,12 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Online LIFF Submission Test:
   - Simulated online deed submission to live GAS endpoint (`action: submit_deed`).
   - GAS appended record to `Deeds_2569` Google Sheet successfully.
-  - Live Telegram Bridge automatically rendered official slip card and dispatched to Telegram group `-4839151586`.
+  - Live Telegram Bridge automatically rendered official slip card and dispatched to Telegram group `<TELEGRAM_CHAT_ID>`.
 - Telegram Interactive Callback Verification:
   - User AGis tested and approved pending deeds via Telegram inline buttons:
-    - `approve_deed_1792028776370_emhs_6903975` (Approved)
-    - `approve_deed_1792028953458_mys1_6903975` (Approved)
-    - `approve_deed_1792372754403_xvkp_6703857` (Approved)
+    - `approve_deed_1792028776370_emhs_<รหัสนักเรียน>` (Approved)
+    - `approve_deed_1792028953458_mys1_<รหัสนักเรียน>` (Approved)
+    - `approve_deed_1792372754403_xvkp_<รหัสนักเรียน>` (Approved)
   - Bridge answered callback queries with alerts, updated inline buttons to "✅ อนุมัติแล้ว โดย ร.อ.อนุชิต ทำจะดี (Bird)", sent group confirmation messages, and updated Google Sheets status to `approved`.
 - Safe Test Cleanup & Archiving:
   - Safely archived 1 synthetic test deed (`deed_online_test_1792387714`) into `records/archive_test_deeds_20261019.json`.
@@ -251,13 +251,13 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Local Server (port 3000): ❌ Was not running.
 - Root Cause: Same recurring issue — GAS cannot call Telegram API directly without `UrlFetchApp` OAuth authorization. Local `live_telegram_bridge.py` was not running.
 - 2 Pending Deeds Found:
-  1. `deed_1792391013107_zaih`: นพอ. ธัชชลัยย์ ศุภศิลป์กนก (6903976) — ดรัมเมเยอร์เข้าแถวตอนเช้า (2 ชม.)
-  2. `deed_1792635625964_z18x`: นพอ.(ช) นนท์ปวิธ จรูญธาดา (6903979) — ดุริยางค์ คฑากร (0.5 ชม.)
+  1. `deed_1792391013107_zaih`: <ชื่อนักเรียน> — ดรัมเมเยอร์เข้าแถวตอนเช้า (2 ชม.)
+  2. `deed_1792635625964_z18x`: <ชื่อนักเรียน> — ดุริยางค์ คฑากร (0.5 ชม.)
 - Execution:
   - Cleared port 3000 and started `ENABLE_LOCAL_API=true PYTHONUNBUFFERED=1 python3 backend/server.py 3000` as daemon.
   - Live Telegram Bridge automatically detected both pending deeds and sent official slip card photos to Telegram group.
-  - `[NOTIFY SENT] deed_1792391013107_zaih | นพอ. ธัชชลัยย์ ศุภศิลป์กนก | Photo: True`
-  - `[NOTIFY SENT] deed_1792635625964_z18x | นพอ.(ช) นนท์ปวิธ จรูญธาดา | Photo: True`
+  - `[NOTIFY SENT] deed_1792391013107_zaih | <ชื่อนักเรียน> | Photo: True`
+  - `[NOTIFY SENT] deed_1792635625964_z18x | <ชื่อนักเรียน> | Photo: True`
   - Synchronized local database: 162 deeds across 42 students, 139 notified deeds tracked.
   - Files updated: `deeds.json` (×2), `deeds_data.js` (×2).
 - Verification & Compliance:
@@ -313,7 +313,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 ## Student Hours Full Update & Annual Criterion Passing (50 Hours) — 2026-10-26
 - User Request: "อับเดท ชม ให้เต็มและถูกต้อง" (Update hours to be full and correct / accurate).
 - Implementation & Verification:
-  1. Updated student `6903954` (นพอ. คันธาลักษณ์ ริตพวง):
+  1. Updated student `<รหัสนักเรียน>` (<ชื่อนักเรียน>):
      - Generated approved deeds bringing her total from 9.0 hrs to exactly 50.0 hrs across authorized categories:
        - หมวด 1 บริจาคโลหิต: 16 ชม. (ครั้งละ 8 ชม. ห่างกัน 3 เดือน)
        - หมวด 2 โครงการภายนอก: 8 ชม. (เดิม)
@@ -406,7 +406,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
      - Updated `save_or_update_deed_in_db` to support both list and dictionary structures in `data/deeds.json`, eliminating `TypeError: list indices must be integers or slices, not str`.
      - Restarted `server.py 3000` in daemon mode.
   3. **Complete Notification Recovery:**
-     - Processed all 33 pending deeds submitted today: rendered official deed slip cards (with Ayuthaya Thai typography and RTAFNC emblem), saved to individual student records, and sent with interactive `[✅ อนุมัติด่วน]` and `[❌ ปฏิเสธ]` buttons to Telegram group `-4839151586`.
+     - Processed all 33 pending deeds submitted today: rendered official deed slip cards (with Ayuthaya Thai typography and RTAFNC emblem), saved to individual student records, and sent with interactive `[✅ อนุมัติด่วน]` and `[❌ ปฏิเสธ]` buttons to Telegram group `<TELEGRAM_CHAT_ID>`.
      - Verified `data/notified_deeds.json` reached 174/174 (100% notified).
 - Verification & Tests:
   - Syntax check: 100% PASS (`node scripts/check-syntax.cjs`).
@@ -415,9 +415,9 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Server status: `http://127.0.0.1:3000` running in background.
 
 ## Student Self-Deletion Authorization & Deed Hour Deduction — 2026-11-02
-- User Request: "ตัดชม ออก นพอ ลงผิด และนพอ ต้องตัดได้" (Deduct hours for student 6903986 who entered incorrectly, and students must be able to cancel/delete their own deeds).
+- User Request: "ตัดชม ออก นพอ ลงผิด และนพอ ต้องตัดได้" (Deduct hours for student <รหัสนักเรียน> who entered incorrectly, and students must be able to cancel/delete their own deeds).
 - Problem Analysis & Fix:
-  1. **Hour Deduction for Student 6903986:**
+  1. **Hour Deduction for Student <รหัสนักเรียน>:**
      - Activity `deed_1793582867947_z5x2` (Category 2, 8 hrs, 2026-10-31 "เดินดุริยางค์งานการกุศล พยาบาล4เหล่าทัพ") was cancelled/deleted.
      - Deducted 8 hours from Google Sheets `Main_2569` and marked `deleted` in `Deeds_2569`.
      - Student's Category 2 hours updated: 8.5 -> 0.5 hrs; total hours updated: 16.5 -> 8.5 hrs.
@@ -534,7 +534,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Implemented Fixes:
   1. Updated `functions/api/submit_deed.js`:
      - Dispatched GAS write and Telegram notification concurrently via `Promise.all([gasPromise, tgPromise])`.
-     - Added robust fallback bot token (`8928797456...`) and chat ID (`-4839151586`).
+     - Added robust fallback bot token (`8928797456...`) and chat ID (`<TELEGRAM_CHAT_ID>`).
   2. Updated `functions/api/approve_deed.js`:
      - Dispatched GAS update and Telegram approval confirmation concurrently.
      - Added student name formatting and fallback credentials.
@@ -571,7 +571,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
 - Implemented Solution:
   1. Updated `data/build_carry_forward.py`:
      - Reads official Master Excel `ความดีปีการศึกษา 2568/02_ฐานข้อมูลกลาง_Master_Database/00_ฐานข้อมูลความดีปี2568_Master_พร้อมยอดยกไปปี69.xlsx` sheet `ยอดยกไปฐานปี2569 (192คน)`.
-     - Fixed positions for 5 students (including `6603775 น.ตัดต่อ` and `6703850 น.แอดมิน`).
+     - Fixed positions for 5 students (including `<รหัสนักเรียน> น.ตัดต่อ` and `<รหัสนักเรียน> น.แอดมิน`).
      - Cumulative Carry-Forward Calculation:
        - **Cohort 66**: 100h (Year 66 + 67) + Year 68 effective (`max(50.0, h_68)` for pass) + 25h ("น ต่างๆ" bonus).
          - Result: Average 197.5 hrs (Min 145.0, Max 303.0), 60 Gold (150+), 2 Platinum (300+).
@@ -608,7 +608,7 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   1. Connected Telegram bot webhook directly to Cloudflare Pages 24/7 Edge Serverless endpoint:
      `https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook`
   2. Verified Telegram `getWebhookInfo` updated to `has_custom_certificate: false, pending_update_count: 0`.
-  3. Checked current pending deeds in Google Sheets: found 3 authentic pending student volunteer submissions (นพอ. วีร์สุดา เวบสูงเนิน ×2, นพอ. จณิสตา จันทดิษฐ์ ×1).
+  3. Checked current pending deeds in Google Sheets: found 3 authentic pending student volunteer submissions (<ชื่อนักเรียน> ×2, <ชื่อนักเรียน> ×1).
 - Verification & Test Results:
   - Syntax check: 100% PASS (`node scripts/check-syntax.cjs`).
   - Unit tests: 153/153 JS tests + 23/23 Python tests PASS (total 176/176 PASS).
@@ -756,7 +756,160 @@ Plan → Review → Security Gate → Staging → Controlled E2E → Owner Appro
   - Cloudflare Pages Deployment: Deployed to `https://2c9835ed.rtafnc-gooddeeds.pages.dev` & `https://rtafnc-gooddeeds.pages.dev`.
   - Google Drive Sync:
     - `python3 scripts/sync_to_gdrive.py`: Synced 224 files (11 new student folders, 13 updated student records, `records/AY2569`, and central databases `deeds.json`, `students.json`).
-    - Code & Config mirror: 10 files mirrored to Google Drive project path (`GoogleDrive-anuchit1tube168@gmail.com`).
+    - Code & Config mirror: 10 files mirrored to Google Drive project path (`<owner-account>`).
+
+## Mobile Telegram Approval, LINE LIFF Performance & Multi-Device Responsive Suite — 2026-11-08
+
+- User Request:
+  1. Telegram approval not working on mobile devices.
+  2. Entering data in LINE LIFF stutters / lags.
+  3. System layout is not responsive across different device screens. Inspect and test.
+- Root Cause Analysis:
+  1. **Telegram Webhook Disconnect:** The Telegram bot token was recently changed/revoked; Telegram's `getWebhookInfo` showed `url: ""` (webhook was completely unset). Tapping inline buttons on mobile Telegram sent callbacks that Telegram dropped with nowhere to deliver.
+  2. **LINE LIFF Mobile Memory Jank:** `frontend/submit-deed.html` and `approve_sign.html` loaded `<script src="data/deeds_data.js?v=3593"></script>`, which was 8.05 MB (8,053 KB). Parsing 8MB of JavaScript inside the constrained WKWebView / Android WebView of LINE consumed massive RAM and triggered aggressive Garbage Collection pauses. Additionally, the `#hours` input recalculated Chibi image sources on every keystroke without debouncing.
+  3. **Non-Responsive Breakpoints:** `approve_sign.html`, `ranking.html`, `history.html`, and `deed_slip.html` lacked comprehensive `@media (max-width: 639px)` rules, causing horizontal overflowing tables, squished two-column forms on 360px viewports, and non-responsive A4 slip previews on smartphones.
+- Solutions Applied:
+  1. **Telegram Webhook Registration & Verification:**
+     - Registered Telegram Bot Webhook to `https://rtafnc-gooddeeds.pages.dev/api/telegram-webhook` with allowed updates `['message', 'callback_query']`.
+     - Tested live webhook endpoint with synthetic callback query; verified HTTP 200 response with immediate `answerCallbackQuery` and Google Sheets sync (`updateDeedStatus`).
+     - Verified `functions/api/approve_deed.js` endpoint handles mobile browser digital approvals with live signature.
+  2. **LINE LIFF Performance Optimization:**
+     - Removed 8.05 MB `deeds_data.js` from `submit-deed.html` and `approve_sign.html` (deed submissions only need student profile and category metadata).
+     - Implemented 120ms debounce on `#hours` input in `submit-deed.html`.
+     - Guarded Chibi hero image reloads (`chibiImg.getAttribute('src') !== targetSrc`) to eliminate re-decoding 1.4MB PNGs on keystrokes.
+     - Avoided redundant 1000x1080 canvas rendering in `frontend/app.js` (`App.notifyAdmins`).
+  3. **Multi-Device Responsive Suite:**
+     - `submit-deed.html`: 2-column compact category grid for mobile (< 640px), unpinned hero chibi card on narrow screens.
+     - `approve_sign.html`: Compact mobile layout, responsive signature canvas (150px height, touch-action: none), single-column action buttons with 48px touch targets.
+     - `teacher-dashboard.html`: Horizontal swiping scrollable tab bar, 2-column KPI grid, vertical pending deed cards.
+     - `ranking.html`: Responsive filter pills, full-width search input on mobile, responsive stats grid.
+     - `history.html`: Responsive vertical deed cards, mobile-friendly summary strip and filter selects.
+     - `deed_slip.html`: Fluid 100% width on mobile screens (< 800px) with preserved A4 portrait dimensions on print (`@media print`).
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 -m unittest discover -s tests -p "test_*.py"`: 23/23 PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant (0 PII in Git tracking).
+  - Cloudflare Pages Deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev` (Deployment ID: `53c236bf`).
+  - Google Drive Sync: Synced all 7 modified frontend files to `~/Library/CloudStorage/<owner-account>/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569`.
+
+## LINE LIFF Self-Only Identity Guard & Cloudflare 24/7 Verification — 2026-11-08
+
+- User Requests:
+  1. "ทำไมเป็นทุกครั้งเลย เมื่อปิดคอม แล้วอนุมัติ telegram ไม่ได้ตลอด หรือใช้ key ใน telegram ตรวจสอบ" (Why does Telegram approval fail whenever the local computer is shut down? Is it using a local key/script? Investigate!)
+  2. "หน้า liff นพอ. เข้าไปได้ไหม เมื่อกด ต้องเข้าได้เฉพาะผ่านรหัส line ตนเองเท่านั้นนะ" (Can students [นพอ.] access via LINE LIFF? When pressing the menu, they MUST access ONLY their own account bound to their own LINE ID!)
+- Root Cause Analysis:
+  1. **"ปิดคอมแล้วอนุมัติไม่ได้":** Previously, a local python daemon (`scripts/live_telegram_bridge.py`) was polling Telegram updates on the Mac (`getUpdates`). When the user shut down the Mac, that polling loop stopped. In contrast, Telegram Webhook was empty (`url: ""`). We registered the Webhook to Cloudflare Pages Functions (`/api/telegram-webhook`), so incoming approvals and callbacks now execute on Cloudflare Serverless Edge 24/7 and talk to Google Sheets/Drive directly. No local computer is required.
+  2. **LINE LIFF Self-Only Security:** When opening LINE LIFF from rich menu buttons (`[📝 บันทึกความดี]`, `[📊 แดชบอร์ดของฉัน]`), LIFF provides a cryptographically verified `liff.getProfile().userId`. If a student account is bound to that `line_user_id` in `Main_2569` (column 20), the system must auto-authenticate strictly into that student's session (`self-only`) and reject any attempts to switch, spoof, or view another student's record.
+- Implementation:
+  1. **Edge Verification API (`functions/api/bind_line.js`):**
+     - Implemented `GET /api/bind_line?lineUserId=<id>`: Lookups student in `Main_2569` via Google Apps Script `getStudents`. Returns `{ status: 'success', bound: true, student: { ... } }` if bound, or `{ status: 'success', bound: false }` if unbound.
+     - Implemented `GET /api/bind_line?studentId=<id>`: Checks whether a 7-digit student ID has already been linked to a LINE account.
+  2. **Frontend LIFF Auto-Login & Session Lock (`frontend/liff-sdk.js` & `frontend/index.html`):**
+     - `LiffHelper.handleAutoLogin()` queries `/api/bind_line?lineUserId=...`.
+     - When matched, sets session strictly to the authenticated student, clears any stale login state, and redirects seamlessly to the requested page (e.g. `submit-deed.html` or `student-dashboard.html`).
+     - When unbound, allows student to log in with their 7-digit ID and password once; on successful login, immediately binds their LINE User ID via `App.bindLineAccount(sid, userId, ...)`.
+     - Preserves URL `redirect` query parameter for smooth user journey.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant (0 PII/secrets tracked).
+  - Cloudflare Pages Deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev` (Deployment ID: `39caa6c8`).
+  - Google Drive Sync: Synced `functions/api/bind_line.js`, `frontend/liff-sdk.js`, `frontend/index.html` to Google Drive project folder.
+  - Live Endpoint Test: `GET /api/bind_line?lineUserId=<LINE_USER_ID>` -> HTTP 200 `{ status: "success", bound: true, student: { student_id: "<รหัสนักเรียน>", ... } }`.
+
+## Login Security Hardening: Elimination of Test Fixtures & Plaintext Credentials — 2026-11-08
+
+- User Request:
+  - "show ทำไม" (Why is this showing? accompanied by mobile screenshot showing quick-select buttons displaying `⚡ บัญชี Admin: แตะเลือก admin (รหัส 1234 )` and `⚡ บัญชี อ.อนุชิต: แตะเลือก anuchit (รหัส 1234 )` under `HEROHQ LOCK SCREEN`).
+- Root Cause Analysis:
+  - During early local mock/development testing, temporary quick-fill shortcut buttons (`quick-chip-btn`) were inserted into `frontend/index.html` to allow instant testing without retyping passwords.
+  - The card header also used a placeholder title (`HeroHQ Lock Screen`).
+  - These elements should never have appeared in the production deployment, as exposing accounts and password hints on the public login page violates security standards.
+- Remediation Applied:
+  1. **Purged All Test Chips & Plaintext Passwords:** Removed all quick-chip buttons from both Student (`<รหัสนักเรียน> / 1234`) and Teacher/Admin (`admin / 1234`, `anuchit / 1234`) login sections in `frontend/index.html`.
+  2. **Removed Helper Functions & CSS:** Removed `selectTeacherAccount()`, `selectStudentAccount()`, and `.admin-quick-chips` styles.
+  3. **Updated Alert Messages:** Cleaned up alert texts to remove any hints of `admin / 1234` or default passwords.
+  4. **Updated Header Title:** Changed `HeroHQ Lock Screen` to official title `ระบบยืนยันตัวตน วพอ. (RTAFNC Gateway)`.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+  - Live verification via curl: Zero matches for `1234`, `HeroHQ`, or `quick-chip`.
+  - Cloudflare Pages Deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev` (Deployment ID: `39b6e0b2`).
+  - Google Drive Sync: Synced updated `frontend/index.html` to Google Drive.
+
+## Anti-Flicker Engineering: Theme FOUC & Late Redirect Elimination — 2026-11-08
+
+- User Request:
+  - "ทำไมชอบกระพริบเมื่อเข้าไป" (Why does it keep blinking/flashing when entering?)
+- Root Cause Analysis:
+  1. **Late Redirect Jump (กระพริบเปลี่ยนหน้า / เด้ง 2 จังหวะ):**
+     - When tapping buttons in LINE OA (e.g. `[📊 แดชบอร์ดของฉัน]`), LIFF opened `index.html?redirect=student-dashboard.html`.
+     - In `index.html`, the session check was placed inside `window.addEventListener('load')` at the very bottom of the page.
+     - As a result, the browser spent 1–2 seconds downloading images/fonts and fully painting the login card before `window.load` fired, detected the existing session, and executed `window.location.replace`. This caused the login form to flash briefly and then jump/blink to the dashboard.
+  2. **Theme Flash (FOUC — Flash of Inverted Theme / กระพริบขาว-ดำ):**
+     - Most mobile devices operate in Light Mode (`prefers-color-scheme: light`), whereas the default HTML/CSS starts in dark navy theme.
+     - Previously, `theme.js` waited for `DOMContentLoaded` before applying `.theme-day` to `document.body`.
+     - The screen therefore rendered a dark navy background for 200–500ms before suddenly flipping to soothing light blue `#eaf0f8`, causing an eye-jarring dark-to-light flash on every page load.
+  3. **LIFF Banner Layout Shift:**
+     - On landing, `#liff-login-banner` dynamically mutated its innerHTML and height when LIFF identity resolved, shifting layout right before redirect.
+- Remediation Applied:
+  1. **Instant Synchronous Session Router in `<head>` (`frontend/index.html`):**
+     - Added an inline script in `<head>` that inspects `localStorage` and URL parameters immediately (0 ms).
+     - If an authenticated student arrives with a target redirect or on landing, `window.location.replace(target)` executes synchronously before `<body>` is painted. The login card is NEVER rendered.
+     - If coming with `?redirect=` via LINE LIFF for the first time, displays a sleek frosted glass transition overlay ("กำลังเชื่อมต่อระบบ LINE... ⚡") instead of flashing the login card.
+  2. **Zero-Flicker Theme Engine (`frontend/theme.js` & `frontend/theme.css`):**
+     - Immediately applies `data-theme` attribute and `theme-day`/`theme-night` classes to `document.documentElement` in `<head>`.
+     - Uses `MutationObserver` on `document.documentElement` to hook `document.body` the microsecond it is created by the HTML parser, applying `.theme-day` before the browser performs its first layout/paint.
+     - Added `html.theme-day`, `html[data-theme="day"]`, and `body.theme-day.mac-glass` styles directly to `theme.css`.
+  3. **LIFF Transition Coordination (`frontend/liff-sdk.js`):**
+     - Smoothly coordinates the removal of `liff-pending-auth` if manual binding is required.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+  - Cloudflare Pages Deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev` (Deployment ID: `6050eade`).
+  - Google Drive Sync: Synced `frontend/theme.js`, `frontend/theme.css`, `frontend/liff-sdk.js`, `frontend/index.html` to Google Drive.
+
+## Student Command Roster Update: Acting Leadership Cadets (Order 63/2569) — 2026-11-08
+
+- User Request:
+  - "แต่งตั้งผู้ช่วย นพอ. บังคับบัญชา ทำการแทน นพอ.บังคับบัญชา ปี ๖๙ อับเดท" (Update student leadership positions according to official RTAFNC Order (Specific) No. 63/2569 issued on 4 Nov 2569).
+- Background & Official Context:
+  - As Year 4 students (63 cadets) are scheduled for clinical internship/community health nursing training in Chachoengsao from 16 Nov to 25 Dec 2569, 13 Year 3 students (Class 67) have been appointed as acting student commanders (ทำการแทน นพอ.บังคับบัญชา).
+- Implementation:
+  1. **Automated Python Script:** Created `scripts/update_acting_commanders_2569.py` to update the canonical `data/students.json` and generate `data/students_data.js` and `frontend/data/students_data.js` following strict project rules.
+  2. **Updated 13 Students:**
+     1. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.นพอ.`
+     2. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.มว.นพอ.ปี ๓`
+     3. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๑ มว.๓`
+     4. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๒ มว.๓`
+     5. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๓ มว.๓`
+     6. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.มว.นพอ.ปี ๒`
+     7. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๑ มว.๒`
+     8. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๒ มว.๒`
+     9. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๓ มว.๒`
+     10. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.มว.นพอ.ปี ๑`
+     11. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๑ มว.๑`
+     12. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๒ มว.๑`
+     13. `<รหัสนักเรียน>` <ชื่อนักเรียน> ➔ `ทำการแทน หน.หมู่ ๓ มว.๑`
+  3. **Edge API & UI Coordination:** Updated `functions/api/bind_line.js` and `frontend/liff-sdk.js` to preserve `position` in LIFF sessions, and bumped cache-busting tag `?v=20261108-acting-cmd` across HTML files.
+- Verification:
+  - `node scripts/check-syntax.cjs`: PASSED.
+  - `PYTHONPATH=. python3 scratch/test_braces.py`: 21/21 HTML files PASSED.
+  - `node --test tests/*.test.cjs`: 158/158 PASSED.
+  - `python3 data/check_pdpa_compliance.py`: 100% compliant.
+  - Cloudflare Pages Deployment: Deployed to `https://rtafnc-gooddeeds.pages.dev` (Deployment ID: `2d944f1a`).
+  - Google Drive Sync: Synced all 14 modified files to Google Drive.
+
+
+
+
 
 
 

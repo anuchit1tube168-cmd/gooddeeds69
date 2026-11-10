@@ -174,6 +174,11 @@ function doPost(e) {
     return jsonResponse({ status: 'error', code: 'EMERGENCY_LOCKDOWN' });
   }
 
+  // หมวด 10 วิ่งเพื่อสุขภาพ + สมรรถภาพ (RunTracker.gs) — ตรวจ gatewayKey ภายใน handler
+  if (data && /^(run_|fitness_)/.test(String(data.action || ''))) {
+    return jsonResponse(runTrackerHandle_(data));
+  }
+
   // Handle Telegram Interactive Inline Callback Buttons
   if (data.callback_query) {
     return jsonResponse(handleTelegramCallback(data.callback_query, e.parameter && e.parameter.webhookKey));

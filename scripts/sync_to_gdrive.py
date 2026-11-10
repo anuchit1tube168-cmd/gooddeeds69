@@ -3,7 +3,7 @@
 sync_to_gdrive.py
 อัปเดตและซิงค์ข้อมูลแฟ้มประวัติความดีส่วนบุคคล (records/) และฐานข้อมูลล่าสุดขึ้นสู่ Google Drive
 เป้าหมาย:
-~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569
+~/Library/CloudStorage/GoogleDrive-<บัญชีเจ้าของ>/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569
 
 ขั้นตอน:
 1. ตรวจสอบนักเรียนที่ยังไม่มีโฟลเดอร์ใน Google Drive (เช่น นพอ. รุ่น 69 และรุ่นอื่นๆ) แล้วสร้างโฟลเดอร์พร้อมคัดลอกไฟล์ทั้งหมด
@@ -13,6 +13,7 @@ sync_to_gdrive.py
 """
 
 import os
+import sys
 import shutil
 import re
 
@@ -20,7 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LOCAL_RECORDS = os.path.join(BASE_DIR, 'records')
 LOCAL_DATA = os.path.join(BASE_DIR, 'data')
 
-GDRIVE_ROOT = os.path.expanduser('~/Library/CloudStorage/GoogleDrive-anuchit1tube168@gmail.com/ไดรฟ์ของฉัน/ระบบบันทึกความดี_วพอ_2569')
+GDRIVE_ROOT = os.environ.get('GOODDEED_GDRIVE_ROOT') or sys.exit('ตั้งค่า GOODDEED_GDRIVE_ROOT เป็นพาธโฟลเดอร์ Google Drive ก่อนรัน')
 GDRIVE_RECORDS = os.path.join(GDRIVE_ROOT, 'records')
 
 def copy_file_if_needed(src, dst):

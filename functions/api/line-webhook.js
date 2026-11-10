@@ -25,7 +25,7 @@ export async function onRequestOptions() {
 export async function onRequestGet(context) {
   const { env } = context;
   const token = await getEffectiveLineToken(env);
-  const hasSecret = !!((env && env.LINE_CHANNEL_SECRET) || '7cf48cc5e433e3b11182e7ec016e44a6');
+  const hasSecret = !!((env && env.LINE_CHANNEL_SECRET) || '');
   const hasToken = !!token;
 
   return new Response(JSON.stringify({
@@ -50,7 +50,7 @@ export async function onRequestGet(context) {
 
 export async function onRequestPost(context) {
   const { request, env } = context;
-  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '';
   const channelToken = await getEffectiveLineToken(env);
 
   const signature = request.headers.get('x-line-signature') || '';
@@ -403,7 +403,7 @@ async function getEffectiveLineToken(env) {
     return env.LINE_CHANNEL_ACCESS_TOKEN;
   }
   const channelId = (env && env.LINE_CHANNEL_ID) ? env.LINE_CHANNEL_ID : '1654464250';
-  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '7cf48cc5e433e3b11182e7ec016e44a6';
+  const channelSecret = (env && env.LINE_CHANNEL_SECRET) ? env.LINE_CHANNEL_SECRET : '';
 
   try {
     const params = new URLSearchParams();

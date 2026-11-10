@@ -6,13 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ระบบบันทึกความดีจิตอาสา วพอ.พอ. (LINE Official LIFF)</title>
     <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Kanit:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
     <link rel="stylesheet" href="style.css?v=3580">
     <link rel="stylesheet" href="theme.css?v=20261026">
+    <link rel="stylesheet" href="pro.css?v=20261111">
     <script src="theme.js?v=20261026"></script>
     <style>
         .deed-card {
@@ -175,6 +171,45 @@
             max-height: 90vh;
             border-radius: var(--radius-sm);
         }
+
+        /* Mobile & Tablet Responsive Media Queries */
+        @media (max-width: 639px) {
+            .deed-card {
+                flex-direction: column;
+                gap: 10px;
+                padding: 12px;
+            }
+            .deed-card-right {
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                border-top: 1px solid rgba(255, 255, 255, 0.08);
+                padding-top: 8px;
+                margin-top: 4px;
+            }
+            .summary-strip {
+                gap: 8px;
+            }
+            .strip-item {
+                padding: 10px 14px;
+            }
+            .strip-value {
+                font-size: 1.15rem;
+            }
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch !important;
+                gap: 8px;
+            }
+            .filter-bar select {
+                width: 100% !important;
+            }
+            .filter-search {
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+        }
     </style>
 </head>
 
@@ -284,7 +319,7 @@
     </div>
 
     <div class="toast-container" id="toast-container"></div>
-    <script src="data/students_data.js?v=20261104-cards-v2"></script>
+    <script src="data/students_data.js?v=20261108-acting-cmd"></script>
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>

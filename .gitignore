@@ -72,3 +72,8 @@ node_modules/
 data/telegram_message_map.json
 data/notified_deeds.json
 frontend/*_thumb.jpg
+
+# หน้าตัวอย่าง/สคริปต์ครั้งเดียวที่มีชื่อและรหัสนักเรียนจริง — เก็บในเครื่อง ไม่ขึ้น GitHub (11 พ.ย. 2569)
+frontend/sample_year_*.html
+frontend/test_photo_sample_*.html
+scripts/update_student_50_hours.py

@@ -29,8 +29,8 @@ function onOpen() {
 // ==================== TEST & AUTHORIZE TELEGRAM (RUN DIRECTLY IN APPS SCRIPT EDITOR) ====================
 function testAuthorizeTelegram() {
   var p = PropertiesService.getScriptProperties();
-  var token = p.getProperty('TELEGRAM_BOT_TOKEN') || '8928797456:AAEB8SoJlQXLbyB2CI5p7hT2v8t1zme6_pg';
-  var chatId = p.getProperty('TELEGRAM_CHAT_ID') || '-4839151586';
+  var token = p.getProperty('TELEGRAM_BOT_TOKEN') || '';
+  var chatId = p.getProperty('TELEGRAM_CHAT_ID') || '';
 
   p.setProperty('TELEGRAM_BOT_TOKEN', token);
   p.setProperty('TELEGRAM_CHAT_ID', chatId);
