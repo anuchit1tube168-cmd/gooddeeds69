@@ -1,0 +1,230 @@
+/* =====================================================================
+   macos.css — Template macOS (Sonoma) สำหรับทุกหน้าของระบบบันทึกความดี
+   โหลดเป็นไฟล์สุดท้ายของทุกหน้า: ทั้งหน้าคือ "หน้าต่างแอป" หนึ่งบาน
+   - ธีมกลางคืน (ค่าเริ่มต้น) = navy, ธีมกลางวัน = light appearance
+   - สีเน้น (accent) = ทองตามสีสถาบัน แทนสีฟ้าของ macOS
+   - ฟอนต์ระบบ: Sukhumvit Set บน Mac/iPhone, IBM Plex/Noto Sans Thai บน Android/Windows
+   ===================================================================== */
+:root, body {
+  --mac-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Sukhumvit Set", "IBM Plex Sans Thai", "Noto Sans Thai", "Leelawadee UI", system-ui, sans-serif;
+  --mac-accent: #d4af37;
+  --mac-accent-strong: #b8921f;
+  --mac-accent-soft: rgba(212, 175, 55, .18);
+  --mac-on-accent: #10203a;
+  --mac-wall: radial-gradient(1200px 700px at 12% -10%, #2b4a7e 0%, transparent 60%),
+              radial-gradient(900px 600px at 100% 100%, #1d3e5e 0%, transparent 55%),
+              linear-gradient(160deg, #0d1a2f 0%, #13243f 55%, #0b1628 100%);
+  --mac-window: rgba(22, 37, 62, .72);
+  --mac-window-solid: #17283f;
+  --mac-bar: rgba(18, 31, 52, .72);
+  --mac-sidebar: rgba(15, 27, 46, .74);
+  --mac-hairline: rgba(255, 255, 255, .1);
+  --mac-hairline-strong: rgba(255, 255, 255, .16);
+  --mac-text: #f2f5fb;
+  --mac-text-2: #b9c5d8;
+  --mac-text-3: #8d9bb3;
+  --mac-field: rgba(255, 255, 255, .06);
+  --mac-control: rgba(255, 255, 255, .09);
+  --mac-control-hover: rgba(255, 255, 255, .14);
+  --mac-select: rgba(212, 175, 55, .22);
+  --mac-shadow: 0 0 0 .5px rgba(0, 0, 0, .35), 0 12px 32px rgba(0, 0, 0, .32), 0 2px 6px rgba(0, 0, 0, .2);
+  --mac-radius-window: 12px;
+  --mac-radius-control: 8px;
+  --mac-blur: blur(30px) saturate(170%);
+}
+body.theme-day, html.theme-day body {
+  --mac-wall: radial-gradient(1200px 700px at 10% -10%, #dbe6f7 0%, transparent 60%),
+              radial-gradient(900px 600px at 100% 100%, #e8e1cf 0%, transparent 55%),
+              linear-gradient(160deg, #eef2f8 0%, #f5f6f9 60%, #e9eef6 100%);
+  --mac-window: rgba(255, 255, 255, .78);
+  --mac-window-solid: #ffffff;
+  --mac-bar: rgba(246, 247, 250, .8);
+  --mac-sidebar: rgba(236, 239, 245, .8);
+  --mac-hairline: rgba(0, 0, 0, .09);
+  --mac-hairline-strong: rgba(0, 0, 0, .14);
+  --mac-text: #1d1d1f;
+  --mac-text-2: #3c4150;
+  --mac-text-3: #6e7383;
+  --mac-field: #ffffff;
+  --mac-control: rgba(0, 0, 0, .05);
+  --mac-control-hover: rgba(0, 0, 0, .08);
+  --mac-select: rgba(212, 175, 55, .24);
+  --mac-accent: #b8921f;
+  --mac-accent-strong: #9a7a14;
+  --mac-on-accent: #ffffff;
+  --mac-shadow: 0 0 0 .5px rgba(0, 0, 0, .12), 0 10px 30px rgba(15, 30, 60, .12), 0 1px 3px rgba(0, 0, 0, .08);
+  /* ให้ตัวแปรเดิมของ style.css ตามธีม */
+  --text-primary: #1d1d1f; --text-secondary: #3c4150; --text-muted: #6e7383;
+}
+
+/* ---------- พื้นหลัง (wallpaper) + ตัวอักษร ---------- */
+html { background: #0d1a2f; }
+html.theme-day { background: #eef2f8; }
+body {
+  font-family: var(--mac-font) !important;
+  background: var(--mac-wall) fixed !important;
+  color: var(--mac-text);
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -.003em;
+}
+body :is(h1, h2, h3, h4) { font-family: var(--mac-font) !important; letter-spacing: -.015em; }
+
+/* ---------- Toolbar (แถบบนของหน้าต่าง) พร้อมปุ่มสัญญาณไฟ ---------- */
+.top-nav, .rn-top {
+  background: var(--mac-bar) !important;
+  -webkit-backdrop-filter: var(--mac-blur); backdrop-filter: var(--mac-blur);
+  border-bottom: 1px solid var(--mac-hairline) !important;
+  box-shadow: none !important;
+  min-height: 52px;
+}
+@media (min-width: 900px) {
+  .top-nav { padding-left: 88px !important; position: sticky; }
+  .top-nav::before, .rn-top::before {
+    content: ""; position: absolute; left: 20px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%;
+    background: #ff5f57; box-shadow: 20px 0 0 #febc2e, 40px 0 0 #28c840;
+    filter: saturate(.95);
+  }
+  .rn-top { position: sticky; padding-left: 88px !important; }
+}
+.nav-brand .title, .nav-brand-text .title { color: var(--mac-text) !important; font-weight: 600; }
+.nav-brand .subtitle, .nav-brand-text .subtitle { color: var(--mac-text-3) !important; }
+
+/* ---------- Sidebar แบบ Finder ---------- */
+.sidebar {
+  background: var(--mac-sidebar) !important;
+  -webkit-backdrop-filter: var(--mac-blur); backdrop-filter: var(--mac-blur);
+  border-right: 1px solid var(--mac-hairline) !important;
+}
+.sidebar-label { color: var(--mac-text-3) !important; font-size: .72rem !important; font-weight: 600 !important; letter-spacing: .02em; text-transform: none; }
+.sidebar-item {
+  border-radius: 7px !important; margin: 1px 10px !important; padding: 8px 10px !important;
+  color: var(--mac-text) !important; font-size: .9rem; border: 0 !important; background: transparent;
+}
+.sidebar-item:hover { background: var(--mac-control) !important; }
+.sidebar-item.active { background: var(--mac-select) !important; color: var(--mac-text) !important; font-weight: 600; box-shadow: none !important; }
+.sidebar-item.active .icon { filter: none; }
+.sidebar-overlay { background: rgba(0, 0, 0, .25) !important; -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); }
+
+/* ---------- หน้าต่าง/การ์ด ---------- */
+:is(.card, .crystal-card, .login-card, .stat-card, .kpi-card, .year-stat-card, .section-card, .rn-card, .rn-stat, .action-card, .modal, .modal-content) {
+  background: var(--mac-window) !important;
+  -webkit-backdrop-filter: var(--mac-blur); backdrop-filter: var(--mac-blur);
+  border: 1px solid var(--mac-hairline) !important;
+  border-radius: var(--mac-radius-window) !important;
+  box-shadow: var(--mac-shadow) !important;
+  color: var(--mac-text);
+}
+.action-card:hover { background: var(--mac-control-hover) !important; transform: translateY(-1px); }
+:is(.card-title, .section-title, .rn-h) { color: var(--mac-text) !important; font-weight: 650; }
+:is(.stat-label, .kpi-label, .text-muted, .rn-note, .form-hint) { color: var(--mac-text-3) !important; }
+:is(.stat-value, .kpi-value) { color: var(--mac-text) !important; font-variant-numeric: tabular-nums; }
+
+/* แถบชื่อหน้าต่าง (traffic lights) ภายในการ์ด */
+.mac-traffic-lights {
+  display: flex; align-items: center; gap: 8px;
+  margin: -6px -6px 16px !important; padding: 0 6px 12px !important;
+  border-bottom: 1px solid var(--mac-hairline) !important;
+}
+.mac-traffic-lights .light { width: 12px !important; height: 12px !important; border-radius: 50%; box-shadow: inset 0 0 0 .5px rgba(0, 0, 0, .25); }
+.mac-traffic-lights .red { background: #ff5f57 !important; }
+.mac-traffic-lights .yellow { background: #febc2e !important; }
+.mac-traffic-lights .green { background: #28c840 !important; }
+.mac-traffic-lights .mac-title { margin-left: auto !important; margin-right: auto; padding-right: 52px; color: var(--mac-text-2) !important; font-size: .8rem !important; font-weight: 600; text-align: center; }
+
+/* ---------- ปุ่ม ---------- */
+.btn, button.btn, a.btn {
+  border-radius: var(--mac-radius-control) !important;
+  font-family: var(--mac-font) !important; font-weight: 600; letter-spacing: 0;
+  box-shadow: 0 .5px 1px rgba(0, 0, 0, .25), inset 0 .5px 0 rgba(255, 255, 255, .12);
+}
+.btn-primary, .rn-seg button.active {
+  background: linear-gradient(180deg, var(--mac-accent) 0%, var(--mac-accent-strong) 100%) !important;
+  color: var(--mac-on-accent) !important; border: 0 !important; text-shadow: none !important;
+}
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-outline, .btn:not(.btn-primary):not(.btn-success):not(.btn-danger):not(.btn-ok):not(.btn-no) {
+  background: var(--mac-control) !important; color: var(--mac-text) !important; border: 1px solid var(--mac-hairline-strong) !important;
+}
+.btn-outline:hover { background: var(--mac-control-hover) !important; }
+.btn-success, .btn-ok { background: linear-gradient(180deg, #34c759, #248a3d) !important; color: #fff !important; border: 0 !important; }
+.btn-danger, .btn-no { background: linear-gradient(180deg, #ff453a, #c9261c) !important; color: #fff !important; border: 0 !important; }
+
+/* ---------- Segmented control (แท็บ/ตัวกรอง) ---------- */
+.tab-bar, .rn-seg {
+  background: var(--mac-control) !important; border: 1px solid var(--mac-hairline) !important;
+  border-radius: 9px !important; padding: 3px !important; gap: 3px;
+}
+.tab-btn, .rn-seg button {
+  border-radius: 7px !important; color: var(--mac-text-2) !important; background: transparent !important; border: 0 !important; box-shadow: none !important;
+}
+.tab-btn.active {
+  background: var(--mac-window-solid) !important; color: var(--mac-text) !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .18), 0 0 0 .5px rgba(0, 0, 0, .1) !important;
+}
+.filter-pill { border-radius: 999px !important; background: var(--mac-control) !important; border: 1px solid var(--mac-hairline) !important; color: var(--mac-text-2) !important; }
+.filter-pill.active { background: var(--mac-select) !important; color: var(--mac-text) !important; border-color: transparent !important; }
+
+/* ---------- ช่องกรอก ---------- */
+:is(.form-input, .form-select, .form-textarea, input[type=text], input[type=number], input[type=date], input[type=password], input[type=email], select, textarea):not([type=checkbox]):not([type=radio]) {
+  background: var(--mac-field) !important; color: var(--mac-text) !important;
+  border: 1px solid var(--mac-hairline-strong) !important; border-radius: 7px !important;
+  font-family: var(--mac-font) !important; box-shadow: inset 0 .5px 1px rgba(0, 0, 0, .12) !important;
+}
+:is(.form-input, .form-select, .form-textarea, input, select, textarea):focus {
+  outline: none !important; border-color: var(--mac-accent) !important;
+  box-shadow: 0 0 0 3.5px var(--mac-accent-soft) !important;
+}
+.form-label { color: var(--mac-text-2) !important; font-weight: 600; font-size: .85rem; }
+.input-prefix { background: var(--mac-control) !important; color: var(--mac-text-2) !important; border-color: var(--mac-hairline-strong) !important; }
+input[type=checkbox], input[type=radio] { accent-color: var(--mac-accent); }
+
+/* ---------- ตาราง (List view) ---------- */
+table { border-collapse: separate !important; border-spacing: 0; }
+th { color: var(--mac-text-3) !important; font-weight: 600 !important; font-size: .78rem; background: transparent !important; border-bottom: 1px solid var(--mac-hairline-strong) !important; }
+td { border-bottom: 1px solid var(--mac-hairline) !important; color: var(--mac-text); }
+tbody tr:nth-child(even) td { background: rgba(127, 127, 127, .045); }
+tbody tr:hover td { background: var(--mac-select); }
+
+/* ---------- Sheet (modal) + การแจ้งเตือน ---------- */
+.modal-overlay { background: rgba(0, 0, 0, .3) !important; -webkit-backdrop-filter: blur(3px) !important; backdrop-filter: blur(3px) !important; }
+.modal { border-radius: 14px !important; }
+.modal-header { border-bottom: 1px solid var(--mac-hairline) !important; }
+.toast, .rn-toast {
+  background: var(--mac-window) !important; -webkit-backdrop-filter: var(--mac-blur); backdrop-filter: var(--mac-blur);
+  color: var(--mac-text) !important; border: 1px solid var(--mac-hairline) !important; border-left: 1px solid var(--mac-hairline) !important;
+  border-radius: 14px !important; box-shadow: var(--mac-shadow) !important;
+}
+
+/* ---------- ป้าย / แถบความคืบหน้า ---------- */
+.badge, .chip { border-radius: 999px !important; font-weight: 600; }
+:is(.progress-track, .rn-bar) { background: var(--mac-control) !important; border-radius: 999px !important; }
+
+/* ---------- Scrollbar แบบ overlay ---------- */
+* { scrollbar-width: thin; scrollbar-color: rgba(127, 127, 127, .45) transparent; }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: rgba(127, 127, 127, .4); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
+::-webkit-scrollbar-track { background: transparent; }
+::selection { background: var(--mac-select); }
+
+/* ---------- หน้าเข้าสู่ระบบ: หน้าต่างกลางจอ ---------- */
+.login-card { padding: 22px 26px 26px !important; }
+.login-header h1 { color: var(--mac-text) !important; font-weight: 700; }
+.login-header .subtitle { color: var(--mac-text-3) !important; }
+.pro-line-banner { background: rgba(52, 199, 89, .08) !important; border-color: rgba(52, 199, 89, .3) !important; border-radius: 10px !important; }
+.pro-line-btn { border-radius: 8px !important; }
+
+/* ---------- มือถือ: ซ่อนสัญญาณไฟบนแถบบน ใช้ขนาดแตะ 44px ---------- */
+@media (max-width: 899px) {
+  .top-nav, .rn-top { min-height: 48px; }
+  .btn, .tab-btn, .rn-seg button { min-height: 44px; }
+  .mac-traffic-lights .mac-title { padding-right: 0; font-size: .74rem !important; }
+}
+@media (prefers-reduced-transparency: reduce) {
+  :is(.card, .crystal-card, .login-card, .rn-card, .top-nav, .rn-top, .sidebar, .modal) { -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--mac-window-solid) !important; }
+}
+
+/* แถบสถานะ 50 ชม. บนหน้าหลักนักเรียน — โหมดกลางวันให้พื้นสว่าง ตัวอักษรเข้ม */
+body.theme-day .year69-progress-widget { background: rgba(255, 255, 255, .7) !important; border: 1px solid rgba(0, 0, 0, .08) !important; }
+body.theme-day .year69-progress-widget :is(.year69-label, span, div) { color: #3c4150 !important; }
+body.theme-day .year69-progress-widget .year69-val, body.theme-day .year69-progress-widget [id$="-text"] { color: #8a6a0f !important; }
+body.theme-day .year69-bar-track { background: rgba(0, 0, 0, .08) !important; }
