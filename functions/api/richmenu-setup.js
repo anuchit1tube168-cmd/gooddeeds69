@@ -23,7 +23,9 @@ async function lineToken(env) {
   return r.ok ? ((await r.json()).access_token || '') : '';
 }
 async function line(token, method, path, body, host = 'https://api.line.me') {
-  const r = await fetch(host + path, { method, headers: { Authorization: `Bearer ${token}`, ...(body && !(body instanceof ArrayBuffer) ? { 'Content-Type': 'application/json' } : {}) },
+  const isImage = body instanceof ArrayBuffer;
+  const r = await fetch(host + path, { method, headers: { Authorization: `Bearer ${token}`,
+      ...(isImage ? { 'Content-Type': 'image/jpeg' } : body ? { 'Content-Type': 'application/json' } : {}) },
     body: body instanceof ArrayBuffer ? body : body ? JSON.stringify(body) : undefined });
   const text = await r.text();
   let data = {}; try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text.slice(0, 200) }; }
@@ -58,7 +60,7 @@ export async function onRequest({ request, env }) {
     if (!c.ok) return json({ status: 'error', code: 'CREATE_FAILED', alias, http: c.status, detail: c.data }, 502);
     created[alias] = c.data.richMenuId;
     const up = await line(token, 'POST', `/v2/bot/richmenu/${created[alias]}/content`, images[alias], 'https://api-data.line.me');
-    if (!up.ok) return json({ status: 'error', code: 'UPLOAD_FAILED', alias, http: up.status }, 502);
+    if (!up.ok) return json({ status: 'error', code: 'UPLOAD_FAILED', alias, http: up.status, detail: up.data }, 502);
     log.push(`created ${alias}`);
   }
   // 3) ชี้ alias ไปที่เมนูใหม่ (มีแล้วอัปเดต ยังไม่มีสร้าง) แล้วตั้งแท็บ 1 เป็นเมนูหลัก
