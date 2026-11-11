@@ -54,16 +54,20 @@ DEPLOY_ID="$(grep -o 'macros/s/[A-Za-z0-9_-]*' .env 2>/dev/null | head -1 | cut 
 if [ ! -f "$GAS_DIR/.clasp.json" ] || [ -z "$DEPLOY_ID" ]; then
   echo "⚠️  ข้าม Apps Script (ไม่พบ $GAS_DIR/.clasp.json หรือ GAS_URL ใน .env)"
 else
-  CLASP="npx --yes @google/clasp@2.4.2"
-  [ -f "$HOME/.clasprc.json" ] || $CLASP login || fail "login clasp ไม่สำเร็จ"
-  TMP="$(mktemp -d)"
-  cp "$GAS_DIR/.clasp.json" "$TMP/"
-  ( cd "$TMP" && $CLASP pull >/dev/null ) || fail "ดึงโค้ด Apps Script ปัจจุบันไม่สำเร็จ"
-  python3 scripts/build_live_gas.py "$TMP" || fail "เตรียมโค้ด Apps Script ไม่สำเร็จ"
-  ( cd "$TMP" && $CLASP push -f ) || fail "clasp push ไม่สำเร็จ"
-  ( cd "$TMP" && $CLASP deploy -i "$DEPLOY_ID" -d "run-tracker $(date +%Y%m%d-%H%M)" ) || fail "อัปเดต deployment Apps Script ไม่สำเร็จ"
-  rm -f "$TMP/RunKey.js"
-  echo "✅ Apps Script อัปเดตแล้ว (URL เดิม)"
+  # clasp 3.x ให้ตรงกับไฟล์ login (~/.clasprc.json) ที่เครื่องนี้ใช้อยู่
+  CLASP="npx --yes @google/clasp@3.4.1"
+  gas_step() {
+    [ -f "$HOME/.clasprc.json" ] || $CLASP login || return 1
+    TMP="$(mktemp -d)"
+    cp "$GAS_DIR/.clasp.json" "$TMP/"
+    ( cd "$TMP" && $CLASP pull >/dev/null ) || { echo "   ดึงโค้ด Apps Script ไม่สำเร็จ (ลอง: npx @google/clasp@3.4.1 login)"; return 1; }
+    python3 scripts/build_live_gas.py "$TMP" || return 1
+    ( cd "$TMP" && $CLASP push -f ) || return 1
+    ( cd "$TMP" && $CLASP deploy -i "$DEPLOY_ID" -d "run-tracker $(date +%Y%m%d-%H%M)" ) || return 1
+    rm -f "$TMP/RunKey.js"
+  }
+  # Apps Script ล้มเหลวไม่หยุดการ deploy เว็บ — ระบบวิ่งจะยังปิดอยู่ (fail closed) จนกว่าจะอัปเดตสำเร็จ
+  if gas_step; then echo "✅ Apps Script อัปเดตแล้ว (URL เดิม)"; else echo "⚠️  ข้าม Apps Script รอบนี้ — deploy เว็บต่อ"; fi
 fi
 
 line "6/6 deploy Cloudflare Pages"
