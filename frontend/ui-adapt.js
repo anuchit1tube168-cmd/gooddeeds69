@@ -83,10 +83,23 @@
     return false;
   }
 
+  var freezeEl = null;
+  // สไตล์ปิด transition ชั่วคราว (สลับ .disabled ไม่แตะ class ของ html จึงไม่วนกระตุ้น observer)
+  function measureStyle() {
+    if (!freezeEl) {
+      freezeEl = document.createElement('style');
+      freezeEl.textContent = '*,*::before,*::after{transition:none!important}';
+      document.head.appendChild(freezeEl);
+    }
+    return freezeEl;
+  }
+
   var running = false;
   function run() {
     running = false;
     if (!document.body) return;
+    // ปิด transition ระหว่างวัด ไม่งั้นค่าสีที่อ่านได้เป็นค่ากลางทาง (หลังสลับธีมจะตัดสินผิด)
+    var freeze = measureStyle(); freeze.disabled = false;
     var marked = document.querySelectorAll('.cg-fix');
     // คืนค่าสีเดิมก่อนวัดใหม่ (inline !important ชนะทุกกฎ CSS จึงต้องเก็บค่าเดิมไว้คืน)
     for (var i = 0; i < marked.length; i++) {
@@ -117,6 +130,7 @@
       var dark = lum(bg) > 0.35;
       fixes.push([el, dark ? '#1d1d1f' : '#f2f5fb']);
     }
+    freeze.disabled = true;
     // เขียนทีเดียวหลังอ่านครบ เลี่ยง layout thrash
     fixes.forEach(function (f) {
       var e = f[0];
@@ -129,16 +143,24 @@
   function schedule(delay) {
     if (running) return;
     running = true;
-    setTimeout(function () { (window.requestIdleCallback || requestAnimationFrame)(run); }, delay || 120);
+    // requestIdleCallback ต้องมี timeout: หน้าที่มีแอนิเมชันตลอดจะไม่เคย idle ทำให้ไม่ได้ตรวจเลย
+    setTimeout(function () {
+      if (window.requestIdleCallback) requestIdleCallback(run, { timeout: 250 }); else requestAnimationFrame(run);
+    }, delay || 120);
   }
 
   function start() {
     schedule(60);
     // สลับธีม
-    new MutationObserver(function () { schedule(30); })
-      .observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
-    new MutationObserver(function () { schedule(30); })
-      .observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    // สลับธีม: ตรวจทันที + ตรวจซ้ำหลังพื้นหลังเปลี่ยนเสร็จ
+    var themeTimer;
+    function onTheme() {
+      schedule(30);
+      clearTimeout(themeTimer);
+      themeTimer = setTimeout(function () { schedule(0); }, 700);
+    }
+    new MutationObserver(onTheme).observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    new MutationObserver(onTheme).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     // เนื้อหาที่โหลดทีหลัง (ตาราง/การ์ดจาก API)
     new MutationObserver(function (muts) {
       for (var i = 0; i < muts.length; i++) if (muts[i].addedNodes.length) { schedule(250); return; }
