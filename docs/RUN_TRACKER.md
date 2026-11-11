@@ -28,18 +28,19 @@
 - การส่งผลวิ่งของนักเรียนยังยืนยันตัวตนจาก session ฝั่งเบราว์เซอร์ (เหมือนระบบความดีเดิม) — ความเสี่ยงที่เหลือคือส่งแทนคนอื่นได้ แต่ทุกรายการต้องผ่านผู้ตรวจที่เห็นภาพหลักฐานก่อนนับผล
 - GET รายคนตัด `gps` ออกก่อนส่งกลับ; โหมด GPS ไม่ส่งพิกัดดิบ ส่งเพียงสรุปและภาพเส้นทาง
 
-## ติดตั้ง (เจ้าของระบบทำ)
+## ติดตั้ง / อัปเดต (อัตโนมัติด้วย `scripts/deploy.command`)
 
-1. **Apps Script**: เพิ่มไฟล์ `RunTracker.gs` และอัปเดต `Code.gs` (hook ใน `doPost`) → Project Settings → Script Properties เพิ่ม `RUN_GATEWAY_KEY` = สุ่มยาว ≥ 32 ตัวอักษร → Deploy → **Manage deployments → แก้ deployment เดิม → New version** (URL เดิมไม่เปลี่ยน)
-2. **Cloudflare Pages** (`rtafnc-gooddeeds`) → Settings → Variables and Secrets (Production, Encrypt):
-   - `RUN_GATEWAY_KEY` = ค่าเดียวกับข้อ 1
-   - `RUN_ADMIN_KEY` = รหัสผู้ตรวจ (สุ่มยาว ≥ 20 ตัวอักษร แจกเฉพาะผู้ตรวจ)
-   - `GAS_URL` มีอยู่แล้ว
-3. ทดสอบ: `node scripts/check-syntax.cjs && node --test tests/*.test.cjs`
-4. Deploy: `npx wrangler pages deploy frontend --project-name rtafnc-gooddeeds --branch main`
-5. ตรวจหลัง deploy: เปิด `/run.html` ด้วยบัญชีนักเรียนทดสอบ → ส่ง 1 รายการ (ทำเครื่องหมาย SYSTEM TEST ในหมายเหตุผู้ตรวจตอนไม่อนุมัติ) → เปิด `/run-admin.html` → ไม่อนุมัติพร้อมเหตุผล "SYSTEM TEST"
+ดับเบิลคลิก `scripts/deploy.command` บน Mac ที่ login `wrangler` และ `clasp` ไว้แล้ว สคริปต์ทำตามลำดับ:
 
-ชีต `Runs_2569`, `Fitness_2569`, `Run_Settings` ถูกสร้างอัตโนมัติเมื่อมีการเรียกครั้งแรก
+1. ตัดรหัสผ่าน/เบอร์/อีเมล/chat id ออกจาก `frontend/data/students_data.js`
+2. ตรวจ syntax + test ทั้งหมด
+3. push GitHub (ข้ามถ้าเครื่องยังไม่ได้ login)
+4. ตรวจ secret ใน Cloudflare; ถ้ายังไม่มี `RUN_ADMIN_KEY`/`RUN_GATEWAY_KEY` จะสุ่มสร้างและเก็บที่ `data/private/run_keys_DO_NOT_SHARE.txt`
+5. **Apps Script ที่ใช้งานจริง** (`scratch/live_gas_project`, clasp): `clasp pull` โค้ดปัจจุบันจาก Google มาเป็นฐาน → `scripts/build_live_gas.py` แทรก hook หมวด 10 ใน `doPost` + คัดลอก `RunTracker.js` + สร้าง `RunKey.js` (รหัสจากไฟล์ส่วนตัว ไม่อยู่ใน GitHub) → `clasp push` → `clasp deploy -i <deployment เดิม>` (URL ไม่เปลี่ยน)
+6. `wrangler pages deploy frontend`
+
+หมายเหตุ: Apps Script ที่ใช้งานจริงคือ `scratch/live_gas_project` (สำเนาใน git: `data/google_apps_script_backend.js`) ไม่ใช่ `backend/Code.gs` — `RunTracker.gs` เขียนให้ใช้ได้ทั้งสองแบบ
+การแจ้งเตือน: ส่งรายการวิ่ง → Telegram กลุ่มผู้ตรวจ; ตรวจแล้ว → LINE ถึงนักเรียน (ถ้าผูก LINE ไว้ในคอลัมน์ 20 ของ `Main_2569`) ทั้งคู่ส่งหลังบันทึกสำเร็จ ส่งไม่ได้ไม่กระทบข้อมูล
 
 ## กติกาค่าเริ่มต้น (ข้อเสนอ รอวิทยาลัยอนุมัติ — แก้ได้ที่หน้าผู้ตรวจ)
 

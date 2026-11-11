@@ -294,6 +294,11 @@ function doPost(e) {
     params = e.parameter || {};
   }
 
+  // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
+  if (params && /^(run_|fitness_)/.test(String(params.action || ''))) {
+    return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
+  }
+
   // 1. Handle Telegram Webhook Callback Query (Instant Button Reaction)
   if (params && params.callback_query) {
     return handleTelegramCallback(params.callback_query, ss);

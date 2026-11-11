@@ -7,15 +7,15 @@ PROJECT="rtafnc-gooddeeds"
 line() { printf '\n==== %s ====\n' "$1"; }
 fail() { printf '\n❌ %s\n' "$1"; exit 1; }
 
-line "1/5 ตัดข้อมูลส่วนตัวออกจากไฟล์ที่ขึ้นเว็บ"
+line "1/6 ตัดข้อมูลส่วนตัวออกจากไฟล์ที่ขึ้นเว็บ"
 python3 scripts/strip_public_student_pii.py || fail "ตัดข้อมูลส่วนตัวไม่สำเร็จ — หยุด deploy"
 
-line "2/5 ทดสอบระบบ"
+line "2/6 ทดสอบระบบ"
 node scripts/check-syntax.cjs || fail "syntax ไม่ผ่าน"
 node --test tests/*.test.cjs >/tmp/gd_test.log 2>&1 || { tail -30 /tmp/gd_test.log; fail "test ไม่ผ่าน"; }
 grep -E "(^# |ℹ )(pass|fail) " /tmp/gd_test.log
 
-line "3/5 push ขึ้น GitHub (main)"
+line "3/6 push ขึ้น GitHub (main)"
 # ไม่ถามรหัสผ่านใน Terminal: ถ้ายังไม่ได้ login GitHub ให้ข้ามไป deploy ต่อ (push ทีหลังได้)
 if GIT_TERMINAL_PROMPT=0 git push origin main; then
   echo "✅ push GitHub แล้ว"
@@ -23,7 +23,7 @@ else
   echo "⚠️  ข้าม push GitHub (เครื่องนี้ยังไม่ได้ login GitHub) — deploy Cloudflare ต่อ"
 fi
 
-line "4/5 ตรวจ secret ใน Cloudflare"
+line "4/6 ตรวจ secret ใน Cloudflare"
 SECRETS="$(npx --yes wrangler pages secret list --project-name "$PROJECT" 2>/dev/null || true)"
 for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY; do
   if echo "$SECRETS" | grep -q "$k"; then echo "✅ $k"; else echo "⚠️  ยังไม่มี $k"; fi
@@ -41,7 +41,25 @@ if ! echo "$SECRETS" | grep -q RUN_GATEWAY_KEY || ! echo "$SECRETS" | grep -q RU
   fi
 fi
 
-line "5/5 deploy Cloudflare Pages"
+line "5/6 อัปเดต Apps Script (ระบบวิ่ง + แจ้งเตือน LINE/Telegram)"
+GAS_DIR="scratch/live_gas_project"
+DEPLOY_ID="$(grep -o 'macros/s/[A-Za-z0-9_-]*' .env 2>/dev/null | head -1 | cut -d/ -f3)"
+if [ ! -f "$GAS_DIR/.clasp.json" ] || [ -z "$DEPLOY_ID" ]; then
+  echo "⚠️  ข้าม Apps Script (ไม่พบ $GAS_DIR/.clasp.json หรือ GAS_URL ใน .env)"
+else
+  CLASP="npx --yes @google/clasp@2.4.2"
+  [ -f "$HOME/.clasprc.json" ] || $CLASP login || fail "login clasp ไม่สำเร็จ"
+  TMP="$(mktemp -d)"
+  cp "$GAS_DIR/.clasp.json" "$TMP/"
+  ( cd "$TMP" && $CLASP pull >/dev/null ) || fail "ดึงโค้ด Apps Script ปัจจุบันไม่สำเร็จ"
+  python3 scripts/build_live_gas.py "$TMP" || fail "เตรียมโค้ด Apps Script ไม่สำเร็จ"
+  ( cd "$TMP" && $CLASP push -f ) || fail "clasp push ไม่สำเร็จ"
+  ( cd "$TMP" && $CLASP deploy -i "$DEPLOY_ID" -d "run-tracker $(date +%Y%m%d-%H%M)" ) || fail "อัปเดต deployment Apps Script ไม่สำเร็จ"
+  rm -f "$TMP/RunKey.js"
+  echo "✅ Apps Script อัปเดตแล้ว (URL เดิม)"
+fi
+
+line "6/6 deploy Cloudflare Pages"
 npx --yes wrangler pages deploy frontend --project-name "$PROJECT" --branch main --commit-dirty=true || fail "deploy ไม่สำเร็จ"
 
 printf '\n✅ เสร็จแล้ว: https://%s.pages.dev\n' "$PROJECT"

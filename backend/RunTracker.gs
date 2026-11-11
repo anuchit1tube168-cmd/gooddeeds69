@@ -14,6 +14,74 @@
  * (ตั้งโดยเจ้าของระบบ) เพราะ URL ของ Web App เป็นสาธารณะ — ถ้ายังไม่ตั้งค่าจะปฏิเสธทั้งหมด (fail closed)
  */
 
+// ---------- ชั้นเข้ากันได้: ใช้ได้ทั้ง backend/Code.gs และโปรเจกต์ที่ใช้งานจริง (scratch/live_gas_project) ----------
+const RUN_MASTER_SHEET = 'Main_2569';
+const RUN_EVIDENCE_FOLDER = 'หลักฐานการวิ่ง_2569';
+
+function runSS_() {
+  return (typeof getSS === 'function') ? getSS() : SpreadsheetApp.getActiveSpreadsheet();
+}
+
+// กันสูตร/คำสั่งในเซลล์ (formula injection) จากข้อความที่ผู้ใช้กรอก
+function runLiteral_(v) {
+  if (typeof legacySheetLiteral_ === 'function') return legacySheetLiteral_(v);
+  const t = String(v == null ? '' : v);
+  return /^[=+\-@]/.test(t) ? "'" + t : t;
+}
+
+function runGatewayKey_() {
+  const fromProps = PropertiesService.getScriptProperties().getProperty('RUN_GATEWAY_KEY');
+  if (fromProps) return fromProps;
+  // RunKey.js สร้างตอน deploy จากไฟล์ส่วนตัวในเครื่อง ไม่อยู่ใน GitHub
+  return (typeof RUN_GATEWAY_KEY_LOCAL !== 'undefined') ? String(RUN_GATEWAY_KEY_LOCAL) : '';
+}
+
+function runUploadEvidence_(base64, studentId, studentName, filename) {
+  if (typeof uploadImage === 'function') {
+    return uploadImage({ base64: base64, studentId: studentId, studentName: studentName, filename: filename });
+  }
+  let data = String(base64 || '');
+  if (data.indexOf('base64,') !== -1) data = data.split('base64,')[1];
+  const blob = Utilities.newBlob(Utilities.base64Decode(data), 'image/jpeg', filename);
+  const root = DriveApp.getFolderById(ROOT_FOLDER_ID);
+  const sub = function (parent, name) { const it = parent.getFoldersByName(name); return it.hasNext() ? it.next() : parent.createFolder(name); };
+  const folder = sub(sub(root, RUN_EVIDENCE_FOLDER), studentId + (studentName ? ' - ' + studentName : ''));
+  const file = folder.createFile(blob);
+  file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE); // หลักฐานเป็นข้อมูลส่วนตัว ห้ามเปิดสาธารณะ
+  return { status: 'success', url: file.getUrl() };
+}
+
+// การแจ้งเตือนเป็นเรื่องรอง: บันทึกข้อมูลสำเร็จก่อนเสมอ ส่งไม่สำเร็จต้องไม่กระทบรายการ
+function runNotifyTelegram_(text) {
+  try {
+    if (typeof UrlFetchApp === 'undefined') return;
+    const p = PropertiesService.getScriptProperties();
+    const token = p.getProperty('TELEGRAM_BOT_TOKEN'), chat = p.getProperty('TELEGRAM_CHAT_ID');
+    if (!token || !chat) return;
+    UrlFetchApp.fetch('https://api.telegram.org/bot' + token + '/sendMessage', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ chat_id: chat, text: text, disable_web_page_preview: true })
+    });
+  } catch (_) {}
+}
+
+function runNotifyStudentLine_(studentId, text) {
+  try {
+    if (typeof UrlFetchApp === 'undefined') return;
+    const token = PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN');
+    const sh = runSS_().getSheetByName(RUN_MASTER_SHEET);
+    if (!token || !sh) return;
+    const row = sh.getDataRange().getValues().filter(function (r, i) { return i > 0 && String(r[1]).trim() === String(studentId); })[0];
+    const lineUserId = row ? String(row[19] || '').trim() : ''; // คอลัมน์ 20 = LINE User ID
+    if (!/^U[0-9a-f]{32}$/.test(lineUserId)) return;
+    UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      headers: { Authorization: 'Bearer ' + token },
+      payload: JSON.stringify({ to: lineUserId, messages: [{ type: 'text', text: text }] })
+    });
+  } catch (_) {}
+}
+
 const RUN_SHEETS = { RUNS: 'Runs_2569', FITNESS: 'Fitness_2569', SETTINGS: 'Run_Settings' };
 const RUN_HEADERS = [
   'Run ID', 'รหัสนักเรียน', 'วันที่วิ่ง', 'ระยะทาง (กม.)', 'เวลา (นาที)', 'เพซ (นาที/กม.)',
@@ -52,7 +120,7 @@ const RUN_DEFAULT_SETTINGS = {
 
 function runTrackerHandle_(data) {
   try {
-    const expected = PropertiesService.getScriptProperties().getProperty('RUN_GATEWAY_KEY');
+    const expected = runGatewayKey_();
     if (!expected || String(data.gatewayKey || '') !== expected) return { status: 'error', code: 'RUN_GATEWAY_DENIED' };
     switch (data.action) {
       case 'run_submit': return runSubmit_(data.run || {});
@@ -69,7 +137,7 @@ function runTrackerHandle_(data) {
 }
 
 function runSheet_(name, headers) {
-  const ss = getSS();
+  const ss = runSS_();
   let sh = ss.getSheetByName(name);
   if (!sh) {
     sh = ss.insertSheet(name);
@@ -181,7 +249,7 @@ function runSubmit_(run) {
   if (type === 'event' && km < settings.eventMinKm) return { status: 'error', code: 'event_too_short', minKm: settings.eventMinKm };
 
   // ยืนยันว่ามีนักเรียนคนนี้จริงใน Main_2569
-  const master = getSS().getSheetByName(SHEETS.STUDENTS);
+  const master = runSS_().getSheetByName(RUN_MASTER_SHEET);
   const ids = master ? master.getRange(2, 2, Math.max(master.getLastRow() - 1, 1), 1).getValues().map(function (r) { return String(r[0]); }) : [];
   if (ids.indexOf(sid) === -1) return { status: 'error', code: 'student_not_found' };
 
@@ -194,18 +262,20 @@ function runSubmit_(run) {
       return o.studentId === sid && o.date === date && Math.abs(o.distanceKm - km) < 0.01 && o.status !== 'rejected';
     });
     if (dup) return { status: 'error', code: 'duplicate_run' };
-    const up = uploadImage({ base64: run.imageData, studentId: sid, studentName: String(run.studentName || '').slice(0, 80),
-      filename: 'run_' + date + '_' + km + 'km_' + Date.now() + '.jpg' });
+    const up = runUploadEvidence_(run.imageData, sid, String(run.studentName || '').slice(0, 80), 'run_' + date + '_' + km + 'km_' + Date.now() + '.jpg');
     if (!up || up.status !== 'success') return { status: 'error', code: 'evidence_upload_failed' };
     const id = 'run_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
     const gps = source === 'gps' ? String(run.gpsSummary || '').slice(0, 1000) : '';
     const est = runEstimate_({ type: type, distanceKm: km, paceMinPerKm: pace }, settings);
-    t.sheet.appendRow([id, sid, legacySheetLiteral_(date), km, min, pace, source, up.url, legacySheetLiteral_(gps),
-      'pending', est, 0, '', '', '', new Date(), type, legacySheetLiteral_(eventName)]);
+    t.sheet.appendRow([id, sid, runLiteral_(date), km, min, pace, source, up.url, runLiteral_(gps),
+      'pending', est, 0, '', '', '', new Date(), type, runLiteral_(eventName)]);
     SpreadsheetApp.flush();
+    lock.releaseLock();
+    runNotifyTelegram_('🏃 มีรายการวิ่งรอตรวจ (หมวด 10)\n' + (type === 'event' ? '10.2 งานวิ่ง: ' + eventName : '10.1 วิ่งส่วนตัว') +
+      '\nรหัส ' + sid + ' · ' + date + ' · ' + km + ' กม. · เพซ ' + pace + ' นาที/กม.\nประมาณ ' + est + ' ชม. — ตรวจที่หน้า "ตรวจการวิ่ง & สมรรถภาพ"');
     return { status: 'success', id: id, estimatedHours: est, pace: pace, type: type };
   } finally {
-    lock.releaseLock();
+    try { lock.releaseLock(); } catch (_) {}
   }
 }
 
@@ -262,11 +332,15 @@ function runReview_(data) {
     }
     const row = idx + 1;
     t.sheet.getRange(row, 10, 1, 6).setValues([[decision === 'approve' ? 'approved' : 'rejected', run.estimatedHours, hours,
-      reviewer, new Date(), legacySheetLiteral_([String(data.note || '').trim(), capNote].filter(String).join(' | ').slice(0, 500))]]);
+      reviewer, new Date(), runLiteral_([String(data.note || '').trim(), capNote].filter(String).join(' | ').slice(0, 500))]]);
     SpreadsheetApp.flush();
+    lock.releaseLock();
+    runNotifyStudentLine_(run.studentId, decision === 'approve'
+      ? '🏃 ผลตรวจการวิ่ง (หมวด 10)\n✅ อนุมัติ ' + run.distanceKm + ' กม. วันที่ ' + run.date + '\nได้ ' + hours + ' ชม.' + (capNote ? ' (' + capNote + ')' : '') + '\nค่าพลังและเลเวลตัวละครอัปเดตแล้ว เปิดดูได้ที่เมนู "วิ่งเพื่อสุขภาพ"'
+      : '🏃 ผลตรวจการวิ่ง (หมวด 10)\n❌ ไม่อนุมัติ ' + run.distanceKm + ' กม. วันที่ ' + run.date + '\nเหตุผล: ' + String(data.note || '').slice(0, 200) + '\nแก้ไขแล้วส่งใหม่ได้');
     return { status: 'success', runId: run.id, decision: decision, approvedHours: hours, capNote: capNote, studentId: run.studentId };
   } finally {
-    lock.releaseLock();
+    try { lock.releaseLock(); } catch (_) {}
   }
 }
 
@@ -282,6 +356,6 @@ function fitnessSave_(rec) {
   if (!recorder) return { status: 'error', code: 'recorder_required' };
   const sh = runSheet_(RUN_SHEETS.FITNESS, FITNESS_HEADERS);
   const id = 'fit_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-  sh.appendRow([id, sid, legacySheetLiteral_(date), runSemesterOf_(date, runSettings_()), run, push, sit, recorder, new Date()]);
+  sh.appendRow([id, sid, runLiteral_(date), runSemesterOf_(date, runSettings_()), run, push, sit, recorder, new Date()]);
   return { status: 'success', id: id };
 }

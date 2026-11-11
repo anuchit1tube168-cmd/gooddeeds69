@@ -136,3 +136,46 @@ test('submit validates pace, evidence, event name and duplicates', () => {
   const ok = sub(base); assert.equal(ok.status, 'success'); assert.equal(ok.estimatedHours, 0.5);
   assert.equal(sub(base).code, 'duplicate_run');
 });
+
+test('live Apps Script mode: key from RunKey.js, own Drive upload, notifications after persistence', () => {
+  const sheets = {};
+  const fetched = [];
+  const mk = (values) => ({
+    values,
+    getDataRange() { return { getValues: () => this.values.map((r) => r.slice()) }; },
+    getRange(r, c, nr = 1, nc = 1) { const sh = this; return {
+      getValues: () => sh.values.slice(r - 1, r - 1 + nr).map((row) => row.slice(c - 1, c - 1 + nc)),
+      setValues: (v) => v.forEach((row, i) => row.forEach((x, j) => { (sh.values[r - 1 + i] ||= [])[c - 1 + j] = x; })),
+      clearContent() {}, setFontWeight() { return this; }, setBackground() { return this; }, setFontColor() { return this; } }; },
+    appendRow(r) { this.values.push(r); }, getLastRow() { return this.values.length; }, setFrozenRows() {},
+  });
+  const folder = { getFoldersByName: () => ({ hasNext: () => false }), createFolder: () => folder,
+    createFile: () => ({ setSharing() {}, getUrl: () => 'https://drive.example/private' }) };
+  const LINE_UID = 'U' + 'a'.repeat(32); // สมมติ
+  const ctx = {
+    RUN_GATEWAY_KEY_LOCAL: 'local-key', ROOT_FOLDER_ID: 'root',
+    PropertiesService: { getScriptProperties: () => ({ getProperty: (k) => ({ TELEGRAM_BOT_TOKEN: 't', TELEGRAM_CHAT_ID: 'c', LINE_CHANNEL_ACCESS_TOKEN: 'l' })[k] || null }) },
+    LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
+    SpreadsheetApp: { flush() {}, getActiveSpreadsheet: () => ({ getSheetByName: (n) => sheets[n] || null, insertSheet: (n) => (sheets[n] = mk([])) }) },
+    Utilities: { formatDate: (d) => d.toISOString().slice(0, 10), newBlob: () => ({}), base64Decode: () => [] },
+    DriveApp: { getFolderById: () => folder, Access: {}, Permission: {} },
+    UrlFetchApp: { fetch: (url, opt) => { fetched.push({ url, body: JSON.parse(opt.payload) }); } },
+  };
+  vm.createContext(ctx);
+  vm.runInContext(fs.readFileSync(path.join(__dirname, '../backend/RunTracker.gs'), 'utf8'), ctx);
+  const main = Array.from({ length: 2 }, () => new Array(22).fill(''));
+  main[1][1] = SYNTH_SID; main[1][19] = LINE_UID;
+  sheets.Main_2569 = mk(main);
+  const today = new Date().toISOString().slice(0, 10);
+  assert.equal(ctx.runTrackerHandle_({ action: 'run_list', gatewayKey: 'wrong' }).code, 'RUN_GATEWAY_DENIED');
+  const sub = ctx.runTrackerHandle_({ action: 'run_submit', gatewayKey: 'local-key',
+    run: { studentId: SYNTH_SID, date: today, distanceKm: 10, durationMin: 60, imageData: 'data:image/jpeg;base64,AA' } });
+  assert.equal(sub.status, 'success', JSON.stringify(sub));
+  assert.equal(fetched.length, 1); assert.match(fetched[0].url, /api\.telegram\.org/);
+  assert.equal(sheets.Runs_2569.values.length, 2); // บันทึกก่อนแจ้งเตือน
+  const rev = ctx.runTrackerHandle_({ action: 'run_review', gatewayKey: 'local-key', runId: sub.id, decision: 'approve', reviewer: 'T' });
+  assert.equal(rev.status, 'success');
+  assert.equal(fetched.length, 2); assert.match(fetched[1].url, /api\.line\.me/); assert.equal(fetched[1].body.to, LINE_UID);
+  // สูตรในเซลล์ถูกกันไว้
+  assert.equal(ctx.runLiteral_('=IMPORTXML("x")'), "'=IMPORTXML(\"x\")");
+});
