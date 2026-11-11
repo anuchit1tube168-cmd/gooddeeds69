@@ -355,6 +355,8 @@
                 }
                 if (urlParams.has('redirect') && !isLogout && !isStaffTab) {
                     document.documentElement.classList.add('liff-pending-auth');
+                    // กันค้าง: ถ้า LIFF SDK โหลดไม่ขึ้นหรือเน็ตช้า ให้แสดงฟอร์มเข้าสู่ระบบภายใน 8 วินาที
+                    setTimeout(function () { document.documentElement.classList.remove('liff-pending-auth'); }, 8000);
                 }
             } catch(e) {}
         })();
@@ -516,7 +518,7 @@
     <script src="app.js?v=20261107-quick-login-v2"></script>
     <script src="gateway-config.js?v=20260919-login-guard"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
-  <script src="liff-sdk.js?v=20260908"></script>
+  <script src="liff-sdk.js?v=20261111-unstick"></script>
     <script>
         // Tab switch
         function switchTab(tab) {

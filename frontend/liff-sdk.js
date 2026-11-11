@@ -68,9 +68,13 @@ const LiffHelper = {
                 }
             }
             this.updateProfileUI();
+            // ไม่ว่าผลจะเป็นอย่างไร (ไม่ได้ login LINE, เคยกดออกจากระบบ, ยังไม่ผูกบัญชี, API ผิดพลาด)
+            // ต้องเอาหน้าจอ "กำลังเชื่อมต่อระบบ LINE..." ออก ให้เห็นฟอร์มเข้าสู่ระบบ — ถ้ากำลังเปลี่ยนหน้าอยู่ก็ไม่มีผล
+            document.documentElement.classList.remove('liff-pending-auth');
             return true;
         } catch (err) {
             console.warn('ℹ️ LIFF Init Note:', err);
+            document.documentElement.classList.remove('liff-pending-auth');
             return false;
         }
     },
