@@ -13,10 +13,15 @@ python3 scripts/strip_public_student_pii.py || fail "ตัดข้อมูล
 line "2/5 ทดสอบระบบ"
 node scripts/check-syntax.cjs || fail "syntax ไม่ผ่าน"
 node --test tests/*.test.cjs >/tmp/gd_test.log 2>&1 || { tail -30 /tmp/gd_test.log; fail "test ไม่ผ่าน"; }
-grep -E "^# (pass|fail)" /tmp/gd_test.log
+grep -E "(^# |ℹ )(pass|fail) " /tmp/gd_test.log
 
 line "3/5 push ขึ้น GitHub (main)"
-git push origin main || fail "push ไม่สำเร็จ (ตรวจการ login GitHub)"
+# ไม่ถามรหัสผ่านใน Terminal: ถ้ายังไม่ได้ login GitHub ให้ข้ามไป deploy ต่อ (push ทีหลังได้)
+if GIT_TERMINAL_PROMPT=0 git push origin main; then
+  echo "✅ push GitHub แล้ว"
+else
+  echo "⚠️  ข้าม push GitHub (เครื่องนี้ยังไม่ได้ login GitHub) — deploy Cloudflare ต่อ"
+fi
 
 line "4/5 ตรวจ secret ใน Cloudflare"
 SECRETS="$(npx --yes wrangler pages secret list --project-name "$PROJECT" 2>/dev/null || true)"
