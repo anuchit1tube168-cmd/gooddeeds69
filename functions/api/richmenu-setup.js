@@ -14,10 +14,12 @@ function safeEqual(a, b) {
 }
 async function lineToken(env) {
   if (env.LINE_CHANNEL_ACCESS_TOKEN) return env.LINE_CHANNEL_ACCESS_TOKEN;
-  if (!env.LINE_CHANNEL_ID || !env.LINE_CHANNEL_SECRET) return '';
+  // Channel ID ไม่ใช่ความลับ (ใช้ค่าเดียวกับ approve_deed.js); Channel Secret ต้องมาจาก Cloudflare secret เท่านั้น
+  const channelId = env.LINE_CHANNEL_ID || '1654464250';
+  if (!env.LINE_CHANNEL_SECRET) return '';
   const r = await fetch('https://api.line.me/v2/oauth/accessToken', { method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: env.LINE_CHANNEL_ID, client_secret: env.LINE_CHANNEL_SECRET }) });
+    body: new URLSearchParams({ grant_type: 'client_credentials', client_id: channelId, client_secret: env.LINE_CHANNEL_SECRET }) });
   return r.ok ? ((await r.json()).access_token || '') : '';
 }
 async function line(token, method, path, body, host = 'https://api.line.me') {

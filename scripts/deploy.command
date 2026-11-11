@@ -29,10 +29,11 @@ SECRETS="$(npx --yes wrangler pages secret list --project-name "$PROJECT" 2>/dev
 for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY; do
   if echo "$SECRETS" | grep -q "$k"; then echo "✅ $k"; else echo "⚠️  ยังไม่มี $k"; fi
 done
-if echo "$SECRETS" | grep -q LINE_CHANNEL_ACCESS_TOKEN || { echo "$SECRETS" | grep -q LINE_CHANNEL_ID && echo "$SECRETS" | grep -q LINE_CHANNEL_SECRET; }; then
+if echo "$SECRETS" | grep -q -e LINE_CHANNEL_ACCESS_TOKEN -e LINE_CHANNEL_SECRET; then
   echo "✅ LINE (token หรือ channel id + secret)"
 else
-  echo "⚠️  ยังไม่มี LINE token — ตั้งด้วย: npx wrangler pages secret put LINE_CHANNEL_SECRET --project-name $PROJECT"
+  echo "⚠️  ยังไม่มี LINE_CHANNEL_SECRET ใน Cloudflare — วางค่าความลับแชนแนลเอง (ระบบจะไม่แสดงสิ่งที่พิมพ์):"
+  npx --yes wrangler pages secret put LINE_CHANNEL_SECRET --project-name "$PROJECT" || echo "⚠️  ข้ามการตั้ง LINE secret"
 fi
 KEYFILE="data/private/run_keys_DO_NOT_SHARE.txt"
 if ! echo "$SECRETS" | grep -q RUN_GATEWAY_KEY || ! echo "$SECRETS" | grep -q RUN_ADMIN_KEY; then
