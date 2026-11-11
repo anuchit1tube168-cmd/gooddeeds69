@@ -5,7 +5,7 @@ set -u
 cd "$(dirname "$0")/.." || exit 1
 PROJECT="rtafnc-gooddeeds"
 line() { printf '\n==== %s ====\n' "$1"; }
-fail() { printf '\n❌ %s\n' "$1"; read -r -p "กด Enter เพื่อปิด"; exit 1; }
+fail() { printf '\n❌ %s\n' "$1"; exit 1; }
 
 line "1/5 ตัดข้อมูลส่วนตัวออกจากไฟล์ที่ขึ้นเว็บ"
 python3 scripts/strip_public_student_pii.py || fail "ตัดข้อมูลส่วนตัวไม่สำเร็จ — หยุด deploy"
@@ -25,8 +25,8 @@ for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_K
 done
 KEYFILE="data/private/run_keys_DO_NOT_SHARE.txt"
 if ! echo "$SECRETS" | grep -q RUN_GATEWAY_KEY || ! echo "$SECRETS" | grep -q RUN_ADMIN_KEY; then
-  read -r -p "สร้าง RUN_ADMIN_KEY / RUN_GATEWAY_KEY ใหม่ให้อัตโนมัติไหม? (y/N) " ans
-  if [ "${ans:-N}" = "y" ]; then
+  # ยังไม่มีรหัสระบบวิ่ง → สุ่มสร้างให้อัตโนมัติ (ไม่ถามเพื่อให้รันจบได้ในครั้งเดียว)
+  if true; then
     mkdir -p data/private; umask 077
     ADMIN="$(openssl rand -hex 16)"; GATE="$(openssl rand -hex 24)"
     printf '%s' "$ADMIN" | npx --yes wrangler pages secret put RUN_ADMIN_KEY --project-name "$PROJECT" >/dev/null || fail "ตั้ง RUN_ADMIN_KEY ไม่สำเร็จ"
@@ -40,4 +40,3 @@ line "5/5 deploy Cloudflare Pages"
 npx --yes wrangler pages deploy frontend --project-name "$PROJECT" --branch main --commit-dirty=true || fail "deploy ไม่สำเร็จ"
 
 printf '\n✅ เสร็จแล้ว: https://%s.pages.dev\n' "$PROJECT"
-read -r -p "กด Enter เพื่อปิด"
