@@ -248,7 +248,7 @@ body.theme-day .year69-bar-track { background: rgba(0, 0, 0, .08) !important; }
 .manual-hero :is(p, .subtitle) { color: #c9d4e6 !important; }
 
 /* ---------- Contrast guard (ui-adapt.js): ข้อความที่สีกลืนพื้นจะถูกสลับสีให้อ่านได้ ---------- */
-.cg-fix { color: var(--cg-color) !important; -webkit-text-fill-color: var(--cg-color) !important; }
+/* .cg-fix = ข้อความที่ ui-adapt.js สลับสีให้ (ตั้งเป็น inline !important) */
 
 /* ---------- แท็บหน้าคู่มือ (manual) ให้ตามธีม ---------- */
 .m-tab-btn { background: var(--mac-control) !important; border: 1px solid var(--mac-hairline) !important; color: var(--mac-text-2) !important; }
@@ -302,3 +302,5 @@ html:is(.in-line, .is-touch) :is(.m-tab-btn, .tab-btn).active { color: var(--mac
 html:is(.in-line, .is-touch) table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
 html:is(.in-line, .is-touch) .manual-hero { padding: 20px 18px !important; border-radius: 14px !important; }
 html:is(.in-line, .is-touch) .manual-hero h1 { font-size: 1.25rem !important; line-height: 1.35; }
+html:is(.in-line, .is-touch) .manual-hero::after { display: none !important; }
+html:is(.in-line, .is-touch) .user-pill > span { max-width: 26vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

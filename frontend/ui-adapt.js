@@ -88,7 +88,15 @@
     running = false;
     if (!document.body) return;
     var marked = document.querySelectorAll('.cg-fix');
-    for (var i = 0; i < marked.length; i++) { marked[i].classList.remove('cg-fix'); marked[i].style.removeProperty('--cg-color'); }
+    // คืนค่าสีเดิมก่อนวัดใหม่ (inline !important ชนะทุกกฎ CSS จึงต้องเก็บค่าเดิมไว้คืน)
+    for (var i = 0; i < marked.length; i++) {
+      var m = marked[i];
+      m.classList.remove('cg-fix');
+      m.style.removeProperty('color'); m.style.removeProperty('-webkit-text-fill-color');
+      var o = m.getAttribute('data-cg-orig');
+      if (o) m.style.setProperty('color', o);
+      m.removeAttribute('data-cg-orig');
+    }
     var cache = new Map();
     var els = document.body.getElementsByTagName('*');
     var limit = Math.min(els.length, 6000); // กันหน้าใหญ่ผิดปกติ
@@ -101,7 +109,8 @@
       // ข้อความไล่สี (background-clip:text) ตัดสินไม่ได้ ข้าม
       if ((cs.webkitBackgroundClip || cs.backgroundClip) === 'text') continue;
       var fg = parse(cs.color);
-      if (!fg || fg.a < 0.1) continue;
+      // ตัวอักษรจางโดยตั้งใจ (ลายน้ำ/ตกแต่ง) ไม่แตะ
+      if (!fg || fg.a < 0.35 || parseFloat(cs.opacity) < 0.5) continue;
       var bg = backdrop(el, cache);
       var fgSolid = fg.a < 1 ? mix(fg, bg) : fg;
       if (ratio(fgSolid, bg) >= MIN_RATIO) continue;
@@ -109,7 +118,13 @@
       fixes.push([el, dark ? '#1d1d1f' : '#f2f5fb']);
     }
     // เขียนทีเดียวหลังอ่านครบ เลี่ยง layout thrash
-    fixes.forEach(function (f) { f[0].style.setProperty('--cg-color', f[1]); f[0].classList.add('cg-fix'); });
+    fixes.forEach(function (f) {
+      var e = f[0];
+      if (e.style.color) e.setAttribute('data-cg-orig', e.style.color);
+      e.style.setProperty('color', f[1], 'important');
+      e.style.setProperty('-webkit-text-fill-color', f[1], 'important');
+      e.classList.add('cg-fix');
+    });
   }
   function schedule(delay) {
     if (running) return;
