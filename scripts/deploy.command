@@ -26,9 +26,14 @@ fi
 
 line "4/6 ตรวจ secret ใน Cloudflare"
 SECRETS="$(npx --yes wrangler pages secret list --project-name "$PROJECT" 2>/dev/null || true)"
-for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY LINE_CHANNEL_ACCESS_TOKEN; do
+for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY; do
   if echo "$SECRETS" | grep -q "$k"; then echo "✅ $k"; else echo "⚠️  ยังไม่มี $k"; fi
 done
+if echo "$SECRETS" | grep -q LINE_CHANNEL_ACCESS_TOKEN || { echo "$SECRETS" | grep -q LINE_CHANNEL_ID && echo "$SECRETS" | grep -q LINE_CHANNEL_SECRET; }; then
+  echo "✅ LINE (token หรือ channel id + secret)"
+else
+  echo "⚠️  ยังไม่มี LINE token — ตั้งด้วย: npx wrangler pages secret put LINE_CHANNEL_SECRET --project-name $PROJECT"
+fi
 KEYFILE="data/private/run_keys_DO_NOT_SHARE.txt"
 if ! echo "$SECRETS" | grep -q RUN_GATEWAY_KEY || ! echo "$SECRETS" | grep -q RUN_ADMIN_KEY; then
   # ยังไม่มีรหัสระบบวิ่ง → สุ่มสร้างให้อัตโนมัติ (ไม่ถามเพื่อให้รันจบได้ในครั้งเดียว)
