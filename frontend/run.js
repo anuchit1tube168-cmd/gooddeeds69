@@ -285,5 +285,13 @@
     return c.toDataURL('image/jpeg', 0.85);
   }
 
-  load();
+  // ลิงก์จากเมนู LINE: ?mode=gps เปิดโหมด GPS, ?focus=power|rules เลื่อนไปส่วนนั้น
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('mode') === 'gps') { const b = document.querySelector('.rn-seg button[data-mode=gps]'); if (b) b.click(); }
+  load().then(() => {
+    const f = qs.get('focus') || (qs.get('mode') === 'gps' ? 'submit-card' : '');
+    if (f === 'rules') $('rules-box').open = true;
+    const el = $(f === 'rules' ? 'rules-box' : f);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
 })();

@@ -175,5 +175,22 @@
     catch (x) { err.textContent = 'บันทึกไม่สำเร็จ: ' + x.message; err.hidden = false; }
   });
 
+  // ---------- LINE Rich Menu ----------
+  async function richmenu(method) {
+    const msg = $('rm-msg');
+    msg.textContent = method === 'POST' ? 'กำลังติดตั้ง…' : 'กำลังตรวจ…';
+    try {
+      const r = await fetch((App.getApiBaseUrl ? App.getApiBaseUrl() : '') + '/api/richmenu-setup', { method, cache: 'no-store',
+        headers: { 'X-Admin-Key': sessionStorage.getItem(KEY) || '' } });
+      const d = await r.json();
+      if (d.status !== 'success') throw new Error(d.code || r.status);
+      msg.textContent = method === 'POST' ? '✅ ติดตั้งแล้ว เปิด LINE OA เพื่อดูเมนูใหม่' : `ติดตั้งอยู่ ${d.installed.length} แท็บ`;
+    } catch (e) {
+      msg.textContent = '❌ ' + ({ LINE_TOKEN_MISSING: 'ยังไม่มี LINE token ใน Cloudflare', ADMIN_KEY_REQUIRED: 'รหัสผู้ตรวจไม่ถูกต้อง' }[e.message] || e.message);
+    }
+  }
+  $('rm-install').addEventListener('click', () => { if (confirm('ติดตั้งเมนู LINE ชุดใหม่ให้ผู้ใช้ทุกคน?')) richmenu('POST'); });
+  $('rm-status').addEventListener('click', () => richmenu('GET'));
+
   load();
 })();
