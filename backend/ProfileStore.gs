@@ -78,6 +78,7 @@ function profileSet_(data) {
 
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
+  let result, oldEmail = '', changed = [];
   try {
     const sh = runSheet_(PROFILE_SHEET, PROFILE_HEADERS);
     let row = profileFind_(sh, sid);
@@ -88,6 +89,8 @@ function profileSet_(data) {
     } else {
       cur = sh.getRange(row, 1, 1, PROFILE_HEADERS.length).getValues()[0];
     }
+    oldEmail = String(cur[7] || '').replace(/^'/, '').trim();
+    changed = keys.filter(function (k) { return String(cur[PROFILE_FIELDS[k][0]] || '').replace(/^'/, '') !== clean[k]; });
     keys.forEach(function (k) { cur[PROFILE_FIELDS[k][0]] = runLiteral_(clean[k]); });
     cur[9] = new Date();
     cur[10] = runLiteral_(String(data.by || 'student').slice(0, 40));
@@ -100,10 +103,36 @@ function profileSet_(data) {
     }
     sh.getRange(row, 1).setNumberFormat('@');
     sh.getRange(row, 3).setNumberFormat('@');
-    return { status: 'success', profile: profileRowToObj_(sh.getRange(row, 1, 1, PROFILE_HEADERS.length).getValues()[0]) };
+    result = { status: 'success', profile: profileRowToObj_(sh.getRange(row, 1, 1, PROFILE_HEADERS.length).getValues()[0]) };
   } finally {
     lock.releaseLock();
   }
+  if (changed.length && data.silent !== true) profileNotifyChange_(sid, changed, oldEmail, data.by);
+  return result;
+}
+
+const PROFILE_FIELD_LABELS = { nickname: 'ชื่อเล่น', dob: 'วันเกิด', province: 'จังหวัด', blood: 'กรุ๊ปเลือด', hobby: 'งานอดิเรก',
+  bio: 'แนะนำตัว', email: 'อีเมล', telegramChatId: 'Telegram' };
+
+// แจ้งเจ้าของทุกครั้งที่โปรไฟล์ถูกแก้ (กันคนอื่นแอบแก้) — ถ้าเปลี่ยนอีเมล ส่งไปอีเมลเดิมด้วย
+function profileNotifyChange_(sid, changed, oldEmail, by) {
+  if (typeof notifyStudent_ !== 'function') return;
+  const labels = changed.map(function (k) { return PROFILE_FIELD_LABELS[k] || k; }).join(', ');
+  const when = Utilities.formatDate(new Date(), 'Asia/Bangkok', 'd/M/yyyy HH:mm');
+  const msg = {
+    title: '📝 ข้อมูลส่วนตัวของคุณถูกแก้ไข',
+    lines: ['รายการที่แก้: ' + labels, 'เวลา: ' + when + (by === 'admin' ? ' (แก้โดยผู้ตรวจ)' : ''),
+      'ถ้าไม่ได้แก้เอง กรุณาแจ้งอาจารย์ผู้ดูแลระบบทันที'],
+    link: '/profile.html', tone: 'info', key: 'profile_' + changed.join('_') + '_' + when
+  };
+  notifyStudent_(sid, msg);
+  try {
+    if (changed.indexOf('email') >= 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(oldEmail) && MailApp.getRemainingDailyQuota() > 10) {
+      MailApp.sendEmail({ to: oldEmail, subject: '[ความดี วพอ.] อีเมลรับแจ้งเตือนของบัญชี ' + sid + ' ถูกเปลี่ยน',
+        body: 'อีเมลรับแจ้งเตือนของรหัส ' + sid + ' ถูกเปลี่ยนเมื่อ ' + when + '\nถ้าไม่ได้เปลี่ยนเอง กรุณาแจ้งอาจารย์ผู้ดูแลระบบ',
+        name: 'ระบบบันทึกความดี วพอ.พอ.' });
+    }
+  } catch (e) { Logger.log('profile old-email notice ' + e.message); }
 }
 
 // ผู้ตรวจแก้ข้อมูลหลักใน Main_2569 (ยศ C, ชื่อ D, นามสกุล E, รุ่น F) + ข้อมูลติดต่อใน Profiles_2569

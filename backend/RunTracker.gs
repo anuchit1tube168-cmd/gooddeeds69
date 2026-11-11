@@ -276,6 +276,14 @@ function runSubmit_(run) {
     lock.releaseLock();
     runNotifyTelegram_('🏃 มีรายการวิ่งรอตรวจ (หมวด 10)\n' + (type === 'event' ? '10.2 งานวิ่ง: ' + eventName : '10.1 วิ่งส่วนตัว') +
       '\nรหัส ' + sid + ' · ' + date + ' · ' + km + ' กม. · เพซ ' + pace + ' นาที/กม.\nประมาณ ' + est + ' ชม. — ตรวจที่หน้า "ตรวจการวิ่ง & สมรรถภาพ"');
+    if (typeof notifyStudent_ === 'function') {
+      notifyStudent_(sid, {
+        title: '📥 ได้รับผลวิ่งแล้ว — รอตรวจ (หมวด 10)',
+        lines: [(type === 'event' ? '10.2 งานวิ่ง: ' + eventName : '10.1 วิ่งส่วนตัว') + ' · ' + km + ' กม. · เพซ ' + pace + ' นาที/กม.',
+          'วันที่วิ่ง: ' + date + ' · ประมาณ ' + est + ' ชม. (ยืนยันหลังผู้ตรวจอนุมัติ)'],
+        link: '/run.html', tone: 'info', key: 'run_sub_' + id
+      });
+    }
     return { status: 'success', id: id, estimatedHours: est, pace: pace, type: type };
   } finally {
     try { lock.releaseLock(); } catch (_) {}
@@ -338,9 +346,19 @@ function runReview_(data) {
       reviewer, new Date(), runLiteral_([String(data.note || '').trim(), capNote].filter(String).join(' | ').slice(0, 500))]]);
     SpreadsheetApp.flush();
     lock.releaseLock();
-    runNotifyStudentLine_(run.studentId, decision === 'approve'
-      ? '🏃 ผลตรวจการวิ่ง (หมวด 10)\n✅ อนุมัติ ' + run.distanceKm + ' กม. วันที่ ' + run.date + '\nได้ ' + hours + ' ชม.' + (capNote ? ' (' + capNote + ')' : '') + '\nค่าพลังและเลเวลตัวละครอัปเดตแล้ว เปิดดูได้ที่เมนู "วิ่งเพื่อสุขภาพ"'
-      : '🏃 ผลตรวจการวิ่ง (หมวด 10)\n❌ ไม่อนุมัติ ' + run.distanceKm + ' กม. วันที่ ' + run.date + '\nเหตุผล: ' + String(data.note || '').slice(0, 200) + '\nแก้ไขแล้วส่งใหม่ได้');
+    const okMsg = decision === 'approve';
+    if (typeof notifyStudent_ === 'function') {
+      notifyStudent_(run.studentId, {
+        title: okMsg ? '🏃 ผลวิ่งได้รับการอนุมัติ (หมวด 10)' : '🏃 ผลวิ่งไม่ได้รับการอนุมัติ (หมวด 10)',
+        lines: okMsg
+          ? ['✅ ' + run.distanceKm + ' กม. วันที่ ' + run.date + ' → ได้ ' + hours + ' ชม.' + (capNote ? ' (' + capNote + ')' : ''), 'ค่าพลังและเลเวลตัวละครอัปเดตแล้ว']
+          : ['❌ ' + run.distanceKm + ' กม. วันที่ ' + run.date, 'เหตุผล: ' + String(data.note || '-').slice(0, 200), 'แก้ไขแล้วส่งใหม่ได้'],
+        link: '/run.html', tone: okMsg ? 'ok' : 'warn', key: 'run_rev_' + run.id
+      });
+      if (okMsg && hours > 0 && typeof notifyMilestone_ === 'function') notifyMilestone_(run.studentId);
+    } else {
+      runNotifyStudentLine_(run.studentId, (okMsg ? '✅ อนุมัติผลวิ่ง ' : '❌ ไม่อนุมัติผลวิ่ง ') + run.distanceKm + ' กม. วันที่ ' + run.date);
+    }
     return { status: 'success', runId: run.id, decision: decision, approvedHours: hours, capNote: capNote, studentId: run.studentId };
   } finally {
     try { lock.releaseLock(); } catch (_) {}

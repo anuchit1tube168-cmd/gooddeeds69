@@ -19,6 +19,29 @@ HOOK = """  // หมวด 10 วิ่งเพื่อสุขภาพ (Ru
 
 """
 
+NOTIFY_SUBMIT_MARK = "notifyDeedSubmitted_("
+NOTIFY_REVIEW_MARK = "notifyDeedReviewedExtra_("
+
+def add_notify_hooks(s):
+    """แทรกการแจ้งนักเรียน (LINE + อีเมล) ใน Code.js จริง — แทรกครั้งเดียว ถ้าหาจุดไม่เจอให้หยุด"""
+    if NOTIFY_SUBMIT_MARK not in s:
+        m = re.search(r"\n(\s*)return ContentService\.createTextOutput\(JSON\.stringify\(\{\s*\n\s*status: 'success',\s*\n\s*message: skipNotification \?", s)
+        if not m:
+            sys.exit("หาจุดจบ submit_deed ไม่เจอ (โค้ดจริงเปลี่ยน) — หยุดเพื่อความปลอดภัย")
+        ind = m.group(1)
+        hook = (f"\n{ind}// แจ้งนักเรียนว่าได้รับรายการแล้ว (StudentNotify.js)\n"
+                f"{ind}if (!skipNotification) {{ try {{ if (typeof notifyDeedSubmitted_ === 'function') notifyDeedSubmitted_(studentId, catId, hours, actDate); }} catch (ne) {{}} }}\n")
+        s = s[:m.start()] + hook + s[m.start():]
+        print("✅ แทรกแจ้งเตือนตอนส่งความดี")
+    if NOTIFY_REVIEW_MARK not in s:
+        m = re.search(r"function notifyStudentViaLine\(ss, studentId, isApprove, deed\) \{\n", s)
+        if not m:
+            sys.exit("หา notifyStudentViaLine ไม่เจอ (โค้ดจริงเปลี่ยน) — หยุดเพื่อความปลอดภัย")
+        hook = "  try { if (typeof notifyDeedReviewedExtra_ === 'function') notifyDeedReviewedExtra_(studentId, isApprove, deed); } catch (ne) {}\n"
+        s = s[:m.end()] + hook + s[m.end():]
+        print("✅ แทรกอีเมล/ครบ 50 ชม. ตอนอนุมัติความดี")
+    return s
+
 def main():
     if len(sys.argv) != 2:
         sys.exit("ต้องระบุโฟลเดอร์ที่ clasp pull มา")
@@ -44,6 +67,10 @@ def main():
             print("✅ มี hook หมวด 10 อยู่แล้ว")
     shutil.copyfile(ROOT / "backend" / "RunTracker.gs", d / "RunTracker.js")
     shutil.copyfile(ROOT / "backend" / "ProfileStore.gs", d / "ProfileStore.js")
+    shutil.copyfile(ROOT / "backend" / "StudentNotify.gs", d / "StudentNotify.js")
+    s = code.read_text(encoding="utf-8")
+    s = add_notify_hooks(s)
+    code.write_text(s, encoding="utf-8")
     keyfile = ROOT / "data" / "private" / "run_keys_DO_NOT_SHARE.txt"
     key = ""
     if keyfile.exists():
