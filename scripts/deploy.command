@@ -9,6 +9,7 @@ fail() { printf '\n❌ %s\n' "$1"; exit 1; }
 
 line "1/6 ตัดข้อมูลส่วนตัวออกจากไฟล์ที่ขึ้นเว็บ"
 python3 scripts/strip_public_student_pii.py || fail "ตัดข้อมูลส่วนตัวไม่สำเร็จ — หยุด deploy"
+python3 scripts/build_sop_html.py || fail "สร้างหน้า SOP ไม่สำเร็จ"
 
 line "2/6 ทดสอบระบบ"
 node scripts/check-syntax.cjs || fail "syntax ไม่ผ่าน"
@@ -25,7 +26,7 @@ fi
 
 line "4/6 ตรวจ secret ใน Cloudflare"
 SECRETS="$(npx --yes wrangler pages secret list --project-name "$PROJECT" 2>/dev/null || true)"
-for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY; do
+for k in GAS_URL TELEGRAM_BOT_TOKEN TELEGRAM_CHAT_ID RUN_ADMIN_KEY RUN_GATEWAY_KEY LINE_CHANNEL_ACCESS_TOKEN; do
   if echo "$SECRETS" | grep -q "$k"; then echo "✅ $k"; else echo "⚠️  ยังไม่มี $k"; fi
 done
 KEYFILE="data/private/run_keys_DO_NOT_SHARE.txt"
@@ -61,5 +62,25 @@ fi
 
 line "6/6 deploy Cloudflare Pages"
 npx --yes wrangler pages deploy frontend --project-name "$PROJECT" --branch main --commit-dirty=true || fail "deploy ไม่สำเร็จ"
+
+line "เมนู LINE (Rich Menu แบบแท็บ)"
+# ติดตั้งเฉพาะเมื่อภาพ/นิยามเมนูเปลี่ยน — รอบแรกติดตั้งเสมอ
+RM_HASH="$(cat frontend/richmenu/*.jpg functions/api/_richmenu_def.js | shasum | cut -d' ' -f1)"
+RM_STAMP="data/private/richmenu_installed.sha"
+ADMIN_KEY="$(grep '^RUN_ADMIN_KEY' "$KEYFILE" 2>/dev/null | cut -d= -f2-)"
+if [ -z "$ADMIN_KEY" ]; then
+  echo "⚠️  ข้ามเมนู LINE (ไม่พบ RUN_ADMIN_KEY ใน $KEYFILE)"
+elif [ "$(cat "$RM_STAMP" 2>/dev/null)" = "$RM_HASH" ]; then
+  echo "✅ เมนู LINE เป็นรุ่นล่าสุดอยู่แล้ว"
+else
+  sleep 8   # รอ deployment ใหม่กระจายถึง edge
+  RESP="$(curl -s -X POST -H "X-Admin-Key: $ADMIN_KEY" "https://$PROJECT.pages.dev/api/richmenu-setup")"
+  if echo "$RESP" | grep -q '"status":"success"'; then
+    echo "$RM_HASH" > "$RM_STAMP"; echo "✅ ติดตั้งเมนู LINE 3 แท็บแล้ว"
+  else
+    echo "⚠️  ติดตั้งเมนู LINE ไม่สำเร็จ: $(echo "$RESP" | grep -o '"code":"[A-Z_]*"')"
+    echo "    ถ้าเป็น LINE_TOKEN_MISSING ให้เพิ่ม LINE_CHANNEL_ACCESS_TOKEN ใน Cloudflare แล้วรันใหม่"
+  fi
+fi
 
 printf '\n✅ เสร็จแล้ว: https://%s.pages.dev\n' "$PROJECT"

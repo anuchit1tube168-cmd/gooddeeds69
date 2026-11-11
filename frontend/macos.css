@@ -228,3 +228,21 @@ body.theme-day .year69-progress-widget { background: rgba(255, 255, 255, .7) !im
 body.theme-day .year69-progress-widget :is(.year69-label, span, div) { color: #3c4150 !important; }
 body.theme-day .year69-progress-widget .year69-val, body.theme-day .year69-progress-widget [id$="-text"] { color: #8a6a0f !important; }
 body.theme-day .year69-bar-track { background: rgba(0, 0, 0, .08) !important; }
+
+/* ---------- หน้า manual: แถบบน .navbar (เดิมไม่มี CSS ทำให้ตราขยายเต็มจอ) ---------- */
+.navbar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  min-height: 52px; padding: 6px 16px; background: var(--mac-bar); -webkit-backdrop-filter: var(--mac-blur); backdrop-filter: var(--mac-blur);
+  border-bottom: 1px solid var(--mac-hairline); }
+.navbar-left, .navbar-right, .navbar-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.navbar-logo { width: 34px !important; height: 34px !important; border-radius: 50%; object-fit: cover; flex: none; }
+.navbar-titles { display: flex; flex-direction: column; line-height: 1.2; min-width: 0; }
+.navbar-title { font-weight: 700; color: var(--mac-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.navbar-subtitle { font-size: .75rem; color: var(--mac-text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hamburger-btn { background: transparent; border: 0; color: var(--mac-text); font-size: 1.3rem; min-width: 40px; min-height: 40px; border-radius: 8px; cursor: pointer; }
+.hamburger-btn:hover { background: var(--mac-control); }
+.user-pill { display: flex; align-items: center; gap: 8px; }
+.user-avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; background: var(--mac-accent); color: var(--mac-on-accent); font-weight: 700; }
+@media (min-width: 900px) { .navbar { padding-left: 88px; } .navbar::before { content: ""; position: absolute; left: 20px; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: #ff5f57; box-shadow: 20px 0 0 #febc2e, 40px 0 0 #28c840; } }
+/* hero ของหน้า manual พื้นเข้มเสมอ → ตัวอักษรต้องสว่างทั้งสองธีม */
+.manual-hero, .manual-hero :is(h1, h2, h3, p, span, div) { color: #f2f5fb !important; }
+.manual-hero :is(p, .subtitle) { color: #c9d4e6 !important; }
