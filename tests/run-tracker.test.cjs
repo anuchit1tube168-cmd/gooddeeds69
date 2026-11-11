@@ -6,6 +6,7 @@ const vm = require('node:vm');
 const path = require('node:path');
 const S = require('../frontend/strength.js');
 
+const SYNTH_SID = '7000001'; // รหัสสมมติ ไม่ใช่รูปแบบรหัสจริง
 const TODAY = new Date('2026-11-11T12:00:00+07:00');
 const run = (o) => ({ status: 'approved', distanceKm: 5, durationMin: 30, date: '2026-11-10', approvedHours: 1, ...o });
 
@@ -63,11 +64,11 @@ function gasSandbox(rows, extraIds = []) {
   vm.createContext(ctx);
   vm.runInContext(fs.readFileSync(path.join(__dirname, '../backend/RunTracker.gs'), 'utf8'), ctx);
   sheets.Runs_2569 = mkSheet('Runs_2569', [vm.runInContext('RUN_HEADERS', ctx).slice(), ...rows]);
-  sheets.Main_2569 = mkSheet('Main_2569', [['no', 'id'], [1, '6900001'], ...extraIds.map((id, i) => [i + 2, id])]);
+  sheets.Main_2569 = mkSheet('Main_2569', [['no', 'id'], [1, '7000001'], ...extraIds.map((id, i) => [i + 2, id])]);
   return { ctx, sheets };
 }
 const row = (id, date, km, status, approved = 0, extra = {}) => {
-  const sid = extra.sid || '6900001', min = extra.min || km * 6;
+  const sid = extra.sid || '7000001', min = extra.min || km * 6;
   return [id, sid, date, km, min, Math.round((min / km) * 100) / 100, 'screenshot', 'u', '', status, 0, approved, '', '', '', new Date(), extra.type || 'personal', extra.event || ''];
 };
 const review = (ctx, runId) => ctx.runTrackerHandle_({ action: 'run_review', gatewayKey: 'k', runId, decision: 'approve', reviewer: 'T' });
@@ -99,10 +100,10 @@ test('10.1 semester cap 3 h and year-4 annual cap 4 h', () => {
   const prior = [1, 2, 3].map((d) => row('p' + d, `2026-11-0${d}`, 10, 'approved', 1));
   const { ctx } = gasSandbox([...prior, row('x', '2026-11-09', 10, 'pending')]);
   assert.equal(review(ctx, 'x').approvedHours, 0);
-  // ชั้นปี 4 (รุ่น 66): ภาค 1 ใช้ไป 3, ภาค 2 ใช้ได้อีกแค่ 1 ชม.
-  const y4 = { sid: '6600001' };
+  // ชั้นปี ≥ 4 (รหัสสมมติรุ่น 65): ภาค 1 ใช้ไป 3, ภาค 2 ใช้ได้อีกแค่ 1 ชม.
+  const y4 = { sid: '6500001' };
   const p4 = [1, 2, 3].map((d) => row('q' + d, `2026-11-0${d}`, 10, 'approved', 1, y4));
-  const { ctx: c4 } = gasSandbox([...p4, row('d1', '2026-12-05', 10, 'pending', 0, y4), row('d2', '2026-12-06', 10, 'pending', 0, y4)], ['6600001']);
+  const { ctx: c4 } = gasSandbox([...p4, row('d1', '2026-12-05', 10, 'pending', 0, y4), row('d2', '2026-12-06', 10, 'pending', 0, y4)], ['6500001']);
   assert.equal(review(c4, 'd1').approvedHours, 1);
   assert.equal(review(c4, 'd2').approvedHours, 0);
 });
@@ -126,7 +127,7 @@ test('reject needs a reason and a run cannot be reviewed twice', () => {
 test('submit validates pace, evidence, event name and duplicates', () => {
   const { ctx } = gasSandbox([]);
   const today = new Date().toISOString().slice(0, 10);
-  const base = { studentId: '6900001', date: today, distanceKm: 5, durationMin: 30, imageData: 'data:image/jpeg;base64,AA' };
+  const base = { studentId: SYNTH_SID, date: today, distanceKm: 5, durationMin: 30, imageData: 'data:image/jpeg;base64,AA' };
   const sub = (run) => ctx.runTrackerHandle_({ action: 'run_submit', gatewayKey: 'k', run });
   assert.equal(sub({ ...base, durationMin: 5 }).code, 'pace_out_of_range');
   assert.equal(sub({ ...base, imageData: '' }).code, 'evidence_required');
