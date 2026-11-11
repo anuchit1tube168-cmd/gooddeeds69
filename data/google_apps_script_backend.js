@@ -295,7 +295,7 @@ function doPost(e) {
   }
 
   // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
-  if (params && /^(run_|fitness_)/.test(String(params.action || ''))) {
+  if (params && /^(run_|fitness_|profile_)/.test(String(params.action || ''))) {
     return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
   }
 

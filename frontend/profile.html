@@ -8,7 +8,8 @@
   <!-- Google Fonts -->
   <link rel="stylesheet" href="style.css?v=3580">
     <link rel="stylesheet" href="pro.css?v=20261111">
-    <link rel="stylesheet" href="macos.css?v=20261111">
+    <link rel="stylesheet" href="macos.css?v=20261111b">
+    <script src="ui-adapt.js?v=20261111b" defer></script>
   <style>
     .profile-photo-wrap {
       position: relative;
@@ -330,8 +331,7 @@
       }
 
       loadPhoto();
-      loadBio();
-      loadContact();
+      loadServerProfile();
     }
 
     // ===== รูปโปรไฟล์ =====
@@ -377,29 +377,91 @@
       showToast('ลบรูปที่อัพโหลดแล้ว', 'info');
     }
 
-    // ===== ประวัติส่วนตัว =====
-    function loadBio() {
-      const bio = Storage.get('bio_' + currentUser.student_id) || {};
-      document.getElementById('bio-nickname').value = bio.nickname || '';
-      document.getElementById('bio-dob').value = bio.dob || '';
-      document.getElementById('bio-province').value = bio.province || '';
-      document.getElementById('bio-blood').value = bio.blood || '';
-      document.getElementById('bio-hobby').value = bio.hobby || '';
-      document.getElementById('bio-bio').value = bio.bio || '';
+    // ===== ประวัติส่วนตัว + ติดต่อ: เก็บบนเซิร์ฟเวอร์ (/api/profile) ใช้ได้ทุกอุปกรณ์ =====
+    // localStorage ใช้เป็นแคชให้หน้าแสดงทันที / ใช้ได้ตอนออฟไลน์เท่านั้น
+    const BIO_KEYS = ['nickname', 'dob', 'province', 'blood', 'hobby', 'bio'];
+    const PROFILE_ERR = {
+      PROFILE_INVALID: 'ข้อมูลบางช่องไม่ถูกรูปแบบ',
+      PROFILE_FORBIDDEN: 'กรุณาออกจากระบบแล้วเข้าใหม่',
+      RUN_NOT_CONFIGURED: 'เซิร์ฟเวอร์ยังไม่พร้อม',
+      PROFILE_NOT_DEPLOYED: 'เซิร์ฟเวอร์กำลังอัปเดต',
+      GAS_UNREACHABLE: 'เชื่อมต่อฐานข้อมูลไม่ได้',
+    };
+    const FIELD_LABEL = { dob: 'วันเกิด', blood: 'กรุ๊ปเลือด', email: 'อีเมล', telegramChatId: 'Telegram Chat ID' };
+
+    function fillBio(bio) {
+      BIO_KEYS.forEach(k => { document.getElementById('bio-' + k).value = bio[k] || ''; });
+    }
+    function fillContact(p) {
+      document.getElementById('profile-email').value = p.email || '';
+      document.getElementById('profile-telegram').value = p.telegramChatId || '';
+    }
+    function cacheProfile(p) {
+      const sid = currentUser.student_id;
+      const bio = {}; BIO_KEYS.forEach(k => { bio[k] = p[k] || ''; });
+      Storage.set('bio_' + sid, bio);
+      App.updateProfile({ email: p.email || '', telegramChatId: p.telegramChatId || '' });
+    }
+
+    async function profileApi(method, body) {
+      const sid = currentUser.student_id;
+      const url = method === 'GET' ? '/api/profile?studentId=' + encodeURIComponent(sid) : '/api/profile';
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', ...App.getAuthHeaders() },
+        body: body ? JSON.stringify(body) : undefined,
+        cache: 'no-store',
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || data.status !== 'success') {
+        const err = new Error(PROFILE_ERR[data.code] || data.code || ('HTTP ' + res.status));
+        err.fields = data.fields || [];
+        throw err;
+      }
+      return data.profile || {};
+    }
+
+    async function loadServerProfile() {
+      // แสดงจากแคชก่อน แล้วค่อยแทนด้วยค่าจริงจากเซิร์ฟเวอร์
+      fillBio(Storage.get('bio_' + currentUser.student_id) || {});
+      fillContact(App.getProfile(currentUser.student_id));
+      try {
+        const p = await profileApi('GET');
+        const hasServerData = BIO_KEYS.concat(['email', 'telegramChatId']).some(k => p[k]);
+        if (hasServerData) { fillBio(p); fillContact(p); cacheProfile(p); }
+        else {
+          // ครั้งแรก: ย้ายข้อมูลที่เคยบันทึกไว้ในเครื่องขึ้นเซิร์ฟเวอร์ให้อัตโนมัติ
+          const local = { ...(Storage.get('bio_' + currentUser.student_id) || {}) };
+          const lp = App.getProfile(currentUser.student_id);
+          if (lp.email) local.email = lp.email;
+          if (lp.telegramChatId) local.telegramChatId = lp.telegramChatId;
+          if (Object.values(local).some(Boolean)) await profileApi('POST', { studentId: currentUser.student_id, fields: local }).catch(() => {});
+        }
+      } catch (e) {
+        console.warn('profile load:', e.message);
+      }
+    }
+
+    async function submitProfile(fields, btnForm, okMsg) {
+      const btn = btnForm.querySelector('button[type="submit"]');
+      if (btn) { btn.disabled = true; btn.dataset.label = btn.dataset.label || btn.innerHTML; btn.innerHTML = 'กำลังบันทึก…'; }
+      try {
+        const p = await profileApi('POST', { studentId: currentUser.student_id, fields });
+        fillBio(p); fillContact(p); cacheProfile(p);
+        showToast(okMsg, 'success');
+      } catch (e) {
+        const which = (e.fields || []).map(f => FIELD_LABEL[f] || f).join(', ');
+        showToast('บันทึกไม่สำเร็จ: ' + e.message + (which ? ' (' + which + ')' : ''), 'error');
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerHTML = btn.dataset.label; }
+      }
     }
 
     function saveBio(e) {
       e.preventDefault();
-      const bio = {
-        nickname: document.getElementById('bio-nickname').value.trim(),
-        dob: document.getElementById('bio-dob').value,
-        province: document.getElementById('bio-province').value.trim(),
-        blood: document.getElementById('bio-blood').value,
-        hobby: document.getElementById('bio-hobby').value.trim(),
-        bio: document.getElementById('bio-bio').value.trim(),
-      };
-      Storage.set('bio_' + currentUser.student_id, bio);
-      showToast('บันทึกประวัติส่วนตัวแล้ว ✅', 'success');
+      const fields = {};
+      BIO_KEYS.forEach(k => { fields[k] = document.getElementById('bio-' + k).value.trim(); });
+      submitProfile(fields, e.target, 'บันทึกประวัติส่วนตัวแล้ว ✅ (ใช้ได้ทุกอุปกรณ์)');
     }
 
     function connectLineLiff() {
@@ -410,20 +472,12 @@
       }
     }
 
-    // ===== ติดต่อ =====
-    function loadContact() {
-      const p = App.getProfile(currentUser.student_id);
-      document.getElementById('profile-email').value = p.email || '';
-      document.getElementById('profile-telegram').value = p.telegramChatId || '';
-    }
-
     function saveContact(e) {
       e.preventDefault();
-      App.updateProfile({
+      submitProfile({
         email: document.getElementById('profile-email').value.trim(),
         telegramChatId: document.getElementById('profile-telegram').value.trim(),
-      });
-      showToast('บันทึกข้อมูลติดต่อแล้ว ✅', 'success');
+      }, e.target, 'บันทึกข้อมูลติดต่อแล้ว ✅');
     }
 
     // ===== รหัสผ่าน =====

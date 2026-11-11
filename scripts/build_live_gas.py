@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOOK_MARK = "runTrackerHandle_(params)"
 HOOK = """  // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
-  if (params && /^(run_|fitness_)/.test(String(params.action || ''))) {
+  if (params && /^(run_|fitness_|profile_)/.test(String(params.action || ''))) {
     return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -35,8 +35,15 @@ def main():
         code.write_text(s, encoding="utf-8")
         print("✅ แทรก hook หมวด 10 ใน doPost")
     else:
-        print("✅ มี hook หมวด 10 อยู่แล้ว")
+        # อัปเกรด hook รุ่นเก่าให้รับ action profile_ ด้วย
+        if "/^(run_|fitness_)/" in s:
+            s = s.replace("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/")
+            code.write_text(s, encoding="utf-8")
+            print("✅ อัปเกรด hook ให้รองรับ profile_")
+        else:
+            print("✅ มี hook หมวด 10 อยู่แล้ว")
     shutil.copyfile(ROOT / "backend" / "RunTracker.gs", d / "RunTracker.js")
+    shutil.copyfile(ROOT / "backend" / "ProfileStore.gs", d / "ProfileStore.js")
     keyfile = ROOT / "data" / "private" / "run_keys_DO_NOT_SHARE.txt"
     key = ""
     if keyfile.exists():

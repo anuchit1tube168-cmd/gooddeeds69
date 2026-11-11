@@ -523,8 +523,9 @@
     <link rel="stylesheet" href="mac-glass.css?v=20260915">
     <link rel="stylesheet" href="theme.css?v=20261026">
     <link rel="stylesheet" href="pro.css?v=20261111">
-    <link rel="stylesheet" href="macos.css?v=20261111">
-    <script src="theme.js?v=20261026"></script>
+    <link rel="stylesheet" href="macos.css?v=20261111b">
+    <script src="ui-adapt.js?v=20261111b" defer></script>
+    <script src="theme.js?v=20261111b"></script>
 </head>
 
 <body class="mac-glass">
@@ -1704,12 +1705,28 @@
         }
       }
       
+      // แก้ข้อมูลหลักต้องใช้รหัสผู้ตรวจ (ชุดเดียวกับหน้า run-admin) — เก็บแค่ใน session ของแท็บนี้
+      const ADMIN_KEY = 'gd_run_admin_key';
+      let adminKey = sessionStorage.getItem(ADMIN_KEY) || '';
+      if (!adminKey) {
+        adminKey = (prompt('กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง) เพื่อบันทึกการแก้ไข') || '').trim();
+        if (!adminKey) return;
+        sessionStorage.setItem(ADMIN_KEY, adminKey);
+      }
+      if (!payload.email) delete payload.email; // ช่องว่าง = ไม่แตะอีเมลเดิมบนเซิร์ฟเวอร์
+      delete payload.password; // รหัสผ่านไม่ส่งไปเก็บในชีต
+
       try {
         const res = await fetch('/api/update_student', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...App.getAuthHeaders() },
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey, ...App.getAuthHeaders() },
           body: JSON.stringify(payload)
         });
+        if (res.status === 401) {
+          sessionStorage.removeItem(ADMIN_KEY);
+          alert('รหัสผู้ตรวจไม่ถูกต้อง — กดบันทึกอีกครั้งเพื่อกรอกใหม่');
+          return;
+        }
         
         if (res.ok) {
           alert('บันทึกการแก้ไขประวัติเรียบร้อยแล้ว');
@@ -1734,8 +1751,10 @@
           toggleStuEdit(false);
           openStuModal(currentStudentId);
         } else {
-          const err = await res.json();
-          alert('เกิดข้อผิดพลาด: ' + (err.message || 'ไม่สามารถบันทึกได้'));
+          const err = await res.json().catch(() => ({}));
+          const msgs = { RUN_NOT_CONFIGURED: 'เซิร์ฟเวอร์ยังไม่ได้ตั้งค่า', PROFILE_NOT_DEPLOYED: 'Apps Script ยังไม่ได้อัปเดต (รัน deploy อีกครั้ง)',
+            PROFILE_STUDENT_NOT_FOUND: 'ไม่พบรหัสนี้ในชีต Main_2569', PROFILE_BAD_RANK: 'ยศไม่ถูกต้อง', PROFILE_INVALID: 'อีเมลไม่ถูกรูปแบบ' };
+          alert('เกิดข้อผิดพลาด: ' + (msgs[err.code] || err.message || err.code || 'ไม่สามารถบันทึกได้'));
         }
       } catch (e) {
         console.error(e);

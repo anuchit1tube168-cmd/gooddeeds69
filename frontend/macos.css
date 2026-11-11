@@ -246,3 +246,59 @@ body.theme-day .year69-bar-track { background: rgba(0, 0, 0, .08) !important; }
 /* hero ของหน้า manual พื้นเข้มเสมอ → ตัวอักษรต้องสว่างทั้งสองธีม */
 .manual-hero, .manual-hero :is(h1, h2, h3, p, span, div) { color: #f2f5fb !important; }
 .manual-hero :is(p, .subtitle) { color: #c9d4e6 !important; }
+
+/* ---------- Contrast guard (ui-adapt.js): ข้อความที่สีกลืนพื้นจะถูกสลับสีให้อ่านได้ ---------- */
+.cg-fix { color: var(--cg-color) !important; -webkit-text-fill-color: var(--cg-color) !important; }
+
+/* ---------- แท็บหน้าคู่มือ (manual) ให้ตามธีม ---------- */
+.m-tab-btn { background: var(--mac-control) !important; border: 1px solid var(--mac-hairline) !important; color: var(--mac-text-2) !important; }
+.m-tab-btn:hover { background: var(--mac-control-hover) !important; color: var(--mac-text) !important; }
+.m-tab-btn.active { background: var(--mac-select) !important; border-color: var(--mac-accent) !important; color: var(--mac-text) !important; box-shadow: none !important; }
+.manual-tabs { border-bottom-color: var(--mac-hairline) !important; }
+
+/* =====================================================================
+   LINE LIFF / มือถือ — เปิดใน LINE ให้หน้าตาเหมือนแอป LINE ไม่ใช่หน้าต่าง Mac
+   (html.in-line ตั้งโดย ui-adapt.js, html.is-touch = จอ < 900px)
+   ===================================================================== */
+html.in-line, html.is-touch { -webkit-text-size-adjust: 100%; }
+html:is(.in-line, .is-touch) body { font-size: 16px; background-attachment: scroll !important; }
+html.in-line body { --mac-radius-window: 14px; }
+/* แถบบนแบบ LINE: ทึบ เรียบ ติดขอบบน รองรับรอยบากจอ */
+html:is(.in-line, .is-touch) :is(.top-nav, .rn-top, .navbar) {
+  padding-left: 12px !important; padding-right: 12px !important;
+  padding-top: env(safe-area-inset-top) !important;
+  background: var(--mac-window-solid) !important;
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  min-height: 52px; position: sticky; top: 0; z-index: 100;
+}
+html:is(.in-line, .is-touch) :is(.top-nav, .rn-top, .navbar)::before { display: none !important; }
+/* ไม่มีสัญญาณไฟ Mac ใน LINE */
+html.in-line .mac-traffic-lights .light { display: none !important; }
+html.in-line .mac-traffic-lights { padding-bottom: 8px !important; margin-bottom: 12px !important; }
+html.in-line .mac-traffic-lights .mac-title { margin: 0 !important; padding: 0 !important; text-align: left; font-size: .9rem !important; color: var(--mac-text) !important; }
+/* การ์ดเต็มกว้าง ขอบมนแบบ LINE ไม่เบลอ (เบลอทำให้มือถือช้า) */
+html:is(.in-line, .is-touch) :is(.card, .crystal-card, .stat-card, .kpi-card, .section-card, .rn-card, .action-card) {
+  -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+  background: var(--mac-window-solid) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12) !important;
+}
+html:is(.in-line, .is-touch) :is(.main-content, .container, .page-container, main) { padding-left: 12px !important; padding-right: 12px !important; padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important; }
+/* ช่องกรอก 16px กัน iPhone ซูมเองตอนแตะ, ปุ่มแตะง่าย 44px */
+html:is(.in-line, .is-touch) :is(input, select, textarea, .form-input, .form-select, .form-textarea) { font-size: 16px !important; min-height: 44px; }
+html:is(.in-line, .is-touch) :is(.btn, button.btn, a.btn) { min-height: 44px; border-radius: 10px !important; }
+/* แท็บแบบ LINE: เลื่อนแนวนอน ขีดใต้แท็บที่เลือก */
+html:is(.in-line, .is-touch) :is(.manual-tabs, .tab-bar) {
+  display: flex; flex-wrap: nowrap; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
+  background: transparent !important; border: 0 !important; border-bottom: 1px solid var(--mac-hairline) !important;
+  border-radius: 0 !important; padding: 0 !important; gap: 0 !important; margin-bottom: 16px;
+}
+html:is(.in-line, .is-touch) :is(.manual-tabs, .tab-bar)::-webkit-scrollbar { display: none; }
+html:is(.in-line, .is-touch) :is(.m-tab-btn, .tab-btn) {
+  flex: none; background: transparent !important; border: 0 !important; border-bottom: 2.5px solid transparent !important;
+  border-radius: 0 !important; box-shadow: none !important; padding: 12px 14px !important; color: var(--mac-text-3) !important; font-size: .92rem;
+}
+html:is(.in-line, .is-touch) :is(.m-tab-btn, .tab-btn).active { color: var(--mac-text) !important; border-bottom-color: var(--mac-accent) !important; font-weight: 700; }
+/* ตารางกว้าง: เลื่อนได้แทนล้นจอ */
+html:is(.in-line, .is-touch) table { display: block; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+html:is(.in-line, .is-touch) .manual-hero { padding: 20px 18px !important; border-radius: 14px !important; }
+html:is(.in-line, .is-touch) .manual-hero h1 { font-size: 1.25rem !important; line-height: 1.35; }

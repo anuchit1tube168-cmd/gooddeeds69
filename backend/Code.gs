@@ -175,7 +175,7 @@ function doPost(e) {
   }
 
   // หมวด 10 วิ่งเพื่อสุขภาพ + สมรรถภาพ (RunTracker.gs) — ตรวจ gatewayKey ภายใน handler
-  if (data && /^(run_|fitness_)/.test(String(data.action || ''))) {
+  if (data && /^(run_|fitness_|profile_)/.test(String(data.action || ''))) {
     return jsonResponse(runTrackerHandle_(data));
   }
 

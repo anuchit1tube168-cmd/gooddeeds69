@@ -66,6 +66,9 @@
     setTheme(theme) {
       const newTheme = theme === 'day' ? 'day' : 'night';
       document.documentElement.setAttribute('data-theme', newTheme);
+      // html ต้องเปลี่ยนคลาสด้วย ไม่งั้นพื้นหลังหน้า (html.theme-day) ค้างธีมเดิม
+      document.documentElement.classList.remove('theme-day', 'theme-night');
+      document.documentElement.classList.add(newTheme === 'day' ? 'theme-day' : 'theme-night');
       applyBodyTheme(newTheme);
 
       try {
