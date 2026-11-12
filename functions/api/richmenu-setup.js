@@ -39,9 +39,20 @@ export async function onRequest({ request, env }) {
 
   const list = await line(token, 'GET', '/v2/bot/richmenu/list');
   if (!list.ok) return json({ status: 'error', code: 'LINE_LIST_FAILED', http: list.status }, 502);
-  const ours = (list.data.richmenus || []).filter((m) => String(m.name || '').startsWith(MENU_PREFIX));
-  if (request.method === 'GET') return json({ status: 'success', installed: ours.map((m) => ({ id: m.richMenuId, name: m.name })) });
+  const all = list.data.richmenus || [];
+  const ours = all.filter((m) => String(m.name || '').startsWith(MENU_PREFIX));
+  const others = all.filter((m) => !String(m.name || '').startsWith(MENU_PREFIX));
+  if (request.method === 'GET') {
+    const cur = await line(token, 'GET', '/v2/bot/user/all/richmenu');
+    return json({ status: 'success', defaultId: cur.ok ? cur.data.richMenuId : null,
+      installed: ours.map((m) => ({ id: m.richMenuId, name: m.name })),
+      others: others.map((m) => ({ id: m.richMenuId, name: m.name, chatBarText: m.chatBarText })) });
+  }
   if (request.method !== 'POST') return json({ status: 'error', code: 'METHOD' }, 405);
+
+  let body = {};
+  try { body = await request.clone().json(); } catch { body = {}; }
+  if (body.action === 'revert') return revert(token, ours, others, body.richMenuId);
 
   const origin = new URL(request.url).origin;
   const log = [];
@@ -74,4 +85,23 @@ export async function onRequest({ request, env }) {
   // 4) ลบเมนูชุดเก่าหลังสลับเสร็จ (ไม่มีช่วงที่ผู้ใช้ไม่มีเมนู)
   for (const m of ours) { await line(token, 'DELETE', `/v2/bot/richmenu/${m.richMenuId}`); log.push(`removed old ${m.name}`); }
   return json({ status: 'success', default: created['gd-tab-1'], aliases: Object.keys(created), log });
+}
+
+// กลับไปใช้เมนูเดิม (ก่อนเมนูแท็บ): ตั้งเมนูเดิมเป็นเมนูหลัก แล้วลบเมนูแท็บ + alias
+// ลบเมนูแท็บด้วย เพราะผู้ใช้ที่เคยกดสลับแท็บจะมีเมนูผูกรายคนซึ่งทับเมนูหลัก — ลบแล้ว LINE ปลดให้เอง
+async function revert(token, ours, others, wantedId) {
+  const target = wantedId ? others.find((m) => m.richMenuId === wantedId) : (others.length === 1 ? others[0] : null);
+  if (!target) {
+    return json({ status: 'error', code: others.length ? 'CHOOSE_MENU' : 'NO_OLD_MENU',
+      others: others.map((m) => ({ id: m.richMenuId, name: m.name, chatBarText: m.chatBarText })) }, 409);
+  }
+  const def = await line(token, 'POST', `/v2/bot/user/all/richmenu/${target.richMenuId}`);
+  if (!def.ok) return json({ status: 'error', code: 'DEFAULT_FAILED', http: def.status }, 502);
+  const log = [`default -> ${target.name}`];
+  for (const m of MENUS) {
+    const d = await line(token, 'DELETE', `/v2/bot/richmenu/alias/${m.alias}`);
+    if (d.ok) log.push(`alias removed ${m.alias}`);
+  }
+  for (const m of ours) { await line(token, 'DELETE', `/v2/bot/richmenu/${m.richMenuId}`); log.push(`removed ${m.name}`); }
+  return json({ status: 'success', default: target.richMenuId, name: target.name, log });
 }

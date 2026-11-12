@@ -78,7 +78,20 @@ line "เมนู LINE (Rich Menu แบบแท็บ)"
 RM_HASH="$(cat frontend/richmenu/*.jpg functions/api/_richmenu_def.js | shasum | cut -d' ' -f1)"
 RM_STAMP="data/private/richmenu_installed.sha"
 ADMIN_KEY="$(grep '^RUN_ADMIN_KEY' "$KEYFILE" 2>/dev/null | cut -d= -f2-)"
-if [ -z "$ADMIN_KEY" ]; then
+if [ -f data/private/richmenu_legacy ]; then
+  # โหมดเมนูเดิม: สลับกลับครั้งเดียว แล้วไม่ติดตั้งเมนูแท็บจนกว่าจะลบไฟล์นี้
+  if [ "$(cat "$RM_STAMP" 2>/dev/null)" = "legacy" ]; then
+    echo "⏸  ใช้เมนู LINE เดิมอยู่ (ลบ data/private/richmenu_legacy เพื่อกลับไปใช้เมนูแท็บ)"
+  elif [ -n "$ADMIN_KEY" ]; then
+    sleep 8
+    RESP="$(curl -s -X POST -H "X-Admin-Key: $ADMIN_KEY" -H "Content-Type: application/json" -d '{"action":"revert"}' "https://$PROJECT.pages.dev/api/richmenu-setup")"
+    if echo "$RESP" | grep -q '"status":"success"'; then
+      echo legacy > "$RM_STAMP"; echo "✅ กลับไปใช้เมนู LINE เดิมแล้ว: $(echo "$RESP" | grep -o '"name":"[^"]*"')"
+    else
+      echo "⚠️  สลับกลับเมนูเดิมไม่สำเร็จ: $RESP"
+    fi
+  fi
+elif [ -z "$ADMIN_KEY" ]; then
   echo "⚠️  ข้ามเมนู LINE (ไม่พบ RUN_ADMIN_KEY ใน $KEYFILE)"
 elif [ "$(cat "$RM_STAMP" 2>/dev/null)" = "$RM_HASH" ]; then
   echo "✅ เมนู LINE เป็นรุ่นล่าสุดอยู่แล้ว"
