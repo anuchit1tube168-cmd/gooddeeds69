@@ -91,17 +91,26 @@ export async function onRequest({ request, env }) {
 // ลบเมนูแท็บด้วย เพราะผู้ใช้ที่เคยกดสลับแท็บจะมีเมนูผูกรายคนซึ่งทับเมนูหลัก — ลบแล้ว LINE ปลดให้เอง
 async function revert(token, ours, others, wantedId) {
   const target = wantedId ? others.find((m) => m.richMenuId === wantedId) : (others.length === 1 ? others[0] : null);
-  if (!target) {
-    return json({ status: 'error', code: others.length ? 'CHOOSE_MENU' : 'NO_OLD_MENU',
+  if (!target && others.length) {
+    return json({ status: 'error', code: 'CHOOSE_MENU',
       others: others.map((m) => ({ id: m.richMenuId, name: m.name, chatBarText: m.chatBarText })) }, 409);
   }
-  const def = await line(token, 'POST', `/v2/bot/user/all/richmenu/${target.richMenuId}`);
-  if (!def.ok) return json({ status: 'error', code: 'DEFAULT_FAILED', http: def.status }, 502);
-  const log = [`default -> ${target.name}`];
+  const log = [];
+  if (target) {
+    const def = await line(token, 'POST', `/v2/bot/user/all/richmenu/${target.richMenuId}`);
+    if (!def.ok) return json({ status: 'error', code: 'DEFAULT_FAILED', http: def.status }, 502);
+    log.push(`default -> ${target.name}`);
+  } else {
+    // เมนูเดิมสร้างใน LINE Official Account Manager (API มองไม่เห็น) — เลิกตั้งเมนูหลักทาง API
+    // แล้ว LINE จะกลับไปแสดงเมนูที่ตั้งไว้ใน OA Manager เอง
+    const un = await line(token, 'DELETE', '/v2/bot/user/all/richmenu');
+    if (!un.ok && un.status !== 404) return json({ status: 'error', code: 'UNSET_DEFAULT_FAILED', http: un.status }, 502);
+    log.push('default unset -> OA Manager menu');
+  }
   for (const m of MENUS) {
     const d = await line(token, 'DELETE', `/v2/bot/richmenu/alias/${m.alias}`);
     if (d.ok) log.push(`alias removed ${m.alias}`);
   }
   for (const m of ours) { await line(token, 'DELETE', `/v2/bot/richmenu/${m.richMenuId}`); log.push(`removed ${m.name}`); }
-  return json({ status: 'success', default: target.richMenuId, name: target.name, log });
+  return json({ status: 'success', default: target ? target.richMenuId : null, name: target ? target.name : 'OA Manager menu', log });
 }

@@ -84,7 +84,7 @@ if [ -f data/private/richmenu_legacy ]; then
     echo "⏸  ใช้เมนู LINE เดิมอยู่ (ลบ data/private/richmenu_legacy เพื่อกลับไปใช้เมนูแท็บ)"
   elif [ -n "$ADMIN_KEY" ]; then
     sleep 8
-    RESP="$(curl -s -X POST -H "X-Admin-Key: $ADMIN_KEY" -H "Content-Type: application/json" -d '{"action":"revert"}' "https://$PROJECT.pages.dev/api/richmenu-setup")"
+    RESP="$(curl -sS -m 60 --retry 3 --retry-all-errors -w ' http=%{http_code}' -X POST -H "X-Admin-Key: $ADMIN_KEY" -H "Content-Type: application/json" -d '{"action":"revert"}' "https://$PROJECT.pages.dev/api/richmenu-setup" 2>&1)"
     if echo "$RESP" | grep -q '"status":"success"'; then
       echo legacy > "$RM_STAMP"; echo "✅ กลับไปใช้เมนู LINE เดิมแล้ว: $(echo "$RESP" | grep -o '"name":"[^"]*"')"
     else
