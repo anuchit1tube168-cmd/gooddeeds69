@@ -90,19 +90,22 @@ function profileSet_(data) {
       cur = sh.getRange(row, 1, 1, PROFILE_HEADERS.length).getValues()[0];
     }
     oldEmail = String(cur[7] || '').replace(/^'/, '').trim();
-    changed = keys.filter(function (k) { return String(cur[PROFILE_FIELDS[k][0]] || '').replace(/^'/, '') !== clean[k]; });
+    // ค่าในชีตอาจเป็น Date/ตัวเลข (ชีตแปลงเอง) — ทำให้เป็นข้อความก่อนเทียบ ไม่งั้นแจ้ง "ถูกแก้" ทุกครั้งที่กดบันทึก
+    const asText = function (v) {
+      if (v instanceof Date) return Utilities.formatDate(v, 'Asia/Bangkok', 'yyyy-MM-dd');
+      return String(v == null ? '' : v).replace(/^'/, '');
+    };
+    changed = keys.filter(function (k) { return asText(cur[PROFILE_FIELDS[k][0]]) !== clean[k]; });
     keys.forEach(function (k) { cur[PROFILE_FIELDS[k][0]] = runLiteral_(clean[k]); });
     cur[9] = new Date();
     cur[10] = runLiteral_(String(data.by || 'student').slice(0, 40));
-    // วันเกิด/รหัสเก็บเป็นข้อความ ไม่ให้ชีตแปลงเป็นวันที่/ตัดเลขศูนย์
-    if (row < 0) {
-      sh.appendRow(cur);
-      row = sh.getLastRow();
-    } else {
-      sh.getRange(row, 1, 1, PROFILE_HEADERS.length).setValues([cur]);
-    }
+    // ตั้งรูปแบบข้อความ "ก่อน" เขียน ไม่งั้นชีตแปลงวันเกิดเป็น Date และรหัสเป็นตัวเลขไปแล้ว
+    if (row < 0) row = sh.getLastRow() + 1;
     sh.getRange(row, 1).setNumberFormat('@');
     sh.getRange(row, 3).setNumberFormat('@');
+    if (cur[2] instanceof Date) cur[2] = Utilities.formatDate(cur[2], 'Asia/Bangkok', 'yyyy-MM-dd');
+    cur[0] = String(cur[0]);
+    sh.getRange(row, 1, 1, PROFILE_HEADERS.length).setValues([cur]);
     result = { status: 'success', profile: profileRowToObj_(sh.getRange(row, 1, 1, PROFILE_HEADERS.length).getValues()[0]) };
   } finally {
     lock.releaseLock();

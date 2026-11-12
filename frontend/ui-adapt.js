@@ -95,11 +95,13 @@
   }
 
   var running = false;
+  var wantFreeze = false;
   function run() {
     running = false;
     if (!document.body) return;
     // ปิด transition ระหว่างวัด ไม่งั้นค่าสีที่อ่านได้เป็นค่ากลางทาง (หลังสลับธีมจะตัดสินผิด)
-    var freeze = measureStyle(); freeze.disabled = false;
+    // ปิด transition เฉพาะรอบหลังสลับธีม — รอบอื่นห้ามปิด เพราะจะตัดแอนิเมชันที่หน้ากำลังเล่นอยู่ทุกครั้งที่ตรวจ
+    var freeze = measureStyle(); freeze.disabled = !wantFreeze; wantFreeze = false;
     var marked = document.querySelectorAll('.cg-fix');
     // คืนค่าสีเดิมก่อนวัดใหม่ (inline !important ชนะทุกกฎ CSS จึงต้องเก็บค่าเดิมไว้คืน)
     for (var i = 0; i < marked.length; i++) {
@@ -155,6 +157,7 @@
     // สลับธีม: ตรวจทันที + ตรวจซ้ำหลังพื้นหลังเปลี่ยนเสร็จ
     var themeTimer;
     function onTheme() {
+      wantFreeze = true;
       schedule(30);
       clearTimeout(themeTimer);
       themeTimer = setTimeout(function () { schedule(0); }, 700);
@@ -162,8 +165,20 @@
     new MutationObserver(onTheme).observe(root, { attributes: true, attributeFilter: ['data-theme', 'class'] });
     new MutationObserver(onTheme).observe(document.body, { attributes: true, attributeFilter: ['class'] });
     // เนื้อหาที่โหลดทีหลัง (ตาราง/การ์ดจาก API)
+    // สนใจเฉพาะ element ที่เพิ่มเข้ามา (ข้อความนาฬิกา/ตัวนับที่เปลี่ยนทุกวินาทีไม่นับ)
+    // และตรวจไม่ถี่กว่า 1 ครั้ง/วินาที กันมือถือรุ่นเก่าช้า
+    var lastContentRun = 0;
     new MutationObserver(function (muts) {
-      for (var i = 0; i < muts.length; i++) if (muts[i].addedNodes.length) { schedule(250); return; }
+      for (var i = 0; i < muts.length; i++) {
+        var added = muts[i].addedNodes;
+        for (var j = 0; j < added.length; j++) {
+          if (added[j].nodeType !== 1) continue;
+          var wait = Math.max(250, 1000 - (Date.now() - lastContentRun));
+          lastContentRun = Date.now() + wait;
+          schedule(wait);
+          return;
+        }
+      }
     }).observe(document.body, { childList: true, subtree: true });
     window.addEventListener('load', function () { schedule(50); });
   }

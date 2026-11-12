@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="style.css?v=3580">
     <link rel="stylesheet" href="pro.css?v=20261111">
     <link rel="stylesheet" href="macos.css?v=20261111c">
-    <script src="ui-adapt.js?v=20261111c" defer></script>
+    <script src="ui-adapt.js?v=20261112a" defer></script>
   <style>
     .profile-photo-wrap {
       position: relative;
@@ -436,7 +436,7 @@
           const lp = App.getProfile(currentUser.student_id);
           if (lp.email) local.email = lp.email;
           if (lp.telegramChatId) local.telegramChatId = lp.telegramChatId;
-          if (Object.values(local).some(Boolean)) await profileApi('POST', { studentId: currentUser.student_id, fields: local }).catch(() => {});
+          if (Object.values(local).some(Boolean)) await profileApi('POST', { studentId: currentUser.student_id, fields: local, migrate: true }).catch(() => {});
         }
       } catch (e) {
         console.warn('profile load:', e.message);

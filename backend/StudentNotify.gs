@@ -154,7 +154,7 @@ function notifyDeedSubmitted_(studentId, catId, hours, actDate) {
     title: '📥 ได้รับรายการความดีแล้ว — รอตรวจ',
     lines: ['หมวด ' + catId + ' ' + (NOTIFY_CAT_NAMES[catId] || '') + ' · ' + hours + ' ชม.', 'วันที่ทำกิจกรรม: ' + actDate,
       'ระบบจะแจ้งอีกครั้งเมื่ออาจารย์ตรวจแล้ว'],
-    link: '/history.html', tone: 'info', key: 'deed_sub_' + catId + '_' + hours + '_' + actDate
+    link: '/history.html', tone: 'info'
   });
 }
 
@@ -167,7 +167,8 @@ function notifyDeedReviewedExtra_(studentId, isApprove, deed) {
     lines: [(catId ? 'หมวด ' + catId + ' ' + (NOTIFY_CAT_NAMES[catId] || '') : 'กิจกรรมความดี') + (hrs !== '' ? ' · ' + hrs + ' ชม.' : ''),
       isApprove ? 'สะสมชั่วโมงเรียบร้อยแล้ว' : 'กรุณาตรวจสอบหลักฐานแล้วส่งใหม่'],
     link: '/history.html', tone: isApprove ? 'ok' : 'warn', skipLine: true,
-    key: 'deed_rev_' + (deed && deed.id ? deed.id : catId + '_' + hrs) + '_' + isApprove
+    // กันซ้ำเฉพาะเมื่อรู้รหัสรายการ — อนุมัติหลายรายการหมวด/ชม.เดียวกันพร้อมกันต้องได้ครบทุกฉบับ
+    key: deed && deed.id ? 'deed_rev_' + deed.id + '_' + isApprove : ''
   });
   if (isApprove) notifyMilestone_(studentId);
 }

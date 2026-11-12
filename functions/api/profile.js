@@ -39,6 +39,7 @@ export async function onRequestPost({ request, env }) {
   const who = canAccess(request, env, sid);
   if (!who) return json({ status: 'error', code: 'PROFILE_FORBIDDEN' }, 403);
   if (!body.fields || typeof body.fields !== 'object') return json({ status: 'error', code: 'PROFILE_NO_FIELDS' }, 400);
-  const r = await callGas(env, { action: 'profile_set', studentId: sid, fields: body.fields, by: who });
+  // migrate = ย้ายข้อมูลเก่าจากเครื่องขึ้นเซิร์ฟเวอร์ครั้งแรก — ไม่ต้องแจ้งเตือน "ข้อมูลถูกแก้"
+  const r = await callGas(env, { action: 'profile_set', studentId: sid, fields: body.fields, by: who, silent: body.migrate === true });
   return json(r, statusFor(r));
 }
