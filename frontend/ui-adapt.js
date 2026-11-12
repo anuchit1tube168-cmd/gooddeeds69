@@ -96,13 +96,29 @@
 
   var running = false;
   var wantFreeze = false;
+  var fullPending = true;       // ตรวจทั้งหน้า (ตอนโหลด/สลับธีม)
+  var partialRoots = [];        // ตรวจเฉพาะส่วนที่เพิ่งถูกเพิ่ม (เนื้อหาจาก API/ตัวนับที่วาดใหม่)
+  function collect(roots) {
+    var out = [];
+    roots.forEach(function (r) {
+      if (!r.isConnected) return;
+      out.push(r);
+      var sub = r.getElementsByTagName('*');
+      for (var i = 0; i < sub.length && out.length < 6000; i++) out.push(sub[i]);
+    });
+    return out;
+  }
   function run() {
     running = false;
     if (!document.body) return;
+    var full = fullPending;
+    var roots = partialRoots;
+    fullPending = false; partialRoots = [];
+    if (!full && !roots.length) return;
     // ปิด transition ระหว่างวัด ไม่งั้นค่าสีที่อ่านได้เป็นค่ากลางทาง (หลังสลับธีมจะตัดสินผิด)
     // ปิด transition เฉพาะรอบหลังสลับธีม — รอบอื่นห้ามปิด เพราะจะตัดแอนิเมชันที่หน้ากำลังเล่นอยู่ทุกครั้งที่ตรวจ
     var freeze = measureStyle(); freeze.disabled = !wantFreeze; wantFreeze = false;
-    var marked = document.querySelectorAll('.cg-fix');
+    var marked = full ? document.querySelectorAll('.cg-fix') : collect(roots).filter(function (e) { return e.classList.contains('cg-fix'); });
     // คืนค่าสีเดิมก่อนวัดใหม่ (inline !important ชนะทุกกฎ CSS จึงต้องเก็บค่าเดิมไว้คืน)
     for (var i = 0; i < marked.length; i++) {
       var m = marked[i];
@@ -113,7 +129,7 @@
       m.removeAttribute('data-cg-orig');
     }
     var cache = new Map();
-    var els = document.body.getElementsByTagName('*');
+    var els = full ? document.body.getElementsByTagName('*') : collect(roots);
     var limit = Math.min(els.length, 6000); // กันหน้าใหญ่ผิดปกติ
     var fixes = [];
     for (var j = 0; j < limit; j++) {
@@ -157,7 +173,7 @@
     // สลับธีม: ตรวจทันที + ตรวจซ้ำหลังพื้นหลังเปลี่ยนเสร็จ
     var themeTimer;
     function onTheme() {
-      wantFreeze = true;
+      wantFreeze = true; fullPending = true;
       schedule(30);
       clearTimeout(themeTimer);
       themeTimer = setTimeout(function () { schedule(0); }, 700);
@@ -173,6 +189,8 @@
         var added = muts[i].addedNodes;
         for (var j = 0; j < added.length; j++) {
           if (added[j].nodeType !== 1) continue;
+          for (var k = j; k < added.length; k++) if (added[k].nodeType === 1) partialRoots.push(added[k]);
+          for (var q = i + 1; q < muts.length; q++) for (var z = 0; z < muts[q].addedNodes.length; z++) if (muts[q].addedNodes[z].nodeType === 1) partialRoots.push(muts[q].addedNodes[z]);
           var wait = Math.max(250, 1000 - (Date.now() - lastContentRun));
           lastContentRun = Date.now() + wait;
           schedule(wait);
@@ -180,8 +198,8 @@
         }
       }
     }).observe(document.body, { childList: true, subtree: true });
-    window.addEventListener('load', function () { schedule(50); });
+    window.addEventListener('load', function () { fullPending = true; schedule(50); });
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
-  window.UIAdapt = { recheck: function () { schedule(0); } };
+  window.UIAdapt = { recheck: function () { fullPending = true; schedule(0); } };
 })();
