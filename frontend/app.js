@@ -419,6 +419,8 @@ const App = {
     },
 
     setSession(role, user) {
+        // รองรับการเรียกแบบเก่า setSession({...}) — ใช้ role ใน object หรือ 'student'
+        if (role && typeof role === 'object' && user === undefined) { user = role; role = user.role || 'student'; }
         if (!user) return null;
         const session = {
             ...user,

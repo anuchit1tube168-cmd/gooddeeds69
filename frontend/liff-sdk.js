@@ -135,7 +135,9 @@ const LiffHelper = {
 
                         // Strict Security: Session is locked to this verified student only (Self)
                         if (typeof App !== 'undefined' && App.setSession) {
-                            App.setSession({
+                            // setSession(role, user) — เดิมส่ง object ตัวเดียว ทำให้ไม่มี session จริง
+                            // แล้ว student-dashboard เด้งกลับ index → login LINE ซ้ำ วนไม่จบ (เลื่อนหน้าไม่ได้)
+                            App.setSession('student', {
                                 student_id: stu.student_id,
                                 rank: stu.rank || 'นพอ.',
                                 first_name: stu.first_name || '',
@@ -157,7 +159,8 @@ const LiffHelper = {
                         // If on landing/index page, automatically navigate to requested destination
                         const path = window.location.pathname;
                         const isLanding = path === '/' || path.endsWith('/') || path.endsWith('index.html') || path.includes('index');
-                        if (isLanding) {
+                        const hasSession = typeof App === 'undefined' || !App.getCurrentUser || !!App.getCurrentUser();
+                        if (isLanding && hasSession) {
                             const urlParams = new URLSearchParams(window.location.search);
                             const redirect = urlParams.get('redirect');
                             const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
