@@ -4,6 +4,7 @@
  * รันบน Cloudflare Edge Network ทำงานได้ทันทีเมื่อนักเรียนส่งบันทึกความดีออนไลน์
  */
 
+import { yearLabel, normalizeClassYear } from './_year.js';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -107,10 +108,8 @@ export async function onRequestPost(context) {
     studentName = studentId ? `นพอ. (${studentId})` : 'นพอ. ผู้ขออนุมัติ';
   }
 
-  const classYear = String(student.class_year || deed.class_year || (studentId.length >= 2 ? studentId.substring(0, 2) : '69'));
-  const yearMap = { '69': '1', '68': '2', '67': '3', '66': '4' };
-  const yearLevel = String(student.year_level || deed.year_level || yearMap[classYear] || '1');
-  const yearName = `ชั้นปีที่ ${yearLevel} (รุ่น ${classYear})`;
+  const classYear = normalizeClassYear(student.class_year || deed.class_year, studentId) || '69';
+  const yearName = yearLabel(classYear, studentId);
 
   const catId = parseInt(deed.categoryId || deed.category_id || 1, 10);
   const catName = CATEGORY_NAMES[catId] || 'กิจกรรมความดี';

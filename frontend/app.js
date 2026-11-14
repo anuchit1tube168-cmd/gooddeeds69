@@ -2457,7 +2457,7 @@ const App = {
                 stuName = `นพอ. (${cleanSid})`;
             }
             const sClassYear = (student && student.class_year) || deed.class_year || '69';
-            const yearLvl = (student && student.year_level) || (String(sClassYear) === '69' ? '1' : String(sClassYear) === '68' ? '2' : String(sClassYear) === '67' ? '3' : '4');
+            const yearLvl = (student && student.year_level) || (App.getYearLevel(sClassYear) || '');
 
             // 6. Section 1 Box (ข้อมูลผู้ขออนุมัติ)
             ctx.strokeStyle = '#0c1b33';
@@ -2863,17 +2863,23 @@ const App = {
         return CATEGORIES.find(c => c.id === parseInt(id)) || { name: 'อื่นๆ', emoji: '📌', color: '#6b7280', bg: '#374151' };
     },
 
+    // ชั้นปีจากรุ่น คิดจากปีการศึกษาปัจจุบัน (เริ่ม ๑ ก.ค.) — รับได้ทั้ง 69, "69", "รุ่น 69"
+    getYearLevel(classYear) {
+        const m = String(classYear == null ? '' : classYear).match(/\d{2}/);
+        if (!m) return null;
+        const now = new Date(Date.now() + 7 * 3600 * 1000);
+        const be = now.getUTCFullYear() + 543;
+        const ay = now.getUTCMonth() >= 6 ? be : be - 1;
+        return ay - (2500 + Number(m[0])) + 1;
+    },
+
     getYearName(classYear) {
-        const yearMap = {
-            69: 'ชั้นปีที่ 1 (รุ่น 69)',
-            68: 'ชั้นปีที่ 2 (รุ่น 68)',
-            67: 'ชั้นปีที่ 3 (รุ่น 67)',
-            66: 'ชั้นปีที่ 4 (รุ่น 66)',
-            65: 'ศิษย์เก่า (รุ่น 65)',
-        };
-        if (yearMap[classYear]) return yearMap[classYear];
-        if (classYear <= 64) return `ศิษย์เก่า (รุ่น ${classYear})`;
-        return `รุ่น ${classYear}`;
+        const m = String(classYear == null ? '' : classYear).match(/\d{2}/);
+        if (!m) return `รุ่น ${classYear}`;
+        const lv = this.getYearLevel(m[0]);
+        if (lv >= 1 && lv <= 4) return `ชั้นปีที่ ${lv} (รุ่น ${m[0]})`;
+        if (lv > 4) return `ศิษย์เก่า (รุ่น ${m[0]})`;
+        return `รุ่น ${m[0]}`;
     },
 
 

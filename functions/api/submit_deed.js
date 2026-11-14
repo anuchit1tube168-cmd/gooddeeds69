@@ -4,6 +4,7 @@
  * รองรับการทำงานจาก submit-deed.html ทั้งบนคอมพิวเตอร์ มือถือ และ LINE LIFF
  */
 
+import { yearLabel } from './_year.js';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -104,7 +105,7 @@ export async function onRequestPost(context) {
   const sLn = student.last_name || rawDeed.student_last_name || '';
   const sName = student.full_name || rawDeed.student_name || rawDeed.studentName || `${sRank} ${sFn} ${sLn}`.trim() || `นพอ. (${studentId})`;
   const sClassYear = student.class_year || rawDeed.class_year || rawDeed.classYear || studentId.substring(0, 2) || '69';
-  const yearName = `ชั้นปีที่ ${sClassYear === '69' ? '1' : sClassYear === '68' ? '2' : sClassYear === '67' ? '3' : '4'} (รุ่น ${sClassYear})`;
+  const yearName = yearLabel(sClassYear, studentId);
 
   const catName = CATEGORY_NAMES[categoryId] || 'จิตอาสาทั่วไป';
   const catEmoji = CATEGORY_EMOJIS[categoryId] || '⭐';
