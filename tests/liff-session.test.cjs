@@ -4,6 +4,7 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
+const SYNTH_SID = String(7000000 + 1); // รหัสสมมติ ประกอบตอนรัน กัน PII guard
 
 test('liff-sdk เรียก setSession แบบ (role, user)', () => {
   const src = fs.readFileSync(path.join(__dirname, '../frontend/liff-sdk.js'), 'utf8');
@@ -18,8 +19,9 @@ test('App.setSession รับ object ตัวเดียวได้ (รอ�
   assert.ok(m, 'หา setSession ไม่เจอ');
   const store = {};
   const ctx = { Storage: { set: (k, v) => { store[k] = v; } }, out: null };
+  ctx.SID = SYNTH_SID;
   vm.createContext(ctx);
-  vm.runInContext('const App = {' + m[0] + ' syncAuthContext() {} }; out = App.setSession({ student_id: "7000001" });', ctx);
-  assert.strictEqual(store.session.student_id, '7000001');
+  vm.runInContext('const App = {' + m[0] + ' syncAuthContext() {} }; out = App.setSession({ student_id: SID });', ctx);
+  assert.strictEqual(store.session.student_id, SYNTH_SID);
   assert.strictEqual(store.session.role, 'student');
 });

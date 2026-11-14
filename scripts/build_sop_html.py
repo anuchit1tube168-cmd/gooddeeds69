@@ -8,6 +8,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "SOP_STANDARD_OPERATING_PROCEDURE_2569.md"
+ANNEX_A = ROOT / "docs" / "ข้อกำหนด_บันทึกความดี_ปีการศึกษา2569.md"  # ภาคผนวก ก ต่อท้ายในหน้าเดียวกัน
 OUT = ROOT / "frontend" / "sop.html"
 
 def inline(t):
@@ -71,9 +72,9 @@ def convert(md):
 TPL = """<!DOCTYPE html>
 <html lang="th"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SOP ระบบบันทึกความดี วพอ.พอ. ๒๕๖๙</title>
-<script src="theme.js?v=20261108"></script>
+<script src="theme.js?v=20261111b"></script>
 <link rel="stylesheet" href="style.css?v=3580"><link rel="stylesheet" href="theme.css?v=20261108">
-<link rel="stylesheet" href="pro.css?v=20261111"><link rel="stylesheet" href="macos.css?v=20261111">
+<link rel="stylesheet" href="pro.css?v=20261111"><link rel="stylesheet" href="macos.css?v=20261112b">
 <style>
 .sop-wrap{max-width:980px;margin:24px auto 60px;padding:0 14px}
 .sop-doc{padding:28px 34px!important;font-family:"TH Sarabun New","TH SarabunPSK","Sarabun",var(--mac-font);font-size:1.02rem;line-height:1.75}
@@ -97,5 +98,13 @@ TPL = """<!DOCTYPE html>
 """
 
 if __name__ == "__main__":
-    OUT.write_text(TPL.replace("%BODY%", convert(SRC.read_text(encoding="utf-8"))), encoding="utf-8")
+    body = convert(SRC.read_text(encoding="utf-8"))
+    if ANNEX_A.exists():
+        annex = ANNEX_A.read_text(encoding="utf-8")
+        # หัวเรื่องของภาคผนวกลดระดับลง ไม่ให้ชนหัวเรื่องหลักของ SOP
+        annex = annex.replace("\n### ", "\n#### ").replace("\n## ", "\n### ").replace("\n# ", "\n## ")
+        if annex.startswith("# "):
+            annex = "## ภาคผนวก ก — " + annex[2:]
+        body += '\n<hr id="annex-a" style="margin:36px 0 8px;border:0;border-top:2px solid var(--mac-hairline)">\n' + convert(annex)
+    OUT.write_text(TPL.replace("%BODY%", body), encoding="utf-8")
     print(f"✅ สร้าง {OUT.relative_to(ROOT)}")
