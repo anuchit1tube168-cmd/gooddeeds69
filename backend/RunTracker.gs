@@ -129,6 +129,9 @@ function runTrackerHandle_(data) {
       case 'fitness_save': return fitnessSave_(data.record || {});
       case 'run_settings_get': return { status: 'success', settings: runSettings_() };
       case 'run_settings_set': return runSettingsSet_(data.settings || {});
+      case 'deedphoto_put': case 'deedphoto_get':
+        if (typeof deedPhotoHandle_ !== 'function') return { status: 'error', code: 'PHOTO_NOT_DEPLOYED' };
+        return deedPhotoHandle_(data);
       case 'profile_get': case 'profile_set': case 'profile_admin_update':
         if (typeof profileHandle_ !== 'function') return { status: 'error', code: 'PROFILE_NOT_DEPLOYED' };
         return profileHandle_(data);

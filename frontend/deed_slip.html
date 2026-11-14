@@ -345,14 +345,19 @@
             .no-print-bar {
                 display: none !important;
             }
+            html, body { height: auto !important; overflow: visible !important; }
             .a4-page {
                 box-shadow: none;
                 padding: 8mm 12mm;
                 width: 100%;
-                min-height: 100%;
+                min-height: 0 !important;      /* เดิม min-height + padding เกินหน้า A4 → ได้หน้าว่างหน้าที่ 2 */
+                height: auto !important;
+                box-sizing: border-box;
+                margin: 0 !important;
                 page-break-inside: avoid;
                 page-break-after: avoid;
             }
+            #doc-evidence-img { max-height: 95mm; width: auto; max-width: 100%; object-fit: contain; }
             @page {
                 size: A4 portrait;
                 margin: 0;
@@ -441,7 +446,7 @@
 
     <script src="data/students_data.js?v=3591"></script>
     <script src="data/deeds_data.js?v=3591"></script>
-    <script src="app.js?v=20261114-year"></script>
+    <script src="app.js?v=20261114-photo"></script>
     <script>
         function trimImageMargins(imgSrc, callback) {
             if (!imgSrc || typeof imgSrc !== 'string' || !imgSrc.startsWith('data:image')) {
@@ -719,7 +724,16 @@
                     this.onerror = null;
                     this.src = '510903.jpg';
                 };
-                const imgKey = deed.imageUrl || deed.imageData || (deed.imageUrls && deed.imageUrls[0]) || '';
+                // ใช้รูปในเครื่องก่อน (ถ้ามี) ไม่งั้นใช้รูปที่เก็บบนเซิร์ฟเวอร์
+                const imgCandidates = [deed.imageData, deed.imageUrl, ...(deed.imageUrls || [])].filter(v => typeof v === 'string' && v);
+                const imgKey = imgCandidates.find(v => v.startsWith('data:image')) || imgCandidates.find(v => v.startsWith('/api/deed_photo')) || imgCandidates[0] || '';
+                // รูปที่มีแค่ในเครื่องนี้ → ส่งขึ้นเซิร์ฟเวอร์ (เฉพาะเจ้าของรายการ)
+                try {
+                    const me = App.getCurrentUser && App.getCurrentUser();
+                    if (me && String(me.student_id) === String(deed.student_id || deed.studentId) && imgKey.startsWith('data:image')) {
+                        App.backfillDeedPhotos(me.student_id, deed.id);
+                    }
+                } catch (_) {}
                 if (imgKey) {
                     evidenceImg.src = (typeof App !== 'undefined' && App.resolveImageUrl) ? App.resolveImageUrl(imgKey) : imgKey;
                 } else {

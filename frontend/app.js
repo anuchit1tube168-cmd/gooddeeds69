@@ -2864,6 +2864,41 @@ const App = {
     },
 
     // ชั้นปีจากรุ่น คิดจากปีการศึกษาปัจจุบัน (เริ่ม ๑ ก.ค.) — รับได้ทั้ง 69, "69", "รุ่น 69"
+    // ย้ายรูปกิจกรรมที่ค้างอยู่ในเครื่องนี้ (base64 ใน localStorage) ขึ้นเซิร์ฟเวอร์
+    // เพื่อให้เปิด/พิมพ์ใบบันทึกความดีจากเครื่องหรือเบราว์เซอร์อื่นแล้วเห็นรูป — ทำครั้งละไม่เกิน 5 รายการ
+    async backfillDeedPhotos(studentId, onlyDeedId) {
+        const sid = String(studentId || '').trim();
+        if (!/^\d{7}$/.test(sid) || this._photoBackfillRunning) return 0;
+        this._photoBackfillRunning = true;
+        let done = 0;
+        try {
+            const doneKey = 'photo_synced_' + sid;
+            const synced = new Set(Storage.get(doneKey) || []);
+            const local = Storage.get('deeds_' + sid) || [];
+            const todo = local.filter(d => d && d.id && !synced.has(String(d.id)) && (!onlyDeedId || String(d.id) === String(onlyDeedId)))
+                .map(d => ({ id: String(d.id), img: [d.imageData, d.imageUrl, ...(d.imageUrls || [])].find(v => typeof v === 'string' && v.startsWith('data:image')) }))
+                .filter(x => x.img)
+                .slice(0, 5);
+            for (const t of todo) {
+                try {
+                    const res = await fetch('/api/deed_photo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
+                        body: JSON.stringify({ deedId: t.id, studentId: sid, image: t.img })
+                    });
+                    const data = await res.json().catch(() => ({}));
+                    // รายการที่ยังไม่ถึงเซิร์ฟเวอร์ (PHOTO_DEED_NOT_FOUND) ไว้ลองใหม่รอบหน้า
+                    if (res.ok && data.status === 'success') { synced.add(t.id); done++; }
+                    else if (data.code === 'PHOTO_BAD_ID' || data.code === 'PHOTO_BAD_IMAGE' || data.code === 'PHOTO_TOO_LARGE') synced.add(t.id);
+                } catch (_) { break; }
+            }
+            Storage.set(doneKey, [...synced].slice(-500));
+        } finally {
+            this._photoBackfillRunning = false;
+        }
+        return done;
+    },
+
     getYearLevel(classYear) {
         const m = String(classYear == null ? '' : classYear).match(/\d{2}/);
         if (!m) return null;
@@ -2973,6 +3008,7 @@ const App = {
         if (!key) return '510903.jpg';
         if (typeof key === 'string') {
             if (key.startsWith('data:image') || key.startsWith('blob:')) return key;
+            if (key.startsWith('/api/')) return key; // รูปหลักฐานที่เก็บบนเซิร์ฟเวอร์ (/api/deed_photo)
             if (key.startsWith('http://') || key.startsWith('https://')) return key;
         }
         // Check localStorage first

@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOOK_MARK = "runTrackerHandle_(params)"
 HOOK = """  // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
-  if (params && /^(run_|fitness_|profile_)/.test(String(params.action || ''))) {
+  if (params && /^(run_|fitness_|profile_|deedphoto_)/.test(String(params.action || ''))) {
     return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -59,15 +59,19 @@ def main():
         print("✅ แทรก hook หมวด 10 ใน doPost")
     else:
         # อัปเกรด hook รุ่นเก่าให้รับ action profile_ ด้วย
-        if "/^(run_|fitness_)/" in s:
-            s = s.replace("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/")
+        upgraded = False
+        for oldre in ("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/"):
+            if oldre in s:
+                s = s.replace(oldre, "/^(run_|fitness_|profile_|deedphoto_)/"); upgraded = True
+        if upgraded:
             code.write_text(s, encoding="utf-8")
-            print("✅ อัปเกรด hook ให้รองรับ profile_")
+            print("✅ อัปเกรด hook ให้รองรับ profile_ / deedphoto_")
         else:
             print("✅ มี hook หมวด 10 อยู่แล้ว")
     shutil.copyfile(ROOT / "backend" / "RunTracker.gs", d / "RunTracker.js")
     shutil.copyfile(ROOT / "backend" / "ProfileStore.gs", d / "ProfileStore.js")
     shutil.copyfile(ROOT / "backend" / "StudentNotify.gs", d / "StudentNotify.js")
+    shutil.copyfile(ROOT / "backend" / "DeedPhoto.gs", d / "DeedPhoto.js")
     s = code.read_text(encoding="utf-8")
     s = add_notify_hooks(s)
     code.write_text(s, encoding="utf-8")

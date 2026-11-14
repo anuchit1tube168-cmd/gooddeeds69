@@ -5,6 +5,7 @@
  */
 
 import { yearLabel } from './_year.js';
+import { callGas } from './_gateway.js';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -144,7 +145,16 @@ export async function onRequestPost(context) {
           silent: true
         })
       });
-      return await resp.json();
+      const saved = await resp.json();
+      // รูปกิจกรรมเป็น base64 ยาวเกินกว่าเก็บในชีตได้ → อัปโหลดขึ้น Drive (private) หลังบันทึกรายการแล้ว
+      // ใบบันทึกความดีบนทุกเครื่องจะดึงรูปผ่าน /api/deed_photo
+      if (saved && saved.status === 'success' && typeof imageUrl === 'string' && imageUrl.startsWith('data:image')) {
+        try {
+          const up = await callGas(env, { action: 'deedphoto_put', deedId, studentId, image: imageUrl });
+          saved.photo = up && up.status === 'success' ? up.path : (up && up.code) || 'PHOTO_FAILED';
+        } catch (pe) { saved.photo = 'PHOTO_FAILED'; }
+      }
+      return saved;
     } catch (gasErr) {
       console.error('Failed to forward submit_deed to GAS:', gasErr);
       return { status: 'error', message: String(gasErr) };

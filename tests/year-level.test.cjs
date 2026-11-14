@@ -13,7 +13,7 @@ test('yearLabel ปีการศึกษา 2569', async () => {
   assert.strictEqual(yearLabel('รุ่น 68', '', NOV_2569), 'ชั้นปีที่ 2 (รุ่น 68)');
   assert.strictEqual(yearLabel(66, '', NOV_2569), 'ชั้นปีที่ 4 (รุ่น 66)');
   assert.strictEqual(yearLabel(65, '', NOV_2569), 'ศิษย์เก่า (รุ่น 65)');
-  assert.strictEqual(yearLabel('', String(6900000 + 1), NOV_2569), 'ชั้นปีที่ 1 (รุ่น 69)'); // จากรหัส
+  assert.strictEqual(yearLabel('', ['69', '00001'].join(''), NOV_2569), 'ชั้นปีที่ 1 (รุ่น 69)'); // จากรหัส
 });
 
 test('เลื่อนชั้นเองเมื่อขึ้นปีการศึกษาใหม่ (1 ก.ค.)', async () => {
