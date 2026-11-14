@@ -93,7 +93,9 @@ function notifyStudent_(studentId, msg) {
       const color = msg.tone === 'warn' ? '#a8322d' : msg.tone === 'ok' ? '#1f6b3a' : '#0e1f3d';
       const html =
         '<div style="font-family:Tahoma,\'Noto Sans Thai\',sans-serif;max-width:560px;margin:auto;border:1px solid #e3e6ec;border-radius:12px;overflow:hidden">' +
-        '<div style="background:#0e1f3d;color:#d4af37;padding:14px 18px;font-weight:bold">' + notifyEscape_(NOTIFY_SENDER_NAME) + '</div>' +
+        '<div style="background:#0e1f3d;color:#d4af37;padding:14px 18px;font-weight:bold">' +
+        '<img src="' + NOTIFY_SITE + '/crest-240.jpg" width="44" height="44" alt="ตราวิทยาลัยพยาบาลทหารอากาศ" style="vertical-align:middle;border-radius:50%;background:#fff;margin-right:10px">' +
+        '<span style="vertical-align:middle">วิทยาลัยพยาบาลทหารอากาศ · ' + notifyEscape_(NOTIFY_SENDER_NAME) + '</span></div>' +
         '<div style="padding:18px;color:#1d1d1f;line-height:1.7">' +
         '<div style="font-size:17px;font-weight:bold;color:' + color + '">' + notifyEscape_(msg.title) + '</div>' +
         (greeting ? '<p>' + notifyEscape_(greeting) + '</p>' : '') +

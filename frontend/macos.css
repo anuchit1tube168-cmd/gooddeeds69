@@ -304,3 +304,12 @@ html:is(.in-line, .is-touch) .manual-hero { padding: 20px 18px !important; borde
 html:is(.in-line, .is-touch) .manual-hero h1 { font-size: 1.25rem !important; line-height: 1.35; }
 html:is(.in-line, .is-touch) .manual-hero::after { display: none !important; }
 html:is(.in-line, .is-touch) .user-pill > span { max-width: 26vw; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+/* ---------- ตราวิทยาลัยพยาบาลทหารอากาศ (ใช้ร่วมทุกหน้า) ---------- */
+.rtafnc-crest { border-radius: 50%; background: #fff; object-fit: cover; flex: none;
+  box-shadow: 0 0 0 1.5px rgba(212, 175, 55, .55), 0 4px 14px rgba(0, 0, 0, .25); }
+.rn-brand { display: flex; align-items: center; gap: 8px; justify-content: center; }
+.rn-brand .rtafnc-crest { width: 30px; height: 30px; }
+.manual-hero-crest { position: absolute; top: 22px; right: 26px; width: 88px; height: 88px; z-index: 2; }
+@media (max-width: 899px) { .manual-hero-crest { position: static; display: block; width: 64px; height: 64px; margin: 0 0 10px; } }
+@media (min-width: 900px) { .manual-hero { padding-right: 140px !important; } }
