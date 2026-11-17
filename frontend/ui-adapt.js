@@ -172,7 +172,17 @@
     // สลับธีม
     // สลับธีม: ตรวจทันที + ตรวจซ้ำหลังพื้นหลังเปลี่ยนเสร็จ
     var themeTimer;
+    function themeKey() {
+      var b = document.body;
+      return [root.getAttribute('data-theme') || '', /theme-day/.test(root.className) ? 'd' : '', /theme-night/.test(root.className) ? 'n' : '',
+        b && /theme-day/.test(b.className) ? 'D' : '', b && /theme-night/.test(b.className) ? 'N' : ''].join('|');
+    }
+    var lastTheme = themeKey();
     function onTheme() {
+      // class อื่นเปลี่ยน (เปิด modal, toast, สถานะ LIFF) ไม่ต้องตรวจใหม่ทั้งหน้า — เดิมทำให้ปิด transition บ่อยจนจอกระตุก
+      var k = themeKey();
+      if (k === lastTheme) return;
+      lastTheme = k;
       wantFreeze = true; fullPending = true;
       schedule(30);
       clearTimeout(themeTimer);

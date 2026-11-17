@@ -365,7 +365,7 @@
     <link rel="stylesheet" href="theme.css?v=20261108">
     <link rel="stylesheet" href="pro.css?v=20261111">
     <link rel="stylesheet" href="macos.css?v=20261114c">
-    <script src="ui-adapt.js?v=20261112b" defer></script>
+    <script src="ui-adapt.js?v=20261117-flicker" defer></script>
     <script src="theme.js?v=20261111b"></script>
 </head>
 
@@ -516,10 +516,10 @@
     <script src="data/deeds_data.js?v=3593"></script>
     <script src="data/app_settings.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261114-photo"></script>
+    <script src="app.js?v=20261117-flicker"></script>
     <script src="gateway-config.js?v=20260919-login-guard"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
-  <script src="liff-sdk.js?v=20261114-session"></script>
+  <script src="liff-sdk.js?v=20261117-flicker"></script>
     <script>
         // Tab switch
         function switchTab(tab) {
@@ -593,7 +593,7 @@
                         const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
                             ? redirect
                             : 'student-dashboard.html';
-                        setTimeout(() => window.location.href = targetPage, 800);
+                        App.navigateOnce(targetPage, 400);
                     } else {
                         showAlert(result.message || 'รหัสนักเรียนหรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -640,7 +640,7 @@
                             LiffHelper.bindCurrentStudentProfile();
                         }
                         showToast('เข้าสู่ระบบสำเร็จ 🎉', 'success');
-                        setTimeout(() => window.location.href = 'teacher-dashboard.html', 800);
+                        App.navigateOnce('teacher-dashboard.html', 400);
                     } else {
                         showAlert(result.message || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง');
                         btn.disabled = false;
@@ -699,19 +699,31 @@
             const loginHeaderTitle = document.querySelector('.login-header h1');
             const loginHeaderSubtitle = document.querySelector('.login-header .subtitle');
 
-            if (studentIdInput) {
+            if (studentIdInput && emblemRing && loginHeaderTitle && loginHeaderSubtitle) {
+                // วาดหัวการ์ดใหม่เฉพาะตอนที่ "สถานะ" เปลี่ยนจริง (ค่าเริ่มต้น ↔ พบนักเรียนคนใดคนหนึ่ง)
+                // เดิมสร้าง <img> ใหม่ทุกครั้งที่พิมพ์ ทำให้รูปโหลดใหม่และจอกระพริบทุกตัวอักษร (เห็นชัดใน LINE)
+                let headerState = 'default';
+                const showDefaultHeader = () => {
+                    if (headerState === 'default') return;
+                    headerState = 'default';
+                    emblemRing.innerHTML = `<img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ">`;
+                    loginHeaderTitle.textContent = "ระบบบันทึกความดี";
+                    loginHeaderSubtitle.innerHTML = `วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569`;
+                };
+                let lookupTimer = null;
                 studentIdInput.addEventListener('input', () => {
+                    clearTimeout(lookupTimer);
+                    lookupTimer = setTimeout(updateHeader, 180);
+                });
+                function updateHeader() {
                     const rawVal = studentIdInput.value.trim();
-                    if (!rawVal) {
-                        emblemRing.innerHTML = `<img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ">`;
-                        loginHeaderTitle.textContent = "ระบบบันทึกความดี";
-                        loginHeaderSubtitle.innerHTML = `วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569`;
-                        return;
-                    }
+                    if (!rawVal) { showDefaultHeader(); return; }
 
                     const student = (typeof App !== 'undefined' && App.findStudent) ? App.findStudent(rawVal) : null;
 
                     if (student) {
+                        if (headerState === 'student:' + student.student_id) return;
+                        headerState = 'student:' + student.student_id;
                         // Get photo or initials
                         const photo = App.getProfilePhoto(student.student_id);
                         if (photo) {
@@ -740,12 +752,9 @@
                         loginHeaderSubtitle.innerHTML = `<span style="color:var(--gold);font-weight:700;">${lvlTitle}</span> (รุ่น ${student.class_year} | สะสมแล้ว ${hours} ชม.จิตอาสา)`;
                         return;
                     }
-                    
-                    // Fallback to default
-                    emblemRing.innerHTML = `<img src="510903.jpg" alt="โลโก้วิทยาลัยพยาบาลทหารอากาศ">`;
-                    loginHeaderTitle.textContent = "ระบบบันทึกความดี";
-                    loginHeaderSubtitle.innerHTML = `วิทยาลัยพยาบาลทหารอากาศ กรมแพทย์ทหารอากาศ<br>ปีการศึกษา 2569`;
-                });
+
+                    showDefaultHeader();
+                }
             }
         });
     </script>
