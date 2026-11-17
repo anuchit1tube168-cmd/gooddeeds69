@@ -166,7 +166,8 @@ const LiffHelper = {
                             const targetPage = (redirect && !redirect.includes('teacher-dashboard') && !redirect.includes('settings'))
                                 ? redirect
                                 : 'student-dashboard.html';
-                            window.location.replace(targetPage);
+                            if (typeof App !== 'undefined' && App.navigateOnce) App.navigateOnce(targetPage);
+                            else if (!window.__gdNavigating) { window.__gdNavigating = true; window.location.replace(targetPage); }
                         }
                         return true;
                     } else {

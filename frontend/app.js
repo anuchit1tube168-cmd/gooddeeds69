@@ -719,6 +719,16 @@ const App = {
         return { success: false, message: 'จัดการบัญชีผ่านระบบผู้ดูแล V2 เท่านั้น' };
     },
 
+    // เปลี่ยนหน้าได้ครั้งเดียว: ฟอร์มเข้าสู่ระบบกับตัวตรวจบัญชี LINE อาจสั่งเปลี่ยนหน้าพร้อมกัน
+    // ถ้าปล่อยให้สั่งซ้อน หน้าใหม่จะโหลด 2 รอบ เห็นเป็นจอกระพริบ
+    navigateOnce(url, delay = 0) {
+        if (window.__gdNavigating) return false;
+        window.__gdNavigating = true;
+        const go = () => window.location.replace(url);
+        if (delay > 0) setTimeout(go, delay); else go();
+        return true;
+    },
+
     requireAuth(allowedRoles = ['student', 'teacher', 'admin']) {
         const user = this.getCurrentUser();
         if (!user) { window.location.href = 'index.html'; return null; }
