@@ -3,7 +3,7 @@
  * GET  ?deedId=&studentId=          ส่งไฟล์รูป (ใช้ใน <img> ของใบบันทึกความดี/หน้าประวัติ/หน้าอาจารย์)
  * POST {deedId, studentId, image}   อัปโหลดรูปของรายการตัวเอง (ย้ายรูปเก่าที่ค้างในเครื่องขึ้นเซิร์ฟเวอร์)
  */
-import { CORS, json, isAdmin, validSid, callGas, statusFor } from './_gateway.js';
+import { CORS, json, isAdmin, staffOf, validSid, callGas, statusFor } from './_gateway.js';
 
 const validDeedId = (v) => /^[A-Za-z0-9_\-]{6,80}$/.test(String(v || ''));
 const MAX_IMAGE_CHARS = 3_400_000; // ~2.5 MB หลังถอด base64
@@ -40,7 +40,7 @@ export async function onRequestPost({ request, env }) {
   const deedId = String(body.deedId || '');
   if (!validDeedId(deedId) || !validSid(studentId)) return json({ status: 'error', code: 'PHOTO_BAD_ID' }, 400);
   const self = String(request.headers.get('X-GoodDeeds-Student-Id') || '').trim() === studentId;
-  if (!self && !isAdmin(request, env)) return json({ status: 'error', code: 'PHOTO_FORBIDDEN' }, 403);
+  if (!self && !(await staffOf(request, env))) return json({ status: 'error', code: 'PHOTO_FORBIDDEN' }, 403);
   const r = await callGas(env, { action: 'deedphoto_put', deedId, studentId, image: String(body.image || '') });
   return json(r, statusFor(r));
 }

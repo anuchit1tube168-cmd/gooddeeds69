@@ -609,6 +609,7 @@
 
     <!-- MAIN -->
     <main class="main-content">
+      <div id="staff-auth-banner" class="card" style="display:none;padding:12px 16px;margin-bottom:14px;border-left:4px solid #c9a227"></div>
 
       <!-- KPI CARDS -->
       <div class="kpi-grid" style="grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));">
@@ -739,6 +740,10 @@
           </div>
         </div>
         <p style="font-size:.85rem;opacity:.8;margin:0 0 12px">ระบบตรวจอัตโนมัติทุกวันจันทร์ 07:30 น. ส่งสรุปเข้า Telegram อาจารย์ และแจ้ง นพอ. ที่พบปัญหาทาง LINE · ตัวเลขอิงข้อมูลในชีตกลาง (ไม่นับรายการที่ไม่อนุมัติ)</p>
+        <details class="card" style="padding:12px 16px;margin-bottom:12px" ontoggle="if(this.open)loadStaffTeam()">
+          <summary style="cursor:pointer;font-weight:700">👥 ทีมผู้ตรวจ (บัญชี LINE ที่อนุมัติแล้ว)</summary>
+          <div id="staff-team" style="margin-top:10px"></div>
+        </details>
         <div id="audit-body"><div class="empty-state" style="padding:24px;text-align:center;opacity:.8">กด "ตรวจตอนนี้" เพื่อดูรายงาน (ใช้รหัสผู้ตรวจชุดเดียวกับหน้าตรวจการวิ่ง)</div></div>
       </div>
 
@@ -960,7 +965,7 @@
   <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
   <script src="data/deeds_data.js?v=20261106-live-v3"></script>
   <script src="data/app_settings.js?v=20261106-live-v3"></script>
-  <script src="app.js?v=20261118-secure"></script>
+  <script src="app.js?v=20261118-staff"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261117-flicker"></script>
@@ -1029,8 +1034,8 @@
 
         // Gracefully ensure student data is loaded from Cache or Google Cloud
         await App.ensureStudentsLoaded();
-        // รายละเอียดความดีของนักเรียนทุกคนเปิดได้เฉพาะผู้มีรหัสผู้ตรวจ (ขอครั้งเดียวต่อแท็บ)
-        if (App.ensureAdminKey) App.ensureAdminKey();
+        // รายละเอียดความดีของนักเรียนทุกคนเปิดได้เฉพาะผู้ตรวจ (เข้าด้วย LINE หรือรหัสผู้ตรวจ)
+        await initStaffAuth();
         if (typeof App.syncAllDeedsWithBackend === 'function') {
           await App.syncAllDeedsWithBackend();
         }
@@ -1443,6 +1448,93 @@
       }
     }
 
+    // ===== ยืนยันตัวตนผู้ตรวจ (LINE / รหัสผู้ตรวจ) =====
+    function renderStaffBanner(msg) {
+      const el = document.getElementById('staff-auth-banner');
+      if (!el) return;
+      const tok = App.staffToken && App.staffToken();
+      let hasKey = false; try { hasKey = !!sessionStorage.getItem('gd_run_admin_key'); } catch (_) {}
+      el.style.display = 'block';
+      if (tok) {
+        el.style.borderLeftColor = '#2f7d4f';
+        el.innerHTML = `✅ <strong>ผู้ตรวจ: ${auditEsc(tok.name || '')}</strong> <span style="opacity:.75;font-size:.85rem">(ยืนยันด้วย LINE · ใช้ได้ถึง ${new Date(tok.exp).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' })} น.)</span>
+          <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="staffLogout()">ออกจากโหมดผู้ตรวจ</button>`;
+        return;
+      }
+      if (hasKey) {
+        el.style.borderLeftColor = '#2f7d4f';
+        el.innerHTML = `✅ <strong>เข้าโหมดผู้ตรวจด้วยรหัสผู้ตรวจ</strong> <span style="opacity:.75;font-size:.85rem">(แนะนำเปลี่ยนเป็นเข้าด้วย LINE เพื่อระบุตัวผู้ตรวจ)</span>
+          <button class="btn btn-sm" style="margin-left:8px;background:#06c755;color:#fff" onclick="staffLineLogin()">เข้าด้วย LINE</button>`;
+        return;
+      }
+      el.style.borderLeftColor = '#c9a227';
+      el.innerHTML = `🔐 <strong>ยืนยันตัวตนผู้ตรวจ</strong> เพื่อดูรายละเอียดความดีของนักเรียน ${msg ? '<div style="margin:6px 0;color:#b5462f" data-keep-color>' + auditEsc(msg) + '</div>' : ''}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+          <button class="btn btn-sm" style="background:#06c755;color:#fff" onclick="staffLineLogin()">เข้าด้วย LINE (แนะนำ)</button>
+          <button class="btn btn-outline btn-sm" onclick="staffKeyLogin()">ใช้รหัสผู้ตรวจ</button>
+        </div>`;
+    }
+    async function afterStaffAuth() {
+      renderStaffBanner();
+      if (typeof App.syncAllDeedsWithBackend === 'function') await App.syncAllDeedsWithBackend().catch(() => {});
+      if (typeof loadData === 'function') loadData();
+    }
+    async function staffLineLogin() {
+      const r = await App.staffLogin(true);
+      if (r.status === 'success') return afterStaffAuth();
+      if (r.status !== 'redirect') renderStaffBanner(r.message || 'เข้าด้วย LINE ไม่สำเร็จ');
+    }
+    async function staffKeyLogin() {
+      try { sessionStorage.removeItem('gd_run_admin_key'); } catch (_) {}
+      if (App.ensureAdminKey('กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง)')) afterStaffAuth();
+    }
+    function staffLogout() { App.clearAdminKey(); renderStaffBanner(); }
+    async function initStaffAuth() {
+      const has = Object.keys(App.adminKeyHeader ? App.adminKeyHeader() : {}).length > 0;
+      if (!has) {
+        // เปิดจากในแอป LINE และ login แล้ว → ยืนยันอัตโนมัติ ไม่ต้องกดอะไร
+        try {
+          if (typeof LiffHelper !== 'undefined' && !LiffHelper.isInitialized) await LiffHelper.init();
+          if (typeof liff !== 'undefined' && liff.isLoggedIn && liff.isLoggedIn()) {
+            const r = await App.staffLogin(false);
+            if (r.status !== 'success') { renderStaffBanner(r.message); return; }
+          }
+        } catch (_) {}
+      }
+      renderStaffBanner();
+    }
+
+    // ===== ทีมผู้ตรวจ (อนุมัติ/ระงับบัญชี LINE ของอาจารย์) =====
+    async function loadStaffTeam() {
+      const box = document.getElementById('staff-team');
+      if (!box) return;
+      box.innerHTML = '⏳ กำลังโหลดรายชื่อผู้ตรวจ…';
+      try {
+        const res = await fetch('/api/staff_auth', { headers: App.adminKeyHeader(), cache: 'no-store' });
+        const j = await res.json();
+        if (!res.ok) throw new Error(j.code || res.status);
+        const label = { active: '🟢 ใช้งาน', pending: '🟠 รออนุมัติ', revoked: '⚫ ระงับ' };
+        box.innerHTML = !j.staff.length ? '<div style="opacity:.75">ยังไม่มีคำขอ — ให้อาจารย์เปิดหน้านี้ใน LINE แล้วกด "เข้าด้วย LINE" ระบบจะส่งคำขอมาที่นี่</div>'
+          : `<table style="width:100%;border-collapse:collapse;font-size:.85rem"><tbody>${j.staff.map(st => `<tr>
+              <td style="padding:6px;border-bottom:1px solid var(--card-border)">${auditEsc(st.name || '-')}</td>
+              <td style="padding:6px;border-bottom:1px solid var(--card-border)">${label[st.status] || auditEsc(st.status)}</td>
+              <td style="padding:6px;border-bottom:1px solid var(--card-border);opacity:.75">${st.by ? 'โดย ' + auditEsc(st.by) : ''}</td>
+              <td style="padding:6px;border-bottom:1px solid var(--card-border);text-align:right;white-space:nowrap">
+                ${st.status !== 'active' ? `<button class="btn btn-sm" style="background:#2f7d4f;color:#fff" onclick="setStaff('${auditEsc(st.lineUserId)}','active')">อนุมัติ</button>` : ''}
+                ${st.status !== 'revoked' ? `<button class="btn btn-outline btn-sm" onclick="setStaff('${auditEsc(st.lineUserId)}','revoked')">ระงับ</button>` : ''}
+              </td></tr>`).join('')}</tbody></table>`;
+      } catch (e) {
+        box.innerHTML = `<div style="color:#b5462f" data-keep-color>โหลดไม่สำเร็จ (${auditEsc(e.message || e)}) — ต้องเข้าโหมดผู้ตรวจก่อน</div>`;
+      }
+    }
+    async function setStaff(uid, status) {
+      if (!confirm(status === 'active' ? 'อนุมัติบัญชีนี้เป็นผู้ตรวจ? (เห็นรายละเอียดความดีของนักเรียนทุกคน)' : 'ระงับสิทธิ์ผู้ตรวจของบัญชีนี้?')) return;
+      const res = await fetch('/api/staff_auth', { method: 'POST', headers: { 'Content-Type': 'application/json', ...App.adminKeyHeader() }, body: JSON.stringify({ op: 'set', lineUserId: uid, status }) });
+      const j = await res.json().catch(() => ({}));
+      if (!res.ok) alert(j.message || j.code || 'บันทึกไม่สำเร็จ');
+      loadStaffTeam();
+    }
+
     // ===== AUDIT TAB (ตรวจซ้ำ/เกินเพดาน/ข้อมูลผิด/กิจกรรมเดียวกันหลายคน) =====
     const AUDIT_CAT = { 1: 'บริจาคโลหิต', 2: 'โครงการภายนอก', 3: 'ช่วยงานภายใน', 4: 'อบรม', 5: 'ช่วยหน่วยงาน/ชุมชน', 6: 'ศาสนสถาน', 7: 'ความดีทั่วไป/ครอบครัว', 8: 'จงรักภักดี', 9: 'บทบาทพิเศษ' };
     function auditEsc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
@@ -1460,20 +1552,54 @@
           <tbody>${rows.map(r => `<tr>${r.map(c => `<td style="padding:6px;border-bottom:1px solid var(--card-border);vertical-align:top">${c}</td>`).join('')}</tr>`).join('')}</tbody>
         </table></div></div>`;
     }
+    function statusLabel(st) { st = String(st || '').toLowerCase(); return st === 'approved' ? 'อนุมัติแล้ว' : st === 'rejected' ? 'ไม่อนุมัติ' : 'รอตรวจ'; }
+    async function auditAdmin(payload) {
+      const res = await fetch('/api/deed_admin', { method: 'POST', headers: { 'Content-Type': 'application/json', ...App.adminKeyHeader() }, body: JSON.stringify(payload) });
+      const j = await res.json().catch(() => ({}));
+      if (res.status === 403) { App.clearAdminKey(); renderStaffBanner('สิทธิ์ผู้ตรวจหมดอายุ — ยืนยันตัวตนใหม่'); }
+      return { ok: res.ok && (j.status === 'success'), j };
+    }
+    async function auditDelete(sid, id) {
+      const reason = prompt('เหตุผลที่ลบ (บันทึกในชีตพร้อมชื่อผู้ตรวจ)', 'ลงซ้ำวันเดียวกัน');
+      if (reason === null) return;
+      const { ok, j } = await auditAdmin({ op: 'delete', studentId: sid, deedId: id, reason });
+      if (typeof showToast === 'function') showToast(ok ? `ลบแล้ว (โดย ${j.by})` : 'ลบไม่สำเร็จ: ' + (j.message || j.code || ''), ok ? 'success' : 'warning');
+      if (ok) loadAudit(false);
+    }
+    async function auditMerge(sid, keepId, ids) {
+      if (!confirm(`รวม ${ids.length} รายการเป็นรายการเดียว (ชั่วโมงรวมไม่เกินเพดานต่อวันของหมวด) แล้วลบรายการที่เหลือ?`)) return;
+      const { ok, j } = await auditAdmin({ op: 'merge', studentId: sid, keepId, deedIds: ids });
+      if (typeof showToast === 'function') showToast(ok ? `รวมแล้ว: ${j.hours} ชม.${j.capped ? ' (ตัดตามเพดาน)' : ''}` : 'รวมไม่สำเร็จ: ' + (j.message || j.code || ''), ok ? 'success' : 'warning');
+      if (ok || (j && j.status === 'partial')) { if (App.syncAllDeedsWithBackend) await App.syncAllDeedsWithBackend().catch(() => {}); loadAudit(false); }
+    }
+
+    // คำนวณ dHash ของรูปเก่าในเบราว์เซอร์ผู้ตรวจ แล้วส่งเก็บ (ครั้งละไม่เกิน 60 รูป)
+    async function backfillDhash() {
+      const need = window.__needDhash || [];
+      const prog = document.getElementById('dhash-prog');
+      const items = [];
+      for (let i = 0; i < need.length; i++) {
+        if (prog) prog.textContent = `กำลังคำนวณ ${i + 1}/${need.length}…`;
+        const n = need[i];
+        const dh = await App.imageDHash(`/api/deed_photo?deedId=${encodeURIComponent(n.deedId)}&studentId=${encodeURIComponent(n.studentId)}`);
+        if (dh) items.push({ deedId: n.deedId, studentId: n.studentId, dhash: dh });
+      }
+      if (!items.length) { if (prog) prog.textContent = 'ไม่มีรูปที่คำนวณได้'; return; }
+      const { ok, j } = await auditAdmin({ op: 'set_dhash', items });
+      if (prog) prog.textContent = ok ? `บันทึกแล้ว ${j.saved} รูป` : 'บันทึกไม่สำเร็จ';
+      if (ok) loadAudit(false);
+    }
+
     async function loadAudit(notify, notifyStudents) {
       if (notifyStudents && !confirm('ส่ง LINE/อีเมลแจ้ง นพอ. ทุกคนที่รายงานพบปัญหา (สูงสุด 40 คน)?')) return;
       const body = document.getElementById('audit-body');
-      const ADMIN_KEY = 'gd_run_admin_key';
-      let key = sessionStorage.getItem(ADMIN_KEY) || '';
-      if (!key) {
-        key = (prompt('กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง)') || '').trim();
-        if (!key) return;
-        sessionStorage.setItem(ADMIN_KEY, key);
-      }
+      if (!Object.keys(App.adminKeyHeader()).length) { renderStaffBanner('กรุณายืนยันตัวตนผู้ตรวจก่อน (ปุ่มด้านบน)'); document.getElementById('staff-auth-banner').scrollIntoView({ behavior: 'smooth' }); return; }
+      const auth = App.adminKeyHeader();
+      loadStaffTeam();
       body.innerHTML = '<div style="padding:24px;text-align:center">⏳ กำลังตรวจข้อมูลทั้งระบบ…</div>';
       try {
         if (notify) {
-          const n = await fetch('/api/deed_audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key }, body: JSON.stringify({ notify: true, notifyStudents: !!notifyStudents }) });
+          const n = await fetch('/api/deed_audit', { method: 'POST', headers: { 'Content-Type': 'application/json', ...auth }, body: JSON.stringify({ notify: true, notifyStudents: !!notifyStudents }) });
           const nj = await n.json().catch(() => ({}));
           if (typeof showToast === 'function') showToast(nj.telegramSent ? 'ส่งสรุปเข้า Telegram แล้ว' : 'ส่ง Telegram ไม่สำเร็จ (ตรวจการตั้งค่า Bot)', nj.telegramSent ? 'success' : 'warning');
           if (notifyStudents && typeof showToast === 'function') {
@@ -1481,17 +1607,30 @@
             showToast(sn.error ? 'แจ้ง นพอ. ไม่สำเร็จ (' + sn.error + ')' : `แจ้ง นพอ. แล้ว ${sn.sent || 0}/${sn.total || 0} คน`, sn.error ? 'warning' : 'success');
           }
         }
-        const res = await fetch('/api/deed_audit', { headers: { 'X-Admin-Key': key }, cache: 'no-store' });
-        if (res.status === 403) { sessionStorage.removeItem(ADMIN_KEY); body.innerHTML = '<div style="padding:24px;color:#b91c1c">รหัสผู้ตรวจไม่ถูกต้อง — กดตรวจอีกครั้งเพื่อกรอกใหม่</div>'; return; }
+        const res = await fetch('/api/deed_audit', { headers: auth, cache: 'no-store' });
+        if (res.status === 403) { App.clearAdminKey(); renderStaffBanner('สิทธิ์ผู้ตรวจหมดอายุหรือรหัสไม่ถูกต้อง — ยืนยันตัวตนใหม่'); body.innerHTML = ''; return; }
         const data = await res.json();
         if (!res.ok || !data.report) throw new Error(data.code || res.status);
         const r = data.report, t = r.totals;
         const kpi = (label, n, bad) => `<div class="card" style="padding:12px 14px;min-width:140px;flex:1"><div style="font-size:.8rem;opacity:.75">${label}</div><div style="font-size:1.6rem;font-weight:800;color:${n && bad ? '#dc2626' : 'inherit'}">${n}</div></div>`;
         let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-          ${kpi('รายการทั้งหมด', t.deeds)}${kpi('นักเรียน', t.students)}${kpi('ลงซ้ำ', t.duplicates, 1)}${kpi('เกินเพดาน', t.overCap, 1)}${kpi('ข้อมูลไม่ถูกต้อง', t.invalid, 1)}${kpi('ข้อความเหมือนกันหลายคน (น่าตรวจ)', t.suspicious, 1)}${kpi('รูปหลักฐานซ้ำ', t.duplicatePhotos || 0, 1)}
+          ${kpi('รายการทั้งหมด', t.deeds)}${kpi('นักเรียน', t.students)}${kpi('ลงซ้ำ', t.duplicates, 1)}${kpi('เกินเพดาน', t.overCap, 1)}${kpi('ข้อมูลไม่ถูกต้อง', t.invalid, 1)}${kpi('ข้อความเหมือนกันหลายคน (น่าตรวจ)', t.suspicious, 1)}${kpi('รูปหลักฐานซ้ำ', t.duplicatePhotos || 0, 1)}${kpi('รูปคล้ายกันมาก', t.similarPhotos || 0, 1)}
         </div>`;
-        html += auditTable('🔴 ลงซ้ำ (หมวดเดียวกัน วันเดียวกัน)', '#dc2626', ['นักเรียน', 'หมวด', 'วันที่', 'จำนวนรายการ'],
-          r.duplicates.map(d => [auditWho(d.studentId), auditEsc(AUDIT_CAT[d.categoryId] || d.categoryId), d.date, d.count]));
+        html += auditTable('🔴 ลงซ้ำ (หมวดเดียวกัน วันเดียวกัน) — เลือกเก็บ 1 รายการแล้วรวมที่เหลือ หรือลบทีละรายการ', '#dc2626', ['นักเรียน', 'หมวด / วันที่', 'รายการในกลุ่ม'],
+          r.duplicates.map(d => {
+            const full = (App.getDeeds(d.studentId) || []);
+            const ids = JSON.stringify(d.ids).replace(/"/g, '&quot;');
+            const items = d.ids.map(id => {
+              const x = full.find(f => String(f.id) === String(id)) || {};
+              return `<div style="padding:6px 0;border-bottom:1px dashed var(--card-border)">
+                <strong>${x.hours != null ? x.hours + ' ชม.' : ''}</strong> · ${auditEsc(statusLabel(x.status))} · ${auditEsc(String(x.description || '(ไม่มีรายละเอียด)').slice(0, 80))}
+                <div style="margin-top:4px;display:flex;gap:6px;flex-wrap:wrap">
+                  <button class="btn btn-sm" style="background:#2f7d4f;color:#fff" onclick="auditMerge('${auditEsc(d.studentId)}','${auditEsc(id)}',${ids})">เก็บรายการนี้ รวมที่เหลือ</button>
+                  <button class="btn btn-outline btn-sm" onclick="auditDelete('${auditEsc(d.studentId)}','${auditEsc(id)}')">ลบรายการนี้</button>
+                </div></div>`;
+            }).join('');
+            return [auditWho(d.studentId), `${auditEsc(AUDIT_CAT[d.categoryId] || d.categoryId)}<br>${d.date}`, items];
+          }));
         html += auditTable('🔴 เกินเพดานภาค/ปี', '#dc2626', ['นักเรียน', 'หมวด', 'ช่วง', 'ใช้ไป / เพดาน'],
           r.overCap.map(o => [auditWho(o.studentId), auditEsc(AUDIT_CAT[o.categoryId] || o.categoryId), auditEsc(o.scope), o.count != null ? `${o.count}/${o.limit} ครั้ง` : `${o.hours}/${o.limit} ชม.`]));
         html += auditTable('🟠 ข้อมูลไม่ถูกต้อง', '#f59e0b', ['นักเรียน', 'วันที่', 'ชม.', 'ปัญหา'],
@@ -1500,6 +1639,16 @@
           (r.duplicatePhotos || []).map(p => [p.crossStudent ? '🔴 ต่างคน' : '🟠 คนเดียว', p.students.map(auditWho).join('<br>'),
             p.items.map(i => `${i.date || '-'} · ${auditEsc(AUDIT_CAT[i.categoryId] || '-')}`).join('<br>'),
             p.items.map(i => `<a href="/api/deed_photo?deedId=${encodeURIComponent(i.deedId)}&studentId=${encodeURIComponent(i.studentId)}" target="_blank" rel="noopener">เปิด</a>`).join('<br>')]));
+        html += auditTable('🖼️ รูปคล้ายกันมาก (อาจถ่ายซ้ำ/ครอป/ย่อ) — ควรเปิดดูเทียบด้วยตา', '#f59e0b', ['', 'ผู้บันทึก', 'รายการ (วันที่ · หมวด)', 'ดูรูป'],
+          (r.similarPhotos || []).map(p => [p.crossStudent ? '🔴 ต่างคน' : '🟠 คนเดียว', p.students.map(auditWho).join('<br>'),
+            p.items.map(i => `${i.date || '-'} · ${auditEsc(AUDIT_CAT[i.categoryId] || '-')}`).join('<br>'),
+            p.items.map(i => `<a href="/api/deed_photo?deedId=${encodeURIComponent(i.deedId)}&studentId=${encodeURIComponent(i.studentId)}" target="_blank" rel="noopener">เปิด</a>`).join('<br>')]));
+        const need = (r.photoCheck && r.photoCheck.needDhash) || [];
+        if (need.length) {
+          window.__needDhash = need;
+          html += `<div class="card" style="padding:10px 14px;margin:-4px 0 12px;font-size:.85rem">🧮 รูปเก่าที่ยังไม่มีลายนิ้วมือความคล้าย: ${need.length}${need.length >= 60 ? '+' : ''} รูป
+            <button class="btn btn-outline btn-sm" style="margin-left:8px" onclick="backfillDhash()">คำนวณตอนนี้</button> <span id="dhash-prog" style="opacity:.75"></span></div>`;
+        }
         if (r.photoCheck && r.photoCheck.pending) html += `<div style="font-size:.8rem;opacity:.75;margin:-6px 0 12px">ยังคำนวณลายนิ้วมือรูปเก่าไม่ครบ ${r.photoCheck.pending} รูป — กดตรวจอีกครั้งเพื่อทำต่อ</div>`;
         html += auditTable('👥 กิจกรรมเดียวกันหลายคน — ใครทำที่ไหน (🟠 = ควรตรวจ)', '#6366f1', ['', 'วันที่', 'หมวด', 'รายละเอียด / สถานที่', 'ผู้บันทึก'],
           r.sharedActivities.slice(0, 200).map(s => [s.suspicious ? '🟠' : '', s.date, auditEsc(AUDIT_CAT[s.categoryId] || s.categoryId),
@@ -1798,23 +1947,18 @@
       
       // แก้ข้อมูลหลักต้องใช้รหัสผู้ตรวจ (ชุดเดียวกับหน้า run-admin) — เก็บแค่ใน session ของแท็บนี้
       const ADMIN_KEY = 'gd_run_admin_key';
-      let adminKey = sessionStorage.getItem(ADMIN_KEY) || '';
-      if (!adminKey) {
-        adminKey = (prompt('กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง) เพื่อบันทึกการแก้ไข') || '').trim();
-        if (!adminKey) return;
-        sessionStorage.setItem(ADMIN_KEY, adminKey);
-      }
+      if (!Object.keys(App.adminKeyHeader()).length && !App.ensureAdminKey('กรอกรหัสผู้ตรวจ (หรือกด "เข้าด้วย LINE" ด้านบนของหน้า) เพื่อบันทึกการแก้ไข')) return;
       if (!payload.email) delete payload.email; // ช่องว่าง = ไม่แตะอีเมลเดิมบนเซิร์ฟเวอร์
       delete payload.password; // รหัสผ่านไม่ส่งไปเก็บในชีต
 
       try {
         const res = await fetch('/api/update_student', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-Admin-Key': adminKey, ...App.getAuthHeaders() },
+          headers: { 'Content-Type': 'application/json', ...App.getAuthHeaders(), ...App.adminKeyHeader() },
           body: JSON.stringify(payload)
         });
         if (res.status === 401) {
-          sessionStorage.removeItem(ADMIN_KEY);
+          App.clearAdminKey(); renderStaffBanner('สิทธิ์ผู้ตรวจหมดอายุ — ยืนยันตัวตนใหม่');
           alert('รหัสผู้ตรวจไม่ถูกต้อง — กดบันทึกอีกครั้งเพื่อกรอกใหม่');
           return;
         }

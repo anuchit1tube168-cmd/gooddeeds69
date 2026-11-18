@@ -12,10 +12,12 @@
  *   GAS_URL          URL Web App เดิม
  * ถ้าไม่ได้ตั้ง secret ระบบจะปฏิเสธ (fail closed) — ไม่มีค่า default ในโค้ด
  */
+import { staffOf } from './_gateway.js';
+
 const CORS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key',
+  'Access-Control-Allow-Headers': 'Content-Type, X-Admin-Key, X-Staff-Token',
 };
 const MAX_IMAGE_CHARS = 2_500_000; // ~1.8 MB หลังถอด base64
 
@@ -31,8 +33,10 @@ function safeEqual(a, b) {
   return diff === 0;
 }
 
-function isAdmin(request, env) {
-  return !!env.RUN_ADMIN_KEY && safeEqual(request.headers.get('X-Admin-Key'), env.RUN_ADMIN_KEY);
+// ผู้ตรวจ: รหัสผู้ตรวจ หรือ token จากการเข้าระบบด้วย LINE
+async function isAdmin(request, env) {
+  if (env.RUN_ADMIN_KEY && safeEqual(request.headers.get('X-Admin-Key'), env.RUN_ADMIN_KEY)) return true;
+  return !!(await staffOf(request, env));
 }
 
 async function callGas(env, payload) {
@@ -58,7 +62,7 @@ export async function onRequestGet({ request, env }) {
   const studentId = (url.searchParams.get('studentId') || '').trim();
   try {
     if (url.searchParams.get('all') === '1') {
-      if (!isAdmin(request, env)) return json({ status: 'error', code: 'ADMIN_KEY_REQUIRED' }, 401);
+      if (!(await isAdmin(request, env))) return json({ status: 'error', code: 'ADMIN_KEY_REQUIRED' }, 401);
       const r = await callGas(env, { action: 'run_list' });
       return json(r, statusFor(r));
     }
@@ -99,7 +103,7 @@ export async function onRequestPost({ request, env }) {
       return json(r, statusFor(r));
     }
 
-    if (!isAdmin(request, env)) return json({ status: 'error', code: 'ADMIN_KEY_REQUIRED' }, 401);
+    if (!(await isAdmin(request, env))) return json({ status: 'error', code: 'ADMIN_KEY_REQUIRED' }, 401);
     let r;
     if (action === 'review') {
       r = await callGas(env, { action: 'run_review', runId: body.runId, decision: body.decision, reviewer: body.reviewer, note: body.note });

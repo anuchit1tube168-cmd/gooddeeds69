@@ -1,8 +1,8 @@
 // รายงานตรวจความดีทั้งระบบ: ลงซ้ำ · เกินเพดาน · ข้อมูลผิดรูปแบบ · กิจกรรมเดียวกันหลายคน (ใครทำที่ไหน) · ความถี่รายหมวด
 // GET  /api/deed_audit?academicYear=2569           (X-Admin-Key) → JSON สำหรับหน้าอาจารย์
 // POST /api/deed_audit {notify:true}                (X-Admin-Key หรือ gatewayKey จากทริกเกอร์รายสัปดาห์ใน Apps Script) → ส่งสรุปเข้า Telegram
-import { CORS, json, isAdmin, safeEqual, callGas } from './_gateway.js';
-import { auditDeeds, photoDuplicates, RULES } from './_deed_rules.js';
+import { CORS, json, staffOf, safeEqual, callGas } from './_gateway.js';
+import { auditDeeds, photoDuplicates, similarPhotos, RULES } from './_deed_rules.js';
 import { academicYearBE } from './_year.js';
 import { fetchDeeds } from './_deed_store.js';
 
@@ -16,14 +16,16 @@ async function build(env, year) {
   if (!deeds) return null;
   const report = auditDeeds(deeds, { academicYear: year });
   const photos = ph && ph.status === 'success' && Array.isArray(ph.photos) ? ph.photos : null;
-  report.duplicatePhotos = photos ? photoDuplicates(photos, deeds) : [];
-  report.photoCheck = photos ? { checked: photos.length, pending: ph.pending || 0 } : { unavailable: true };
+  report.duplicatePhotos = photos ? photoDuplicates(photos.filter(p => p.hash), deeds) : [];
+  report.similarPhotos = photos ? similarPhotos(photos, deeds) : [];
+  report.photoCheck = photos ? { checked: photos.length, pending: ph.pending || 0, withDhash: photos.filter(p => p.dhash).length, needDhash: Array.isArray(ph.needDhash) ? ph.needDhash : [] } : { unavailable: true };
   report.totals.duplicatePhotos = report.duplicatePhotos.length;
+  report.totals.similarPhotos = report.similarPhotos.length;
   return report;
 }
 
 export async function onRequestGet({ request, env }) {
-  if (!isAdmin(request, env)) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
+  if (!(await staffOf(request, env))) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
   const year = Number(new URL(request.url).searchParams.get('academicYear')) || academicYearBE();
   const report = await build(env, year);
   if (!report) return json({ status: 'error', code: 'DEEDS_UNAVAILABLE' }, 503);
@@ -34,7 +36,7 @@ export async function onRequestPost({ request, env }) {
   let body = {};
   try { body = await request.json(); } catch (_) {}
   const viaGateway = !!env.RUN_GATEWAY_KEY && safeEqual(body.gatewayKey, env.RUN_GATEWAY_KEY);
-  if (!viaGateway && !isAdmin(request, env)) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
+  if (!viaGateway && !(await staffOf(request, env))) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
   const year = Number(body.academicYear) || academicYearBE();
   const report = await build(env, year);
   if (!report) return json({ status: 'error', code: 'DEEDS_UNAVAILABLE' }, 503);
@@ -79,6 +81,7 @@ export function telegramText(report, base = 'https://rtafnc-gooddeeds.pages.dev'
     `${t.invalid ? '🟠' : '🟢'} ข้อมูลไม่ถูกต้อง: <b>${t.invalid}</b>`,
     `${t.suspicious ? '🟠' : '🟢'} กิจกรรมข้อความเหมือนกันหลายคน (น่าตรวจ): <b>${t.suspicious}</b> จาก ${t.sharedActivities} กลุ่ม`,
     `${t.duplicatePhotos ? '🔴' : '🟢'} รูปหลักฐานซ้ำ (ไฟล์เดียวกันหลายรายการ): <b>${t.duplicatePhotos || 0}</b>`,
+    `${t.similarPhotos ? '🟠' : '🟢'} รูปคล้ายกันมาก (อาจครอป/ถ่ายซ้ำ): <b>${t.similarPhotos || 0}</b>`,
   ];
   const top = (arr, n, f) => arr.slice(0, n).map(f).concat(arr.length > n ? [`  …และอีก ${arr.length - n} รายการ`] : []);
   if (report.duplicates.length) lines.push('', '<b>ลงซ้ำ</b>', ...top(report.duplicates, 8, d => `• ${d.studentId} · ${esc(catName(d.categoryId))} · ${d.date} (${d.count} รายการ)`));

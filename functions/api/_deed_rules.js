@@ -49,7 +49,8 @@ export function normText(s) {
 }
 
 const num = (v) => { const n = parseFloat(v); return Number.isFinite(n) ? n : 0; };
-const counts = (d) => String(d.status || '').toLowerCase() !== 'rejected';
+// ไม่นับรายการที่ไม่อนุมัติ และรายการที่ถูกลบ (ชีตเก็บไว้เป็นสถานะ deleted)
+const counts = (d) => !['rejected', 'deleted'].includes(String(d.status || '').toLowerCase());
 const fmt = (n) => String(Math.round(n * 100) / 100);
 
 /**
@@ -184,6 +185,7 @@ export function auditDeeds(deeds, opts = {}) {
   const overCap = [];
   const byStudent = new Map();
   for (const d of list) {
+    if (!counts(d)) continue; // รายการที่ไม่อนุมัติ/ลบแล้ว ไม่ต้องตรวจ
     const sid = String(d.studentId || d.student_id || '').trim();
     const issues = [];
     if (!/^\d{7}$/.test(sid)) issues.push('รหัสนักเรียนไม่ใช่ 7 หลัก');
@@ -264,7 +266,7 @@ export function auditDeeds(deeds, opts = {}) {
   return {
     generatedAt: now.toISOString(),
     academicYear: yearFilter,
-    totals: { deeds: list.length, students: byStudent.size, invalid: invalid.length, duplicates: duplicates.length, overCap: overCap.length, sharedActivities: sharedActivities.length, suspicious: sharedActivities.filter(s => s.suspicious).length },
+    totals: { deeds: list.filter(counts).length, students: byStudent.size, invalid: invalid.length, duplicates: duplicates.length, overCap: overCap.length, sharedActivities: sharedActivities.length, suspicious: sharedActivities.filter(s => s.suspicious).length },
     invalid, duplicates, overCap, sharedActivities, categories,
   };
 }
@@ -289,6 +291,43 @@ export function photoDuplicates(photos, deeds) {
     groups.get(p.hash).push({ deedId: String(p.deedId), studentId: String(p.studentId), categoryId: d ? Number(d.categoryId) : null, date: d ? normDate(d.activityDate) : '' });
   }
   return [...groups.values()].filter(g => g.length > 1).map(items => {
+    const students = [...new Set(items.map(i => i.studentId))];
+    return { count: items.length, students, crossStudent: students.length > 1, items };
+  }).sort((a, b) => Number(b.crossStudent) - Number(a.crossStudent) || b.count - a.count);
+}
+
+// ระยะแฮมมิงของ dHash 64 บิต (hex 16 ตัว)
+export function hamming(a, b) {
+  let d = 0;
+  for (let i = 0; i < 16; i += 4) {
+    let x = parseInt(a.slice(i, i + 4), 16) ^ parseInt(b.slice(i, i + 4), 16);
+    while (x) { d += x & 1; x >>= 1; }
+  }
+  return d;
+}
+
+/**
+ * รูปคล้ายกัน (ถ่ายซ้ำ/ครอป/ย่อ/บีบอัดใหม่) จาก dHash — ต่างกันไม่เกิน maxDist บิตจาก 64
+ * ไม่รวมคู่ที่เป็นไฟล์เดียวกันทุกไบต์ (รายงานแยกใน photoDuplicates แล้ว)
+ */
+export function similarPhotos(photos, deeds, maxDist = 6) {
+  const byId = new Map((deeds || []).map(d => [String(d.id), d]));
+  const list = (photos || []).filter(p => /^[0-9a-f]{16}$/.test(String(p.dhash || '')) && (!byId.get(String(p.deedId)) || counts(byId.get(String(p.deedId)))));
+  // dHash ของภาพสีพื้นเรียบ (ทั้งขาว/ทั้งดำ) เป็น 0 เกือบทั้งหมด จับคู่กันมั่ว → ข้าม
+  const usable = list.filter(p => { const z = hamming(p.dhash, '0000000000000000'); return z > 4 && z < 60; });
+  const parent = usable.map((_, i) => i);
+  const find = (i) => (parent[i] === i ? i : (parent[i] = find(parent[i])));
+  const pairs = [];
+  for (let i = 0; i < usable.length; i++) for (let j = i + 1; j < usable.length; j++) {
+    const a = usable[i], b = usable[j];
+    if (a.hash && a.hash === b.hash) continue;
+    const dist = hamming(a.dhash, b.dhash);
+    if (dist <= maxDist) { parent[find(i)] = find(j); pairs.push(dist); }
+  }
+  const groups = new Map();
+  usable.forEach((p, i) => { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(p); });
+  return [...groups.values()].filter(g => g.length > 1).map(g => {
+    const items = g.map(p => { const d = byId.get(String(p.deedId)); return { deedId: String(p.deedId), studentId: String(p.studentId), categoryId: d ? Number(d.categoryId) : null, date: d ? normDate(d.activityDate) : '' }; });
     const students = [...new Set(items.map(i => i.studentId))];
     return { count: items.length, students, crossStudent: students.length > 1, items };
   }).sort((a, b) => Number(b.crossStudent) - Number(a.crossStudent) || b.count - a.count);

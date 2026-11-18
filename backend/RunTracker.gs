@@ -129,9 +129,12 @@ function runTrackerHandle_(data) {
       case 'fitness_save': return fitnessSave_(data.record || {});
       case 'run_settings_get': return { status: 'success', settings: runSettings_() };
       case 'run_settings_set': return runSettingsSet_(data.settings || {});
-      case 'deedphoto_put': case 'deedphoto_get': case 'deedphoto_hashes':
+      case 'deedphoto_put': case 'deedphoto_get': case 'deedphoto_hashes': case 'deedphoto_setdhash':
         if (typeof deedPhotoHandle_ !== 'function') return { status: 'error', code: 'PHOTO_NOT_DEPLOYED' };
         return deedPhotoHandle_(data);
+      case 'staff_get': case 'staff_request': case 'staff_list': case 'staff_set':
+        if (typeof staffHandle_ !== 'function') return { status: 'error', code: 'STAFF_NOT_DEPLOYED' };
+        return staffHandle_(data);
       case 'deednotify_send':
         if (typeof deedNotifyHandle_ !== 'function') return { status: 'error', code: 'DEEDNOTIFY_NOT_DEPLOYED' };
         return deedNotifyHandle_(data);

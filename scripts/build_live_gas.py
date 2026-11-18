@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOOK_MARK = "runTrackerHandle_(params)"
 HOOK = """  // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
-  if (params && /^(run_|fitness_|profile_|deedphoto_|deednotify_)/.test(String(params.action || ''))) {
+  if (params && /^(run_|fitness_|profile_|deedphoto_|deednotify_|staff_)/.test(String(params.action || ''))) {
     return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -60,12 +60,13 @@ def main():
     else:
         # อัปเกรด hook รุ่นเก่าให้รับ action profile_ ด้วย
         upgraded = False
-        for oldre in ("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/", "/^(run_|fitness_|profile_|deedphoto_)/"):
+        NEW_RE = "/^(run_|fitness_|profile_|deedphoto_|deednotify_|staff_)/"
+        for oldre in ("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/", "/^(run_|fitness_|profile_|deedphoto_)/", "/^(run_|fitness_|profile_|deedphoto_|deednotify_)/"):
             if oldre in s:
-                s = s.replace(oldre, "/^(run_|fitness_|profile_|deedphoto_|deednotify_)/"); upgraded = True
+                s = s.replace(oldre, NEW_RE); upgraded = True
         if upgraded:
             code.write_text(s, encoding="utf-8")
-            print("✅ อัปเกรด hook ให้รองรับ profile_ / deedphoto_ / deednotify_")
+            print("✅ อัปเกรด hook ให้รองรับ profile_ / deedphoto_ / deednotify_ / staff_")
         else:
             print("✅ มี hook หมวด 10 อยู่แล้ว")
     shutil.copyfile(ROOT / "backend" / "RunTracker.gs", d / "RunTracker.js")
@@ -73,6 +74,7 @@ def main():
     shutil.copyfile(ROOT / "backend" / "StudentNotify.gs", d / "StudentNotify.js")
     shutil.copyfile(ROOT / "backend" / "DeedPhoto.gs", d / "DeedPhoto.js")
     shutil.copyfile(ROOT / "backend" / "DeedAudit.gs", d / "DeedAudit.js")
+    shutil.copyfile(ROOT / "backend" / "StaffLine.gs", d / "StaffLine.js")
     s = code.read_text(encoding="utf-8")
     s = add_notify_hooks(s)
     s = add_deeds_guard(s)

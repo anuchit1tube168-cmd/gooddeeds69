@@ -592,7 +592,7 @@
     <script src="data/app_settings.js?v=3593"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261118-secure"></script>
+    <script src="app.js?v=20261118-staff"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261117-flicker"></script>
@@ -1027,6 +1027,8 @@
 
                 // Images handling (clean payload without duplicate storage keys)
                 const primaryImg = uploadedImages.length > 0 ? uploadedImages[0] : null;
+                // ลายนิ้วมือความคล้ายของรูป ใช้ตรวจรูปหลักฐานที่ถ่ายซ้ำ/ครอปมาใช้หลายรายการ
+                const imageDHash = (primaryImg && App.imageDHash) ? await App.imageDHash(primaryImg) : null;
 
                 const deed = await App.addDeed({
                     categoryId: selectedCategoryId,
@@ -1041,6 +1043,7 @@
                     imageUrl: primaryImg || '',
                     imageData: primaryImg || '',
                     imageUrls: uploadedImages.length > 0 ? uploadedImages : [],
+                    imageDHash: imageDHash || '',
                 });
 
                 // Auto-send confirmation Flex Message into LINE chat if opened inside LINE app

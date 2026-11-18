@@ -4,12 +4,12 @@
  * ปัญหาเดิม: รูปเป็น base64 อยู่ใน localStorage ของเครื่องที่ส่งเท่านั้น (ชีตรับไม่ได้เพราะยาวเกิน)
  * เปิดจากเครื่องอื่น/เบราว์เซอร์อื่น เช่น ส่งใน LINE แล้วพิมพ์ใน Chrome → ใบบันทึกไม่มีรูป
  *
- * DeedPhotos_2569  1 แถว/รายการ: Deed ID, รหัสนักเรียน, Drive File ID, วันที่อัปโหลด, SHA-256 ของไฟล์ (ตรวจรูปซ้ำ)
+ * DeedPhotos_2569  1 แถว/รายการ: Deed ID, รหัสนักเรียน, Drive File ID, วันที่อัปโหลด, SHA-256 ของไฟล์ (รูปซ้ำ), dHash (รูปคล้าย)
  * ไฟล์ใน Drive เป็น PRIVATE เสมอ (ข้อมูลส่วนบุคคล) — ผู้ใช้ดูผ่าน /api/deed_photo ที่ Cloudflare
  * เรียกผ่าน runTrackerHandle_ (ตรวจ gatewayKey แล้ว)
  */
 const DEED_PHOTO_SHEET = 'DeedPhotos_2569';
-const DEED_PHOTO_HEADERS = ['Deed ID', 'รหัสนักเรียน', 'Drive File ID', 'อัปโหลดเมื่อ', 'SHA-256'];
+const DEED_PHOTO_HEADERS = ['Deed ID', 'รหัสนักเรียน', 'Drive File ID', 'อัปโหลดเมื่อ', 'SHA-256', 'dHash'];
 const DEED_PHOTO_FOLDER = 'หลักฐานความดี_2569';
 const DEED_PHOTO_MAX_BYTES = 2500000;
 
@@ -68,9 +68,10 @@ function deedPhotoPut_(data) {
     const sub = function (parent, name) { const it = parent.getFoldersByName(name); return it.hasNext() ? it.next() : parent.createFolder(name); };
     const file = sub(sub(root, DEED_PHOTO_FOLDER), sid).createFile(blob);
     file.setSharing(DriveApp.Access.PRIVATE, DriveApp.Permission.NONE);
-    deedPhotoEnsureHashHeader_(sh);
-    const row = [runLiteral_(deedId), runLiteral_(sid), file.getId(), new Date(), deedPhotoSha_(bytes)];
-    if (existing > 0) sh.getRange(existing, 1, 1, 5).setValues([row]);
+    // ขึ้นต้นด้วย ' ให้ชีตเก็บเป็นข้อความ (ค่า hex ที่เป็นตัวเลขล้วนจะถูกแปลงเป็นตัวเลขแล้วเพี้ยน)
+    const dh = /^[0-9a-f]{16}$/.test(String(data.dhash || '')) ? "'" + String(data.dhash) : '';
+    const row = [runLiteral_(deedId), runLiteral_(sid), file.getId(), new Date(), "'" + deedPhotoSha_(bytes), dh];
+    if (existing > 0) sh.getRange(existing, 1, 1, 6).setValues([row]);
     else sh.appendRow(row);
     // ให้ทุกเครื่องเห็นรูปเดียวกัน: เก็บที่อยู่รูปในคอลัมน์ "รูปหลักฐาน URL" ของรายการ
     deeds.getRange(deedRow, 12).setValue(deedPhotoApiPath_(deedId, sid));
@@ -100,6 +101,7 @@ function deedPhotoSha_(bytes) {
 
 function deedPhotoEnsureHashHeader_(sh) {
   if (String(sh.getRange(1, 5).getValue() || '') === '') sh.getRange(1, 5).setValue('SHA-256');
+  if (String(sh.getRange(1, 6).getValue() || '') === '') sh.getRange(1, 6).setValue('dHash');
 }
 
 // ลายนิ้วมือรูปทุกรายการ สำหรับรายงาน "รูปหลักฐานซ้ำ" — รูปเก่าที่ยังไม่มีค่า คำนวณเพิ่มรอบละไม่เกิน 25 ไฟล์ (กันเวลาเกิน)
@@ -108,7 +110,7 @@ function deedPhotoHashes_() {
   if (!sh || sh.getLastRow() < 2) return { status: 'success', photos: [], pending: 0 };
   deedPhotoEnsureHashHeader_(sh);
   const n = sh.getLastRow() - 1;
-  const rows = sh.getRange(2, 1, n, 5).getValues();
+  const rows = sh.getRange(2, 1, n, 6).getValues();
   let filled = 0, pending = 0;
   const started = Date.now();
   rows.forEach(function (r, i) {
@@ -116,15 +118,31 @@ function deedPhotoHashes_() {
     if (filled >= 25 || Date.now() - started > 20000) { pending++; return; }
     try {
       r[4] = deedPhotoSha_(DriveApp.getFileById(String(r[2])).getBlob().getBytes());
-      sh.getRange(i + 2, 5).setValue(r[4]);
+      sh.getRange(i + 2, 5).setValue("'" + r[4]);
       filled++;
     } catch (e) { pending++; }
   });
   return {
     status: 'success',
     pending: pending,
-    photos: rows.filter(function (r) { return r[4]; }).map(function (r) { return { deedId: String(r[0]), studentId: String(r[1]), hash: String(r[4]) }; })
+    photos: rows.filter(function (r) { return r[4] || r[5]; }).map(function (r) { return { deedId: String(r[0]), studentId: String(r[1]), hash: String(r[4] || ''), dhash: String(r[5] || '') }; }),
+    // รูปที่ยังไม่มี dHash — ผู้ตรวจคำนวณในเบราว์เซอร์แล้วส่งกลับ (deedphoto_setdhash)
+    needDhash: rows.filter(function (r) { return r[2] && !r[5]; }).slice(0, 60).map(function (r) { return { deedId: String(r[0]), studentId: String(r[1]) }; })
   };
+}
+
+function deedPhotoSetDhash_(data) {
+  const sh = runSS_().getSheetByName(DEED_PHOTO_SHEET);
+  if (!sh) return { status: 'error', code: 'PHOTO_NOT_FOUND' };
+  deedPhotoEnsureHashHeader_(sh);
+  let saved = 0;
+  (data.items || []).slice(0, 80).forEach(function (it) {
+    const sid = String(it.studentId || ''), id = String(it.deedId || ''), dh = String(it.dhash || '');
+    if (!deedPhotoValid_(sid, id) || !/^[0-9a-f]{16}$/.test(dh)) return;
+    const r = deedPhotoFind_(sh, id, sid);
+    if (r > 0) { sh.getRange(r, 6).setValue("'" + dh); saved++; }
+  });
+  return { status: 'success', saved: saved };
 }
 
 function deedPhotoHandle_(data) {
@@ -132,6 +150,7 @@ function deedPhotoHandle_(data) {
     case 'deedphoto_put': return deedPhotoPut_(data);
     case 'deedphoto_get': return deedPhotoGet_(data);
     case 'deedphoto_hashes': return deedPhotoHashes_();
+    case 'deedphoto_setdhash': return deedPhotoSetDhash_(data);
     default: return { status: 'error', code: 'PHOTO_ACTION_UNKNOWN' };
   }
 }

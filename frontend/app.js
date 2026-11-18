@@ -1177,6 +1177,7 @@ const App = {
             imageUrl: deed.imageUrl || (deed.imageUrls && deed.imageUrls[0]) || '',
             imageUrls: deed.imageUrls || (deed.imageUrl ? [deed.imageUrl] : []),
             imageData: deed.imageData || deed.imageUrl || '',
+            imageDHash: deed.imageDHash || '',
             status: 'pending', // pending | approved | rejected
             submittedAt: new Date().toISOString(),
             approvedBy: null,
@@ -1304,11 +1305,75 @@ const App = {
     },
 
     // รหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง) เก็บเฉพาะในแท็บนี้ — ใช้ดึงรายการเต็มของทุกคน
-    adminKeyHeader() {
-        try { const k = sessionStorage.getItem('gd_run_admin_key'); return k ? { 'X-Admin-Key': k } : {}; } catch (_) { return {}; }
+    // ลายนิ้วมือความคล้ายของภาพ (dHash 64 บิต) — รูปเดียวกันที่ถูกย่อ/บีบอัด/ครอปเล็กน้อยได้ค่าใกล้กัน
+    imageDHash(src) {
+        return new Promise((resolve) => {
+            try {
+                const img = new Image();
+                img.onload = () => {
+                    try {
+                        const c = document.createElement('canvas');
+                        c.width = 9; c.height = 8;
+                        const ctx = c.getContext('2d', { willReadFrequently: true });
+                        ctx.drawImage(img, 0, 0, 9, 8);
+                        const px = ctx.getImageData(0, 0, 9, 8).data;
+                        const g = (x, y) => { const i = (y * 9 + x) * 4; return px[i] * 0.299 + px[i + 1] * 0.587 + px[i + 2] * 0.114; };
+                        let hex = '';
+                        for (let y = 0; y < 8; y++) {
+                            let byte = 0;
+                            for (let x = 0; x < 8; x++) byte = (byte << 1) | (g(x, y) < g(x + 1, y) ? 1 : 0);
+                            hex += byte.toString(16).padStart(2, '0');
+                        }
+                        resolve(hex);
+                    } catch (_) { resolve(null); }
+                };
+                img.onerror = () => resolve(null);
+                img.src = src;
+            } catch (_) { resolve(null); }
+        });
     },
-    clearAdminKey() { try { sessionStorage.removeItem('gd_run_admin_key'); } catch (_) {} },
+
+    // ผู้ตรวจที่เข้าระบบด้วย LINE ได้ token อายุ 12 ชม. (ตรวจลายเซ็นที่เซิร์ฟเวอร์) — ใช้แทนรหัสผู้ตรวจได้ทุก API
+    staffToken() {
+        try {
+            const o = JSON.parse(localStorage.getItem('gd_staff_token') || 'null');
+            return o && o.token && o.exp > Date.now() + 60000 ? o : null;
+        } catch (_) { return null; }
+    },
+    adminKeyHeader() {
+        const h = {};
+        try { const k = sessionStorage.getItem('gd_run_admin_key'); if (k) h['X-Admin-Key'] = k; } catch (_) {}
+        const t = this.staffToken();
+        if (t) h['X-Staff-Token'] = t.token;
+        return h;
+    },
+    clearAdminKey() {
+        try { sessionStorage.removeItem('gd_run_admin_key'); } catch (_) {}
+        try { localStorage.removeItem('gd_staff_token'); } catch (_) {}
+    },
+    // เข้าระบบผู้ตรวจด้วย LINE: interactive=true จะพาไปหน้า login ของ LINE ถ้ายังไม่ได้ login
+    async staffLogin(interactive = false) {
+        try {
+            if (typeof LiffHelper !== 'undefined' && !LiffHelper.isInitialized) await LiffHelper.init();
+            if (typeof liff === 'undefined' || !liff.isLoggedIn) return { status: 'error', code: 'NO_LIFF', message: 'โหลด LINE ไม่สำเร็จ' };
+            if (!liff.isLoggedIn()) {
+                if (interactive) liff.login({ redirectUri: window.location.href });
+                return { status: 'redirect' };
+            }
+            const idToken = liff.getIDToken && liff.getIDToken();
+            const res = await fetch('/api/staff_auth', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ idToken }) });
+            const j = await res.json().catch(() => ({}));
+            if (j.status === 'success' && j.token) {
+                localStorage.setItem('gd_staff_token', JSON.stringify({ token: j.token, name: j.name, exp: Date.now() + (j.expiresInHours || 12) * 3600000 }));
+                return j;
+            }
+            // ID token ของ LINE หมดอายุ (~1 ชม.) → login ใหม่
+            if (j.code === 'LINE_VERIFY_FAILED' && interactive && liff.logout) { liff.logout(); liff.login({ redirectUri: window.location.href }); return { status: 'redirect' }; }
+            return j;
+        } catch (e) { return { status: 'error', code: 'STAFF_LOGIN_FAILED', message: String(e && e.message || e) }; }
+    },
     ensureAdminKey(message) {
+        if (this.staffToken()) return 'line';
         try {
             let k = sessionStorage.getItem('gd_run_admin_key') || '';
             if (!k && typeof prompt === 'function') {

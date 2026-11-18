@@ -17,22 +17,26 @@
   const yearOf = (sid) => { const s = byId[sid]; return s && s.year_level ? Number(s.year_level) : (69 - Number(String(sid).slice(0, 2)) + 1); };
   const deedHoursOf = (sid) => { try { return Number((App.getStudentSummary(sid) || {}).totalHours) || 0; } catch (_) { return 0; } };
 
+  // รหัสผู้ตรวจ หรือ token จากการเข้าระบบด้วย LINE (หน้าอาจารย์)
+  const authHeaders = () => (App.adminKeyHeader ? App.adminKeyHeader() : { 'X-Admin-Key': sessionStorage.getItem(KEY) || '' });
+  const hasAuth = () => Object.keys(authHeaders()).length > 0;
+
   async function call(method, body, query = '') {
     const r = await fetch(API + query, { method, cache: 'no-store',
-      headers: { 'Content-Type': 'application/json', 'X-Admin-Key': sessionStorage.getItem(KEY) || '' },
+      headers: { 'Content-Type': 'application/json', ...authHeaders() },
       body: body ? JSON.stringify(body) : undefined });
     const d = await r.json().catch(() => ({ status: 'error', code: 'bad_response' }));
-    if (r.status === 401) { sessionStorage.removeItem(KEY); showKey('รหัสผู้ตรวจไม่ถูกต้อง'); throw new Error('ADMIN_KEY_REQUIRED'); }
+    if (r.status === 401) { if (App.clearAdminKey) App.clearAdminKey(); else sessionStorage.removeItem(KEY); showKey('รหัสผู้ตรวจไม่ถูกต้อง'); throw new Error('ADMIN_KEY_REQUIRED'); }
     if (d.status !== 'success') throw new Error(d.code || 'error');
     return d;
   }
 
   function showKey(err) { $('key-card').hidden = false; $('app').hidden = true; $('key-err').hidden = !err; $('key-err').textContent = err || ''; }
   $('key-form').addEventListener('submit', (e) => { e.preventDefault(); sessionStorage.setItem(KEY, $('key-input').value.trim()); load(); });
-  $('btn-lock').addEventListener('click', () => { sessionStorage.removeItem(KEY); showKey(); });
+  $('btn-lock').addEventListener('click', () => { if (App.clearAdminKey) App.clearAdminKey(); else sessionStorage.removeItem(KEY); showKey(); });
 
   async function load() {
-    if (!sessionStorage.getItem(KEY)) return showKey();
+    if (!hasAuth()) return showKey();
     try {
       data = await call('GET', null, '?all=1');
       $('key-card').hidden = true; $('app').hidden = false;
@@ -181,7 +185,7 @@
     msg.textContent = method === 'POST' ? 'กำลังติดตั้ง…' : 'กำลังตรวจ…';
     try {
       const r = await fetch((App.getApiBaseUrl ? App.getApiBaseUrl() : '') + '/api/richmenu-setup', { method, cache: 'no-store',
-        headers: { 'X-Admin-Key': sessionStorage.getItem(KEY) || '' } });
+        headers: authHeaders() });
       const d = await r.json();
       if (d.status !== 'success') throw new Error(d.code || r.status);
       msg.textContent = method === 'POST' ? '✅ ติดตั้งแล้ว เปิด LINE OA เพื่อดูเมนูใหม่' : `ติดตั้งอยู่ ${d.installed.length} แท็บ`;

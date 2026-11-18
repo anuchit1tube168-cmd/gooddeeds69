@@ -1,7 +1,7 @@
 // ตรวจก่อนส่ง: เพดานชั่วโมง (ครั้ง/วัน/ภาค/ปี) และการลงซ้ำ — หน้าบันทึกความดีเรียกก่อนกดส่ง
 // GET /api/deed_check?studentId=&categoryId=&hours=&activityDate=&description=
 // hours=0 → ขอดูโควตาคงเหลืออย่างเดียว
-import { CORS, json, isAdmin, validSid } from './_gateway.js';
+import { CORS, json, staffOf, validSid } from './_gateway.js';
 import { checkDeed, usageOf, RULES } from './_deed_rules.js';
 import { fetchDeeds } from './_deed_store.js';
 
@@ -13,7 +13,7 @@ export async function onRequestGet({ request, env }) {
   if (!validSid(studentId)) return json({ status: 'error', code: 'BAD_STUDENT_ID' }, 400);
   // ดูได้เฉพาะของตัวเอง (หรือผู้ดูแล)
   const own = String(request.headers.get('X-GoodDeeds-Student-Id') || '').trim() === studentId;
-  if (!own && !isAdmin(request, env)) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
+  if (!own && !(await staffOf(request, env))) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
   const all = !q.get('categoryId');
   const categoryId = Number(q.get('categoryId'));
   if (!all && !RULES[categoryId]) return json({ status: 'error', code: 'CATEGORY_INVALID' }, 400);

@@ -175,7 +175,8 @@ export async function onRequestPost(context) {
       // ใบบันทึกความดีบนทุกเครื่องจะดึงรูปผ่าน /api/deed_photo
       if (saved && saved.status === 'success' && typeof imageUrl === 'string' && imageUrl.startsWith('data:image')) {
         try {
-          const up = await callGas(env, { action: 'deedphoto_put', deedId, studentId, image: imageUrl });
+          const dhash = /^[0-9a-f]{16}$/.test(String(rawDeed.imageDHash || '')) ? String(rawDeed.imageDHash) : '';
+          const up = await callGas(env, { action: 'deedphoto_put', deedId, studentId, image: imageUrl, dhash });
           saved.photo = up && up.status === 'success' ? up.path : (up && up.code) || 'PHOTO_FAILED';
         } catch (pe) { saved.photo = 'PHOTO_FAILED'; }
       }
