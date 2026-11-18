@@ -51,6 +51,52 @@ function notifyContact_(studentId) {
   return out;
 }
 
+/**
+ * ส่ง LINE ถึงนักเรียน 1 คน
+ * 1) ใช้ LINE_CHANNEL_ACCESS_TOKEN ใน Script Properties ถ้ามี
+ * 2) ไม่มี/ส่งไม่ผ่าน → ฝากส่งผ่าน Cloudflare (/api/line_push) ซึ่งเก็บรหัส LINE ไว้แล้ว — ล็อกด้วย RUN_GATEWAY_KEY
+ */
+function notifyLinePush_(to, text) {
+  const token = PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN');
+  if (token) {
+    try {
+      const r = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
+        method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+        headers: { Authorization: 'Bearer ' + token },
+        payload: JSON.stringify({ to: to, messages: [{ type: 'text', text: text }] })
+      });
+      if (r.getResponseCode() === 200) return true;
+    } catch (e) {}
+  }
+  const key = (typeof runGatewayKey_ === 'function') ? runGatewayKey_() : '';
+  if (!key) return false;
+  try {
+    const r2 = UrlFetchApp.fetch(NOTIFY_SITE + '/api/line_push', {
+      method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+      payload: JSON.stringify({ gatewayKey: key, to: to, text: text })
+    });
+    return r2.getResponseCode() === 200;
+  } catch (e) { return false; }
+}
+
+// สถานะช่องทางแจ้งเตือน (ไม่คืนค่ารหัสลับ) — ใช้ในหน้าอาจารย์ "ตรวจสถานะการแจ้งเตือน"
+function notifyStatus_() {
+  const out = { status: 'success', lineTokenInScript: !!PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN') };
+  try { out.mailQuota = MailApp.getRemainingDailyQuota(); out.mail = true; }
+  catch (e) { out.mail = false; out.mailError = 'ยังไม่ได้อนุญาตการส่งอีเมล (send_mail)'; }
+  try { out.weeklyAudit = ScriptApp.getProjectTriggers().some(function (t) { return t.getHandlerFunction() === 'weeklyDeedAudit'; }); }
+  catch (e) { out.weeklyAudit = null; }
+  try {
+    const main = notifySS_().getSheetByName('Main_2569');
+    if (main && main.getLastRow() >= 2) {
+      const col = main.getRange(2, 20, main.getLastRow() - 1, 1).getValues();
+      out.students = col.length;
+      out.studentsWithLine = col.filter(function (r) { return /^U[0-9a-f]{32}$/.test(String(r[0] || '').trim()); }).length;
+    }
+  } catch (e) {}
+  return out;
+}
+
 function notifyEscape_(s) {
   return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
     return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -79,14 +125,8 @@ function notifyStudent_(studentId, msg) {
       cache.put(k, '1', 60);
     }
 
-    const token = PropertiesService.getScriptProperties().getProperty('LINE_CHANNEL_ACCESS_TOKEN');
-    if (token && c.lineUserId && msg.skipLine !== true) {
-      const r = UrlFetchApp.fetch('https://api.line.me/v2/bot/message/push', {
-        method: 'post', contentType: 'application/json', muteHttpExceptions: true,
-        headers: { Authorization: 'Bearer ' + token },
-        payload: JSON.stringify({ to: c.lineUserId, messages: [{ type: 'text', text: (body + '\n\n🔗 ' + link).slice(0, 4900) }] })
-      });
-      result.line = r.getResponseCode() === 200;
+    if (c.lineUserId && msg.skipLine !== true) {
+      result.line = notifyLinePush_(c.lineUserId, (body + '\n\n🔗 ' + link).slice(0, 4900));
     }
 
     if (c.email && MailApp.getRemainingDailyQuota() > NOTIFY_MAIL_RESERVE) {

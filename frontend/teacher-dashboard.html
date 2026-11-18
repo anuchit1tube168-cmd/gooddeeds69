@@ -740,6 +740,10 @@
           </div>
         </div>
         <p style="font-size:.85rem;opacity:.8;margin:0 0 12px">ระบบตรวจอัตโนมัติทุกวันจันทร์ 07:30 น. ส่งสรุปเข้า Telegram อาจารย์ และแจ้ง นพอ. ที่พบปัญหาทาง LINE · ตัวเลขอิงข้อมูลในชีตกลาง (ไม่นับรายการที่ไม่อนุมัติ)</p>
+        <details class="card" style="padding:12px 16px;margin-bottom:12px" ontoggle="if(this.open)loadNotifyStatus()">
+          <summary style="cursor:pointer;font-weight:700">📡 สถานะการแจ้งเตือน (Telegram · LINE · อีเมล)</summary>
+          <div id="notify-status" style="margin-top:10px"></div>
+        </details>
         <details class="card" style="padding:12px 16px;margin-bottom:12px" ontoggle="if(this.open)loadStaffTeam()">
           <summary style="cursor:pointer;font-weight:700">👥 ทีมผู้ตรวจ (บัญชี LINE ที่อนุมัติแล้ว)</summary>
           <div id="staff-team" style="margin-top:10px"></div>
@@ -1502,6 +1506,33 @@
         } catch (_) {}
       }
       renderStaffBanner();
+    }
+
+    // ===== สถานะช่องทางแจ้งเตือน =====
+    async function loadNotifyStatus() {
+      const box = document.getElementById('notify-status');
+      if (!box) return;
+      box.innerHTML = '⏳ กำลังตรวจ…';
+      try {
+        const res = await fetch('/api/notify_status', { headers: App.adminKeyHeader(), cache: 'no-store' });
+        const j = await res.json();
+        if (!res.ok) throw new Error(j.code || res.status);
+        const row = (ok, title, detail) => `<div style="display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--card-border)">
+            <span style="font-size:1.1rem">${ok === true ? '✅' : ok === false ? '❌' : '❔'}</span>
+            <div><strong>${title}</strong><div style="font-size:.82rem;opacity:.8">${detail}</div></div></div>`;
+        const L = j.line, bot = L.cloudflare.bot;
+        box.innerHTML =
+          row(j.telegram.ready, 'Telegram (แจ้งอาจารย์)', j.telegram.ready ? 'บอทและห้องแชตพร้อม' : (!j.telegram.bot ? 'รหัสบอทใช้ไม่ได้' : 'ยังไม่ได้ตั้งห้องแชต')) +
+          row(L.ready, 'LINE (แจ้ง นพอ.)',
+            (bot && bot.ok ? `ส่งผ่าน LINE OA ${auditEsc(bot.name)} ${auditEsc(bot.basicId)}` : 'Cloudflare ยังไม่มีรหัส LINE ที่ใช้ได้') +
+            (L.appsScriptToken ? ' · Apps Script มีรหัสของตัวเอง' : ' · Apps Script ฝากส่งผ่าน Cloudflare') +
+            (L.studentsWithLine != null ? `<br>นพอ. ที่ผูก LINE แล้ว ${L.studentsWithLine}/${L.students} คน (คนที่ยังไม่ผูกจะไม่ได้รับ LINE)` : '')) +
+          row(j.email.ready, 'อีเมล (แจ้ง นพอ.)', j.email.ready ? `พร้อม · โควตาวันนี้เหลือ ${j.email.quotaToday} ฉบับ` : auditEsc(j.email.note || 'ยังไม่พร้อม') + ' — เจ้าของสคริปต์ต้องเพิ่มสิทธิ์ send_mail แล้ว Run setupEmailNotify') +
+          row(j.weeklyAudit, 'ตรวจรายสัปดาห์อัตโนมัติ (จันทร์ 07:30)', j.weeklyAudit ? 'ตั้งเวลาแล้ว' : 'ยังไม่ได้ตั้ง — Run setupWeeklyDeedAudit ใน Apps Script ครั้งเดียว') +
+          (j.appsScript !== 'ok' ? `<div style="color:#b5462f;margin-top:6px" data-keep-color>ติดต่อ Apps Script ไม่ได้ (${auditEsc(j.appsScript)})</div>` : '');
+      } catch (e) {
+        box.innerHTML = `<div style="color:#b5462f" data-keep-color>ตรวจไม่สำเร็จ (${auditEsc(e.message || e)}) — ต้องเข้าโหมดผู้ตรวจก่อน</div>`;
+      }
     }
 
     // ===== ทีมผู้ตรวจ (อนุมัติ/ระงับบัญชี LINE ของอาจารย์) =====

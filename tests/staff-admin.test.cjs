@@ -95,3 +95,35 @@ test('รูปคล้าย: dHash ต่างกันไม่กี่บ
   assert.ok(g[0].items.some(i => i.deedId === 'p2'));
   assert.ok(!g[0].items.some(i => i.deedId === 'p3'));
 });
+
+test('line_push: ต้องมี gatewayKey · ส่งผ่านรหัส LINE ของ Cloudflare', async () => {
+  const api = await mod('line_push.js');
+  const sent = [];
+  global.fetch = async (u, o = {}) => { sent.push([String(u), o.headers && o.headers.Authorization]); return new Response('{}'); };
+  const e2 = { ...env, LINE_CHANNEL_ACCESS_TOKEN: 'tok' };
+  const post = (b) => api.onRequestPost({ request: req('/api/line_push', { method: 'POST', body: JSON.stringify(b) }), env: e2 });
+  assert.strictEqual((await post({ to: UID, text: 'hi' })).status, 403);
+  assert.strictEqual((await post({ gatewayKey: 'x'.repeat(32), to: UID, text: 'hi' })).status, 403);
+  assert.strictEqual((await post({ gatewayKey: 'g'.repeat(32), to: 'bad', text: 'hi' })).status, 400);
+  assert.strictEqual((await post({ gatewayKey: 'g'.repeat(32), to: UID, text: 'hi' })).status, 200);
+  assert.deepStrictEqual(sent[0], ['https://api.line.me/v2/bot/message/push', 'Bearer tok']);
+});
+
+test('notify_status: เฉพาะผู้ตรวจ และไม่คืนค่ารหัสลับ', async () => {
+  const api = await mod('notify_status.js');
+  global.fetch = async (u, o = {}) => {
+    if (String(u).includes('telegram')) return new Response('{}');
+    if (String(u).includes('bot/info')) return new Response(JSON.stringify({ displayName: 'วพอ.', basicId: '@x' }));
+    return new Response(JSON.stringify({ status: 'success', lineTokenInScript: false, mail: false, mailError: 'x', weeklyAudit: false, students: 10, studentsWithLine: 4 }));
+  };
+  const e2 = { ...env, LINE_CHANNEL_ACCESS_TOKEN: 'secret-token-value', TELEGRAM_BOT_TOKEN: 'tg-secret', TELEGRAM_CHAT_ID: '1' };
+  assert.strictEqual((await api.onRequestGet({ request: req('/api/notify_status'), env: e2 })).status, 403);
+  const r = await api.onRequestGet({ request: req('/api/notify_status', { headers: { 'X-Admin-Key': 'a'.repeat(32) } }), env: e2 });
+  const txt = await r.text();
+  assert.ok(!txt.includes('secret-token-value') && !txt.includes('tg-secret'));
+  const j = JSON.parse(txt);
+  assert.strictEqual(j.line.ready, true);
+  assert.strictEqual(j.email.ready, false);
+  assert.strictEqual(j.telegram.ready, true);
+  assert.strictEqual(j.line.studentsWithLine, 4);
+});

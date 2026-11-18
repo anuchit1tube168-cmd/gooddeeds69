@@ -49,6 +49,7 @@ function deedsKeyOk_(e) {
  * data.items = [{ studentId, title, lines[], key }]  (สูงสุด 40 รายการต่อครั้ง กันโควตา LINE)
  */
 function deedNotifyHandle_(data) {
+  if (data.action === 'deednotify_status') return (typeof notifyStatus_ === 'function') ? notifyStatus_() : { status: 'error', code: 'NOTIFY_NOT_DEPLOYED' };
   if (typeof notifyStudent_ !== 'function') return { status: 'error', code: 'NOTIFY_NOT_DEPLOYED' };
   var items = (data.items || []).slice(0, 40);
   var sent = 0;

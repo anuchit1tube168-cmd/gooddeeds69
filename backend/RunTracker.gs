@@ -135,7 +135,7 @@ function runTrackerHandle_(data) {
       case 'staff_get': case 'staff_request': case 'staff_list': case 'staff_set':
         if (typeof staffHandle_ !== 'function') return { status: 'error', code: 'STAFF_NOT_DEPLOYED' };
         return staffHandle_(data);
-      case 'deednotify_send':
+      case 'deednotify_send': case 'deednotify_status':
         if (typeof deedNotifyHandle_ !== 'function') return { status: 'error', code: 'DEEDNOTIFY_NOT_DEPLOYED' };
         return deedNotifyHandle_(data);
       case 'profile_get': case 'profile_set': case 'profile_admin_update':
