@@ -665,10 +665,34 @@
           <h2>📋 รายการรออนุมัติ</h2>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <input type="text" class="form-input" style="width:200px;padding:8px 12px" id="pend-search"
-              placeholder="🔍 ค้นหาชื่อ/รหัส..." oninput="renderPending()">
-            <button class="btn btn-success btn-sm" id="approve-all-btn" onclick="approveAll()">✅ อนุมัติทั้งหมด</button>
+              placeholder="🔍 ค้นหาชื่อ/รหัส/กิจกรรม..." oninput="renderPending()">
+            <button class="btn btn-outline btn-sm" onclick="loadTriage(true)" title="คัดกรองคิวใหม่จากชีตกลาง">🔄 ตรวจคิวใหม่</button>
           </div>
         </div>
+        <style>
+          .tri-seg{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px}
+          .tri-seg button{flex:1;min-width:150px;padding:12px 14px;border-radius:14px;border:1px solid var(--card-border);background:var(--card-bg,rgba(255,255,255,.04));color:inherit;text-align:left;cursor:pointer;font:inherit}
+          .tri-seg button.on{outline:2px solid var(--gold);background:rgba(201,162,39,.12)}
+          .tri-seg .n{font-size:1.6rem;font-weight:800;line-height:1.1;display:block}
+          .tri-seg .l{font-size:.82rem;opacity:.8}
+          .tri-bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:10px 12px;border-radius:12px;background:rgba(47,125,79,.10);margin-bottom:10px;position:sticky;top:0;z-index:5;backdrop-filter:blur(6px)}
+          .tri-row{display:grid;grid-template-columns:28px 56px 1fr auto;gap:10px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--card-border)}
+          .tri-row img,.tri-card img.th{width:56px;height:56px;object-fit:cover;border-radius:10px;cursor:pointer;background:rgba(127,127,127,.15)}
+          .tri-ph{width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;background:rgba(127,127,127,.15);font-size:1.3rem}
+          .tri-name{font-weight:700}
+          .tri-sub{font-size:.8rem;opacity:.78}
+          .tri-desc{font-size:.85rem;opacity:.9;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+          .tri-card{border:1px solid var(--card-border);border-radius:16px;padding:14px;margin-bottom:12px;display:grid;grid-template-columns:72px 1fr;gap:12px}
+          .tri-card.block{border-left:5px solid #b5462f}.tri-card.warn{border-left:5px solid #c9a227}
+          .tri-card img.th{width:72px;height:72px}
+          .tri-flags{display:flex;flex-direction:column;gap:4px;margin:8px 0}
+          .tri-flag{font-size:.82rem;padding:5px 10px;border-radius:8px;line-height:1.4}
+          .tri-flag.block{background:rgba(181,70,47,.16);color:#e07a63}.tri-flag.warn{background:rgba(201,162,39,.16);color:#d9b84a}.tri-flag.info{background:rgba(127,127,127,.15)}
+          .tri-act{display:flex;gap:6px;flex-wrap:wrap;grid-column:1/-1}
+          .tri-act .btn{flex:1;min-width:110px}
+          @media (max-width:560px){.tri-row{grid-template-columns:24px 48px 1fr}.tri-row .tri-go{grid-column:2/-1}.tri-row img,.tri-ph{width:48px;height:48px}}
+        </style>
+        <div id="triage-box"></div>
         <div id="pending-list"></div>
       </div>
 
@@ -1445,6 +1469,7 @@
       }
 
       renderPending();
+      loadTriage(false);
       renderStudents();
       renderStats();
     }
@@ -1499,6 +1524,7 @@
       renderStaffBanner();
       if (typeof App.syncAllDeedsWithBackend === 'function') await App.syncAllDeedsWithBackend().catch(() => {});
       if (typeof loadData === 'function') loadData();
+      loadTriage(true);
     }
     async function staffLineLogin() {
       const r = await App.staffLogin(true);
@@ -1713,7 +1739,153 @@
     if (location.hash === '#audit') document.addEventListener('DOMContentLoaded', () => { switchTab('audit', null); loadAudit(false); });
 
     // ===== PENDING TAB =====
+    // ===== คัดกรองอัจฉริยะ: ผิดกฎ / ควรตรวจ / ปกติ (อนุมัติเป็นชุด) =====
+    let triage = null, triageAt = 0, triageView = 'review', triageSel = new Set(), triageBusy = false, triageLoading = false;
+    async function loadTriage(force) {
+      if (!isStaffAuthed()) { triage = null; return; }
+      if (triageLoading) return;
+      if (!force && triage && Date.now() - triageAt < 60000) return;
+      const box = document.getElementById('triage-box');
+      if (box && !triage) box.innerHTML = '<div style="padding:20px;text-align:center;opacity:.8">⏳ กำลังคัดกรองคิว (ตรวจโควตา รายการซ้ำ รูปซ้ำ)…</div>';
+      triageLoading = true;
+      try {
+        const res = await fetch('/api/review_queue', { headers: App.adminKeyHeader(), cache: 'no-store' });
+        if (res.status === 403) { App.clearAdminKey(); renderStaffBanner('สิทธิ์ผู้ตรวจหมดอายุ — ยืนยันตัวตนใหม่'); triage = null; return renderPending(); }
+        const j = await res.json();
+        if (!res.ok || !Array.isArray(j.items)) throw new Error(j.code || res.status);
+        triage = j; triageAt = Date.now();
+        triageSel = new Set([...triageSel].filter(k => j.items.some(i => i.level === 'ok' && triKey(i) === k)));
+        if (!j.counts.block && !j.counts.warn && triageView === 'review') triageView = 'ok';
+      } catch (e) {
+        triage = null;
+        if (box) box.innerHTML = `<div style="padding:10px;color:#b5462f" data-keep-color>คัดกรองอัตโนมัติไม่สำเร็จ (${auditEsc(e.message || e)}) — แสดงรายการแบบเดิมด้านล่าง</div>`;
+        return;
+      } finally { triageLoading = false; }
+      renderPending();
+    }
+    const triKey = (d) => `${d.studentId}|${d.id}`;
+    function triWho(d) {
+      const s = App.getStudentById(d.studentId) || {};
+      const name = d.studentName || d.student_name || (s.full_name || `${s.rank || 'นพอ.'} ${s.first_name || ''} ${s.last_name || ''}`).trim();
+      return { name: auditEsc(name), year: auditEsc(s.class_year || d.class_year || String(d.studentId).slice(0, 2)) };
+    }
+    function triThumb(d, cls) {
+      const k = (Array.isArray(d.imageUrls) && d.imageUrls[0]) || d.imageUrl;
+      const src = k ? App.getImage(k) : '';
+      if (!src) return '<div class="tri-ph" title="ไม่มีรูปหลักฐาน">📷</div>';
+      return `<img class="${cls || ''}" src="${auditEsc(src)}" loading="lazy" data-k="${auditEsc(k)}" onclick="showLightbox(this.dataset.k)" onerror="this.outerHTML='<div class=tri-ph>🖼️</div>'" alt="หลักฐาน">`;
+    }
+    function triCounts() {
+      triage.counts = { total: triage.items.length, block: triage.items.filter(i => i.level === 'block').length, warn: triage.items.filter(i => i.level === 'warn').length, ok: triage.items.filter(i => i.level === 'ok').length };
+    }
+    function renderTriage(q) {
+      // รายการที่เพิ่งอนุมัติ/ปฏิเสธในหน้านี้ (ผ่านหน้าต่างเซ็นชื่อ ฯลฯ) → เอาออกจากคิวทันที ไม่ต้องรอคัดกรองรอบใหม่
+      const before = triage.items.length;
+      triage.items = triage.items.filter(i => {
+        const x = (App.getDeeds(i.studentId) || []).find(dd => String(dd.id) === String(i.id));
+        return !(x && ['approved', 'rejected', 'deleted'].includes(String(x.status || '').toLowerCase()));
+      });
+      if (triage.items.length !== before) triCounts();
+      const box = document.getElementById('triage-box');
+      const c = document.getElementById('pending-list');
+      if (c) c.innerHTML = '';
+      const match = (d) => !q || [d.studentId, triWho(d).name, d.description, d.location].join(' ').toLowerCase().includes(q);
+      const review = triage.items.filter(i => i.level !== 'ok' && match(i));
+      const ok = triage.items.filter(i => i.level === 'ok' && match(i));
+      const k = triage.counts;
+      let html = `<div class="tri-seg">
+          <button class="${triageView === 'review' ? 'on' : ''}" onclick="triageView='review';renderPending()"><span class="n" style="color:${k.block ? '#e07a63' : 'inherit'}" data-keep-color>${k.block + k.warn}</span><span class="l">⚠️ ต้องตรวจทีละรายการ (ผิดกฎ ${k.block} · ควรดู ${k.warn})</span></button>
+          <button class="${triageView === 'ok' ? 'on' : ''}" onclick="triageView='ok';renderPending()"><span class="n" style="color:#3a9a62" data-keep-color>${k.ok}</span><span class="l">✅ ปกติ — ในโควตา มีรูป ไม่ซ้ำ อนุมัติเป็นชุดได้</span></button>
+        </div>`;
+      if (triageView === 'ok') {
+        const sel = ok.filter(d => triageSel.has(triKey(d))).length;
+        html += ok.length ? `<div class="tri-bar">
+            <label style="display:flex;gap:6px;align-items:center;cursor:pointer"><input type="checkbox" ${sel && sel === ok.length ? 'checked' : ''} onchange="triSelectAll(this.checked)"> เลือกทั้งหมด</label>
+            <span style="opacity:.8;font-size:.85rem">เลือกแล้ว ${sel}/${ok.length}</span>
+            <button class="btn btn-success btn-sm" style="margin-left:auto" ${sel && !triageBusy ? '' : 'disabled'} onclick="triApproveSelected()">✅ อนุมัติที่เลือก (${sel})</button>
+            <span id="tri-prog" style="font-size:.85rem"></span>
+          </div><div class="card" style="padding:0;overflow:hidden">${ok.map(d => {
+            const w = triWho(d), cat = App.getCategoryById(d.categoryId) || {};
+            return `<div class="tri-row">
+              <input type="checkbox" ${triageSel.has(triKey(d)) ? 'checked' : ''} onchange="triToggle('${auditEsc(triKey(d))}',this.checked)">
+              ${triThumb(d)}
+              <div style="min-width:0">
+                <div class="tri-name">${w.name} <span class="tri-sub">รุ่น ${w.year} · ${auditEsc(d.studentId)}</span></div>
+                <div class="tri-sub">${cat.emoji || ''} ${auditEsc(cat.name || '')} · <strong>${auditEsc(d.hours)} ชม.</strong> · ${App.formatDate(d.activityDate)}${d.quota ? ' · ' + auditEsc(d.quota) : ''}</div>
+                <div class="tri-desc">${auditEsc(d.description || '')}${d.location ? ' · 📍 ' + auditEsc(d.location) : ''}</div>
+              </div>
+              <div class="tri-go"><button class="btn btn-outline btn-sm" onclick="openLiveSigModal('${auditEsc(d.studentId)}','${auditEsc(d.id)}')">ดู/เซ็น</button></div>
+            </div>`; }).join('')}</div>` : '<div class="empty-state"><div class="icon">✅</div><p>ไม่มีรายการปกติที่รออนุมัติ</p></div>';
+      } else {
+        html += review.length ? review.map(d => {
+          const w = triWho(d), cat = App.getCategoryById(d.categoryId) || {};
+          const dup = d.flags.some(f => f.code === 'DUPLICATE');
+          return `<div class="tri-card ${d.level}">
+            ${triThumb(d, 'th')}
+            <div style="min-width:0">
+              <div class="tri-name">${w.name} <span class="tri-sub">รุ่น ${w.year} · ${auditEsc(d.studentId)}</span></div>
+              <div class="tri-sub">${cat.emoji || ''} ${auditEsc(cat.name || '')} · <strong>${auditEsc(d.hours)} ชม.</strong> · ทำ ${App.formatDate(d.activityDate)} · ส่ง ${App.formatDate(d.submittedAt)}${d.quota ? ' · ' + auditEsc(d.quota) : ''}</div>
+              <div class="tri-desc" style="-webkit-line-clamp:3">${auditEsc(d.description || '-')}${d.location ? ' · 📍 ' + auditEsc(d.location) : ''}</div>
+              <div class="tri-flags">${d.flags.map(f => `<div class="tri-flag ${f.level}" data-keep-color>${f.level === 'block' ? '⛔' : f.level === 'warn' ? '⚠️' : 'ℹ️'} ${auditEsc(f.text)}</div>`).join('')}</div>
+            </div>
+            <div class="tri-act">
+              <button class="btn btn-outline btn-sm" style="color:var(--gold);border-color:rgba(201,162,39,.5)" onclick="openLiveSigModal('${auditEsc(d.studentId)}','${auditEsc(d.id)}')">✍️ ตรวจ & เซ็น</button>
+              ${dup ? `<button class="btn btn-outline btn-sm" onclick="switchTab('audit',null);loadAudit(false)">🧩 รวม/ลบรายการซ้ำ</button>` : ''}
+              <button class="btn btn-success btn-sm" onclick="triApproveOne('${auditEsc(d.studentId)}','${auditEsc(d.id)}','${d.level}')">✅ อนุมัติ</button>
+              <button class="btn btn-danger btn-sm" onclick="openRejectModal('${auditEsc(d.studentId)}','${auditEsc(d.id)}')">❌ ปฏิเสธ</button>
+            </div>
+          </div>`; }).join('') : '<div class="empty-state"><div class="icon">🎉</div><p>ไม่มีรายการที่ต้องตรวจเป็นพิเศษ — ดูแท็บ "ปกติ" เพื่ออนุมัติเป็นชุด</p></div>';
+      }
+      html += `<div style="font-size:.75rem;opacity:.6;margin-top:8px">คัดกรองเมื่อ ${new Date(triage.generatedAt).toLocaleTimeString('th-TH')} น.${triage.photoCheck ? '' : ' · (รอบนี้ตรวจรูปซ้ำไม่ได้)'} · ผู้ตรวจ: ${auditEsc(triage.reviewer || '')}</div>`;
+      box.innerHTML = html;
+    }
+    function triToggle(k, on) { on ? triageSel.add(k) : triageSel.delete(k); renderPending(); }
+    function triSelectAll(on) {
+      const q = (document.getElementById('pend-search')?.value || '').toLowerCase();
+      triage.items.filter(i => i.level === 'ok').forEach(i => {
+        if (!q || [i.studentId, i.description, i.location].join(' ').toLowerCase().includes(q)) on ? triageSel.add(triKey(i)) : triageSel.delete(triKey(i));
+      });
+      renderPending();
+    }
+    function reviewerName() {
+      const t = App.staffToken && App.staffToken();
+      if (t && t.name) return t.name;
+      const u = App.getCurrentUser();
+      return (u && (u.name || u.username)) || 'อาจารย์ผู้ตรวจ';
+    }
+    function triDrop(sid, id) {
+      if (!triage) return;
+      triage.items = triage.items.filter(i => !(String(i.studentId) === String(sid) && String(i.id) === String(id)));
+      triCounts();
+      triageSel.delete(`${sid}|${id}`);
+    }
+    async function triApproveOne(sid, id, level) {
+      if (level === 'block' && !confirm('รายการนี้ผิดข้อกำหนด (เกินเพดานหรือลงซ้ำ) — ยืนยันอนุมัติทั้งที่ผิดกฎ?')) return;
+      await App.updateDeedStatus(sid, id, 'approved', reviewerName());
+      triDrop(sid, id);
+      showToast('✅ อนุมัติแล้ว', 'success');
+      loadData();
+    }
+    async function triApproveSelected() {
+      const list = triage.items.filter(i => i.level === 'ok' && triageSel.has(triKey(i)));
+      if (!list.length || !confirm(`อนุมัติ ${list.length} รายการที่ผ่านการคัดกรองแล้ว?\nชื่อผู้อนุมัติ: ${reviewerName()}`)) return;
+      triageBusy = true;
+      let done = 0, fail = 0;
+      for (const d of list) {
+        const prog = document.getElementById('tri-prog');
+        if (prog) prog.textContent = `กำลังอนุมัติ ${done + fail + 1}/${list.length}…`;
+        try { await App.updateDeedStatus(d.studentId, d.id, 'approved', reviewerName()); triDrop(d.studentId, d.id); done++; }
+        catch (_) { fail++; }
+      }
+      triageBusy = false;
+      showToast(`✅ อนุมัติแล้ว ${done} รายการ${fail ? ` · ไม่สำเร็จ ${fail}` : ''}`, fail ? 'warning' : 'success');
+      loadData();
+    }
+
     function renderPending() {
+      const qTri = (document.getElementById('pend-search')?.value || '').toLowerCase();
+      if (triage && isStaffAuthed()) return renderTriage(qTri);
+      const tb = document.getElementById('triage-box'); if (tb && !triageLoading) tb.innerHTML = '';
       const q = (document.getElementById('pend-search')?.value || '').toLowerCase();
       let list = pendingDeeds;
       if (q) {

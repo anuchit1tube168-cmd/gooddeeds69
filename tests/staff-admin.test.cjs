@@ -127,3 +127,26 @@ test('notify_status: เฉพาะผู้ตรวจ และไม่ค�
   assert.strictEqual(j.telegram.ready, true);
   assert.strictEqual(j.line.studentsWithLine, 4);
 });
+
+test('review_queue: แยกผิดกฎ / ควรดู / ปกติ และต้องเป็นผู้ตรวจ', async () => {
+  const api = await mod('review_queue.js');
+  const NOW = new Date('2026-11-17T03:00:00Z');
+  const S2 = String(7000000 + 22);
+  const base = { description: 'ช่วยจัดสถานที่งานพิธี', location: 'วพอ.', imageUrl: '/api/deed_photo?x', submittedAt: '2026-11-16' };
+  const deeds = [
+    { ...base, id: 'ok1', studentId: SID, categoryId: 3, hours: 2, activityDate: '2026-11-15', status: 'pending' },
+    { ...base, id: 'b1', studentId: SID, categoryId: 7, hours: 1, activityDate: '2026-11-10', status: 'approved', description: 'ล้างจานช่วยแม่' },
+    { ...base, id: 'b2', studentId: SID, categoryId: 7, hours: 1, activityDate: '2026-11-11', status: 'approved', description: 'กวาดบ้าน' },
+    { ...base, id: 'blk', studentId: SID, categoryId: 7, hours: 1, activityDate: '2026-11-12', status: 'pending', description: 'รดน้ำต้นไม้' },
+    { ...base, id: 'np', studentId: S2, categoryId: 3, hours: 1, activityDate: '2026-11-14', status: 'pending', imageUrl: '' , description: 'ยกโต๊ะ'},
+    { ...base, id: 'late', studentId: S2, categoryId: 2, hours: 4, activityDate: '2026-06-13', status: 'pending', description: 'โครงการภายนอก' },
+  ];
+  const q = api.buildQueue(deeds, null, NOW);
+  const lv = Object.fromEntries(q.items.map(i => [i.id, i.level]));
+  assert.deepStrictEqual(lv, { blk: 'block', np: 'warn', late: 'warn', ok1: 'ok' });
+  assert.strictEqual(q.items[0].id, 'blk');
+  assert.ok(q.items.find(i => i.id === 'late').flags.some(f => f.code === 'LATE'));
+  assert.deepStrictEqual(q.counts, { total: 4, block: 1, warn: 2, ok: 1 });
+  global.fetch = async () => new Response('[]');
+  assert.strictEqual((await api.onRequestGet({ request: req('/api/review_queue'), env })).status, 403);
+});
