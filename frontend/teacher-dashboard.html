@@ -1100,7 +1100,24 @@
 
     window.loadDashboardData = loadData;
 
-    function openLiveSigModal(studentId, deedId) {
+    function isStaffAuthed() { return !!(App.adminKeyHeader && Object.keys(App.adminKeyHeader()).length); }
+    // ก่อนเปิดหน้าตรวจ: ต้องเป็นผู้ตรวจ และต้องมีรายละเอียดฉบับเต็ม (ดึงใหม่ถ้าในเครื่องเป็นฉบับย่อ)
+    async function openLiveSigModal(studentId, deedId) {
+      if (!isStaffAuthed()) {
+        showToast('🔒 กรุณายืนยันตัวตนผู้ตรวจก่อน จึงจะเห็นรายละเอียดคำขอ', 'warning');
+        const inLine = typeof liff !== 'undefined' && liff.isInClient && liff.isInClient();
+        if (inLine || confirm('ยืนยันตัวตนผู้ตรวจ\n\nกด OK = เข้าด้วย LINE\nกด Cancel = ใช้รหัสผู้ตรวจ')) await staffLineLogin();
+        else await staffKeyLogin();
+        if (!isStaffAuthed()) return;
+      }
+      let d0 = pendingDeeds.find(item => String(item.id) === String(deedId));
+      if (d0 && !d0.description && App.syncDeedsWithBackend) {
+        await App.syncDeedsWithBackend(String(studentId)).catch(() => null);
+        loadData();
+      }
+      return openLiveSigModalInner(studentId, deedId);
+    }
+    function openLiveSigModalInner(studentId, deedId) {
       const d = pendingDeeds.find(item => String(item.id) === String(deedId));
       if (!d) {
         showToast('⚠️ ไม่พบข้อมูลคำขอนี้ หรือได้รับการอนุมัติไปแล้ว', 'warning');
@@ -1145,7 +1162,7 @@
           </div>
         </div>
         <div style="font-size:0.9rem; color:var(--text-secondary); line-height:1.5; margin-bottom:10px; background:rgba(0,0,0,0.35); padding:10px 14px; border-radius:8px; border:1px solid rgba(255,255,255,0.05);">
-          ${d.description || d.title || '-'}
+          ${auditEsc(d.description || d.title || '-')}
         </div>
         <div style="display:flex; flex-wrap:wrap; gap:14px; font-size:0.8rem; color:var(--text-muted); margin-bottom:${imgPreviews ? '10px' : '0'};">
           <span>📅 วันที่ทำ: <b style="color:#fff;">${App.formatDate(d.activityDate)}</b></span>
@@ -1715,7 +1732,14 @@
         return;
       }
 
-      c.innerHTML = list.map(d => {
+      // ยังไม่ได้ยืนยันตัวตนผู้ตรวจ → เซิร์ฟเวอร์ส่งมาแค่ตัวเลข ไม่มีรายละเอียด/รูป ต้องบอกให้ชัด
+      const lockNote = isStaffAuthed() ? '' : `<div class="card" style="padding:14px 16px;margin-bottom:12px;border-left:4px solid #b5462f">
+          🔒 <strong>ยังไม่ได้ยืนยันตัวตนผู้ตรวจ</strong> — จึงยังไม่เห็นรายละเอียดกิจกรรม สถานที่ และรูปหลักฐาน
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <button class="btn btn-sm" style="background:#06c755;color:#fff" onclick="staffLineLogin()">เข้าด้วย LINE</button>
+            <button class="btn btn-outline btn-sm" onclick="staffKeyLogin()">ใช้รหัสผู้ตรวจ</button>
+          </div></div>`;
+      c.innerHTML = lockNote + list.map(d => {
         const cat = App.getCategoryById(d.categoryId);
         const s = d.student || {};
         const sid = s.student_id || d.studentId || d.student_id;
@@ -1753,7 +1777,7 @@
             ${sPos ? `<span class="badge" style="background:rgba(201,162,39,0.15); color:#ffd700; border:1px solid rgba(201,162,39,0.3); margin-left:4px; font-size:0.75rem;">⭐ ${sPos}</span>` : ''}
           </div>
           <div class="pcard-cat">${cat.emoji} ${cat.name}</div>
-          <div class="pcard-desc">${d.description || '-'}</div>
+          <div class="pcard-desc">${d.description ? auditEsc(d.description) : (isStaffAuthed() ? '-' : '🔒 ยืนยันตัวตนผู้ตรวจเพื่อดูรายละเอียด')}</div>
           <div class="pcard-meta">
             <span>📅 วันที่ทำ: ${App.formatDate(d.activityDate)}</span>
             <span>📤 ส่งเมื่อ: ${App.formatDate(d.submittedAt)}</span>
