@@ -412,7 +412,18 @@
                 <div id="liff-login-banner" class="pro-line-banner">
                     <div class="pro-line-text">ใช้งานผ่าน LINE Official Account ของวิทยาลัย</div>
                     <a href="https://line.me/R/ti/p/@586diwio" target="_blank" rel="noopener" class="pro-line-btn">เพิ่มเพื่อน LINE OA @586diwio</a>
+                    <a id="open-in-line-btn" href="https://liff.line.me/2010948179-Ympqt2bT" class="pro-line-btn" style="display:none;margin-top:8px;">เปิดในแอป LINE (แนะนำ)</a>
                 </div>
+                <script>
+                    // เปิดจากเบราว์เซอร์มือถือ (ไม่ใช่ในแอป LINE) → แนะนำปุ่มเปิดในแอป LINE เพื่อเข้าระบบอัตโนมัติและรับแจ้งเตือน
+                    (function () {
+                        var ua = navigator.userAgent || '';
+                        if (!/\bLine\//i.test(ua) && /Android|iPhone|iPad|iPod/i.test(ua)) {
+                            var btn = document.getElementById('open-in-line-btn');
+                            if (btn) btn.style.display = 'block';
+                        }
+                    })();
+                </script>
 
                 <div style="display:flex; align-items:center; gap:12px; margin: 16px 0; color:var(--text-muted); font-size:0.75rem;">
                     <div style="flex:1; height:1px; background:rgba(255,255,255,0.1);"></div>
