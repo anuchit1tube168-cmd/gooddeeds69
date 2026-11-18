@@ -2,8 +2,8 @@
 const test = require('node:test');
 const assert = require('node:assert');
 const path = require('node:path');
-const SID = String(6900000 + 11);
-const SID2 = String(6900000 + 12);
+const SID = String(7000000 + 11);
+const SID2 = String(7000000 + 12);
 const NOW = new Date('2026-11-17T03:00:00Z'); // 17 พ.ย. 2569 (ภาค 1/2569)
 const rules = () => import(path.join(__dirname, '../functions/api/_deed_rules.js'));
 const d = (id, cat, date, hours, extra = {}) => ({ id, studentId: SID, categoryId: cat, activityDate: date, hours, description: 'กิจกรรม ' + id, status: 'pending', ...extra });
@@ -88,7 +88,8 @@ test('submit_deed: เกินโควตา → 409 และไม่ส่�
   const api = await import(path.join(__dirname, '../functions/api/submit_deed.js'));
   const posts = [];
   global.fetch = async (u, o = {}) => {
-    if (!o.method || o.method === 'GET') return new Response(JSON.stringify([d('a', 7, '2026-11-01', 1), d('b', 7, '2026-11-08', 1)]));
+    const b = o.body ? JSON.parse(o.body) : {};
+    if (b.action === 'getDeeds') return new Response(JSON.stringify([d('a', 7, '2026-11-01', 1), d('b', 7, '2026-11-08', 1)]));
     posts.push(u); return new Response(JSON.stringify({ status: 'success' }));
   };
   const body = { studentId: SID, categoryId: 7, hours: 1, activityDate: '2026-11-15', description: 'ช่วยแม่ทำกับข้าว' };
@@ -122,4 +123,54 @@ test('deed_audit: ต้องมีรหัสผู้ตรวจหรื�
   assert.strictEqual(viaGas.status, 200);
   const txt = api.telegramText((await (await api.onRequestGet({ request: new Request('https://x.test/api/deed_audit?academicYear=2569', { headers: { 'X-Admin-Key': 'a'.repeat(32) } }), env })).json()).report);
   assert.match(txt, /รายงานตรวจความดีประจำสัปดาห์/);
+});
+
+test('get_all_deeds: คนทั่วไปได้แค่ตัวเลข · อาจารย์ได้รายการเต็ม · Apps Script ต้องได้ gatewayKey', async () => {
+  const api = await import(path.join(__dirname, '../functions/api/get_all_deeds.js'));
+  const sent = [];
+  global.fetch = async (u, o = {}) => { sent.push(JSON.parse(o.body)); return new Response(JSON.stringify([d('a', 6, '2026-11-01', 1, { location: 'วัด', imageUrl: 'x', approver: 'y' })])); };
+  const env = { RUN_ADMIN_KEY: 'a'.repeat(32), RUN_GATEWAY_KEY: 'g'.repeat(32) };
+  const pub = await (await api.onRequestGet({ request: new Request('https://x.test/api/get_all_deeds'), env })).json();
+  assert.strictEqual(pub[0].description, undefined);
+  assert.strictEqual(pub[0].location, undefined);
+  assert.strictEqual(pub[0].hours, 1);
+  assert.strictEqual(sent[0].gatewayKey, 'g'.repeat(32));
+  const full = await (await api.onRequestGet({ request: new Request('https://x.test/api/get_all_deeds', { headers: { 'X-Admin-Key': 'a'.repeat(32) } }), env })).json();
+  assert.strictEqual(full[0].description, 'กิจกรรม a');
+});
+
+test('get_deeds: รายละเอียดเต็มเฉพาะเจ้าของหรืออาจารย์', async () => {
+  const api = await import(path.join(__dirname, '../functions/api/get_deeds.js'));
+  global.fetch = async () => new Response(JSON.stringify([d('a', 6, '2026-11-01', 1)]));
+  const env = { RUN_ADMIN_KEY: 'a'.repeat(32), RUN_GATEWAY_KEY: 'g'.repeat(32) };
+  const url = 'https://x.test/api/get_deeds?student_id=' + SID;
+  assert.strictEqual((await api.onRequestGet({ request: new Request(url), env })).status, 403);
+  assert.strictEqual((await api.onRequestGet({ request: new Request(url, { headers: { 'X-GoodDeeds-Student-Id': SID2 } }), env })).status, 403);
+  const own = await api.onRequestGet({ request: new Request(url, { headers: { 'X-GoodDeeds-Student-Id': SID } }), env });
+  assert.strictEqual((await own.json())[0].description, 'กิจกรรม a');
+});
+
+test('รูปหลักฐานซ้ำ: ไฟล์เดียวกันหลายรายการ แยกคนเดียว/ต่างคน', async () => {
+  const { photoDuplicates } = await rules();
+  const deeds = [d('a', 3, '2026-11-01', 2), d('b', 3, '2026-11-02', 2), { ...d('c', 3, '2026-11-03', 2), studentId: SID2 }, d('x', 3, '2026-11-04', 2, { status: 'rejected' })];
+  const photos = [
+    { deedId: 'a', studentId: SID, hash: 'h1' }, { deedId: 'b', studentId: SID, hash: 'h1' },
+    { deedId: 'c', studentId: SID2, hash: 'h1' }, { deedId: 'x', studentId: SID, hash: 'h2' }, { deedId: 'y', studentId: SID, hash: 'h3' },
+  ];
+  const g = photoDuplicates(photos, deeds);
+  assert.strictEqual(g.length, 1);
+  assert.strictEqual(g[0].count, 3);
+  assert.strictEqual(g[0].crossStudent, true);
+});
+
+test('แจ้งเตือน นพอ. จากรายงาน: คนละ 1 ข้อความ รวมทุกเรื่อง', async () => {
+  const api = await import(path.join(__dirname, '../functions/api/deed_audit.js'));
+  const { auditDeeds } = await rules();
+  const r = auditDeeds([d('1', 7, '2026-11-01', 1), d('2', 7, '2026-11-01', 1), d('3', 7, '2026-11-03', 1)], { academicYear: 2569, now: NOW });
+  r.duplicatePhotos = [];
+  const items = api.studentNotices(r);
+  assert.strictEqual(items.length, 1);
+  assert.strictEqual(items[0].studentId, SID);
+  assert.ok(items[0].lines.some(l => l.includes('ลงซ้ำ')));
+  assert.ok(items[0].lines.some(l => l.includes('เกินเพดาน')));
 });

@@ -735,9 +735,10 @@
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="btn btn-outline btn-sm" onclick="loadAudit(false)">🔄 ตรวจตอนนี้</button>
             <button class="btn btn-outline btn-sm" onclick="loadAudit(true)">📨 ตรวจ + ส่งสรุปเข้า Telegram</button>
+            <button class="btn btn-outline btn-sm" onclick="loadAudit(true, true)">🔔 + แจ้งเตือน นพอ. ที่พบปัญหา (LINE)</button>
           </div>
         </div>
-        <p style="font-size:.85rem;opacity:.8;margin:0 0 12px">ระบบตรวจอัตโนมัติทุกวันจันทร์ 07:30 น. และส่งสรุปเข้า Telegram อาจารย์ · ตัวเลขอิงข้อมูลในชีตกลาง (ไม่นับรายการที่ไม่อนุมัติ)</p>
+        <p style="font-size:.85rem;opacity:.8;margin:0 0 12px">ระบบตรวจอัตโนมัติทุกวันจันทร์ 07:30 น. ส่งสรุปเข้า Telegram อาจารย์ และแจ้ง นพอ. ที่พบปัญหาทาง LINE · ตัวเลขอิงข้อมูลในชีตกลาง (ไม่นับรายการที่ไม่อนุมัติ)</p>
         <div id="audit-body"><div class="empty-state" style="padding:24px;text-align:center;opacity:.8">กด "ตรวจตอนนี้" เพื่อดูรายงาน (ใช้รหัสผู้ตรวจชุดเดียวกับหน้าตรวจการวิ่ง)</div></div>
       </div>
 
@@ -959,7 +960,7 @@
   <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
   <script src="data/deeds_data.js?v=20261106-live-v3"></script>
   <script src="data/app_settings.js?v=20261106-live-v3"></script>
-  <script src="app.js?v=20261118-quota"></script>
+  <script src="app.js?v=20261118-secure"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261117-flicker"></script>
@@ -1028,6 +1029,8 @@
 
         // Gracefully ensure student data is loaded from Cache or Google Cloud
         await App.ensureStudentsLoaded();
+        // รายละเอียดความดีของนักเรียนทุกคนเปิดได้เฉพาะผู้มีรหัสผู้ตรวจ (ขอครั้งเดียวต่อแท็บ)
+        if (App.ensureAdminKey) App.ensureAdminKey();
         if (typeof App.syncAllDeedsWithBackend === 'function') {
           await App.syncAllDeedsWithBackend();
         }
@@ -1457,7 +1460,8 @@
           <tbody>${rows.map(r => `<tr>${r.map(c => `<td style="padding:6px;border-bottom:1px solid var(--card-border);vertical-align:top">${c}</td>`).join('')}</tr>`).join('')}</tbody>
         </table></div></div>`;
     }
-    async function loadAudit(notify) {
+    async function loadAudit(notify, notifyStudents) {
+      if (notifyStudents && !confirm('ส่ง LINE/อีเมลแจ้ง นพอ. ทุกคนที่รายงานพบปัญหา (สูงสุด 40 คน)?')) return;
       const body = document.getElementById('audit-body');
       const ADMIN_KEY = 'gd_run_admin_key';
       let key = sessionStorage.getItem(ADMIN_KEY) || '';
@@ -1469,9 +1473,13 @@
       body.innerHTML = '<div style="padding:24px;text-align:center">⏳ กำลังตรวจข้อมูลทั้งระบบ…</div>';
       try {
         if (notify) {
-          const n = await fetch('/api/deed_audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key }, body: JSON.stringify({ notify: true }) });
+          const n = await fetch('/api/deed_audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key }, body: JSON.stringify({ notify: true, notifyStudents: !!notifyStudents }) });
           const nj = await n.json().catch(() => ({}));
           if (typeof showToast === 'function') showToast(nj.telegramSent ? 'ส่งสรุปเข้า Telegram แล้ว' : 'ส่ง Telegram ไม่สำเร็จ (ตรวจการตั้งค่า Bot)', nj.telegramSent ? 'success' : 'warning');
+          if (notifyStudents && typeof showToast === 'function') {
+            const sn = nj.studentsNotified || {};
+            showToast(sn.error ? 'แจ้ง นพอ. ไม่สำเร็จ (' + sn.error + ')' : `แจ้ง นพอ. แล้ว ${sn.sent || 0}/${sn.total || 0} คน`, sn.error ? 'warning' : 'success');
+          }
         }
         const res = await fetch('/api/deed_audit', { headers: { 'X-Admin-Key': key }, cache: 'no-store' });
         if (res.status === 403) { sessionStorage.removeItem(ADMIN_KEY); body.innerHTML = '<div style="padding:24px;color:#b91c1c">รหัสผู้ตรวจไม่ถูกต้อง — กดตรวจอีกครั้งเพื่อกรอกใหม่</div>'; return; }
@@ -1480,7 +1488,7 @@
         const r = data.report, t = r.totals;
         const kpi = (label, n, bad) => `<div class="card" style="padding:12px 14px;min-width:140px;flex:1"><div style="font-size:.8rem;opacity:.75">${label}</div><div style="font-size:1.6rem;font-weight:800;color:${n && bad ? '#dc2626' : 'inherit'}">${n}</div></div>`;
         let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
-          ${kpi('รายการทั้งหมด', t.deeds)}${kpi('นักเรียน', t.students)}${kpi('ลงซ้ำ', t.duplicates, 1)}${kpi('เกินเพดาน', t.overCap, 1)}${kpi('ข้อมูลไม่ถูกต้อง', t.invalid, 1)}${kpi('ข้อความเหมือนกันหลายคน (น่าตรวจ)', t.suspicious, 1)}
+          ${kpi('รายการทั้งหมด', t.deeds)}${kpi('นักเรียน', t.students)}${kpi('ลงซ้ำ', t.duplicates, 1)}${kpi('เกินเพดาน', t.overCap, 1)}${kpi('ข้อมูลไม่ถูกต้อง', t.invalid, 1)}${kpi('ข้อความเหมือนกันหลายคน (น่าตรวจ)', t.suspicious, 1)}${kpi('รูปหลักฐานซ้ำ', t.duplicatePhotos || 0, 1)}
         </div>`;
         html += auditTable('🔴 ลงซ้ำ (หมวดเดียวกัน วันเดียวกัน)', '#dc2626', ['นักเรียน', 'หมวด', 'วันที่', 'จำนวนรายการ'],
           r.duplicates.map(d => [auditWho(d.studentId), auditEsc(AUDIT_CAT[d.categoryId] || d.categoryId), d.date, d.count]));
@@ -1488,6 +1496,11 @@
           r.overCap.map(o => [auditWho(o.studentId), auditEsc(AUDIT_CAT[o.categoryId] || o.categoryId), auditEsc(o.scope), o.count != null ? `${o.count}/${o.limit} ครั้ง` : `${o.hours}/${o.limit} ชม.`]));
         html += auditTable('🟠 ข้อมูลไม่ถูกต้อง', '#f59e0b', ['นักเรียน', 'วันที่', 'ชม.', 'ปัญหา'],
           r.invalid.map(i => [auditWho(i.studentId), i.date || '-', i.hours, auditEsc(i.issues.join(', '))]));
+        html += auditTable('🖼️ รูปหลักฐานซ้ำ (ไฟล์เดียวกันใช้หลายรายการ)', '#dc2626', ['', 'ผู้บันทึก', 'รายการ (วันที่ · หมวด)', 'ดูรูป'],
+          (r.duplicatePhotos || []).map(p => [p.crossStudent ? '🔴 ต่างคน' : '🟠 คนเดียว', p.students.map(auditWho).join('<br>'),
+            p.items.map(i => `${i.date || '-'} · ${auditEsc(AUDIT_CAT[i.categoryId] || '-')}`).join('<br>'),
+            p.items.map(i => `<a href="/api/deed_photo?deedId=${encodeURIComponent(i.deedId)}&studentId=${encodeURIComponent(i.studentId)}" target="_blank" rel="noopener">เปิด</a>`).join('<br>')]));
+        if (r.photoCheck && r.photoCheck.pending) html += `<div style="font-size:.8rem;opacity:.75;margin:-6px 0 12px">ยังคำนวณลายนิ้วมือรูปเก่าไม่ครบ ${r.photoCheck.pending} รูป — กดตรวจอีกครั้งเพื่อทำต่อ</div>`;
         html += auditTable('👥 กิจกรรมเดียวกันหลายคน — ใครทำที่ไหน (🟠 = ควรตรวจ)', '#6366f1', ['', 'วันที่', 'หมวด', 'รายละเอียด / สถานที่', 'ผู้บันทึก'],
           r.sharedActivities.slice(0, 200).map(s => [s.suspicious ? '🟠' : '', s.date, auditEsc(AUDIT_CAT[s.categoryId] || s.categoryId),
             `${auditEsc(s.description)}<br><span style="opacity:.7">📍 ${auditEsc(s.location || '-')}</span>${s.hoursMismatch ? '<br><span style="color:#dc2626">ชั่วโมงไม่เท่ากัน</span>' : ''}`,

@@ -478,7 +478,7 @@
 
     <script src="data/teachers_data.js?v=3593"></script>
     <script src="data/students_data.js?v=3593"></script>
-    <script src="app.js?v=20261118-quota"></script>
+    <script src="app.js?v=20261118-secure"></script>
     <script>
         // Purge legacy stored signatures to strictly enforce RTAFNC Live Signature Policy
         try {
@@ -796,6 +796,14 @@
                 } catch (e) {
                     console.warn('Could not fetch deed from backend:', e);
                 }
+            }
+
+            // 2.1 ข้อมูลในเครื่องอาจเป็นฉบับย่อ (หน้าอันดับไม่มีรายละเอียดของคนอื่น) → เติมจากลิงก์ที่ระบบส่งมา
+            if (currentDeed && !str(currentDeed.description) && urlDesc) {
+                currentDeed = { ...currentDeed,
+                    description: decodeURIComponent(urlDesc),
+                    location: currentDeed.location || (urlLoc ? decodeURIComponent(urlLoc) : ''),
+                    approver: currentDeed.approver || (urlAppr ? decodeURIComponent(urlAppr) : '') };
             }
 
             // 3. Fallback: construct deed from URL params (Telegram links include all details)

@@ -1314,6 +1314,18 @@
 
 
 
+            <!-- โควตาของฉัน: ตัวเลขจากระบบกลาง (ตัวเดียวกับที่ใช้ตัดสินตอนส่ง) -->
+            <div class="card crystal-card mb-24" id="my-quota-card">
+                <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+                    <div class="card-title"><span class="icon">🎯</span> โควตาของฉัน <span id="my-quota-term" style="font-size:.8rem;opacity:.75;font-weight:500"></span></div>
+                    <button type="button" class="btn btn-outline btn-sm" onclick="loadMyQuota(true)" style="padding:4px 12px">🔄 ตรวจล่าสุด</button>
+                </div>
+                <div id="my-quota-body" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px">
+                    <div style="opacity:.7;font-size:.9rem">กำลังตรวจโควตาจากระบบกลาง…</div>
+                </div>
+                <div style="font-size:.75rem;opacity:.65;margin-top:10px">หมวดที่ไม่มีในรายการนี้จำกัดแค่ชั่วโมงต่อวัน · ลงหมวดเดียวกันวันเดียวกันได้ 1 รายการ · รายการที่ไม่อนุมัติไม่นับโควตา</div>
+            </div>
+
             <!-- Category Slider (Professional Dashboard Horizontal Carousel / Desktop Grid) -->
             <div class="card crystal-card mb-24">
                 <div class="mac-traffic-lights" style="margin-top:-14px; margin-bottom:20px;">
@@ -1464,7 +1476,7 @@
     <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
     <script src="data/deeds_data.js?v=20261106-live-v3"></script>
     <script src="data/app_settings.js?v=20261106-live-v3"></script>
-    <script src="app.js?v=20261118-quota"></script>
+    <script src="app.js?v=20261118-secure"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
@@ -1483,6 +1495,53 @@
             document.getElementById('slide-modal').style.display = 'none';
             document.getElementById('slide-iframe').src = '';
         }
+
+        // ===== โควตาของฉัน =====
+        const QUOTA_ICON = { 1: '🩸', 6: '🙏', 7: '🏠', 8: '👑', 9: '🎖️' };
+        function quotaBar(label, used, limit, unit) {
+            const pct = Math.min(100, Math.round(used / limit * 100));
+            const full = used >= limit;
+            const color = full ? '#b5462f' : (pct >= 75 ? '#c9a227' : '#2f7d4f');
+            return `<div style="margin-top:8px">
+                <div style="display:flex;justify-content:space-between;font-size:.82rem;margin-bottom:4px">
+                    <span>${label}</span><span style="font-weight:700;color:${color}" data-keep-color>${used}/${limit} ${unit}${full ? ' · ครบแล้ว' : ''}</span>
+                </div>
+                <div style="height:8px;border-radius:99px;background:rgba(127,127,127,.22);overflow:hidden">
+                    <div style="height:100%;width:${pct}%;background:${color};border-radius:99px;transition:width .6s ease"></div>
+                </div></div>`;
+        }
+        let quotaLoadedAt = 0;
+        async function loadMyQuota(force) {
+            const body = document.getElementById('my-quota-body');
+            if (!body || !currentUser || !currentUser.student_id) return;
+            if (!force && Date.now() - quotaLoadedAt < 30000) return;
+            quotaLoadedAt = Date.now();
+            try {
+                const url = (App.getEdgeApiUrl ? App.getEdgeApiUrl('/api/deed_check') : '/api/deed_check') + '?studentId=' + encodeURIComponent(currentUser.student_id);
+                const res = await fetch(url, { headers: App.getAuthHeaders(), cache: 'no-store' });
+                const data = await res.json();
+                if (!res.ok || !Array.isArray(data.quotas)) throw new Error(data.code || res.status);
+                const t = data.quotas[0] && data.quotas[0].term;
+                const termEl = document.getElementById('my-quota-term');
+                if (termEl && t) termEl.textContent = `ภาค ${t.semester}/${t.academicYear}`;
+                body.innerHTML = data.quotas.map(u => {
+                    const bars = [];
+                    if (u.perTerm) bars.push(quotaBar('ภาคนี้', u.termHours, u.perTerm, 'ชม.'));
+                    if (u.perYear) bars.push(quotaBar('ทั้งปีการศึกษา', u.yearHours, u.perYear, 'ชม.'));
+                    if (u.remainingCount != null) bars.push(quotaBar('จำนวนครั้งในปี', u.yearCount, u.yearCount + u.remainingCount, 'ครั้ง'));
+                    const tag = u.full
+                        ? '<span style="font-size:.72rem;padding:2px 8px;border-radius:99px;background:rgba(181,70,47,.15);color:#b5462f;font-weight:700" data-keep-color>ครบโควตา ห้ามลงเพิ่ม</span>'
+                        : '<span style="font-size:.72rem;padding:2px 8px;border-radius:99px;background:rgba(47,125,79,.14);color:#2f7d4f;font-weight:700" data-keep-color>ลงได้</span>';
+                    return `<div style="padding:12px 14px;border-radius:14px;border:1px solid rgba(127,127,127,.25)">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:6px">
+                            <strong style="font-size:.9rem">${QUOTA_ICON[u.categoryId] || '⭐'} ${u.name}</strong>${tag}
+                        </div>${bars.join('')}</div>`;
+                }).join('');
+            } catch (e) {
+                body.innerHTML = '<div style="opacity:.75;font-size:.9rem">ตรวจโควตาจากระบบกลางไม่ได้ชั่วคราว — กด "ตรวจล่าสุด" อีกครั้งภายหลัง</div>';
+            }
+        }
+        window.addEventListener('deeds_updated', () => loadMyQuota(false));
 
         async function init() {
             // Self-healing: if session is a tainted admin session without teacher token, purge it
@@ -1508,6 +1567,7 @@
             }
 
             summary = App.getStudentSummary(currentUser.student_id);
+            loadMyQuota(true);
 
             renderHero();
             renderStatusBanner();

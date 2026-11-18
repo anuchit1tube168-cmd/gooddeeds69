@@ -1,17 +1,25 @@
 // รายงานตรวจความดีทั้งระบบ: ลงซ้ำ · เกินเพดาน · ข้อมูลผิดรูปแบบ · กิจกรรมเดียวกันหลายคน (ใครทำที่ไหน) · ความถี่รายหมวด
 // GET  /api/deed_audit?academicYear=2569           (X-Admin-Key) → JSON สำหรับหน้าอาจารย์
 // POST /api/deed_audit {notify:true}                (X-Admin-Key หรือ gatewayKey จากทริกเกอร์รายสัปดาห์ใน Apps Script) → ส่งสรุปเข้า Telegram
-import { CORS, json, isAdmin, safeEqual } from './_gateway.js';
-import { auditDeeds, RULES } from './_deed_rules.js';
+import { CORS, json, isAdmin, safeEqual, callGas } from './_gateway.js';
+import { auditDeeds, photoDuplicates, RULES } from './_deed_rules.js';
 import { academicYearBE } from './_year.js';
 import { fetchDeeds } from './_deed_store.js';
 
 export const onRequestOptions = () => new Response(null, { status: 204, headers: CORS });
 
 async function build(env, year) {
-  const deeds = await fetchDeeds(env, '', 20000);
+  const [deeds, ph] = await Promise.all([
+    fetchDeeds(env, '', 20000),
+    callGas(env, { action: 'deedphoto_hashes' }).catch(() => null),
+  ]);
   if (!deeds) return null;
-  return auditDeeds(deeds, { academicYear: year });
+  const report = auditDeeds(deeds, { academicYear: year });
+  const photos = ph && ph.status === 'success' && Array.isArray(ph.photos) ? ph.photos : null;
+  report.duplicatePhotos = photos ? photoDuplicates(photos, deeds) : [];
+  report.photoCheck = photos ? { checked: photos.length, pending: ph.pending || 0 } : { unavailable: true };
+  report.totals.duplicatePhotos = report.duplicatePhotos.length;
+  return report;
 }
 
 export async function onRequestGet({ request, env }) {
@@ -32,10 +40,32 @@ export async function onRequestPost({ request, env }) {
   if (!report) return json({ status: 'error', code: 'DEEDS_UNAVAILABLE' }, 503);
   let telegramSent = false;
   if (body.notify) telegramSent = await sendTelegram(env, report);
-  return json({ status: 'success', telegramSent, totals: report.totals });
+  let studentsNotified = null;
+  if (body.notifyStudents) {
+    const items = studentNotices(report);
+    const r = items.length ? await callGas(env, { action: 'deednotify_send', items }) : { status: 'success', sent: 0, total: 0 };
+    studentsNotified = r && r.status === 'success' ? { sent: r.sent, total: r.total } : { error: (r && r.code) || 'FAILED' };
+  }
+  return json({ status: 'success', telegramSent, studentsNotified, totals: report.totals });
 }
 
 const catName = (id) => (RULES[id] || {}).name || `หมวด ${id}`;
+
+// ข้อความถึง นพอ. ที่รายงานพบปัญหา (คนละ 1 ข้อความ รวมทุกเรื่อง) — สูงสุด 40 คนต่อรอบ กันโควตา LINE
+export function studentNotices(report) {
+  const by = new Map();
+  const add = (sid, line) => { if (!/^\d{7}$/.test(sid)) return; if (!by.has(sid)) by.set(sid, []); by.get(sid).push(line); };
+  report.duplicates.forEach(d => add(d.studentId, `• ลงซ้ำ: หมวด "${catName(d.categoryId)}" วันที่ ${d.date} มี ${d.count} รายการ`));
+  report.overCap.forEach(o => add(o.studentId, `• เกินเพดาน: หมวด "${catName(o.categoryId)}" ${o.scope} ${o.count != null ? o.count + '/' + o.limit + ' ครั้ง' : o.hours + '/' + o.limit + ' ชม.'}`));
+  (report.duplicatePhotos || []).forEach(p => p.items.forEach(i => add(i.studentId, `• รูปหลักฐานซ้ำกับรายการอื่น${p.crossStudent ? ' (ของผู้อื่น)' : ''}: วันที่ ${i.date || '-'}`)));
+  report.invalid.forEach(i => add(i.studentId, `• ข้อมูลไม่ถูกต้อง: วันที่ ${i.date || '-'} (${i.issues.join(', ')})`));
+  return [...by.entries()].slice(0, 40).map(([studentId, lines]) => ({
+    studentId,
+    title: '🛡️ ระบบตรวจพบรายการความดีที่ต้องแก้ไข',
+    lines: [...lines.slice(0, 5), lines.length > 5 ? `• …และอีก ${lines.length - 5} เรื่อง` : '', 'กรุณาแจ้งอาจารย์ผู้ตรวจเพื่อลบ/แก้รายการ — ชั่วโมงส่วนที่ซ้ำหรือเกินจะไม่ถูกนับ'].filter(Boolean),
+    key: 'audit_' + report.generatedAt.slice(0, 10),
+  }));
+}
 const esc = (s) => String(s == null ? '' : s).replace(/[<>&]/g, c => ({ '<': '&lt;', '>': '&gt;', '&': '&amp;' }[c]));
 
 export function telegramText(report, base = 'https://rtafnc-gooddeeds.pages.dev') {
@@ -48,12 +78,14 @@ export function telegramText(report, base = 'https://rtafnc-gooddeeds.pages.dev'
     `${t.overCap ? '🔴' : '🟢'} เกินเพดานภาค/ปี: <b>${t.overCap}</b>`,
     `${t.invalid ? '🟠' : '🟢'} ข้อมูลไม่ถูกต้อง: <b>${t.invalid}</b>`,
     `${t.suspicious ? '🟠' : '🟢'} กิจกรรมข้อความเหมือนกันหลายคน (น่าตรวจ): <b>${t.suspicious}</b> จาก ${t.sharedActivities} กลุ่ม`,
+    `${t.duplicatePhotos ? '🔴' : '🟢'} รูปหลักฐานซ้ำ (ไฟล์เดียวกันหลายรายการ): <b>${t.duplicatePhotos || 0}</b>`,
   ];
   const top = (arr, n, f) => arr.slice(0, n).map(f).concat(arr.length > n ? [`  …และอีก ${arr.length - n} รายการ`] : []);
   if (report.duplicates.length) lines.push('', '<b>ลงซ้ำ</b>', ...top(report.duplicates, 8, d => `• ${d.studentId} · ${esc(catName(d.categoryId))} · ${d.date} (${d.count} รายการ)`));
   if (report.overCap.length) lines.push('', '<b>เกินเพดาน</b>', ...top(report.overCap, 8, o => `• ${o.studentId} · ${esc(catName(o.categoryId))} · ${o.scope}: ${o.count != null ? o.count + '/' + o.limit + ' ครั้ง' : o.hours + '/' + o.limit + ' ชม.'}`));
   if (report.invalid.length) lines.push('', '<b>ข้อมูลไม่ถูกต้อง</b>', ...top(report.invalid, 6, i => `• ${i.studentId || '-'} · ${i.date || 'ไม่มีวันที่'}: ${esc(i.issues.join(', '))}`));
   const sus = report.sharedActivities.filter(s => s.suspicious);
+  if ((report.duplicatePhotos || []).length) lines.push('', '<b>รูปหลักฐานซ้ำ</b>', ...top(report.duplicatePhotos, 5, p => `• ${p.count} รายการ · ${p.crossStudent ? 'ต่างคนกัน ' + p.students.join(', ') : 'คนเดียว ' + p.students[0]}`));
   if (sus.length) lines.push('', '<b>ข้อความเหมือนกันหลายคน</b>', ...top(sus, 5, s => `• ${s.date} · ${esc(catName(s.categoryId))} · ${s.count} คน: "${esc(s.description.slice(0, 50))}"${s.hoursMismatch ? ' (ชั่วโมงไม่เท่ากัน)' : ''}`));
   lines.push('', `📊 ดูรายละเอียด: ${base}/teacher-dashboard.html#audit`);
   return lines.join('\n');

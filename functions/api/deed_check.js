@@ -14,12 +14,21 @@ export async function onRequestGet({ request, env }) {
   // ดูได้เฉพาะของตัวเอง (หรือผู้ดูแล)
   const own = String(request.headers.get('X-GoodDeeds-Student-Id') || '').trim() === studentId;
   if (!own && !isAdmin(request, env)) return json({ status: 'error', code: 'FORBIDDEN' }, 403);
+  const all = !q.get('categoryId');
   const categoryId = Number(q.get('categoryId'));
-  if (!RULES[categoryId]) return json({ status: 'error', code: 'CATEGORY_INVALID' }, 400);
+  if (!all && !RULES[categoryId]) return json({ status: 'error', code: 'CATEGORY_INVALID' }, 400);
   const activityDate = q.get('activityDate') || new Date().toISOString();
 
   const deeds = await fetchDeeds(env, studentId);
   if (!deeds) return json({ status: 'unavailable', code: 'DEEDS_UNAVAILABLE', message: 'ตรวจโควตาจากเซิร์ฟเวอร์ไม่ได้ชั่วคราว ระบบจะตรวจอีกครั้งตอนส่ง' }, 503);
+
+  // ไม่ระบุหมวด → โควตาทุกหมวดที่มีเพดานภาค/ปี (หน้า "โควตาของฉัน")
+  if (all) {
+    const quotas = Object.keys(RULES).map(Number)
+      .filter(c => RULES[c].perTerm || RULES[c].perYear || RULES[c].maxCountYear)
+      .map(c => { const u = usageOf(deeds, c, activityDate); delete u.bloodDates; return u; });
+    return json({ status: 'success', quotas });
+  }
 
   const hours = Number(q.get('hours')) || 0;
   if (!hours) return json({ status: 'success', ok: true, usage: usageOf(deeds, categoryId, activityDate) });

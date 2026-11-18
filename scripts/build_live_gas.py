@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 HOOK_MARK = "runTrackerHandle_(params)"
 HOOK = """  // หมวด 10 วิ่งเพื่อสุขภาพ (RunTracker.js) — ตรวจ gatewayKey ภายใน handler
-  if (params && /^(run_|fitness_|profile_|deedphoto_)/.test(String(params.action || ''))) {
+  if (params && /^(run_|fitness_|profile_|deedphoto_|deednotify_)/.test(String(params.action || ''))) {
     return ContentService.createTextOutput(JSON.stringify(runTrackerHandle_(params))).setMimeType(ContentService.MimeType.JSON);
   }
 
@@ -60,12 +60,12 @@ def main():
     else:
         # อัปเกรด hook รุ่นเก่าให้รับ action profile_ ด้วย
         upgraded = False
-        for oldre in ("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/"):
+        for oldre in ("/^(run_|fitness_)/", "/^(run_|fitness_|profile_)/", "/^(run_|fitness_|profile_|deedphoto_)/"):
             if oldre in s:
-                s = s.replace(oldre, "/^(run_|fitness_|profile_|deedphoto_)/"); upgraded = True
+                s = s.replace(oldre, "/^(run_|fitness_|profile_|deedphoto_|deednotify_)/"); upgraded = True
         if upgraded:
             code.write_text(s, encoding="utf-8")
-            print("✅ อัปเกรด hook ให้รองรับ profile_ / deedphoto_")
+            print("✅ อัปเกรด hook ให้รองรับ profile_ / deedphoto_ / deednotify_")
         else:
             print("✅ มี hook หมวด 10 อยู่แล้ว")
     shutil.copyfile(ROOT / "backend" / "RunTracker.gs", d / "RunTracker.js")
@@ -75,6 +75,7 @@ def main():
     shutil.copyfile(ROOT / "backend" / "DeedAudit.gs", d / "DeedAudit.js")
     s = code.read_text(encoding="utf-8")
     s = add_notify_hooks(s)
+    s = add_deeds_guard(s)
     code.write_text(s, encoding="utf-8")
     keyfile = ROOT / "data" / "private" / "run_keys_DO_NOT_SHARE.txt"
     key = ""
@@ -87,6 +88,21 @@ def main():
     (d / "RunKey.js").write_text(
         "// สร้างอัตโนมัติตอน deploy — ห้าม commit / ห้ามแชร์\nconst RUN_GATEWAY_KEY_LOCAL = '%s';\n" % key, encoding="utf-8")
     print("✅ เตรียม RunTracker.js + RunKey.js")
+
+GUARD_MARK = "// [deeds-guard] ต้องมี gatewayKey"
+def add_deeds_guard(s):
+    """ปิด getDeeds/getAllDeeds แบบไม่มีกุญแจ (ข้อมูลทุกคนรั่วผ่าน URL Apps Script)"""
+    if GUARD_MARK in s:
+        return s
+    anchor = "  if (action === 'getDeeds' || action === 'getAllDeeds') {\n    try {"
+    if anchor not in s:
+        sys.exit("ไม่พบ handler getDeeds ใน Code.js — หยุดเพื่อไม่ให้ deploy โดยไม่มีการป้องกัน")
+    guard = ("  " + GUARD_MARK + "\n"
+             "  if ((action === 'getDeeds' || action === 'getAllDeeds') && !deedsKeyOk_(e)) {\n"
+             "    return ContentService.createTextOutput(JSON.stringify({ status: 'error', code: 'DEEDS_KEY_REQUIRED' })).setMimeType(ContentService.MimeType.JSON);\n"
+             "  }\n")
+    print("✅ ปิด getDeeds แบบไม่มีกุญแจ")
+    return s.replace(anchor, guard + anchor, 1)
 
 if __name__ == "__main__":
     main()

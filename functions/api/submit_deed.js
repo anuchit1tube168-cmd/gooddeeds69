@@ -291,6 +291,24 @@ export async function onRequestPost(context) {
 
   const [gasResult, telegramSent] = await Promise.all([gasPromise, tgPromise]);
 
+  // รายการนี้ทำให้หมวดครบโควตา → แจ้ง นพอ. ทาง LINE/อีเมล ว่ารายการถัดไปในหมวดนี้ระบบจะไม่รับ
+  if (quota && gasResult && gasResult.status === 'success') {
+    const u = quota.usage;
+    const lines = [];
+    if (rule.perTerm && u.termHours + hours >= rule.perTerm) lines.push(`ภาค ${u.term.semester}/${u.term.academicYear} ครบ ${rule.perTerm} ชม. แล้ว`);
+    if (rule.perYear && u.yearHours + hours >= rule.perYear) lines.push(`ปีการศึกษา ${u.term.academicYear} ครบ ${rule.perYear} ชม. แล้ว`);
+    if (rule.maxCountYear && u.yearCount + 1 >= rule.maxCountYear) lines.push(`ปีการศึกษา ${u.term.academicYear} ครบ ${rule.maxCountYear} ครั้งแล้ว`);
+    if (lines.length) {
+      const later = context.waitUntil ? context.waitUntil.bind(context) : (pr) => pr;
+      later(callGas(env, { action: 'deednotify_send', items: [{
+        studentId,
+        title: `🎯 หมวด "${rule.name}" ครบโควตาแล้ว`,
+        lines: [...lines, 'รายการถัดไปในหมวดนี้ระบบจะไม่รับ (นับเฉพาะรายการที่ไม่ถูกปฏิเสธ)', 'ดูโควตาทุกหมวดได้ที่หน้าหลัก → โควตาของฉัน'],
+        key: `quota_full_${categoryId}_${u.term.academicYear}_${u.term.semester}`,
+      }] }).catch(() => null));
+    }
+  }
+
   return new Response(JSON.stringify({
     status: 'success',
     deedId: deedId,

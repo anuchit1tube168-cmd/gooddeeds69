@@ -446,7 +446,7 @@
 
     <script src="data/students_data.js?v=3591"></script>
     <script src="data/deeds_data.js?v=3591"></script>
-    <script src="app.js?v=20261118-quota"></script>
+    <script src="app.js?v=20261118-secure"></script>
     <script>
         function trimImageMargins(imgSrc, callback) {
             if (!imgSrc || typeof imgSrc !== 'string' || !imgSrc.startsWith('data:image')) {
@@ -530,6 +530,12 @@
             } catch (e) {}
 
             let deed = findDeed(deedId, studentId);
+            // ข้อมูลในเครื่องอาจเป็นฉบับย่อ (ไม่มีรายละเอียด) → ดึงฉบับเต็มของเจ้าของ/อาจารย์ใหม่
+            if (deed && !str(deed.description) && studentId) {
+                try { if (await App.syncDeedsWithBackend(studentId)) deed = findDeed(deedId, studentId) || deed; } catch (e) {}
+                const urlDesc = params.get('desc') || params.get('description');
+                if (!str(deed.description) && urlDesc) deed = { ...deed, description: urlDesc, location: deed.location || params.get('loc') || '' };
+            }
             if (!deed && studentId) {
                 try {
                     const fetched = await App.syncDeedsWithBackend(studentId);

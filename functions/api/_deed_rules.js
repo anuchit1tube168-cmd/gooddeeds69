@@ -272,3 +272,24 @@ export function auditDeeds(deeds, opts = {}) {
 function brief(d) {
   return { id: String(d.id || ''), studentId: String(d.studentId || d.student_id || ''), categoryId: Number(d.categoryId), date: normDate(d.activityDate), hours: num(d.hours), status: String(d.status || '') };
 }
+
+/**
+ * รูปหลักฐานซ้ำ: ไฟล์เดียวกัน (SHA-256 ตรงกัน) ถูกใช้กับหลายรายการ
+ * photos = [{deedId, studentId, hash}] · deeds ใช้เติมหมวด/วันที่ (ตัดรายการที่ไม่อนุมัติออก)
+ * จับได้เฉพาะไฟล์ที่เหมือนกันทุกไบต์ — รูปที่ถูกครอปหรือบีบอัดใหม่จะไม่ถูกจับ
+ */
+export function photoDuplicates(photos, deeds) {
+  const byId = new Map((deeds || []).map(d => [String(d.id), d]));
+  const groups = new Map();
+  for (const p of photos || []) {
+    const d = byId.get(String(p.deedId));
+    if (d && !counts(d)) continue;
+    if (!p.hash) continue;
+    if (!groups.has(p.hash)) groups.set(p.hash, []);
+    groups.get(p.hash).push({ deedId: String(p.deedId), studentId: String(p.studentId), categoryId: d ? Number(d.categoryId) : null, date: d ? normDate(d.activityDate) : '' });
+  }
+  return [...groups.values()].filter(g => g.length > 1).map(items => {
+    const students = [...new Set(items.map(i => i.studentId))];
+    return { count: items.length, students, crossStudent: students.length > 1, items };
+  }).sort((a, b) => Number(b.crossStudent) - Number(a.crossStudent) || b.count - a.count);
+}

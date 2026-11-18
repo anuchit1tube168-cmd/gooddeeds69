@@ -875,7 +875,8 @@ const App = {
         // Cloudflare Pages 24/7 Edge Serverless API for online & mobile
         try {
             const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl(`/api/get_deeds?student_id=${encodeURIComponent(studentId)}`) : `https://rtafnc-gooddeeds.pages.dev/api/get_deeds?student_id=${encodeURIComponent(studentId)}`;
-            const res = await fetch(edgeUrl);
+            // ได้รายละเอียดเต็มเฉพาะของตัวเอง (หรืออาจารย์ที่มีรหัสผู้ตรวจ)
+            const res = await fetch(edgeUrl, { headers: { ...this.getAuthHeaders(), ...this.adminKeyHeader() }, cache: 'no-store' });
             if (res.ok) {
                 const deeds = await res.json();
                 if (Array.isArray(deeds)) {
@@ -963,11 +964,21 @@ const App = {
             }
         }
 
+        // นักเรียน: ดึงรายการของตัวเองฉบับเต็มก่อน (ข้อมูลรวมทั้งระบบเป็นฉบับย่อ) — ไม่เกินนาทีละครั้ง
+        const meFirst = this.getCurrentUser();
+        if (meFirst && meFirst.role === 'student' && meFirst.student_id && Date.now() - (this._ownSyncAt || 0) > 60000) {
+            this._ownSyncAt = Date.now();
+            try { await this.syncDeedsWithBackend(meFirst.student_id); } catch (_) {}
+        }
+
         // Cloudflare Pages Edge 24/7 or Google Apps Script fetch for Online Deployment
         let list = null;
         try {
             const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/get_all_deeds') : 'https://rtafnc-gooddeeds.pages.dev/api/get_all_deeds';
-            const res = await fetch(edgeUrl);
+            // ไม่มีรหัสผู้ตรวจ → ได้แค่ตัวเลขสำหรับหน้าอันดับ (ไม่มีรายละเอียดของคนอื่น)
+            const adminHdr = this.adminKeyHeader();
+            const res = await fetch(edgeUrl, { headers: adminHdr, cache: Object.keys(adminHdr).length ? 'no-store' : 'default' });
+            if (res.status === 403 || res.status === 401) this.clearAdminKey();
             if (res.ok) {
                 const cloudDeeds = await res.json();
                 list = Array.isArray(cloudDeeds) ? cloudDeeds : (cloudDeeds && Array.isArray(cloudDeeds.deeds) ? cloudDeeds.deeds : (cloudDeeds && Array.isArray(cloudDeeds.data) ? cloudDeeds.data : null));
@@ -999,7 +1010,13 @@ const App = {
                 }
             } catch (_) {}
 
-            const activeList = list.filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
+            let activeList = list.filter(d => d && !deletedSet.has(String(d.id)) && d.status !== 'deleted');
+            // รายการของตัวเองใช้ฉบับเต็มที่เก็บในเครื่อง (ข้อมูลสาธารณะไม่มีรายละเอียด)
+            const me = this.getCurrentUser();
+            if (me && me.student_id) {
+                const mine = new Map((Storage.get('deeds_' + me.student_id) || []).map(d => [String(d.id), d]));
+                if (mine.size) activeList = activeList.map(d => mine.has(String(d.id)) ? { ...d, ...mine.get(String(d.id)) } : d);
+            }
 
             const byStudent = {};
             activeList.forEach(d => {
@@ -1284,6 +1301,22 @@ const App = {
         }
 
         return newDeed;
+    },
+
+    // รหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง) เก็บเฉพาะในแท็บนี้ — ใช้ดึงรายการเต็มของทุกคน
+    adminKeyHeader() {
+        try { const k = sessionStorage.getItem('gd_run_admin_key'); return k ? { 'X-Admin-Key': k } : {}; } catch (_) { return {}; }
+    },
+    clearAdminKey() { try { sessionStorage.removeItem('gd_run_admin_key'); } catch (_) {} },
+    ensureAdminKey(message) {
+        try {
+            let k = sessionStorage.getItem('gd_run_admin_key') || '';
+            if (!k && typeof prompt === 'function') {
+                k = (prompt(message || 'กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง) เพื่อดูรายละเอียดความดีของนักเรียน') || '').trim();
+                if (k) sessionStorage.setItem('gd_run_admin_key', k);
+            }
+            return k;
+        } catch (_) { return ''; }
     },
 
     // ลบรายการที่ถูกเซิร์ฟเวอร์ปฏิเสธออกจากเครื่อง (ไม่ให้ค้างเป็น "รอตรวจ" ปลอม)
