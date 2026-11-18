@@ -6,6 +6,8 @@
 
 import { yearLabel } from './_year.js';
 import { callGas } from './_gateway.js';
+import { checkDeed, RULES } from './_deed_rules.js';
+import { fetchDeeds } from './_deed_store.js';
 const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -108,6 +110,29 @@ export async function onRequestPost(context) {
   const sClassYear = student.class_year || rawDeed.class_year || rawDeed.classYear || studentId.substring(0, 2) || '69';
   const yearName = yearLabel(sClassYear, studentId);
 
+  // ตรวจเพดานชั่วโมงและการลงซ้ำจากข้อมูลในชีต (ไม่เชื่อข้อมูลในเครื่องนักเรียน)
+  // อ่านชีตไม่ได้ → รับรายการไว้ แต่แจ้งอาจารย์ให้ตรวจเอง (ไม่ปิดการส่งทั้งระบบเพราะ Apps Script ช้าชั่วคราว)
+  const existing = await fetchDeeds(env, studentId);
+  let quota = null;
+  if (existing) {
+    quota = checkDeed(existing, { id: deedId, categoryId, hours, activityDate, description });
+    if (!quota.ok) {
+      return new Response(JSON.stringify({ status: 'blocked', code: quota.code, message: quota.message, usage: quota.usage }), {
+        status: 409,
+        headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' }
+      });
+    }
+  }
+  const rule = RULES[categoryId] || {};
+  const quotaLine = !quota
+    ? `⚠️ <b>ตรวจโควตาอัตโนมัติไม่ได้</b> — กรุณาตรวจเพดาน/การลงซ้ำก่อนอนุมัติ`
+    : [
+        rule.perTerm ? `ภาคนี้ ${quota.usage.termHours + hours}/${rule.perTerm} ชม.` : '',
+        rule.perYear ? `ปีนี้ ${quota.usage.yearHours + hours}/${rule.perYear} ชม.` : '',
+        rule.maxCountYear ? `ปีนี้ครั้งที่ ${quota.usage.yearCount + 1}/${rule.maxCountYear}` : '',
+      ].filter(Boolean).map(x => `📊 <b>โควตา:</b> ${x}`).join('\n');
+  const warnLines = quota && quota.warnings.length ? quota.warnings.map(w => `⚠️ ${w}`).join('\n') : '';
+
   const catName = CATEGORY_NAMES[categoryId] || 'จิตอาสาทั่วไป';
   const catEmoji = CATEGORY_EMOJIS[categoryId] || '⭐';
 
@@ -206,9 +231,11 @@ export async function onRequestPost(context) {
         `📅 <b>วันที่:</b> ${activityDate}`,
         `📝 <b>รายละเอียด:</b> ${description}`,
         `👨‍🏫 <b>อาจารย์ผู้ตรวจ:</b> ${approver}`,
+        quotaLine,
+        warnLines,
         `━━━━━━━━━━━━━━━━━━━━━━━`,
         `⏳ <i>กดปุ่มด้านล่างเพื่อตรวจและอนุมัติความดี</i>`
-      ].join('\n');
+      ].filter(Boolean).join('\n');
 
       let sent = false;
       const hasPhoto = slipImage && typeof slipImage === 'string' && slipImage.startsWith('data:image');
@@ -270,6 +297,8 @@ export async function onRequestPost(context) {
     studentId: studentId,
     message: 'บันทึกความดีและส่งแจ้งเตือนเรียบร้อยแล้ว',
     telegramSent: telegramSent,
+    quotaChecked: !!quota,
+    warnings: quota ? quota.warnings : [],
     gasResult: gasResult
   }), {
     status: 200,

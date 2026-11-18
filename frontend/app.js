@@ -1236,9 +1236,17 @@ const App = {
                 const edgeUrl = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/submit_deed') : 'https://rtafnc-gooddeeds.pages.dev/api/submit_deed';
                 const res = await fetch(edgeUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
                     body: JSON.stringify(payload)
                 });
+                if (res.status === 409) {
+                    // เซิร์ฟเวอร์ตรวจแล้วเกินเพดาน/ลงซ้ำ → ถอนรายการที่เพิ่งเก็บในเครื่อง และไม่ส่งสำรองไป Apps Script
+                    const info = await res.json().catch(() => ({}));
+                    this.removeLocalDeed(studentId, newDeed.id);
+                    const err = new Error(info.message || 'รายการนี้เกินเพดานหรือบันทึกซ้ำ');
+                    err.blocked = true; err.code = info.code;
+                    throw err;
+                }
                 if (res.ok) {
                     backendSaved = true;
                     const resData = await res.json().catch(() => ({}));
@@ -1248,6 +1256,7 @@ const App = {
                     console.log('☁️ Sent deed to Cloudflare Edge API successfully');
                 }
             } catch (cfErr) {
+                if (cfErr && cfErr.blocked) throw cfErr;
                 console.warn('⚠️ Cloudflare Edge submit notice:', cfErr);
             }
         }
@@ -1275,6 +1284,40 @@ const App = {
         }
 
         return newDeed;
+    },
+
+    // ลบรายการที่ถูกเซิร์ฟเวอร์ปฏิเสธออกจากเครื่อง (ไม่ให้ค้างเป็น "รอตรวจ" ปลอม)
+    removeLocalDeed(studentId, deedId) {
+        const id = String(deedId);
+        this.saveDeeds(studentId, this.getDeeds(studentId).filter(d => String(d.id) !== id));
+        if (typeof DEEDS_DATA !== 'undefined' && Array.isArray(DEEDS_DATA)) {
+            const i = DEEDS_DATA.findIndex(d => String(d.id) === id);
+            if (i >= 0) DEEDS_DATA.splice(i, 1);
+        }
+        if (typeof IMPORTED_DEEDS !== 'undefined' && IMPORTED_DEEDS && Array.isArray(IMPORTED_DEEDS[String(studentId)])) {
+            IMPORTED_DEEDS[String(studentId)] = IMPORTED_DEEDS[String(studentId)].filter(d => String(d.id) !== id);
+        }
+        if (typeof window !== 'undefined') window.dispatchEvent(new CustomEvent('deeds_updated', { detail: { studentId, deedId: id, removed: true } }));
+    },
+
+    // ตรวจกับข้อมูลในชีตก่อนส่ง (เพดานครั้ง/วัน/ภาค/ปี + ลงซ้ำ) — คืน null ถ้าเซิร์ฟเวอร์ตรวจไม่ได้
+    async checkDeedServer(deed, studentId) {
+        try {
+            const p = new URLSearchParams({
+                studentId: String(studentId || ''),
+                categoryId: String(deed.categoryId || ''),
+                hours: String(deed.hours || 0),
+                activityDate: deed.activityDate || '',
+                description: deed.description || ''
+            });
+            const url = this.getEdgeApiUrl ? this.getEdgeApiUrl('/api/deed_check?' + p) : '/api/deed_check?' + p;
+            const ctrl = new AbortController();
+            const t = setTimeout(() => ctrl.abort(), 10000);
+            const res = await fetch(url, { headers: this.getAuthHeaders(), signal: ctrl.signal, cache: 'no-store' });
+            clearTimeout(t);
+            if (!res.ok) return null;
+            return await res.json();
+        } catch (_) { return null; }
     },
 
     async updateDeedStatus(studentId, deedId, status, teacherName, rejectReason = '', deedData = null) {
