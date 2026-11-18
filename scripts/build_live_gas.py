@@ -72,6 +72,7 @@ def main():
     shutil.copyfile(ROOT / "backend" / "ProfileStore.gs", d / "ProfileStore.js")
     shutil.copyfile(ROOT / "backend" / "StudentNotify.gs", d / "StudentNotify.js")
     shutil.copyfile(ROOT / "backend" / "DeedPhoto.gs", d / "DeedPhoto.js")
+    shutil.copyfile(ROOT / "backend" / "DeedAudit.gs", d / "DeedAudit.js")
     s = code.read_text(encoding="utf-8")
     s = add_notify_hooks(s)
     code.write_text(s, encoding="utf-8")

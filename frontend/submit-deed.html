@@ -592,7 +592,7 @@
     <script src="data/app_settings.js?v=3593"></script>
     <script src="chibi3d.js?v=3593"></script>
     <script src="data/carry_forward_data.js?v=20261104-cards-v2"></script>
-    <script src="app.js?v=20261117-flicker"></script>
+    <script src="app.js?v=20261118-quota"></script>
     <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261117-flicker"></script>
@@ -719,8 +719,9 @@
 
                 if (banner && ruleText) {
                     banner.style.display = 'block';
-                    ruleText.innerHTML = `${cat.ruleNote || 'บันทึกตามเวลาจริง'} <br><span style="color:var(--gold);font-weight:600">⚠️ เพดานสูงสุดของหมวดนี้: ${cat.maxHours} ชั่วโมงต่อครั้ง</span>${quotaBadge}`;
+                    ruleText.innerHTML = `${cat.ruleNote || 'บันทึกตามเวลาจริง'} <br><span style="color:var(--gold);font-weight:600">⚠️ เพดานสูงสุดของหมวดนี้: ${cat.maxHours} ชั่วโมงต่อครั้ง</span>${quotaBadge}<div id="server-quota"></div>`;
                 }
+                refreshServerQuota();
 
                 // Update Hours Input Max & Default
                 const hoursInput = document.getElementById('hours');
@@ -735,6 +736,38 @@
                 calculateProjectedChibi();
             }
         }
+
+        // โควตาจากระบบกลาง (ชีต) — ตัวจริงที่ใช้ตัดสิน ข้อมูลในเครื่องอาจไม่ครบถ้าเคยบันทึกจากเครื่องอื่น
+        let quotaReq = 0;
+        let quotaBlocked = false;
+        async function refreshServerQuota() {
+            const box = document.getElementById('server-quota');
+            const btn = document.getElementById('submit-btn');
+            if (!box || !selectedCategoryId || !currentUser || !App.checkDeedServer) return;
+            const my = ++quotaReq;
+            const date = (document.getElementById('activity-date') || {}).value || new Date().toISOString().slice(0, 10);
+            box.innerHTML = '<div style="margin-top:6px;font-size:0.8rem;opacity:.75">กำลังตรวจโควตาจากระบบกลาง…</div>';
+            const r = await App.checkDeedServer({ categoryId: selectedCategoryId, hours: 0, activityDate: date }, currentUser.student_id);
+            if (my !== quotaReq) return;
+            quotaBlocked = false;
+            if (!r || !r.usage) { box.innerHTML = ''; if (btn) btn.disabled = false; return; }
+            const u = r.usage, parts = [];
+            if (u.perTerm) parts.push(`ภาค ${u.term.semester}/${u.term.academicYear}: <strong>${u.termHours}/${u.perTerm} ชม.</strong>`);
+            if (u.perYear) parts.push(`ปีการศึกษา ${u.term.academicYear}: <strong>${u.yearHours}/${u.perYear} ชม.</strong>`);
+            if (u.remainingCount != null) parts.push(`ปีนี้บันทึกแล้ว <strong>${u.yearCount}/${u.yearCount + u.remainingCount} ครั้ง</strong>`);
+            if (u.perDay && u.dayHours) parts.push(`วันที่เลือกบันทึกหมวดนี้ไปแล้ว <strong>${u.dayHours} ชม.</strong> — ลงซ้ำวันเดียวกันไม่ได้`);
+            if (!parts.length) { box.innerHTML = ''; if (btn) btn.disabled = false; return; }
+            quotaBlocked = !!u.full || (u.perDay && u.dayHours > 0);
+            const color = quotaBlocked ? '#b91c1c' : '#146c43';
+            const bg = quotaBlocked ? 'rgba(220,38,38,0.12)' : 'rgba(22,163,74,0.10)';
+            box.innerHTML = `<div style="margin-top:6px;padding:8px 10px;border-radius:8px;background:${bg};color:${color};font-size:0.85rem;line-height:1.5" data-keep-color>
+                ${quotaBlocked ? '⛔ <strong>' + (u.full ? 'หมวดนี้บันทึกครบโควตาแล้ว ห้ามบันทึกเพิ่ม' : 'บันทึกหมวดนี้ในวันนี้ไปแล้ว') + '</strong><br>' : '✅ ตรวจจากระบบกลาง: '}${parts.join(' · ')}</div>`;
+            if (btn) btn.disabled = quotaBlocked;
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const d = document.getElementById('activity-date');
+            if (d) d.addEventListener('change', () => { if (selectedCategoryId) refreshServerQuota(); });
+        });
 
         function adjustHours(delta) {
             const input = document.getElementById('hours');
@@ -963,6 +996,21 @@
 
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> กำลังตรวจโควตา...';
+            const resetBtn = () => { btn.disabled = false; btn.innerHTML = '<span>💾</span> บันทึกความดี'; };
+
+            // ตรวจกับระบบกลางก่อนส่ง: เกินเพดาน/ลงซ้ำ → ห้ามส่ง · ข้อความคล้ายรายการเดิม → ให้ยืนยัน
+            const check = App.checkDeedServer ? await App.checkDeedServer({ categoryId: selectedCategoryId, hours, activityDate, description }, currentUser.student_id) : null;
+            if (check && check.ok === false) {
+                resetBtn();
+                showFormAlert('⛔ ' + check.message);
+                const alertEl = document.getElementById('form-alert');
+                if (alertEl) alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            if (check && check.warnings && check.warnings.length) {
+                if (!window.confirm('โปรดตรวจสอบก่อนส่ง:\n\n• ' + check.warnings.join('\n• ') + '\n\nยืนยันส่งรายการนี้?')) { resetBtn(); return; }
+            }
             btn.innerHTML = '<span class="spinner"></span> กำลังบันทึก...';
 
             const loadingOverlay = document.getElementById('chibi-loading-overlay');
@@ -1035,7 +1083,8 @@
                 showSuccessModal(deed);
             } catch (err) {
                 console.error('❌ handleSubmit error:', err);
-                showFormAlert('เกิดข้อผิดพลาดในการบันทึก: ' + (err.message || err));
+                showFormAlert(err && err.blocked ? '⛔ ' + err.message : 'เกิดข้อผิดพลาดในการบันทึก: ' + (err.message || err));
+                if (err && err.blocked) refreshServerQuota();
                 const alertEl = document.getElementById('form-alert');
                 if (alertEl) alertEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             } finally {

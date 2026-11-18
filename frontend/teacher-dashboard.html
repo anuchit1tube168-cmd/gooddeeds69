@@ -585,6 +585,9 @@
         <a href="#" class="sidebar-item" id="sb-stats" onclick="switchTab('stats',this)">
           <span class="icon">📊</span> สถิติภาพรวม
         </a>
+        <a href="#" class="sidebar-item" id="sb-audit" onclick="switchTab('audit',this)">
+          <span class="icon">🛡️</span> ตรวจสอบความดี (ซ้ำ/เกินเพดาน)
+        </a>
         <a href="#" class="sidebar-item" id="sb-broadcast" onclick="switchTab('broadcast',this)">
           <span class="icon">📢</span> บรอดแคสต์ LINE (ทุกคน/เลือกคน)
         <a href="run-admin.html" class="sidebar-item"><span class="icon">🏃</span> ตรวจการวิ่ง &amp; สมรรถภาพ</a>
@@ -651,6 +654,7 @@
         <button class="tab-btn active" id="tb-pending" onclick="switchTab('pending',null)">⏳ รออนุมัติ</button>
         <button class="tab-btn" id="tb-students" onclick="switchTab('students',null)">👥 นักเรียนทั้งหมด</button>
         <button class="tab-btn" id="tb-stats" onclick="switchTab('stats',null)">📊 สถิติภาพรวม</button>
+        <button class="tab-btn" id="tb-audit" onclick="switchTab('audit',null)">🛡️ ตรวจสอบ</button>
         <button class="tab-btn" id="tb-broadcast" onclick="switchTab('broadcast',null)" style="color:#06c755;font-weight:700">📢 ส่ง LINE ทุกคน</button>
       </div>
 
@@ -725,6 +729,18 @@
       </div>
 
       <!-- TAB: BROADCAST LINE OA -->
+      <div class="tab-pane" id="pane-audit">
+        <div class="sec-hdr">
+          <h2>🛡️ ตรวจสอบความดี — ลงซ้ำ · เกินเพดาน · ข้อมูลผิด · ใครทำที่ไหนเหมือนกัน</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="btn btn-outline btn-sm" onclick="loadAudit(false)">🔄 ตรวจตอนนี้</button>
+            <button class="btn btn-outline btn-sm" onclick="loadAudit(true)">📨 ตรวจ + ส่งสรุปเข้า Telegram</button>
+          </div>
+        </div>
+        <p style="font-size:.85rem;opacity:.8;margin:0 0 12px">ระบบตรวจอัตโนมัติทุกวันจันทร์ 07:30 น. และส่งสรุปเข้า Telegram อาจารย์ · ตัวเลขอิงข้อมูลในชีตกลาง (ไม่นับรายการที่ไม่อนุมัติ)</p>
+        <div id="audit-body"><div class="empty-state" style="padding:24px;text-align:center;opacity:.8">กด "ตรวจตอนนี้" เพื่อดูรายงาน (ใช้รหัสผู้ตรวจชุดเดียวกับหน้าตรวจการวิ่ง)</div></div>
+      </div>
+
       <div class="tab-pane" id="pane-broadcast">
         <div class="sec-hdr">
           <h2>📢 ส่ง LINE Flex Message — ส่งทุกคน / เลือกส่งรายคน</h2>
@@ -943,7 +959,7 @@
   <script src="data/carry_forward_data.js?v=20261106-live-v3"></script>
   <script src="data/deeds_data.js?v=20261106-live-v3"></script>
   <script src="data/app_settings.js?v=20261106-live-v3"></script>
-  <script src="app.js?v=20261117-flicker"></script>
+  <script src="app.js?v=20261118-quota"></script>
   <script src="gateway-config.js?v=20260908"></script>
   <script src="gateway-client.js?v=20260922-v3-login"></script>
   <script src="liff-sdk.js?v=20261117-flicker"></script>
@@ -1423,6 +1439,68 @@
         if (sb) sb.classList.add('active');
       }
     }
+
+    // ===== AUDIT TAB (ตรวจซ้ำ/เกินเพดาน/ข้อมูลผิด/กิจกรรมเดียวกันหลายคน) =====
+    const AUDIT_CAT = { 1: 'บริจาคโลหิต', 2: 'โครงการภายนอก', 3: 'ช่วยงานภายใน', 4: 'อบรม', 5: 'ช่วยหน่วยงาน/ชุมชน', 6: 'ศาสนสถาน', 7: 'ความดีทั่วไป/ครอบครัว', 8: 'จงรักภักดี', 9: 'บทบาทพิเศษ' };
+    function auditEsc(v) { return String(v == null ? '' : v).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+    function auditWho(sid) {
+      const s = (typeof App !== 'undefined' && App.getStudentById) ? App.getStudentById(sid) : null;
+      const name = s ? `${s.rank || 'นพอ.'}${s.first_name || ''} ${s.last_name || ''}`.trim() : '';
+      return `${auditEsc(sid)}${name ? ' ' + auditEsc(name) : ''}`;
+    }
+    function auditTable(title, color, headers, rows) {
+      if (!rows.length) return `<div class="card" style="padding:14px 16px;margin-bottom:12px"><strong>${title}</strong> <span style="color:#16a34a">✅ ไม่พบ</span></div>`;
+      return `<div class="card" style="padding:14px 16px;margin-bottom:12px;border-left:4px solid ${color}">
+        <strong>${title}</strong> <span style="opacity:.75">(${rows.length})</span>
+        <div style="overflow-x:auto;margin-top:8px"><table style="width:100%;border-collapse:collapse;font-size:.85rem">
+          <thead><tr>${headers.map(h => `<th style="text-align:left;padding:6px;border-bottom:1px solid var(--card-border)">${h}</th>`).join('')}</tr></thead>
+          <tbody>${rows.map(r => `<tr>${r.map(c => `<td style="padding:6px;border-bottom:1px solid var(--card-border);vertical-align:top">${c}</td>`).join('')}</tr>`).join('')}</tbody>
+        </table></div></div>`;
+    }
+    async function loadAudit(notify) {
+      const body = document.getElementById('audit-body');
+      const ADMIN_KEY = 'gd_run_admin_key';
+      let key = sessionStorage.getItem(ADMIN_KEY) || '';
+      if (!key) {
+        key = (prompt('กรอกรหัสผู้ตรวจ (ชุดเดียวกับหน้าตรวจการวิ่ง)') || '').trim();
+        if (!key) return;
+        sessionStorage.setItem(ADMIN_KEY, key);
+      }
+      body.innerHTML = '<div style="padding:24px;text-align:center">⏳ กำลังตรวจข้อมูลทั้งระบบ…</div>';
+      try {
+        if (notify) {
+          const n = await fetch('/api/deed_audit', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Admin-Key': key }, body: JSON.stringify({ notify: true }) });
+          const nj = await n.json().catch(() => ({}));
+          if (typeof showToast === 'function') showToast(nj.telegramSent ? 'ส่งสรุปเข้า Telegram แล้ว' : 'ส่ง Telegram ไม่สำเร็จ (ตรวจการตั้งค่า Bot)', nj.telegramSent ? 'success' : 'warning');
+        }
+        const res = await fetch('/api/deed_audit', { headers: { 'X-Admin-Key': key }, cache: 'no-store' });
+        if (res.status === 403) { sessionStorage.removeItem(ADMIN_KEY); body.innerHTML = '<div style="padding:24px;color:#b91c1c">รหัสผู้ตรวจไม่ถูกต้อง — กดตรวจอีกครั้งเพื่อกรอกใหม่</div>'; return; }
+        const data = await res.json();
+        if (!res.ok || !data.report) throw new Error(data.code || res.status);
+        const r = data.report, t = r.totals;
+        const kpi = (label, n, bad) => `<div class="card" style="padding:12px 14px;min-width:140px;flex:1"><div style="font-size:.8rem;opacity:.75">${label}</div><div style="font-size:1.6rem;font-weight:800;color:${n && bad ? '#dc2626' : 'inherit'}">${n}</div></div>`;
+        let html = `<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+          ${kpi('รายการทั้งหมด', t.deeds)}${kpi('นักเรียน', t.students)}${kpi('ลงซ้ำ', t.duplicates, 1)}${kpi('เกินเพดาน', t.overCap, 1)}${kpi('ข้อมูลไม่ถูกต้อง', t.invalid, 1)}${kpi('ข้อความเหมือนกันหลายคน (น่าตรวจ)', t.suspicious, 1)}
+        </div>`;
+        html += auditTable('🔴 ลงซ้ำ (หมวดเดียวกัน วันเดียวกัน)', '#dc2626', ['นักเรียน', 'หมวด', 'วันที่', 'จำนวนรายการ'],
+          r.duplicates.map(d => [auditWho(d.studentId), auditEsc(AUDIT_CAT[d.categoryId] || d.categoryId), d.date, d.count]));
+        html += auditTable('🔴 เกินเพดานภาค/ปี', '#dc2626', ['นักเรียน', 'หมวด', 'ช่วง', 'ใช้ไป / เพดาน'],
+          r.overCap.map(o => [auditWho(o.studentId), auditEsc(AUDIT_CAT[o.categoryId] || o.categoryId), auditEsc(o.scope), o.count != null ? `${o.count}/${o.limit} ครั้ง` : `${o.hours}/${o.limit} ชม.`]));
+        html += auditTable('🟠 ข้อมูลไม่ถูกต้อง', '#f59e0b', ['นักเรียน', 'วันที่', 'ชม.', 'ปัญหา'],
+          r.invalid.map(i => [auditWho(i.studentId), i.date || '-', i.hours, auditEsc(i.issues.join(', '))]));
+        html += auditTable('👥 กิจกรรมเดียวกันหลายคน — ใครทำที่ไหน (🟠 = ควรตรวจ)', '#6366f1', ['', 'วันที่', 'หมวด', 'รายละเอียด / สถานที่', 'ผู้บันทึก'],
+          r.sharedActivities.slice(0, 200).map(s => [s.suspicious ? '🟠' : '', s.date, auditEsc(AUDIT_CAT[s.categoryId] || s.categoryId),
+            `${auditEsc(s.description)}<br><span style="opacity:.7">📍 ${auditEsc(s.location || '-')}</span>${s.hoursMismatch ? '<br><span style="color:#dc2626">ชั่วโมงไม่เท่ากัน</span>' : ''}`,
+            `${s.count} คน<br><span style="opacity:.8">${s.students.map(auditWho).join('<br>')}</span>`]));
+        html += auditTable('📊 ความถี่รายหมวด', '#16a34a', ['หมวด', 'รายการ', 'ชั่วโมงรวม', 'นักเรียน (คน)'],
+          r.categories.map(c => [auditEsc(AUDIT_CAT[c.categoryId] || c.name), c.entries, Math.round(c.hours * 10) / 10, c.students]));
+        html += `<div style="font-size:.75rem;opacity:.6">ตรวจเมื่อ ${new Date(r.generatedAt).toLocaleString('th-TH')} · ปีการศึกษา ${r.academicYear}</div>`;
+        body.innerHTML = html;
+      } catch (e) {
+        body.innerHTML = `<div style="padding:24px;color:#b91c1c">ตรวจไม่สำเร็จ (${auditEsc(e.message || e)}) — ลองใหม่อีกครั้ง</div>`;
+      }
+    }
+    if (location.hash === '#audit') document.addEventListener('DOMContentLoaded', () => { switchTab('audit', null); loadAudit(false); });
 
     // ===== PENDING TAB =====
     function renderPending() {
