@@ -666,7 +666,8 @@
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <input type="text" class="form-input" style="width:200px;padding:8px 12px" id="pend-search"
               placeholder="🔍 ค้นหาชื่อ/รหัส/กิจกรรม..." oninput="renderPending()">
-            <button class="btn btn-outline btn-sm" onclick="loadTriage(true)" title="คัดกรองคิวใหม่จากชีตกลาง">🔄 ตรวจคิวใหม่</button>
+            <button class="btn btn-outline btn-sm" id="view-toggle-btn" onclick="togglePendingView()" title="สลับมุมมองรายการรออนุมัติ">🧠 มุมมองคัดกรอง</button>
+            <button class="btn btn-success btn-sm" id="approve-all-btn" onclick="approveAll()">✅ อนุมัติทั้งหมด</button>
           </div>
         </div>
         <style>
@@ -1741,7 +1742,21 @@
     // ===== PENDING TAB =====
     // ===== คัดกรองอัจฉริยะ: ผิดกฎ / ควรตรวจ / ปกติ (อนุมัติเป็นชุด) =====
     let triage = null, triageAt = 0, triageView = 'review', triageSel = new Set(), triageBusy = false, triageLoading = false;
+    // มุมมองเดิม (การ์ดรายการแบบเดิม) เป็นค่าเริ่มต้น · มุมมองคัดกรองเป็นทางเลือก จำค่าไว้ในเครื่อง
+    let pendingMode = (function () { try { return localStorage.getItem('gd_pending_mode') || 'classic'; } catch (_) { return 'classic'; } })();
+    function togglePendingView() {
+      pendingMode = pendingMode === 'triage' ? 'classic' : 'triage';
+      try { localStorage.setItem('gd_pending_mode', pendingMode); } catch (_) {}
+      if (pendingMode === 'triage') loadTriage(true); else renderPending();
+    }
+    function syncViewButtons() {
+      const t = document.getElementById('view-toggle-btn');
+      if (t) t.textContent = pendingMode === 'triage' ? '📋 มุมมองเดิม' : '🧠 มุมมองคัดกรอง';
+      const a = document.getElementById('approve-all-btn');
+      if (a) a.style.display = pendingMode === 'triage' ? 'none' : '';
+    }
     async function loadTriage(force) {
+      if (pendingMode !== 'triage') return;
       if (!isStaffAuthed()) { triage = null; return; }
       if (triageLoading) return;
       if (!force && triage && Date.now() - triageAt < 60000) return;
@@ -1883,8 +1898,9 @@
     }
 
     function renderPending() {
+      syncViewButtons();
       const qTri = (document.getElementById('pend-search')?.value || '').toLowerCase();
-      if (triage && isStaffAuthed()) return renderTriage(qTri);
+      if (pendingMode === 'triage' && triage && isStaffAuthed()) return renderTriage(qTri);
       const tb = document.getElementById('triage-box'); if (tb && !triageLoading) tb.innerHTML = '';
       const q = (document.getElementById('pend-search')?.value || '').toLowerCase();
       let list = pendingDeeds;
